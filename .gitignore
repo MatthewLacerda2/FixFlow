@@ -6,6 +6,7 @@
 *.sln.docstates
 
 # Common files to ignore across all projects
+.vs
 .vscode/
 node_modules/
 *.log
@@ -77,4 +78,3 @@ bld/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
-
