@@ -2,13 +2,15 @@ namespace Models;
 
 public class CompletedAppointment {
 
-    public Guid Id;
-    public string AttendantId = string.Empty;
-    public string clientId = string.Empty;
+    public Guid Id { get; set; }
+    public Guid ScheduleId { get; set; }
+    public string AttendantId { get; set; } = string.Empty;
+    public string clientId { get; set; } = string.Empty;
     
-    public string clientName { get; set;} = string.Empty;
-    public float price = 30f;
-    public int duration = 1;
+    public float price { get; set; } = 30f;
+    public TimeSpan timeSpan { get; set; }
     public string observation { get; set;} = string.Empty;
-    public DateTime time  { get; set;}
+    public string location { get; set;} = string.Empty;
+    public CompletedStatus status { get; set; }
+
 }
