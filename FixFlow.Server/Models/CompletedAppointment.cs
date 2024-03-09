@@ -7,10 +7,11 @@ public class CompletedAppointment {
     public string AttendantId { get; set; } = string.Empty;
     public string clientId { get; set; } = string.Empty;
     
-    public float price { get; set; } = 30f;
     public TimeSpan timeSpan { get; set; }
+    public CompletedStatus status { get; set; }
+
+    public float price { get; set; } = 30f;    
     public string observation { get; set;} = string.Empty;
     public string location { get; set;} = string.Empty;
-    public CompletedStatus status { get; set; }
 
 }
