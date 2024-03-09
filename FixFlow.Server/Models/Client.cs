@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace Models;
+namespace Server.Models;
 
 public class Client : IdentityUser {
+
+    public DateTime LastLogin { get; set; }
 
     //For faster queries
     public float spentSum { get; set; } = 30f;
