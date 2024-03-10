@@ -1,6 +1,4 @@
-using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
-
 namespace Server.Models;
 
 public class Secretary : IdentityUser {

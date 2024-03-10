@@ -1,12 +1,9 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.OpenApi.Models;
 using Server.Models;
+using Server.Data;
 
 namespace Server
 {
@@ -23,18 +20,27 @@ namespace Server
         {
             // Configure Identity with your custom user classes (Client, Secretary, Employee)
             services.AddIdentity<Client, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<ServerContext>()
                 .AddDefaultTokenProviders();
 
             // Configure DbContext for MySQL
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ServerContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 23))));
 
             // Configure MongoDB
             services.ConfigureMongoDb(Configuration);
 
             // Configure authentication
-            services.ConfigureAuthentication();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => {
+                    options.LoginPath = "/Accounts/Login";
+                    options.AccessDeniedPath = "/Accounts/Login";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                    options.SlidingExpiration = true;
+                    options.Cookie.Name = "Flow_Cookie";
+                });
+
+            services.AddAuthorization();
 
             // Add Swagger
             services.AddSwaggerGen(c =>
