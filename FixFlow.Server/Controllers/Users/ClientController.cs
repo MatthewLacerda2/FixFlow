@@ -12,7 +12,7 @@ namespace webserver.Controllers;
 /// <summary>
 /// Controller class for Client CRUD requests
 /// </summary>
-[Authorize]
+[Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
 [ApiController]
 [Route("api/v1/client")]
 [Produces("application/json")]
@@ -113,7 +113,7 @@ public class ClientController : ControllerBase {
     [HttpPost]
     public async Task<IActionResult> CreateClient([FromBody] ClientDTO clientDto, string password) {
 
-        var existingName = _context.Clients.Where(c=>c.Fullname == clientDto.Fullname);
+        var existingName = _context.Clients.Where(c=>c.Fullname == clientDto.FullName);
         if(existingName != null){
             return BadRequest("FullName already registered!");
         }
@@ -141,7 +141,7 @@ public class ClientController : ControllerBase {
             clientDto.Email = string.Empty;
         }
 
-        Client client = new Client (clientDto.Fullname, clientDto.CPF, clientDto.PhoneNumber, clientDto.Email);
+        Client client = new Client (clientDto.FullName, clientDto.CPF, clientDto.PhoneNumber, clientDto.Email);
 
         var result = await _userManager.CreateAsync(client, password);
 
@@ -153,26 +153,30 @@ public class ClientController : ControllerBase {
     }
 
     /// <summary>
-    /// Updates the Client with the given Id and data
+    /// Updates the Client with the given Id
     /// </summary>
     /// <returns>Client's DTO with the updated Data</returns>
-    /// <response code="200">ClientdDTO with the updated data</response>
+    /// <response code="200">Client's DTO with the updated data</response>
     /// <response code="400">If a Client with the given Id was not found</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Client))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
     [HttpPatch]
-    public async Task<IActionResult> UpdateClient([FromBody] ClientDTO newClient) {
+    public async Task<IActionResult> UpdateClient([FromBody] ClientDTO upClient) {
 
-        var existingClient = _context.Clients.Find(newClient.Id);
+        var existingClient = _context.Clients.Find(upClient.Id);
         if (existingClient==null) {
             return BadRequest("Client does not Exist!");
         }
 
-        existingClient.UserName = newClient.UserName;
-        existingClient.PhoneNumber = newClient.PhoneNumber;
-        
-        existingClient.Occupation = newClient.Occupation;
+        existingClient.UserName = upClient.FullName;
+        existingClient.PhoneNumber = upClient.PhoneNumber;
+
+        if(!string.IsNullOrEmpty(upClient.CPF)){
+            existingClient.CPF = upClient.CPF;
+        }
+        if(!string.IsNullOrEmpty(upClient.Email)){
+            existingClient.Email = upClient.Email;
+        }
 
         await _context.SaveChangesAsync();
 
