@@ -5,7 +5,7 @@ public class EmployeeDTO {
     public string Id = string.Empty;
     public string Name = string.Empty;
     public string Phone = string.Empty;
-    public TimeSpan shift { get; set; }
+    public TimeInterval shift { get; set; } = new TimeInterval();
 
     public static explicit operator EmployeeDTO(Employee employee){
         return new EmployeeDTO {

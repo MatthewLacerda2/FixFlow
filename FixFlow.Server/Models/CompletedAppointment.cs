@@ -1,4 +1,4 @@
-namespace Models;
+namespace Server.Models;
 
 public class CompletedAppointment {
 
@@ -7,7 +7,7 @@ public class CompletedAppointment {
     public string AttendantId { get; set; } = string.Empty;
     public string clientId { get; set; } = string.Empty;
     
-    public TimeSpan timeSpan { get; set; }
+    public TimeInterval timeStamp { get; set; } = new TimeInterval();
     public CompletedStatus status { get; set; }
 
     public float price { get; set; } = 30f;    
