@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
 using Server.Models;
 using Server.Data;
+using MongoDB.Driver;
 
 namespace Server
 {
@@ -18,8 +19,15 @@ namespace Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Configure Identity with your custom user classes (Client, Secretary, Employee)
             services.AddIdentity<Client, IdentityRole>()
+                .AddEntityFrameworkStores<ServerContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddIdentity<Employee, IdentityRole>()
+                .AddEntityFrameworkStores<ServerContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddIdentity<Secretary, IdentityRole>()
                 .AddEntityFrameworkStores<ServerContext>()
                 .AddDefaultTokenProviders();
 
@@ -28,7 +36,13 @@ namespace Server
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 23))));
 
             // Configure MongoDB
-            services.ConfigureMongoDb(Configuration);
+            string connectionString = Configuration.GetConnectionString("MongoDbConnection")!;
+            services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
+            services.AddSingleton<IMongoDatabase>(provider =>
+            {
+                var client = provider.GetRequiredService<IMongoClient>();
+                return client.GetDatabase("YourMongoDatabaseName");
+            });
 
             // Configure authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
