@@ -11,4 +11,11 @@ public class Client : IdentityUser {
     public int appointmentsSum { get; set; } = 1;
     public string additionalNote { get; set; } = string.Empty;
 
+    public Client(string id, string username, string email, string phonenumber){
+
+        Id = id;
+        UserName = username;
+        Email = email;
+        PhoneNumber = phonenumber;
+    }
 }
