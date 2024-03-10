@@ -5,14 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Models;
 using Server.Models.DTO;
-using Server.Models.Utils;
 using Newtonsoft.Json;
 
 namespace webserver.Controllers;
 
 /// <summary>
-/// Controller class for Client CRUD requests via the HTTP API
-/// Responses are sent only in JSON
+/// Controller class for Client CRUD requests
 /// </summary>
 [Authorize]
 [ApiController]
@@ -25,8 +23,7 @@ public class ClientController : ControllerBase {
     private readonly RoleManager<IdentityRole> _roleManager;
 
     /// <summary>
-    /// Controller class for Client CRUD requests via the HTTP API
-    /// Responses are sent only in JSON
+    /// Controller class for Client CRUD requests
     /// </summary>
     public ClientController(ServerContext context, UserManager<Client> userManager, RoleManager<IdentityRole> roleManager){
         _context = context;
@@ -37,7 +34,7 @@ public class ClientController : ControllerBase {
     /// <summary>
     /// Get the Client with the given Id
     /// </summary>
-    /// <returns>Client of the given User. NotFoundResult if there is none</returns>
+    /// <returns>Client with the given Id. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Client's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
     [HttpGet("{id}")]
@@ -54,7 +51,7 @@ public class ClientController : ControllerBase {
     }
 
     /// <summary>
-    /// Get an array of Clients DTO, with optional filters
+    /// Get all Clients within optional filters
     /// </summary>
     /// <returns>ClientDTO Array</returns>
     /// <param name="username">Filters results to only Users whose username contains this string</param>
@@ -68,7 +65,7 @@ public class ClientController : ControllerBase {
     [HttpGet]
     public async Task<IActionResult> ReadClients(string? username, int? offset, int limit, string? sort) {
 
-        if(limit<1){
+        if (limit < 1) {
             return BadRequest("Limit parameter must be a natural number greater than 0");
         }
 
@@ -92,14 +89,14 @@ public class ClientController : ControllerBase {
         }
         clients = clients.Take(limit);
 
-        var resultArray = await clients.ToArrayAsync();
-        var resultDtoArray = resultArray.Select(c=>(ClientDTO)c).ToArray();
+        var resultQuery = await clients.ToArrayAsync();
+        var resultsArray = resultQuery.Select(c=>(ClientDTO)c).ToArray();
         
-        if(resultDtoArray==null || resultDtoArray.Length==0){
+        if(resultsArray==null || resultsArray.Length==0){
             return NotFound();
         }
         
-        var response = JsonConvert.SerializeObject(resultDtoArray);
+        var response = JsonConvert.SerializeObject(resultsArray);
 
         return Ok(response);
     }
@@ -107,46 +104,50 @@ public class ClientController : ControllerBase {
     /// <summary>
     /// Creates a Client User
     /// </summary>
-    /// <returns>The created Client Data</returns>
+    /// <returns>The created Client's Data</returns>
     /// <response code="200">ClientDTO</response>
-    /// <response code="400">In case the Email or Username is already Registered (it will tell which)</response>
-    /// <response code="500">Returns a string with the requirements in the data which weren't filled (weak password, empty fields, etc)</response>
-    /// <response code="500">Returns a string with server-side error(s)</response>
+    /// <response code="400">Returns a string with the requirements that were not filled</response>
+    /// <response code="400">In case the Client's data is already Registered (it will tell which data)</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Client))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> CreateClient([FromBody] ClientDTO clientDto, string password) {
 
-        // Check if the email is already registered
-        var existingEmail = await _userManager.FindByEmailAsync(clientDto.Email);
-        if (existingEmail != null) {
-            return BadRequest("Email already registered!");
+        var existingName = _context.Clients.Where(c=>c.Fullname == clientDto.Fullname);
+        if(existingName != null){
+            return BadRequest("FullName already registered!");
         }
 
-        var existingUsername = await _userManager.FindByNameAsync(clientDto.UserName);
-        if (existingUsername != null) {
-            return BadRequest("UserName already registered!");
+        var existingPhone = _context.Clients.Where(c=>c.PhoneNumber == clientDto.PhoneNumber);
+        if(existingPhone != null){
+            return BadRequest("PhoneNumber already registered!");
         }
 
-        Client client = new Client {
-            UserName = clientDto.UserName,
-            Email = clientDto.Email,
-            PhoneNumber = clientDto.PhoneNumber
-        };
+        if(!string.IsNullOrEmpty(clientDto.CPF)){
+            var existingCPF = _context.Clients.Where(c=>c.CPF == clientDto.CPF);
+            if (existingCPF != null) {
+                return BadRequest("CPF already registered!");
+            }
+        }else{
+            clientDto.CPF = string.Empty;
+        }
+        
+        if(!string.IsNullOrEmpty(clientDto.Email)){
+            var existingEmail = await _userManager.FindByEmailAsync(clientDto.Email);
+            if (existingEmail != null) {
+                return BadRequest("Email already registered!");
+            }
+        }else{
+            clientDto.Email = string.Empty;
+        }
+
+        Client client = new Client (clientDto.Fullname, clientDto.CPF, clientDto.PhoneNumber, clientDto.Email);
 
         var result = await _userManager.CreateAsync(client, password);
 
         if(!result.Succeeded){
-            return StatusCode(500, "Internal Server Error: Register Client Unsuccessful\n\n"+result.Errors);
+            return StatusCode(500, "Internal Server Error: Register Client Unsuccessful");
         }
-
-        var roleExists = await _roleManager.RoleExistsAsync(Common.Client_Role);
-        if (!roleExists) {
-            await _roleManager.CreateAsync(new IdentityRole(Common.Client_Role));
-        }
-
-        await _userManager.AddToRoleAsync(client, Common.Client_Role);
 
         return CreatedAtAction(nameof(CreateClient), (ClientDTO)client);
     }
@@ -170,6 +171,8 @@ public class ClientController : ControllerBase {
 
         existingClient.UserName = newClient.UserName;
         existingClient.PhoneNumber = newClient.PhoneNumber;
+        
+        existingClient.Occupation = newClient.Occupation;
 
         await _context.SaveChangesAsync();
 
