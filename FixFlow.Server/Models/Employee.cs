@@ -21,6 +21,5 @@ public class Employee : IdentityUser {
 
         salary = _salary;
         shift = _shift;
-    }
-        
+    }        
 }
