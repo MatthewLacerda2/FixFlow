@@ -185,7 +185,6 @@ public class EmployeeController : ControllerBase {
     /// <response code="400">Employee not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Employee))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployee(string id) {
 

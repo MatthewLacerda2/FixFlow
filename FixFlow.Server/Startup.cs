@@ -55,6 +55,8 @@ public class Startup {
 
         services.AddAuthorization();
 
+        services.AddControllersWithViews();
+
         // Add Swagger
         services.AddSwaggerGen(c =>
         {

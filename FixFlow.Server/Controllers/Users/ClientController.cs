@@ -185,7 +185,6 @@ public class ClientController : ControllerBase {
     /// <response code="400">Client not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Client))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteClient(string id) {
 

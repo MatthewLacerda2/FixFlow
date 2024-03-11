@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Server.Data;
 using Server.Models;
 using Server.Models.DTO;
@@ -19,13 +19,14 @@ namespace webserver.Controllers;
 public class ScheduleController : ControllerBase {
 
     private readonly IMongoCollection<ScheduledAppointment> _appointmentsCollection;
+    private readonly UserManager<Client> _userManager;
 
     /// <summary>
     /// Controller class for Scheduled Appointment CRUD requests
     /// </summary>
-    public ScheduleController(IMongoClient mongoClient) {
-        var database = mongoClient.GetDatabase("MongoDbConnection");
-        _appointmentsCollection = database.GetCollection<ScheduledAppointment>("ScheduledAppointments");
+    public ScheduleController(UserManager<Client> userManager, IMongoClient mongoClient) {
+        _userManager = userManager;
+        _appointmentsCollection = mongoClient.GetDatabase("MongoDbConnection").GetCollection<ScheduledAppointment>("ScheduledAppointments");
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduledAppointment))]
@@ -46,7 +47,7 @@ public class ScheduleController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ScheduledAppointment>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public IActionResult GetAppointments( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
+    public IActionResult ReadSchedules( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
 
         var filterBuilder = Builders<ScheduledAppointment>.Filter;
         var filter = filterBuilder.Empty;
@@ -86,61 +87,50 @@ public class ScheduleController : ControllerBase {
         return Ok(JsonConvert.SerializeObject(result));
     }
     
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Secretary))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ScheduledAppointment))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPost]
-    public async Task<IActionResult> CreateSchedule([FromBody] SecretaryDTO SecretaryDto, string password) {
+    public async Task<IActionResult> CreateSchedule([FromBody] ScheduledAppointment newAppointment) {
 
-        var existingName = _context.Secretarys.Where(c=>c.FullName == SecretaryDto.FullName);
-        if(existingName != null){
-            return BadRequest("FullName already registered!");
+        var existingClient = await _userManager.FindByIdAsync(newAppointment.clientId);
+        if(existingClient==null){
+            return BadRequest("Client does not exist");
         }
 
-        Secretary Secretary = new Secretary(SecretaryDto.FullName, SecretaryDto.Email, SecretaryDto.CPF, SecretaryDto.PhoneNumber, SecretaryDto.salary, SecretaryDto.shift);
+        newAppointment.Id = Guid.NewGuid();
 
-        var result = await _userManager.CreateAsync(Secretary, password);
+        _appointmentsCollection.InsertOne(newAppointment);
 
-        if(!result.Succeeded){
-            return StatusCode(500, "Internal Server Error: Register Secretary Unsuccessful");
-        }
-
-        return CreatedAtAction(nameof(CreateSchedule), (SecretaryDTO)Secretary);
+        return CreatedAtAction(nameof(CreateSchedule), newAppointment);
     }
     
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Secretary))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [HttpPatch]
-    public async Task<IActionResult> UpdateSchedule([FromBody] SecretaryDTO upSecretary) {
-
-        var existingSecretary = _context.Secretarys.Find(upSecretary.Id);
-        if (existingSecretary==null) {
-            return BadRequest("Secretary does not Exist!");
-        }
-
-        existingSecretary = (Secretary)upSecretary;
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduledAppointment))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [HttpPut]
+    public async Task<IActionResult> UpdateSchedule([FromBody] ScheduledAppointment upAppointment) {
         
-        await _context.SaveChangesAsync();
+        var existingAppointment = await _appointmentsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefaultAsync();
+        if (existingAppointment == null) {
+            return NotFound("Schedule not found");
+        }
+        
+        await _appointmentsCollection.ReplaceOneAsync(s => s.Id == upAppointment.Id, upAppointment);
 
-        var response = JsonConvert.SerializeObject((SecretaryDTO)existingSecretary);
-
-        return Ok(response);
+        return Ok(upAppointment);
     }
+
     
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Secretary))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteSchedule(string id) {
+    [HttpDelete]
+    public async Task<IActionResult> DeleteSchedule(Guid id) {
 
-        var Secretary = _context.Secretarys.Find(id);
-        if(Secretary == null){
-            return BadRequest("Secretary does not Exist!");
+        var scheduleToDelete = await _appointmentsCollection.Find(s => s.Id == id).FirstOrDefaultAsync();
+        if (scheduleToDelete == null) {
+            return BadRequest("Schedule Appointment does not exist");
         }
         
-        _context.Secretarys.Remove(Secretary);
-
-        await _context.SaveChangesAsync();
-
+        await _appointmentsCollection.DeleteOneAsync(s => s.Id == id);
         return NoContent();
     }    
 }
