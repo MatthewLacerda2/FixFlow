@@ -6,22 +6,16 @@ services:
     container_name: front-end
     working_dir: /app
     command: sh -c "npm install && npm start"
-    resources:
-      limits:
-        memory: 1GB
     ports:
-      - "3000:3000" #PLACEHOLDER
+      - "5173:5173"
 
   web-api:
     image: mcr.microsoft.com/dotnet/core/sdk:latest
     container_name: back-end
     working_dir: /app
     command: sh -c "dotnet restore && dotnet watch run"
-    resources:
-      limits:
-        memory: 1GB
     ports:
-      - "5000:5000" #PLACEHOLDER
+      - "5105:5105"
     depends_on:
       - mysql-db
       - mongo-db
@@ -34,9 +28,6 @@ services:
       MYSQL_DATABASE: mysql_db
       MYSQL_USER: lendacerda
       MYSQL_PASSWORD: xpvista7810
-    resources:
-      limits:
-        memory: 1GB
     ports:
       - "3306:3306"
     volumes:
@@ -49,10 +40,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: lendacerda
       MONGO_INITDB_ROOT_PASSWORD: xpvista7810
       MONGO_INITDB_DATABASE: mongo_db
-    resources:
-      limits:
-        memory: 1GB
     ports:
-      - "27017:27017" #PLACEHOLDER
+      - "27017:27017"
     volumes:
       - ./mongo-data:/data/db
