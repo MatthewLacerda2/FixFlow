@@ -40,7 +40,7 @@ public class Startup {
         services.AddSingleton<IMongoDatabase>(provider =>
         {
             var client = provider.GetRequiredService<IMongoClient>();
-            return client.GetDatabase("YourMongoDatabaseName");
+            return client.GetDatabase("mongo_db");
         });
 
         // Configure authentication

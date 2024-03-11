@@ -8,46 +8,46 @@ using Newtonsoft.Json;
 namespace webserver.Controllers;
 
 /// <summary>
-/// Controller class for Scheduled Appointment CRUD requests
+/// Controller class for Appointment Log CRUD requests
 /// </summary>
 [Authorize]
 [ApiController]
-[Route("api/v1/schedules")]
+[Route("api/v1/logs")]
 [Produces("application/json")]
-public class ScheduleController : ControllerBase {
+public class LogController : ControllerBase {
 
-    private readonly IMongoCollection<AppointmentSchedule> _appointmentsCollection;
+    private readonly IMongoCollection<AppointmentLog> _appointmentsCollection;
     private readonly UserManager<Client> _userManager;
 
     /// <summary>
-    /// Controller class for Scheduled Appointment CRUD requests
+    /// Controller class for Appointment Log CRUD requests
     /// </summary>
-    public ScheduleController(UserManager<Client> userManager, IMongoClient mongoClient) {
+    public LogController(UserManager<Client> userManager, IMongoClient mongoClient) {
         _userManager = userManager;
-        _appointmentsCollection = mongoClient.GetDatabase("mongo_db").GetCollection<AppointmentSchedule>("ScheduledAppointments");
+        _appointmentsCollection = mongoClient.GetDatabase("mongo_db").GetCollection<AppointmentLog>("AppointmentLogs");
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentSchedule))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentLog))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public async Task<IActionResult> ReadSchedule(Guid id) {
+    public async Task<IActionResult> ReadLog(Guid id) {
 
-        var schedule = await _appointmentsCollection.FindAsync(s => s.Id == id);
+        var log = await _appointmentsCollection.FindAsync(s => s.Id == id);
 
-        if(schedule==null) {
+        if(log==null) {
             return NotFound();
         }
 
-        var response = JsonConvert.SerializeObject(schedule);
+        var response = JsonConvert.SerializeObject(log);
         return Ok(response);
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentSchedule>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentLog>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public IActionResult ReadSchedules( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
+    public IActionResult ReadLogs( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
 
-        var filterBuilder = Builders<AppointmentSchedule>.Filter;
+        var filterBuilder = Builders<AppointmentLog>.Filter;
         var filter = filterBuilder.Empty;
 
         if (!string.IsNullOrEmpty(clientId)) {
@@ -85,10 +85,10 @@ public class ScheduleController : ControllerBase {
         return Ok(JsonConvert.SerializeObject(result));
     }
     
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AppointmentSchedule))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AppointmentLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPost]
-    public async Task<IActionResult> CreateSchedule([FromBody] AppointmentSchedule newAppointment) {
+    public async Task<IActionResult> CreateLog([FromBody] AppointmentLog newAppointment) {
 
         var existingClient = await _userManager.FindByIdAsync(newAppointment.clientId);
         if(existingClient==null){
@@ -99,32 +99,32 @@ public class ScheduleController : ControllerBase {
 
         _appointmentsCollection.InsertOne(newAppointment);
 
-        return CreatedAtAction(nameof(CreateSchedule), newAppointment);
+        return CreatedAtAction(nameof(CreateLog), newAppointment);
     }
     
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentSchedule))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPut]
-    public async Task<IActionResult> UpdateSchedule([FromBody] AppointmentSchedule upAppointment) {
+    public async Task<IActionResult> UpdateLog([FromBody] AppointmentLog upAppointment) {
         
-        var existingAppointment = await _appointmentsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefaultAsync();
-        if (existingAppointment == null) {
-            return NotFound("Schedule not found");
+        var existingLog = await _appointmentsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefaultAsync();
+        if (existingLog == null) {
+            return NotFound("Log not found");
         }
         
         await _appointmentsCollection.ReplaceOneAsync(s => s.Id == upAppointment.Id, upAppointment);
 
         return Ok(upAppointment);
     }
-
+    
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Secretary))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpDelete]
-    public async Task<IActionResult> DeleteSchedule(Guid id) {
+    public async Task<IActionResult> DeleteLog(Guid id) {
 
-        var scheduleToDelete = await _appointmentsCollection.Find(s => s.Id == id).FirstOrDefaultAsync();
-        if (scheduleToDelete == null) {
-            return BadRequest("Schedule Appointment does not exist");
+        var logToDelete = await _appointmentsCollection.Find(s => s.Id == id).FirstOrDefaultAsync();
+        if (logToDelete == null) {
+            return BadRequest("Log Appointment does not exist");
         }
         
         await _appointmentsCollection.DeleteOneAsync(s => s.Id == id);

@@ -1,6 +1,6 @@
 namespace Server.Models;
 
-public class ScheduledAppointment {
+public class AppointmentSchedule {
     //Remember, anyone can schedule an appointment
     public Guid Id { get; set; }
     public string clientId { get; set; } = string.Empty;
@@ -13,7 +13,7 @@ public class ScheduledAppointment {
     public DateTime dateTime { get; set; }
     public string observation { get; set;} = string.Empty;
 
-    public ScheduledAppointment(string _clientId){
+    public AppointmentSchedule(string _clientId){
         clientId = _clientId;
     }
 }
