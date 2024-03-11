@@ -3,7 +3,7 @@ version: '3.8'
 services:
   react-app:
     image: node:latest
-    container_name: front-end
+    container_name: front-end_flow
     working_dir: /app
     command: sh -c "npm install && npm start"
     ports:
@@ -11,7 +11,7 @@ services:
 
   web-api:
     image: mcr.microsoft.com/dotnet/core/sdk:latest
-    container_name: back-end
+    container_name: back-end_flow
     working_dir: /app
     command: sh -c "dotnet restore && dotnet watch run"
     ports:
@@ -22,7 +22,7 @@ services:
 
   mysql-db:
     image: mysql:latest
-    container_name: mysql
+    container_name: mysql_flow
     environment:
       MYSQL_ROOT_PASSWORD: xpvista7810
       MYSQL_DATABASE: mysql_db
@@ -35,7 +35,7 @@ services:
 
   mongo-db:
     image: mongo:latest
-    container_name: mongo
+    container_name: mongo_flow
     environment:
       MONGO_INITDB_ROOT_USERNAME: lendacerda
       MONGO_INITDB_ROOT_PASSWORD: xpvista7810
