@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Server.Models;
-using MongoDB.Driver;
 using Newtonsoft.Json;
 
 namespace webserver.Controllers;
