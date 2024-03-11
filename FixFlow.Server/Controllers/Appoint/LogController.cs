@@ -45,8 +45,10 @@ public class LogController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentLog>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public IActionResult ReadLogs( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
-
+    public IActionResult ReadLogs( string? clientId, string? attendantId, [FromQuery] TimeInterval? interval,
+                                    CompletedStatus? status, string? sort,
+                                    string? place, int offset = 0, int limit = 20) {
+                                        
         var filterBuilder = Builders<AppointmentLog>.Filter;
         var filter = filterBuilder.Empty;
 
@@ -56,19 +58,26 @@ public class LogController : ControllerBase {
         if (!string.IsNullOrEmpty(attendantId)) {
             filter &= filterBuilder.Eq(s => s.AttendantId, attendantId);
         }
-        if (fromDate.HasValue) {
-            filter &= filterBuilder.Gte(s => s.dateTime, fromDate.Value);
+        if (!string.IsNullOrEmpty(place)) {
+            filter &= filterBuilder.Eq(s => s.place, place);
+        }
+        if (status.HasValue) {
+            filter &= filterBuilder.Eq(s => s.status, status);
+        }
+        if (interval != null) {
+            filter &= filterBuilder.Gte(s => s.interval.start, interval.start);
+            filter &= filterBuilder.Lte(s => s.interval.finish, interval.finish);
         }
 
         var appointments = _appointmentsCollection.Find(filter);
 
         if (!string.IsNullOrEmpty(sort)) {
             if(sort=="client"){
-                appointments = appointments.SortBy(s => s.clientId).ThenBy(s => s.AttendantId).ThenBy(s => s.dateTime);
+                appointments = appointments.SortBy(s => s.clientId).ThenBy(s => s.AttendantId).ThenBy(s => s.interval.start).ThenBy(s=>s.interval.finish);
             }else if(sort=="attendant"){
-                appointments = appointments.SortBy(s => s.AttendantId).ThenBy(s => s.clientId).ThenBy(s => s.dateTime);
+                appointments = appointments.SortBy(s => s.AttendantId).ThenBy(s => s.clientId).ThenBy(s => s.interval.start).ThenBy(s=>s.interval.finish);
             }else{
-                appointments = appointments.SortBy(s => s.dateTime);
+                appointments = appointments.SortBy(s => s.interval.start).ThenBy(s=>s.interval.finish);
             }
         }
 
