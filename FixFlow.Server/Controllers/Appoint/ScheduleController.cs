@@ -43,53 +43,47 @@ public class ScheduleController : ControllerBase {
         return Ok(response);
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Secretary>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ScheduledAppointment>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public async Task<IActionResult> ReadSchedules(string? username, TimeInterval? shift, int? offset, int limit, string? sort) {
+    public IActionResult GetAppointments( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
         
-        if (limit < 1) {
-            return BadRequest("Limit parameter must be a natural number greater than 0");
+        var filterBuilder = Builders<ScheduledAppointment>.Filter;
+        var filter = filterBuilder.Empty;
+
+        if (!string.IsNullOrEmpty(clientId)) {
+            filter &= filterBuilder.Eq(s => s.clientId, clientId);
+        }
+        if (!string.IsNullOrEmpty(attendantId)) {
+            filter &= filterBuilder.Eq(s => s.AttendantId, attendantId);
+        }
+        if (fromDate.HasValue) {
+            filter &= filterBuilder.Gte(s => s.dateTime, fromDate.Value);
         }
 
-        var Secretarys = _context.Secretarys.AsQueryable();
+        var appointments = _appointmentsCollection.Find(filter);
 
-        if(!string.IsNullOrEmpty(username)){
-            Secretarys = Secretarys.Where(Secretary => Secretary.UserName!.Contains(username));
-        }
-
-        if(shift!=null){
-            Secretarys = Secretarys.Where(Secretary => Secretary.shift.start >= shift.start);
-            Secretarys = Secretarys.Where(Secretary => Secretary.shift.finish <= shift.finish);
-        }
-
-        if(!string.IsNullOrEmpty(sort)){
-            sort = sort.ToLower();
-            switch (sort) {
-                case "name":
-                    Secretarys = Secretarys.OrderBy(emp => emp.UserName);
-                    break;
-                case "shift":
-                    Secretarys = Secretarys.OrderBy(emp => emp.shift.start).ThenBy(emp=>emp.shift.finish);
-                    break;
+        if (!string.IsNullOrEmpty(sort)) {
+            if(sort=="client"){
+                appointments.SortBy(s=>s.clientId).ThenBy(s=>s.AttendantId).ThenBy(s=>s.dateTime);
+            }else if(sort=="attendant"){
+                appointments.SortBy(s=>s.AttendantId).ThenBy(s=>s.clientId).ThenBy(s=>s.dateTime);
+            }else{
+                appointments.SortBy(s=>s.dateTime);
             }
         }
 
-        if(offset.HasValue){
-            Secretarys = Secretarys.Skip(offset.Value);
-        }
-        Secretarys = Secretarys.Take(limit);
+        appointments = appointments
+            .Skip(offset)
+            .Limit(limit)
+            .ToList()
+            .ToArray();
 
-        var resultQuery = await Secretarys.ToArrayAsync();
-        var resultsArray = resultQuery.Select(c=>(SecretaryDTO)c).ToArray();
-        
-        if(resultsArray.Length==0){
+        if (appointments.Length == 0) {
             return NotFound();
         }
-        
-        var response = JsonConvert.SerializeObject(resultsArray);
 
-        return Ok(response);
+        return Ok(JsonConvert.SerializeObject(appointments));
     }
     
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Secretary))]
