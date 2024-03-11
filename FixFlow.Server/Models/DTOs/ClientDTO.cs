@@ -11,7 +11,7 @@ public class ClientDTO {
     public static explicit operator ClientDTO(Client client){
         return new ClientDTO {
             Id = client.Id,
-            FullName = client.Fullname,
+            FullName = client.FullName,
             PhoneNumber = client.PhoneNumber!,
             CPF = client.CPF,
             Email = client.Email

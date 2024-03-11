@@ -113,7 +113,7 @@ public class ClientController : ControllerBase {
     [HttpPost]
     public async Task<IActionResult> CreateClient([FromBody] ClientDTO clientDto, string password) {
 
-        var existingName = _context.Clients.Where(c=>c.Fullname == clientDto.FullName);
+        var existingName = _context.Clients.Where(c=>c.FullName == clientDto.FullName);
         if(existingName != null){
             return BadRequest("FullName already registered!");
         }
@@ -189,8 +189,8 @@ public class ClientController : ControllerBase {
     /// Deletes the Client with the given Id
     /// </summary>
     /// <returns>NoContent if successfull</returns>
-    /// <response code="200">User was found, and thus deleted</response>
-    /// <response code="400">User not found</response>
+    /// <response code="200">Client was found, and thus deleted</response>
+    /// <response code="400">Client not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Client))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]

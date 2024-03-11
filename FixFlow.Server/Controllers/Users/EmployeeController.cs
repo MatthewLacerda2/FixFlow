@@ -70,7 +70,7 @@ public class EmployeeController : ControllerBase {
         }
 
         var Employees = _context.Employees.AsQueryable();
-//fullname, cpf, salary, shift, appointments
+
         if(!string.IsNullOrEmpty(username)){
             Employees = Employees.Where(Employee => Employee.UserName!.Contains(username));
         }
@@ -126,30 +126,17 @@ public class EmployeeController : ControllerBase {
             return BadRequest("FullName already registered!");
         }
 
+        var existingCPF = _context.Employees.Where(c=>c.CPF == EmployeeDto.CPF);
+        if (existingCPF != null) {
+            return BadRequest("CPF already registered!");
+        }
+
         var existingPhone = _context.Employees.Where(c=>c.PhoneNumber == EmployeeDto.PhoneNumber);
         if(existingPhone != null){
             return BadRequest("PhoneNumber already registered!");
         }
 
-        if(!string.IsNullOrEmpty(EmployeeDto.CPF)){
-            var existingCPF = _context.Employees.Where(c=>c.CPF == EmployeeDto.CPF);
-            if (existingCPF != null) {
-                return BadRequest("CPF already registered!");
-            }
-        }else{
-            EmployeeDto.CPF = string.Empty;
-        }
-        
-        if(!string.IsNullOrEmpty(EmployeeDto.Email)){
-            var existingEmail = await _userManager.FindByEmailAsync(EmployeeDto.Email);
-            if (existingEmail != null) {
-                return BadRequest("Email already registered!");
-            }
-        }else{
-            EmployeeDto.Email = string.Empty;
-        }
-
-        Employee Employee = new Employee (EmployeeDto.FullName, EmployeeDto.CPF, EmployeeDto.PhoneNumber, EmployeeDto.Email);
+        Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.CPF, EmployeeDto.PhoneNumber, EmployeeDto.salary, EmployeeDto.shift);
 
         var result = await _userManager.CreateAsync(Employee, password);
 
@@ -177,15 +164,12 @@ public class EmployeeController : ControllerBase {
         }
 
         existingEmployee.UserName = upEmployee.FullName;
+        existingEmployee.CPF = upEmployee.CPF;
         existingEmployee.PhoneNumber = upEmployee.PhoneNumber;
-
-        if(!string.IsNullOrEmpty(upEmployee.CPF)){
-            existingEmployee.CPF = upEmployee.CPF;
-        }
-        if(!string.IsNullOrEmpty(upEmployee.Email)){
-            existingEmployee.Email = upEmployee.Email;
-        }
-
+        existingEmployee.shift = upEmployee.shift;
+        existingEmployee.salary = upEmployee.salary;
+        existingEmployee.appointmentsDone = upEmployee.appointmentsDone;
+        
         await _context.SaveChangesAsync();
 
         var response = JsonConvert.SerializeObject((EmployeeDTO)existingEmployee);
@@ -197,8 +181,8 @@ public class EmployeeController : ControllerBase {
     /// Deletes the Employee with the given Id
     /// </summary>
     /// <returns>NoContent if successfull</returns>
-    /// <response code="200">User was found, and thus deleted</response>
-    /// <response code="400">User not found</response>
+    /// <response code="200">Employee was found, and thus deleted</response>
+    /// <response code="400">Employee not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Employee))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]

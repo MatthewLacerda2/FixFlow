@@ -4,8 +4,8 @@ namespace Server.Models;
 public class Secretary : IdentityUser {
 
     public DateTime LastLogin { get; set; }
-    public string Fullname { get; set; } = string.Empty;
-    public string CPF { get; set; } = string.Empty;
+    public string Fullname { get; set; }
+    public string CPF { get; set; }
 
     public float salary { get; set; }
     public TimeInterval shift { get; set; }
