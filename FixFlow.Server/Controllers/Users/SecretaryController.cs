@@ -20,15 +20,13 @@ public class SecretaryController : ControllerBase {
 
     private readonly ServerContext _context;
     private readonly UserManager<Secretary> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
 
     /// <summary>
     /// Controller class for Secretary CRUD requests
     /// </summary>
-    public SecretaryController(ServerContext context, UserManager<Secretary> userManager, RoleManager<IdentityRole> roleManager){
+    public SecretaryController(ServerContext context, UserManager<Secretary> userManager){
         _context = context;
         _userManager = userManager;
-        _roleManager = roleManager;
     }
 
     /// <summary>

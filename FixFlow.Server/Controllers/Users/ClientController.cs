@@ -20,15 +20,13 @@ public class ClientController : ControllerBase {
 
     private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
 
     /// <summary>
     /// Controller class for Client CRUD requests
     /// </summary>
-    public ClientController(ServerContext context, UserManager<Client> userManager, RoleManager<IdentityRole> roleManager){
+    public ClientController(ServerContext context, UserManager<Client> userManager){
         _context = context;
         _userManager = userManager;
-        _roleManager = roleManager;
     }
 
     /// <summary>

@@ -20,15 +20,13 @@ public class EmployeeController : ControllerBase {
 
     private readonly ServerContext _context;
     private readonly UserManager<Employee> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
 
     /// <summary>
     /// Controller class for Employee CRUD requests
     /// </summary>
-    public EmployeeController(ServerContext context, UserManager<Employee> userManager, RoleManager<IdentityRole> roleManager){
+    public EmployeeController(ServerContext context, UserManager<Employee> userManager){
         _context = context;
         _userManager = userManager;
-        _roleManager = roleManager;
     }
 
     /// <summary>
