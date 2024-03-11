@@ -13,7 +13,7 @@ services:
       - "3000:3000" #PLACEHOLDER
 
   web-api:
-    image: mcr.microsoft.com/dotnet/core/sdk:3.1
+    image: mcr.microsoft.com/dotnet/core/sdk:latest
     container_name: back-end
     working_dir: /app
     command: sh -c "dotnet restore && dotnet watch run"
