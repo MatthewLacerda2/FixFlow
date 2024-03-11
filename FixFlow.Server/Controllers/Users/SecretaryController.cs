@@ -35,10 +35,12 @@ public class SecretaryController : ControllerBase {
     /// <returns>Secretary with the given Id. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Secretary's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public IActionResult ReadSecretary(string id) {
+    public async Task<IActionResult> ReadSecretary(string id) {
 
-        var Secretary = _context.Secretarys.Find(id);
+        var Secretary = await _context.Secretarys.FindAsync(id);
         if(Secretary==null){
             return NotFound();
         }
@@ -98,7 +100,7 @@ public class SecretaryController : ControllerBase {
         var resultQuery = await Secretarys.ToArrayAsync();
         var resultsArray = resultQuery.Select(c=>(SecretaryDTO)c).ToArray();
         
-        if(resultsArray==null || resultsArray.Length==0){
+        if(resultsArray.Length==0){
             return NotFound();
         }
         
@@ -183,7 +185,6 @@ public class SecretaryController : ControllerBase {
     /// <response code="400">Secretary not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Secretary))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteSecretary(string id) {
 

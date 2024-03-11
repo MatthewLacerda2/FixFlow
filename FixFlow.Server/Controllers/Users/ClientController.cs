@@ -35,10 +35,12 @@ public class ClientController : ControllerBase {
     /// <returns>Client with the given Id. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Client's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public IActionResult ReadClient(string id) {
+    public async Task<IActionResult> ReadClient(string id) {
 
-        var client = _context.Clients.Find(id);
+        var client = await _context.Clients.FindAsync(id);
         if(client==null){
             return NotFound();
         }
@@ -90,7 +92,7 @@ public class ClientController : ControllerBase {
         var resultQuery = await clients.ToArrayAsync();
         var resultsArray = resultQuery.Select(c=>(ClientDTO)c).ToArray();
         
-        if(resultsArray==null || resultsArray.Length==0){
+        if(resultsArray.Length==0){
             return NotFound();
         }
         
@@ -183,7 +185,6 @@ public class ClientController : ControllerBase {
     /// <response code="400">Client not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Client))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteClient(string id) {
 

@@ -35,10 +35,12 @@ public class EmployeeController : ControllerBase {
     /// <returns>Employee with the given Id. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Employee's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public IActionResult ReadEmployee(string id) {
+    public async Task<IActionResult> ReadEmployee(string id) {
 
-        var employee = _context.Employees.Find(id);
+        var employee = await _context.Employees.FindAsync(id);
         if(employee==null){
             return NotFound();
         }
@@ -98,7 +100,7 @@ public class EmployeeController : ControllerBase {
         var resultQuery = await Employees.ToArrayAsync();
         var resultsArray = resultQuery.Select(c=>(EmployeeDTO)c).ToArray();
         
-        if(resultsArray==null || resultsArray.Length==0){
+        if(resultsArray.Length==0){
             return NotFound();
         }
         
@@ -183,7 +185,6 @@ public class EmployeeController : ControllerBase {
     /// <response code="400">Employee not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Employee))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployee(string id) {
 
