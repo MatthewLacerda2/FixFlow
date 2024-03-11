@@ -38,9 +38,9 @@ public class EmployeeController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public IActionResult ReadEmployee(string id) {
+    public async Task<IActionResult> ReadEmployee(string id) {
 
-        var employee = _context.Employees.Find(id);
+        var employee = await _context.Employees.FindAsync(id);
         if(employee==null){
             return NotFound();
         }
@@ -100,7 +100,7 @@ public class EmployeeController : ControllerBase {
         var resultQuery = await Employees.ToArrayAsync();
         var resultsArray = resultQuery.Select(c=>(EmployeeDTO)c).ToArray();
         
-        if(resultsArray==null || resultsArray.Length==0){
+        if(resultsArray.Length==0){
             return NotFound();
         }
         

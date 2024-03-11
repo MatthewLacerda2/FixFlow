@@ -28,15 +28,15 @@ public class ScheduleController : ControllerBase {
         _appointmentsCollection = database.GetCollection<ScheduledAppointment>("ScheduledAppointments");
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ScheduledAppointment))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public IActionResult ReadSchedule(Guid id){
+    public async Task<IActionResult> ReadSchedule(Guid id) {
 
-        var schedule = _appointmentsCollection.Find(s=>s.Id == id).FirstOrDefault();
+        var schedule = await _appointmentsCollection.FindAsync(s => s.Id == id);
 
-        if(schedule==null){
-            return NotFound("Schedule not found");
+        if(schedule==null) {
+            return NotFound();
         }
 
         var response = JsonConvert.SerializeObject(schedule);
@@ -83,7 +83,7 @@ public class ScheduleController : ControllerBase {
         var resultQuery = await Secretarys.ToArrayAsync();
         var resultsArray = resultQuery.Select(c=>(SecretaryDTO)c).ToArray();
         
-        if(resultsArray==null || resultsArray.Length==0){
+        if(resultsArray.Length==0){
             return NotFound();
         }
         

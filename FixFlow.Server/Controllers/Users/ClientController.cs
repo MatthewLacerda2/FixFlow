@@ -38,9 +38,9 @@ public class ClientController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public IActionResult ReadClient(string id) {
+    public async Task<IActionResult> ReadClient(string id) {
 
-        var client = _context.Clients.Find(id);
+        var client = await _context.Clients.FindAsync(id);
         if(client==null){
             return NotFound();
         }
@@ -92,7 +92,7 @@ public class ClientController : ControllerBase {
         var resultQuery = await clients.ToArrayAsync();
         var resultsArray = resultQuery.Select(c=>(ClientDTO)c).ToArray();
         
-        if(resultsArray==null || resultsArray.Length==0){
+        if(resultsArray.Length==0){
             return NotFound();
         }
         
