@@ -126,17 +126,22 @@ public class EmployeeController : ControllerBase {
             return BadRequest("FullName already registered!");
         }
 
+        var existingEmail = await _userManager.FindByEmailAsync(EmployeeDto.Email);
+        if (existingEmail != null) {
+            return BadRequest("Email already registered!");
+        }
+
         var existingCPF = _context.Employees.Where(c=>c.CPF == EmployeeDto.CPF);
         if (existingCPF != null) {
             return BadRequest("CPF already registered!");
         }
-
+        
         var existingPhone = _context.Employees.Where(c=>c.PhoneNumber == EmployeeDto.PhoneNumber);
         if(existingPhone != null){
             return BadRequest("PhoneNumber already registered!");
         }
 
-        Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.CPF, EmployeeDto.PhoneNumber, EmployeeDto.salary, EmployeeDto.shift);
+        Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.Email, EmployeeDto.CPF, EmployeeDto.PhoneNumber, EmployeeDto.salary, EmployeeDto.shift);
 
         var result = await _userManager.CreateAsync(Employee, password);
 
@@ -163,12 +168,7 @@ public class EmployeeController : ControllerBase {
             return BadRequest("Employee does not Exist!");
         }
 
-        existingEmployee.UserName = upEmployee.FullName;
-        existingEmployee.CPF = upEmployee.CPF;
-        existingEmployee.PhoneNumber = upEmployee.PhoneNumber;
-        existingEmployee.shift = upEmployee.shift;
-        existingEmployee.salary = upEmployee.salary;
-        existingEmployee.appointmentsDone = upEmployee.appointmentsDone;
+        existingEmployee = (Employee)upEmployee;
         
         await _context.SaveChangesAsync();
 

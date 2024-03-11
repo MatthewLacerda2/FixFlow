@@ -141,7 +141,7 @@ public class ClientController : ControllerBase {
             clientDto.Email = string.Empty;
         }
 
-        Client client = new Client (clientDto.FullName, clientDto.CPF, clientDto.PhoneNumber, clientDto.Email);
+        Client client = new Client (clientDto.FullName, clientDto.CPF, clientDto.PhoneNumber, clientDto.Email, clientDto.additionalNote);
 
         var result = await _userManager.CreateAsync(client, password);
 
@@ -168,15 +168,7 @@ public class ClientController : ControllerBase {
             return BadRequest("Client does not Exist!");
         }
 
-        existingClient.UserName = upClient.FullName;
-        existingClient.PhoneNumber = upClient.PhoneNumber;
-
-        if(!string.IsNullOrEmpty(upClient.CPF)){
-            existingClient.CPF = upClient.CPF;
-        }
-        if(!string.IsNullOrEmpty(upClient.Email)){
-            existingClient.Email = upClient.Email;
-        }
+        existingClient = (Client)upClient;
 
         await _context.SaveChangesAsync();
 
