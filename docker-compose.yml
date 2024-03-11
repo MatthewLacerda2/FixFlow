@@ -2,10 +2,13 @@ version: '3.8'
 
 services:
   react-app:
-    image: node:14
+    image: node:latest
     container_name: front-end
     working_dir: /app
     command: sh -c "npm install && npm start"
+    resources:
+      limits:
+        memory: 1GB
     ports:
       - "3000:3000" #PLACEHOLDER
 
@@ -14,6 +17,9 @@ services:
     container_name: back-end
     working_dir: /app
     command: sh -c "dotnet restore && dotnet watch run"
+    resources:
+      limits:
+        memory: 1GB
     ports:
       - "5000:5000" #PLACEHOLDER
     depends_on:
@@ -28,6 +34,9 @@ services:
       MYSQL_DATABASE: mysql_db
       MYSQL_USER: lendacerda
       MYSQL_PASSWORD: xpvista7810
+    resources:
+      limits:
+        memory: 1GB
     ports:
       - "3306:3306"
     volumes:
@@ -40,6 +49,9 @@ services:
       MONGO_INITDB_ROOT_USERNAME: lendacerda
       MONGO_INITDB_ROOT_PASSWORD: xpvista7810
       MONGO_INITDB_DATABASE: mongo_db
+    resources:
+      limits:
+        memory: 1GB
     ports:
       - "27017:27017" #PLACEHOLDER
     volumes:
