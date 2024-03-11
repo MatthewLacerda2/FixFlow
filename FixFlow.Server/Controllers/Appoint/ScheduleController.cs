@@ -26,15 +26,14 @@ public class ScheduleController : ControllerBase {
         _context = context;
     }
 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
     public IActionResult ReadSchedule(string id) {
 
-        var Secretary = _context.Secretarys.Find(id);
-        if(Secretary==null){
-            return NotFound();
-        }
+        //Find Schedule by Id
 
-        var response = JsonConvert.SerializeObject((SecretaryDTO)Secretary);
+        var response = JsonConvert.SerializeObject(//...);
 
         return Ok(response);
     }

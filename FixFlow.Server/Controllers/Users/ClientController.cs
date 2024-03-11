@@ -35,6 +35,8 @@ public class ClientController : ControllerBase {
     /// <returns>Client with the given Id. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Client's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
     public IActionResult ReadClient(string id) {
 

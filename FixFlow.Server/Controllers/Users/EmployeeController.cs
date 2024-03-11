@@ -35,6 +35,8 @@ public class EmployeeController : ControllerBase {
     /// <returns>Employee with the given Id. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Employee's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
     public IActionResult ReadEmployee(string id) {
 
