@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.OpenApi.Models;
 using Server.Models;
 using Server.Data;
-using MongoDB.Driver;
 
 namespace Server;
 
@@ -33,15 +32,6 @@ public class Startup {
         // Configure DbContext for MySQL
         services.AddDbContext<ServerContext>(options =>
             options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 23))));
-
-        // Configure MongoDB
-        string connectionString = Configuration.GetConnectionString("MongoDbConnection")!;
-        services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
-        services.AddSingleton<IMongoDatabase>(provider =>
-        {
-            var client = provider.GetRequiredService<IMongoClient>();
-            return client.GetDatabase("mongo_db");
-        });
 
         // Configure authentication
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
