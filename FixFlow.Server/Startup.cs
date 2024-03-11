@@ -18,7 +18,15 @@ public class Startup {
 
     public void ConfigureServices(IServiceCollection services) {
 
-        services.AddIdentity<Client, IdentityRole>()
+        services.AddIdentityCore<Client>()
+            .AddEntityFrameworkStores<ServerContext>()
+            .AddDefaultTokenProviders();
+
+        services.AddIdentityCore<Employee>()
+            .AddEntityFrameworkStores<ServerContext>()
+            .AddDefaultTokenProviders();
+
+        services.AddIdentityCore<Secretary>()
             .AddEntityFrameworkStores<ServerContext>()
             .AddDefaultTokenProviders();
 
