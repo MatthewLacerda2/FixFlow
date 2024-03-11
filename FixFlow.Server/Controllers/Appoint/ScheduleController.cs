@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Models;
 using Server.Models.DTO;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 
 namespace webserver.Controllers;
@@ -17,24 +18,28 @@ namespace webserver.Controllers;
 [Produces("application/json")]
 public class ScheduleController : ControllerBase {
 
-    private readonly ServerContext _context;
+    private readonly IMongoCollection<ScheduledAppointment> _appointmentsCollection;
 
     /// <summary>
     /// Controller class for Scheduled Appointment CRUD requests
     /// </summary>
-    public ScheduleController(ServerContext context){
-        _context = context;
+    public ScheduleController(IMongoClient mongoClient) {
+        var database = mongoClient.GetDatabase("MongoDbConnection");
+        _appointmentsCollection = database.GetCollection<ScheduledAppointment>("ScheduledAppointments");
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public IActionResult ReadSchedule(string id) {
+    public IActionResult ReadSchedule(Guid id){
 
-        //Find Schedule by Id
+        var schedule = _appointmentsCollection.Find(s=>s.Id == id).FirstOrDefault();
 
-        var response = JsonConvert.SerializeObject(//...);
+        if(schedule==null){
+            return NotFound("Schedule not found");
+        }
 
+        var response = JsonConvert.SerializeObject(schedule);
         return Ok(response);
     }
 
