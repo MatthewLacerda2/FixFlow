@@ -4,7 +4,7 @@ namespace Server.Models;
 public class Employee : IdentityUser {
 
     public DateTime LastLogin { get; set; }
-    public string Fullname { get; set; }
+    public string FullName { get; set; }
     public string CPF { get; set; }
     
     public float salary { get; set; }
@@ -12,9 +12,10 @@ public class Employee : IdentityUser {
 
     public int appointmentsDone { get; set; }
 
-    public Employee(string fullname, string cpf, string phonenumber, float _salary, TimeInterval _shift){
+    public Employee(string fullname, string email, string cpf, string phonenumber, float _salary, TimeInterval _shift){
 
-        Fullname = fullname;
+        FullName = fullname;
+        Email = email;
         PhoneNumber = phonenumber;
         CPF = cpf;
 

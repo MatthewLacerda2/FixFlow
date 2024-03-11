@@ -121,7 +121,7 @@ public class EmployeeController : ControllerBase {
     [HttpPost]
     public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDTO EmployeeDto, string password) {
 
-        var existingName = _context.Employees.Where(c=>c.Fullname == EmployeeDto.FullName);
+        var existingName = _context.Employees.Where(c=>c.FullName == EmployeeDto.FullName);
         if(existingName != null){
             return BadRequest("FullName already registered!");
         }

@@ -5,14 +5,15 @@ namespace Server.Models;
 public class Client : IdentityUser {
 
     public DateTime LastLogin { get; set; }
-    public string FullName { get; set; } = string.Empty;
-    public string? CPF { get; set; } = string.Empty;
-    public string additionalNote { get; set; } = string.Empty;
+    public string FullName { get; set; }
+    public string CPF { get; set; }
+    public string additionalNote { get; set; }
 
-    public Client(string fullname, string cpf, string phonenumber, string email){
+    public Client(string fullname, string cpf, string _phoneNumber, string _email, string _additionalNote){
         FullName = fullname;
         CPF = cpf;
-        PhoneNumber = phonenumber;
-        Email = email;
+        PhoneNumber = _phoneNumber;
+        Email = _email;
+        additionalNote = _additionalNote;
     }
 }
