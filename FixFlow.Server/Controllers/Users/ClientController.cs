@@ -72,14 +72,14 @@ public class ClientController : ControllerBase {
         var clients = _context.Clients.AsQueryable();
 
         if(!string.IsNullOrEmpty(username)){
-            clients = clients.Where(client => client.UserName!.Contains(username));
+            clients = clients.Where(client => client.UserName!.Contains(username)); //Is this case sensitive???
         }
 
         if(!string.IsNullOrEmpty(sort)){
             sort = sort.ToLower();
             switch (sort) {
                 case "name":
-                    clients = clients.OrderBy(re => re.UserName);
+                    clients = clients.OrderBy(c => c.UserName);
                     break;
             }
         }
