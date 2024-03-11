@@ -4,6 +4,10 @@ public class TimeInterval {
 
     public DateTime start, finish;
 
+    public override string ToString() {
+        return interval;
+    }
+
     public string interval {
         get {
             CheckOrder();
