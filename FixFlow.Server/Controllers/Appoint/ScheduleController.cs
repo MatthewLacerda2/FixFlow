@@ -47,7 +47,7 @@ public class ScheduleController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public IActionResult GetAppointments( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
-        
+
         var filterBuilder = Builders<ScheduledAppointment>.Filter;
         var filter = filterBuilder.Empty;
 
@@ -65,25 +65,25 @@ public class ScheduleController : ControllerBase {
 
         if (!string.IsNullOrEmpty(sort)) {
             if(sort=="client"){
-                appointments.SortBy(s=>s.clientId).ThenBy(s=>s.AttendantId).ThenBy(s=>s.dateTime);
+                appointments = appointments.SortBy(s => s.clientId).ThenBy(s => s.AttendantId).ThenBy(s => s.dateTime);
             }else if(sort=="attendant"){
-                appointments.SortBy(s=>s.AttendantId).ThenBy(s=>s.clientId).ThenBy(s=>s.dateTime);
+                appointments = appointments.SortBy(s => s.AttendantId).ThenBy(s => s.clientId).ThenBy(s => s.dateTime);
             }else{
-                appointments.SortBy(s=>s.dateTime);
+                appointments = appointments.SortBy(s => s.dateTime);
             }
         }
 
-        appointments = appointments
+        var result = appointments
             .Skip(offset)
             .Limit(limit)
             .ToList()
             .ToArray();
 
-        if (appointments.Length == 0) {
+        if (result.Length == 0) {
             return NotFound();
         }
 
-        return Ok(JsonConvert.SerializeObject(appointments));
+        return Ok(JsonConvert.SerializeObject(result));
     }
     
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Secretary))]
