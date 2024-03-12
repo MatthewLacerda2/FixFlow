@@ -61,6 +61,8 @@ public class Startup {
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "FlowAPI", Version = "v1" });
+            c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
         });
 
         // Add other services as needed
@@ -71,9 +73,10 @@ public class Startup {
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Flow API v0.5"));
         }
+
+        app.UseSwagger();
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Flow API v1"));
 
         app.UseRouting();
         app.UseAuthentication();
