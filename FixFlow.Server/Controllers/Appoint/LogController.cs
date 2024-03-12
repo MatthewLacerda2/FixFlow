@@ -126,7 +126,7 @@ public class LogController : ControllerBase {
         return Ok(upAppointment);
     }
     
-    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Secretary))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpDelete]
     public async Task<IActionResult> DeleteLog(Guid id) {
