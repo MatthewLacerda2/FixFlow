@@ -11,9 +11,16 @@ function App() {
     return (
         <Routes>
             <Route path = "/" element = {<MainPage/>}/>
-            <Route path = "/Client" element = {<ClientPage/>}/>
-            <Route path = "/Employee" element = {<EmployeePage/>}/>
-            <Route path = "/Secretary" element = {<SecretaryPage/>}/>
+            <Route path = "/Client">
+                <Route index element={<ClientPage/>}/>
+                <Route path=":id" element={<ClientPage/>}/>
+            </Route>
+            <Route path = "/Employee">
+                <Route index element={<EmployeePage/>}/>
+            </Route>
+            <Route path = "/Secretary">
+                <Route index element={<SecretaryPage/>}/>
+            </Route>
             <Route path = "/AppointmentSchedule/:id" element = {<AppointmentSchedule/>}/>
             <Route path = "*" element = {<NotFoundPage/>}/>
         </Routes>
