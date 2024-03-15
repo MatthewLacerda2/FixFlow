@@ -6,6 +6,7 @@ using Server.Data;
 using Server.Models;
 using Server.Models.DTO;
 using Newtonsoft.Json;
+using Server.Models.Utils;
 
 namespace webserver.Controllers;
 
@@ -62,6 +63,7 @@ public class ClientController : ControllerBase {
     /// <response code="404">If no Clients fit the given filters</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [Authorize(Roles = Common.Employee_Role+", "+Common.Secretary_Role)]
     [HttpGet]
     public async Task<IActionResult> ReadClients(string? username, int? offset, int limit, string? sort) {
 
@@ -110,7 +112,7 @@ public class ClientController : ControllerBase {
     /// <response code="400">In case the Client's data is already Registered (it will tell which data)</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Client))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [Authorize(Server.Models.Utils.Common.Secretary_Role)]
+    [Authorize(Common.Secretary_Role)]
     [HttpPost]
     public async Task<IActionResult> CreateClient([FromBody] ClientDTO clientDto, string password) {
 

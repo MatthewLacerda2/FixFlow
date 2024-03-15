@@ -6,6 +6,7 @@ using Server.Data;
 using Server.Models;
 using Server.Models.DTO;
 using Newtonsoft.Json;
+using Server.Models.Utils;
 
 namespace webserver.Controllers;
 
@@ -37,6 +38,7 @@ public class EmployeeController : ControllerBase {
     /// <response code="404">If there is none with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [Authorize(Roles = Common.Employee_Role+", "+Common.Secretary_Role)]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadEmployee(string id) {
 
@@ -62,6 +64,7 @@ public class EmployeeController : ControllerBase {
     /// <response code="404">If no Employees fit the given filters</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Employee>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [Authorize(Roles = Common.Employee_Role+", "+Common.Secretary_Role)]
     [HttpGet]
     public async Task<IActionResult> ReadEmployees(string? username, TimeInterval? shift, int? offset, int limit, string? sort) {
         
@@ -118,7 +121,7 @@ public class EmployeeController : ControllerBase {
     /// <response code="400">In case the Employee's data is already Registered (it will tell which data)</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
+    [Authorize(Roles=Common.Secretary_Role)]
     [HttpPost]
     public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDTO EmployeeDto, string password) {
 
@@ -161,6 +164,7 @@ public class EmployeeController : ControllerBase {
     /// <response code="400">If a Employee with the given Id was not found</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [Authorize(Roles = Common.Employee_Role+", "+Common.Secretary_Role)]
     [HttpPatch]
     public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeDTO upEmployee) {
 
@@ -186,7 +190,7 @@ public class EmployeeController : ControllerBase {
     /// <response code="400">Employee not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Employee))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
+    [Authorize(Roles=Common.Secretary_Role)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployee(string id) {
 
