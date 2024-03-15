@@ -12,7 +12,7 @@ namespace webserver.Controllers;
 /// <summary>
 /// Controller class for Client CRUD requests
 /// </summary>
-[Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
+[Authorize]
 [ApiController]
 [Route("api/v1/client")]
 [Produces("application/json")]
@@ -110,6 +110,7 @@ public class ClientController : ControllerBase {
     /// <response code="400">In case the Client's data is already Registered (it will tell which data)</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Client))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [Authorize(Server.Models.Utils.Common.Secretary_Role)]
     [HttpPost]
     public async Task<IActionResult> CreateClient([FromBody] ClientDTO clientDto, string password) {
 
