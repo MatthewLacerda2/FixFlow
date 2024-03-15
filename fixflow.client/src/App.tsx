@@ -6,6 +6,7 @@ import EmployeePage from './Pages/Employee/EmployeePage';
 import SecretaryPage from './Pages/Secretary/SecretaryPage';
 import AppointmentSchedule from './Pages/Shared/AppointmentSchedule';
 import NotFoundPage from './Pages/NotFoundPage';
+import RegisterSecretary from './Pages/Secretary/RegisterSecretary';
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
             </Route>
             <Route path = "/Secretary">
                 <Route index element={<SecretaryPage/>}/>
+                <Route path="/RegisterSecretary" element={<RegisterSecretary/>}/>
             </Route>
             <Route path = "/AppointmentSchedule/:id" element = {<AppointmentSchedule/>}/>
             <Route path = "*" element = {<NotFoundPage/>}/>
