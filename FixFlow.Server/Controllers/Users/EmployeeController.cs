@@ -12,7 +12,7 @@ namespace webserver.Controllers;
 /// <summary>
 /// Controller class for Employee CRUD requests
 /// </summary>
-[Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
+[Authorize]
 [ApiController]
 [Route("api/v1/employee")]
 [Produces("application/json")]
@@ -118,6 +118,7 @@ public class EmployeeController : ControllerBase {
     /// <response code="400">In case the Employee's data is already Registered (it will tell which data)</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
     [HttpPost]
     public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDTO EmployeeDto, string password) {
 
@@ -185,6 +186,7 @@ public class EmployeeController : ControllerBase {
     /// <response code="400">Employee not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Employee))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployee(string id) {
 
