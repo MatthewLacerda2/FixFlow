@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Server.Models;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using Server.Models.Utils;
 
 namespace webserver.Controllers;
 
@@ -11,6 +12,7 @@ namespace webserver.Controllers;
 /// Controller class for Scheduled Appointment CRUD requests
 /// </summary>
 [ApiController]
+[Authorize]
 [Route("api/v1/schedules")]
 [Produces("application/json")]
 public class ScheduleController : ControllerBase {
@@ -28,6 +30,7 @@ public class ScheduleController : ControllerBase {
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentSchedule))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadSchedule(Guid id) {
 
@@ -43,7 +46,7 @@ public class ScheduleController : ControllerBase {
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentSchedule>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-    [Authorize]
+    [Authorize(Roles = Common.Employee_Role+", "+Common.Secretary_Role)]
     [HttpGet]
     public IActionResult ReadSchedules( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
 
@@ -87,7 +90,6 @@ public class ScheduleController : ControllerBase {
     
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AppointmentSchedule))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateSchedule([FromBody] AppointmentSchedule newAppointment) {
 
@@ -105,7 +107,6 @@ public class ScheduleController : ControllerBase {
     
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentSchedule))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [Authorize]
     [HttpPut]
     public async Task<IActionResult> UpdateSchedule([FromBody] AppointmentSchedule upAppointment) {
         
@@ -121,7 +122,6 @@ public class ScheduleController : ControllerBase {
 
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Secretary))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> DeleteSchedule(Guid id) {
 
