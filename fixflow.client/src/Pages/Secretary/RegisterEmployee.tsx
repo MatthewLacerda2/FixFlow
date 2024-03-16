@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RegisterEmployee = () => {
+const RegisterEmployeePage = () => {
   return (
     <div>
       <h1>Hello, this is an example component!</h1>
@@ -9,4 +9,4 @@ const RegisterEmployee = () => {
   );
 };
 
-export default RegisterEmployee;
+export default RegisterEmployeePage;

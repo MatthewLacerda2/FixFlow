@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RegisterSecretary = () => {
+const RegisterSecretaryPage = () => {
   return (
     <div>
       <h1>Hello, this is an example component!</h1>
@@ -9,4 +9,4 @@ const RegisterSecretary = () => {
   );
 };
 
-export default RegisterSecretary;
+export default RegisterSecretaryPage;
