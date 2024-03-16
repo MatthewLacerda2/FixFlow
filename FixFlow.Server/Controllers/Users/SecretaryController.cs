@@ -35,7 +35,7 @@ public class SecretaryController : ControllerBase {
     /// <returns>Secretary with the given Id. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Secretary's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SecretaryDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadSecretary(string id) {
@@ -60,7 +60,7 @@ public class SecretaryController : ControllerBase {
     /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
     /// <response code="200">Returns an array of Secretary DTOs</response>
     /// <response code="404">If no Secretarys fit the given filters</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Secretary>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SecretaryDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public async Task<IActionResult> ReadSecretarys(string? username, TimeInterval? shift, int? offset, int limit, string? sort) {
@@ -116,7 +116,7 @@ public class SecretaryController : ControllerBase {
     /// <response code="200">SecretaryDTO</response>
     /// <response code="400">Returns a string with the requirements that were not filled</response>
     /// <response code="400">In case the Secretary's data is already Registered (it will tell which data)</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Secretary))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SecretaryDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPost]
     public async Task<IActionResult> CreateSecretary([FromBody] SecretaryDTO SecretaryDto, string password) {
@@ -158,7 +158,7 @@ public class SecretaryController : ControllerBase {
     /// <returns>Secretary's DTO with the updated Data</returns>
     /// <response code="200">Secretary's DTO with the updated data</response>
     /// <response code="400">If a Secretary with the given Id was not found</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Secretary))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SecretaryDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPatch]
     public async Task<IActionResult> UpdateSecretary([FromBody] SecretaryDTO upSecretary) {
@@ -183,7 +183,7 @@ public class SecretaryController : ControllerBase {
     /// <returns>NoContent if successfull</returns>
     /// <response code="200">Secretary was found, and thus deleted</response>
     /// <response code="400">Secretary not found</response>
-    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Secretary))]
+    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(SecretaryDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteSecretary(string id) {

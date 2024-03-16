@@ -35,7 +35,7 @@ public class EmployeeController : ControllerBase {
     /// <returns>Employee with the given Id. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Employee's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadEmployee(string id) {
@@ -60,7 +60,7 @@ public class EmployeeController : ControllerBase {
     /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
     /// <response code="200">Returns an array of Employee DTOs</response>
     /// <response code="404">If no Employees fit the given filters</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Employee>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public async Task<IActionResult> ReadEmployees(string? username, TimeInterval? shift, int? offset, int limit, string? sort) {
@@ -116,7 +116,7 @@ public class EmployeeController : ControllerBase {
     /// <response code="200">EmployeeDTO</response>
     /// <response code="400">Returns a string with the requirements that were not filled</response>
     /// <response code="400">In case the Employee's data is already Registered (it will tell which data)</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPost]
     public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDTO EmployeeDto, string password) {
@@ -158,7 +158,7 @@ public class EmployeeController : ControllerBase {
     /// <returns>Employee's DTO with the updated Data</returns>
     /// <response code="200">Employee's DTO with the updated data</response>
     /// <response code="400">If a Employee with the given Id was not found</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPatch]
     public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeDTO upEmployee) {
@@ -183,7 +183,7 @@ public class EmployeeController : ControllerBase {
     /// <returns>NoContent if successfull</returns>
     /// <response code="200">Employee was found, and thus deleted</response>
     /// <response code="400">Employee not found</response>
-    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Employee))]
+    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployee(string id) {
