@@ -8,6 +8,7 @@ import RegisterEmployeePage from './Pages/Secretary/RegisterEmployee';
 import RegisterSecretaryPage from './Pages/Secretary/RegisterSecretary';
 import AppointmentSchedulePage from './Pages/Shared/AppointmentSchedulePage';
 import NotFoundPage from './Pages/NotFoundPage';
+import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                 <Route path="RegisterEmployee" element={<RegisterEmployeePage/>}/>
                 <Route path="RegisterSecretary" element={<RegisterSecretaryPage/>}/>
             </Route>
+            <Route path="/AppointmentSchedule" element={<CreateSchedulePage/>}/>
             <Route path="/AppointmentSchedule/:id" element={<AppointmentSchedulePage/>}/>
             <Route path="*" element={<NotFoundPage/>}/>
         </Routes>
