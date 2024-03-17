@@ -5,6 +5,8 @@ using Microsoft.OpenApi.Models;
 using Server.Models;
 using Server.Data;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 namespace Server;
 
@@ -56,6 +58,15 @@ public class Startup {
         services.AddAuthorization();
 
         services.AddControllersWithViews();
+
+        services.AddRateLimiter(_ => _
+            .AddFixedWindowLimiter(policyName: "fixed", options =>
+            {
+                options.PermitLimit = 10;
+                options.Window = TimeSpan.FromSeconds(5);
+                options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                options.QueueLimit = 10;
+            }));
 
         // Add Swagger
         services.AddSwaggerGen(c =>
