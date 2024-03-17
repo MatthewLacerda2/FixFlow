@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, useParams } from 'react-router-dom';
 
 //useSearchParams
-const AppointmentSchedule = () => {
+const AppointmentSchedulePage = () => {
 
   const {id} = useParams();
 
@@ -14,4 +14,4 @@ const AppointmentSchedule = () => {
   );
 };
 
-export default AppointmentSchedule;
+export default AppointmentSchedulePage;

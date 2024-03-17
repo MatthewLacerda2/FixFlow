@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
-const AppointmentSchedule = () => {
+const NotFoundPage = () => {
 
   const {id} = useParams();
   const navigate = useNavigate();
@@ -21,4 +21,4 @@ const AppointmentSchedule = () => {
   );
 };
 
-export default AppointmentSchedule;
+export default NotFoundPage;
