@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MainStyle = () => {
+const LogExpandable = () => {
   return (
     <div>
       <h1>Hello, this is an example component!</h1>
@@ -9,4 +9,4 @@ const MainStyle = () => {
   );
 };
 
-export default MainStyle;
+export default LogExpandable;

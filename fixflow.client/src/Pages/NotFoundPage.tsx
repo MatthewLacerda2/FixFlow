@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, redirect, useNavigate, useParams } from 'react-router-dom';
 
 const NotFoundPage = () => {
 
@@ -9,7 +9,7 @@ const NotFoundPage = () => {
   useEffect(() => {
     // Check if the id matches any of the specified patterns
     if (id && ['cliente', 'clients', 'clientes'].includes(id.toLowerCase())) {
-      navigate("/Client") ;
+      redirect("/Client");
     }
   }, [id]);
 
