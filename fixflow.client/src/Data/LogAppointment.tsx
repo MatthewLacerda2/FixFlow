@@ -1,3 +1,4 @@
+import TimeInterval from "./TimeInterval";
 import CompletedStatus from "./enumCompletedStatus";
 
 class LogAppointment {
@@ -7,9 +8,9 @@ class LogAppointment {
     status: CompletedStatus = CompletedStatus.Successful;
     price: number = 30;
     scheduleId: string = '';
-    interval: string = '';  //PLACEHOLDER
+    interval: TimeInterval = new TimeInterval();  //PLACEHOLDER
     observation: string = '';
     place: string = '';
 }
   
-export default LogAppointment;  
+export default LogAppointment;

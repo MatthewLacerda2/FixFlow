@@ -1,54 +1,55 @@
 import { useState } from 'react';
+import LogAppointment from '../Data/LogAppointment';
 
 function LogFormulary() {
-  
-  const [clientId, setClientId] = useState('');
-  const [dateTime, setDateTime] = useState('');
-  const [attendantId, setAttendantId] = useState('');
-  const [secretaryId, setSecretaryId] = useState('');
-  const [expectedPrice, setExpectedPrice] = useState('');
-  const [observation, setObservation] = useState('');
+
+  const [logAppointment, setLogAppointment] = useState<LogAppointment>(new LogAppointment());
   const [buttonColor, setButtonColor] = useState('yellow');
 
   const handleSend = () => {
-    if (dateTime && clientId) {
+    if (logAppointment.clientId !== null) {
       setButtonColor('green');
-      // Logic to send data
+      // Lógica para enviar dados
     }
-  };  
+  };
+
+  const handleChange = (field: keyof LogAppointment, value: string | number | Date) => {
+    setLogAppointment(prevAppointment => ({
+      ...prevAppointment,
+      [field]: value
+    }));
+  };
 
   return (
     <div>
-      <header className="header">
-        <div className="header-left">
-          FixFlow
-        </div>
-        <div className="header-right">
-          <button>Login</button>
-        </div>
-      </header>
       <div className="form-container">
         <div>
-            <label>Client ID:</label>
-            <input type="text" value={clientId} onChange={(e) => setClientId(e.target.value)} required />
+          <label>Client ID:</label>
+          <input type="text" value={logAppointment.clientId} onChange={(e) => handleChange('clientId', e.target.value)} required />
         </div>
         <div>
-            <label>Date Time:</label>
-            <input type="datetime-local" value={dateTime} onChange={(e) => setDateTime(e.target.value)} required />
+          <label>Attendant ID:</label>
+          <input type="text" value={logAppointment.attendantId} onChange={(e) => handleChange('attendantId', e.target.value)} />
         </div>
         <div>
-            <label>Attendant ID:</label>
-            <input type="text" value={attendantId} onChange={(e) => setAttendantId(e.target.value)} />
-        </div>
-            <label>Secretary ID:</label>
-            <input type="text" value={secretaryId} onChange={(e) => setSecretaryId(e.target.value)} />
-        <div>
-            <label>Expected Price:</label>
-            <input type="number" value={expectedPrice} onChange={(e) => setExpectedPrice(e.target.value)} />
+          <label>Status:</label>
+          <input type="text" value={logAppointment.status} onChange={(e) => handleChange('status', e.target.value)} />
         </div>
         <div>
-            <label>Observation:</label>
-            <textarea value={observation} onChange={(e) => setObservation(e.target.value)} />
+          <label>Price:</label>
+          <input type="text" value={logAppointment.price} onChange={(e) => handleChange('price', e.target.value)} />
+        </div>
+        <div>
+          <label>Schedule ID:</label>
+          <input type="text" value={logAppointment.scheduleId} onChange={(e) => handleChange('scheduleId', e.target.value)} />
+        </div>
+        <div>
+          <label>Place:</label>
+          <input type="text" value={logAppointment.place} onChange={(e) => handleChange('place', e.target.value)} />
+        </div>
+        <div>
+          <label>Observation:</label>
+          <textarea value={logAppointment.observation} onChange={(e) => handleChange('observation', e.target.value)} />
         </div>
         <button style={{ backgroundColor: buttonColor }} onClick={handleSend}>Send</button>
       </div>
@@ -57,3 +58,16 @@ function LogFormulary() {
 }
 
 export default LogFormulary;
+
+/*
+
+<div>
+  <label>Date Time Start:</label>
+  <input type="datetime-local" value={logAppointment.interval.start} onChange={(e) => handleChange('interval.start', new Date(e.target.value))} required />
+</div>
+<div>
+  <label>Date Time End:</label>
+  <input type="datetime-local" value={logAppointment.interval.finish} onChange={(e) => handleChange('interval.finish', new Date(e.target.value))} required />
+</div>
+
+*/
