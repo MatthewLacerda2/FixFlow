@@ -2,9 +2,6 @@ import { Route, Routes } from 'react-router-dom';
 import './App.css'
 import Header from './Components/Header/Header';
 import MainPage from './Pages/MainPage';
-import ClientPage from './Pages/Client/ClientPage';
-import EmployeePage from './Pages/Employee/EmployeePage';
-import SecretaryPage from './Pages/Secretary/SecretaryPage';
 import RegisterEmployeePage from './Pages/Secretary/RegisterEmployee';
 import RegisterSecretaryPage from './Pages/Secretary/RegisterSecretary';
 import AppointmentSchedulePage from './Pages/Shared/AppointmentSchedulePage';
@@ -17,18 +14,15 @@ function App() {
         <div>
             <Header/>
             <Routes>
-                <Route path="/Test" element={<UserPage/>}/>
-
                 <Route path="/" element = {<MainPage/>}/>
                 <Route path="/Client">
-                    <Route index element={<ClientPage/>}/>
-                    <Route path=":id" element={<ClientPage/>}/>
+                    <Route index element={<UserPage/>}/>
                 </Route>
                 <Route path="/Employee">
-                    <Route index element={<EmployeePage/>}/>
+                    <Route index element={<UserPage/>}/>
                 </Route>
                 <Route path="/Secretary">
-                    <Route index element={<SecretaryPage/>}/>
+                    <Route index element={<UserPage/>}/>
                     <Route path="RegisterEmployee" element={<RegisterEmployeePage/>}/>
                     <Route path="RegisterSecretary" element={<RegisterSecretaryPage/>}/>
                 </Route>
