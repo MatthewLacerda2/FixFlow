@@ -1,6 +1,6 @@
 import React from 'react';
-import Card from '../../Components/Card';
-import LogExpendable from '../../Components/LogExpandable';
+import Card from '../../Components/Card/Card';
+import LogExpendable from '../../Components/LogExpendable/LogExpandable';
 
 const UserSettingsPage: React.FC = () => {
   
