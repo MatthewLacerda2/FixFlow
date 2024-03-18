@@ -1,5 +1,4 @@
-import React from 'react';
-import { Route, useParams } from 'react-router-dom';
+import {  useParams } from 'react-router-dom';
 
 //useSearchParams
 const AppointmentSchedulePage = () => {
