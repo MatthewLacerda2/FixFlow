@@ -9,8 +9,8 @@ import RegisterEmployeePage from './Pages/Secretary/RegisterEmployee';
 import RegisterSecretaryPage from './Pages/Secretary/RegisterSecretary';
 import AppointmentSchedulePage from './Pages/Shared/AppointmentSchedulePage';
 import NotFoundPage from './Pages/NotFoundPage';
-import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
 import UserPage from './Pages/Shared/UserPage';
+import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
 
 function App() {
     return (
