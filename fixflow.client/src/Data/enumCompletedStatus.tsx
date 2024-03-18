@@ -4,4 +4,4 @@ enum CompletedStatus {
     Failed = 'Failed'
 }
   
-export default CompletedStatus;  
+export default CompletedStatus;
