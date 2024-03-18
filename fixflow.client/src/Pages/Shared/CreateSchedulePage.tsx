@@ -1,4 +1,4 @@
-import Card from '../../Components/Card';
+import Card from '../../Components/Card/Card';
 import ScheduleFormulary from '../../Components/ScheduleFormulary';
 
 function CreateSchedulePage() {

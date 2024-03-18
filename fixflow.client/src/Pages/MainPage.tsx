@@ -1,7 +1,7 @@
 import React from 'react';
 import './MainPage.css';
-import Card from '../Components/Card';
-import LogExpendable from '../Components/LogExpandable';
+import Card from '../Components/Card/Card';
+import LogExpendable from '../Components/LogExpendable/LogExpandable';
 
 const generateLogs = (count: number) => {
   const logs = [];

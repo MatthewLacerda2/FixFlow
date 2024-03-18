@@ -1,7 +1,7 @@
 import React from 'react';
-import Card from '../../Components/Card';
-import LogExpendable from '../../Components/LogExpandable';
-import Actions from '../../Components/Actions';
+import Card from '../../Components/Card/Card';
+import LogExpendable from '../../Components/LogExpendable/LogExpandable';
+import Actions from '../../Components/Actions/Actions';
 
 const UserPage: React.FC = () => {
   
