@@ -4,26 +4,25 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 10px;
-  }
-  
-  .header {
+}
+
+.header {
     background-color: yellow;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     cursor: pointer;
-  }
-  
-  .dateTime {
+}
+
+.dateTime {
     font-weight: bold;
-  }
-  
-  .arrow {
+}
+
+.arrow {
     font-size: 14px;
-  }
-  
-  .name {
+}
+
+.name {
     padding: 10px;
-  }
-  
+}  
