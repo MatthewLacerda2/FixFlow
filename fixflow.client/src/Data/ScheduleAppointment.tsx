@@ -1,5 +1,5 @@
 class ScheduleAppointment {
-    
+
     id: string = '';
     clientId: string = '';
     attendantId: string = '';
@@ -7,7 +7,7 @@ class ScheduleAppointment {
     expectedPrice: number = 30;
     dateTime: Date = new Date();
     observation: string = '';
-  
+
 }
-  
-export default ScheduleAppointment;  
+
+export default ScheduleAppointment;
