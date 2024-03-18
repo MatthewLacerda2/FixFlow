@@ -1,12 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
+import './LogExpandable.css';
 
-const LogExpandable = () => {
+interface LogExpendableProps {
+  name: string;
+}
+
+const LogExpendable: React.FC<LogExpendableProps> = ({ name }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  const generateRandomDateTime = () => {
+    const startDate = new Date('2024-01-01T08:00:00');
+    const endDate = new Date('2024-01-01T17:00:00');
+    const randomDateTime = new Date(
+      startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime())
+    );
+    return randomDateTime.toLocaleString();
+  };
+
+  const dateTime = generateRandomDateTime();
+
+  const handleToggleExpand = () => {
+    setExpanded(!expanded);
+  };
+
   return (
-    <div>
-      <h1>Hello, this is an example component!</h1>
-      <p>You can customize this component as needed.</p>
+    <div className="log-expendable">
+      <div className="header" onClick={handleToggleExpand}>
+        <div className="dateTime">{dateTime}</div>
+        <div className="arrow">{expanded ? '▼' : '▶'}</div>
+      </div>
+      {expanded && <div className="name">{name}</div>}
     </div>
   );
 };
 
-export default LogExpandable;
+export default LogExpendable;
