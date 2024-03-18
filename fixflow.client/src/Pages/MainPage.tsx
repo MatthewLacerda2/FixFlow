@@ -1,15 +1,6 @@
 import React from 'react';
 import './MainPage.css';
-import Card from '../Components/Card/Card';
-import LogExpendable from '../Components/LogExpendable/LogExpandable';
-
-const generateLogs = (count: number) => {
-  const logs = [];
-  for (let i = 0; i < count; i++) {
-    logs.push(<LogExpendable key={i} name={`Person ${i + 1}`} />);
-  }
-  return logs;
-};
+import TextCard from '../Components/Card/TextCard';
 
 const MainPage: React.FC = () => {
   return (
@@ -20,18 +11,19 @@ const MainPage: React.FC = () => {
       <br/>
       
       <div style={{ display: 'flex' }}>
-        <Card
-          title="Log of Appointments"
-          items={generateLogs(2)} // Generating 2 LogExpendables as placeholder data
+        <TextCard
+          title="Client"
+          items={["Schedule your appointments quick and easily"]}
         />
-        <Card
-          title="Scheduled Appointments"
-          items={generateLogs(3)} // Generating 3 LogExpendables as placeholder data
+        <TextCard
+          title="Employee"
+          items={["Find all appointments to do in a quick and intuitive way"]}
         />
-        <Card
-          title="Scheduled Appointments"
-          items={generateLogs(3)} // Generating 3 LogExpendables as placeholder data
+        <TextCard
+          title="Secretary"
+          items={["Manage and overview all the office's appointments easily"]}
         />
+
       </div>
     </div>
   );
