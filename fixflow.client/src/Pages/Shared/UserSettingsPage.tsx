@@ -16,11 +16,11 @@ const UserSettingsPage: React.FC = () => {
     <div style={{ display: 'flex' }}>
       <Card
         title="User Preferences"
-        items={generateLogs(2)} // Generating 2 LogExpendables as placeholder data
+        items={generateLogs(2)}
       />
       <Card
         title="Page Settings"
-        items={generateLogs(3)} // Generating 3 LogExpendables as placeholder data
+        items={generateLogs(3)}
       />
     </div>
   );
