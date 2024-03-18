@@ -3,7 +3,7 @@ import './Card.css';
 
 interface TextCardProps {
   title: string;
-  items: string[]; // Change the type of 'items' to string[]
+  items: string[];
 }
 
 const TextCard: React.FC<TextCardProps> = ({ title, items }) => {

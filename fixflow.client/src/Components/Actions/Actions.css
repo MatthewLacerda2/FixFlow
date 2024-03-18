@@ -1,6 +1,6 @@
 .actions {
     display: flex;
-    background-color: var(--main-background-color); /* Use the main background color */
+    background-color: var(--main-background-color);
     border-top: 1px solid #888888;
   }
   
@@ -8,12 +8,12 @@
     flex: 1;
     padding: 10px;
     border: 1px solid #888888;
-    background-color: var(--main-background-color); /* Use the main background color */
+    background-color: var(--main-background-color);
     color: white;
     cursor: pointer;
   }
   
   .action-button:hover {
-    background-color: #666666; /* Darken the background color on hover */
+    background-color: #666666;
   }
   
