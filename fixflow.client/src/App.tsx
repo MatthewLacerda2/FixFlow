@@ -10,12 +10,15 @@ import RegisterSecretaryPage from './Pages/Secretary/RegisterSecretary';
 import AppointmentSchedulePage from './Pages/Shared/AppointmentSchedulePage';
 import NotFoundPage from './Pages/NotFoundPage';
 import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
+import UserPage from './Pages/Shared/UserPage';
 
 function App() {
     return (
         <div>
             <Header/>
             <Routes>
+                <Route path="/Test" element={<UserPage/>}/>
+
                 <Route path="/" element = {<MainPage/>}/>
                 <Route path="/Client">
                     <Route index element={<ClientPage/>}/>
