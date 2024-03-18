@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Navigate, redirect, useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { redirect, useNavigate, useParams } from 'react-router-dom';
 
 const NotFoundPage = () => {
 
