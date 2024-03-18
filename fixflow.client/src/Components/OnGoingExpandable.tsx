@@ -5,8 +5,7 @@ interface OnGoingExpendableProps {
   name: string;
 }
 
-const ScheduleExpandable: React.FC<OnGoingExpendableProps> = ({ name }) => {
-  
+const OnGoingExpandable: React.FC<OnGoingExpendableProps> = ({ name }) => {
   const [expanded, setExpanded] = useState(false);
 
   const generateRandomDateTime = () => {
@@ -35,4 +34,4 @@ const ScheduleExpandable: React.FC<OnGoingExpendableProps> = ({ name }) => {
   );
 };
 
-export default ScheduleExpandable;
+export default OnGoingExpandable;
