@@ -13,14 +13,7 @@ function ScheduleFormulary() {
     }
   };
 
-  const handleChange = (field: string, value: string | Date) => {
-    setSchedule(prevSchedule => ({
-      ...prevSchedule,
-      [field]: value
-    }));
-  };
-
-  const handleNumberChange = (field: string, value: number) => {
+  const handleChange = (field: string, value: string | Date | number) => {
     setSchedule(prevSchedule => ({
       ...prevSchedule,
       [field]: value
@@ -47,7 +40,7 @@ function ScheduleFormulary() {
       </div>
       <div>
         <label>Expected Price:</label>
-        <input type="number" value={schedule.expectedPrice} onChange={(e) => handleNumberChange('expectedPrice', parseFloat(e.target.value))} />
+        <input type="number" value={schedule.expectedPrice} onChange={(e) => handleChange('expectedPrice', parseFloat(e.target.value))} />
       </div>
       <div>
         <label>Observation:</label>

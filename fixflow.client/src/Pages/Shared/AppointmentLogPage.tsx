@@ -1,9 +1,9 @@
 import LogAppointment from '../../Data/LogAppointment';
 import { useState } from 'react';
 
-const AppointmentLogPage: React.FC<LogAppointment> = ( logAppoint : LogAppointment ) => {
+const AppointmentLogPage= () => {
   
-  const [schedule, setSchedule] = useState<LogAppointment>(logAppoint);
+  const [schedule, setSchedule] = useState<LogAppointment>(new LogAppointment);
   const [buttonColor, setButtonColor] = useState('yellow');
 
   const handleSend = () => {
