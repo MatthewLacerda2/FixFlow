@@ -1,13 +1,13 @@
 import React from 'react';
 import Card from '../../Components/Card/Card';
-import LogExpendable from '../../Components/LogExpendable/LogExpandable';
+import LogExpandable from '../../Components/LogExpandable/LogExpandable';
 
 const UserSettingsPage: React.FC = () => {
   
   const generateLogs = (count: number) => {
     const logs = [];
     for (let i = 0; i < count; i++) {
-      logs.push(<LogExpendable key={i} name={`Person ${i + 1}`} />);
+      logs.push(<LogExpandable key={i} name={`Person ${i + 1}`} />);
     }
     return logs;
   };

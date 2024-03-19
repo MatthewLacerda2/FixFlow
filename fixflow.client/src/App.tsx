@@ -9,6 +9,7 @@ import RegisterSecretaryPage from './Pages/Secretary/RegisterSecretary';
 import AppointmentLogPage from './Pages/Shared/AppointmentLogPage';
 import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
 import AppointmentSchedulePage from './Pages/Shared/AppointmentSchedulePage';
+import UserSettingsPage from './Pages/Shared/UserSettingsPage';
 
 //falta register client
 //falta log appointment
@@ -21,12 +22,15 @@ function App() {
                 <Route path="/" element = {<MainPage/>}/>
                 <Route path="/Client">
                     <Route index element={<UserPage/>}/>
+                    <Route path="UserSettings" element={<UserSettingsPage/>}/>
                 </Route>
                 <Route path="/Employee">
                     <Route index element={<UserPage/>}/>
+                    <Route path="UserSettings" element={<UserSettingsPage/>}/>
                 </Route>
                 <Route path="/Secretary">
                     <Route index element={<UserPage/>}/>
+                    <Route path="UserSettings" element={<UserSettingsPage/>}/>
                     <Route path="RegisterEmployee" element={<RegisterEmployeePage/>}/>
                     <Route path="RegisterSecretary" element={<RegisterSecretaryPage/>}/>
                 </Route>
