@@ -8,7 +8,7 @@ import CreateLogPage from './Pages/Shared/CreateLogPage';
 import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
 import AppointmentSchedulePage from './Pages/Shared/AppointmentSchedulePage';
 import UserSettingsPage from './Pages/Shared/UserSettingsPage';
-import RegisterUser from './Pages/Business/RegisterUser';
+import RegisterUser from './Pages/Business/RegisterUserPage';
 import WeekOverviewPage from './Pages/Business/WeekOverviewPage';
 import AppointmentLogPage from './Pages/Shared/AppointmentLogPage';
 

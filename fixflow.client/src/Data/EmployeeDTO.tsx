@@ -8,7 +8,7 @@ class EmployeeDTO {
     PhoneNumber: string = '';
     shift : TimeInterval = new TimeInterval();
     salary : number = 2000;
-    additionalNote: string = '';
+    appointmentsDone : number = 0;
 }
   
 export default EmployeeDTO;
