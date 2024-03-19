@@ -1,9 +1,9 @@
+import LogAppointment from '../../Data/LogAppointment';
 import { useState } from 'react';
-import ScheduleAppointment from '../../Data/ScheduleAppointment';
 
-const AppointmentLogPage = () => {
+const CreateLogPage= () => {
   
-  const [schedule, setSchedule] = useState<ScheduleAppointment>(new ScheduleAppointment);
+  const [schedule, setSchedule] = useState<LogAppointment>(new LogAppointment);
   const [buttonColor, setButtonColor] = useState('yellow');
 
   const handleSend = () => {
@@ -13,7 +13,7 @@ const AppointmentLogPage = () => {
     }
   };
 
-  const handleChange = (field: string, value: string | number | Date) => {
+  const handleChange = (field: string, value: string | Date) => {
     setSchedule(prevSchedule => ({
       ...prevSchedule,
       [field]: value
@@ -32,16 +32,20 @@ const AppointmentLogPage = () => {
         <input type="text" value={schedule.clientId} onChange={(e) => handleChange('clientId', e.target.value)} required />
       </div>
       <div>
-        <label>Secretary ID:</label>
-        <input type="text" value={schedule.secretaryId} onChange={(e) => handleChange('secretaryId', e.target.value)} required />
+        <label>Status:</label>
+        <input type="text" value={schedule.status} onChange={(e) => handleChange('status', e.target.value)} required />
       </div>
       <div>
         <label>Price:</label>
-        <input type="text" value={schedule.expectedPrice} onChange={(e) => handleChange('expectedPrice', e.target.value)} required />
+        <input type="text" value={schedule.price} onChange={(e) => handleChange('price', e.target.value)} required />
       </div>
       <div>
-        <label>Observation:</label>
-        <input type="text" value={schedule.observation} onChange={(e) => handleChange('observation', e.target.value)} required />
+        <label>Schedule Id:</label>
+        <input type="text" value={schedule.scheduleId} onChange={(e) => handleChange('scheduleId', e.target.value)} required />
+      </div>
+      <div>
+        <label>Place:</label>
+        <input type="text" value={schedule.place} onChange={(e) => handleChange('place', e.target.value)} required />
       </div>
 
       <button style={{ backgroundColor: buttonColor }} onClick={handleSend}>Send</button>
@@ -50,4 +54,4 @@ const AppointmentLogPage = () => {
   );
 };
 
-export default AppointmentLogPage;
+export default CreateLogPage;
