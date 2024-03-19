@@ -8,11 +8,8 @@ import AppointmentLogPage from './Pages/Shared/AppointmentLogPage';
 import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
 import AppointmentSchedulePage from './Pages/Shared/AppointmentSchedulePage';
 import UserSettingsPage from './Pages/Shared/UserSettingsPage';
-import RegisterUser from './Pages/Shared/RegisterUser';
+import RegisterUser from './Pages/Business/RegisterUser';
 
-//falta register client
-//falta log appointment
-//falta ver log appointment
 function App() {
     return (
         <div>
