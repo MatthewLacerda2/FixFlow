@@ -47,10 +47,6 @@ function LogFormulary() {
           <label>Place:</label>
           <input type="text" value={logAppointment.place} onChange={(e) => handleChange('place', e.target.value)} />
         </div>
-        <div>
-          <label>Observation:</label>
-          <textarea value={logAppointment.observation} onChange={(e) => handleChange('observation', e.target.value)} />
-        </div>
         <button style={{ backgroundColor: buttonColor }} onClick={handleSend}>Send</button>
       </div>
     </div>
