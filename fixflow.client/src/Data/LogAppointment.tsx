@@ -9,8 +9,7 @@ class LogAppointment {
     price: number = 30;
     scheduleId: string = '';
     interval: TimeInterval = new TimeInterval();  //PLACEHOLDER
-    observation: string = '';
     place: string = '';
 }
-  
+
 export default LogAppointment;
