@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import './LogExpandable.css';
 
-interface OnGoingExpendableProps {
+interface OnGoingExpandableProps {
   name: string;
 }
 
-const ScheduleExpandable: React.FC<OnGoingExpendableProps> = ({ name }) => {
+const ScheduleExpandable: React.FC<OnGoingExpandableProps> = ({ name }) => {
   
   const [expanded, setExpanded] = useState(false);
 
@@ -25,7 +25,7 @@ const ScheduleExpandable: React.FC<OnGoingExpendableProps> = ({ name }) => {
   };
 
   return (
-    <div className="log-expendable">
+    <div className="log-expandable">
       <div className="header" onClick={handleToggleExpand}>
         <div className="dateTime">{dateTime}</div>
         <div className="arrow">{expanded ? '▼' : '▶'}</div>

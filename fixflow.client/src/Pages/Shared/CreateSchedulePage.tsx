@@ -2,17 +2,10 @@ import Card from '../../Components/Card/Card';
 import ScheduleFormulary from '../../Components/ScheduleFormulary';
 
 function CreateSchedulePage() {
-
-  const generateScheduleFormulary = () => {
-    const logs = [];
-    logs.push(<ScheduleFormulary/>);
-    return logs;
-  };
-  
   return (
     <Card  
       title="Create Schedule Formulary"
-      items={generateScheduleFormulary()}
+      items={[<ScheduleFormulary />]}
     />
   );
 }
