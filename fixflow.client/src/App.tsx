@@ -6,11 +6,9 @@ import NotFoundPage from './Pages/NotFoundPage';
 import UserPage from './Pages/Shared/UserPage';
 import CreateLogPage from './Pages/Shared/CreateLogPage';
 import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
-import AppointmentSchedulePage from './Pages/Shared/AppointmentSchedulePage';
 import UserSettingsPage from './Pages/Shared/UserSettingsPage';
 import RegisterUser from './Pages/Business/RegisterUserPage';
 import WeekOverviewPage from './Pages/Business/WeekOverviewPage';
-import AppointmentLogPage from './Pages/Shared/AppointmentLogPage';
 
 function App() {
     return (
@@ -36,10 +34,8 @@ function App() {
                     <Route path="RegisterSecretary" element={<RegisterUser/>}/>
                     <Route path="WeekOverview" element={<WeekOverviewPage/>}/>
                 </Route>
-                <Route path="/AppointmentLog/" element={<AppointmentLogPage/>}/>
                 <Route path="/AppointmentLog/:id" element={<CreateLogPage/>}/>
                 <Route path="/AppointmentSchedule" element={<CreateSchedulePage/>}/>
-                <Route path="/AppointmentSchedule/:id" element={<AppointmentSchedulePage/>}/>                
                 <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
         </div>

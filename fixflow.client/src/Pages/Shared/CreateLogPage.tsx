@@ -13,7 +13,7 @@ const CreateLogPage= () => {
     }
   };
 
-  const handleChange = (field: string, value: string | Date) => {
+  const handleChange = (field: string, value: string | number | Date) => {
     setSchedule(prevSchedule => ({
       ...prevSchedule,
       [field]: value
