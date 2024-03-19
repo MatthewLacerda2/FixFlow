@@ -11,7 +11,6 @@ public class AppointmentLog {
 
     public Guid ScheduleId { get; set; }
     public TimeInterval interval { get; set; } = new TimeInterval();
-    public string observation { get; set;} = string.Empty;
     public string place { get; set;} = string.Empty;
 
     public AppointmentLog(string _AttendantId, string _clientId, CompletedStatus _status, float _price){

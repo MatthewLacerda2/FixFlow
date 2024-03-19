@@ -1,8 +1,25 @@
-const RegisterUser = () => {
+import React, { useState } from 'react';
+import Card from '../../Components/Card/Card';
+
+interface UserProps {
+  FullName: string;
+  CPF: string;
+  Email: string;
+  PhoneNumber: string;
+}
+
+const RegisterUser: React.FC<{ userType: string }> = ({ userType }) => {
+
+  const [userForm, setUserForm] = useState<UserProps>({
+    FullName: '',
+    CPF: '',
+    Email: '',
+    PhoneNumber: ''
+  });
+
   return (
     <div>
-      <h1>Hello, this is an example component!</h1>
-      <p>You can customize this component as needed.</p>
+      Not yet ready
     </div>
   );
 };
