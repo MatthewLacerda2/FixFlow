@@ -1,7 +1,8 @@
 import {  useParams } from 'react-router-dom';
+import LogAppointment from '../../Data/LogAppointment';
 
 //useSearchParams
-const AppointmentLogPage = () => {
+const AppointmentLogPage: React.FC<LogAppointment> = ( ) => {
 
   const {id} = useParams();
 

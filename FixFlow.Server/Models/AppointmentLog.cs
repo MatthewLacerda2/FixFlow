@@ -5,6 +5,7 @@ public class AppointmentLog {
     public Guid Id { get; set; }
     public string AttendantId { get; set; } = string.Empty; //Who took the appointment
     public string clientId { get; set; } = string.Empty;
+    public string secretaryId { get; set; } = string.Empty;
     public CompletedStatus status { get; set; }
     public float price { get; set; } = 30f;
 
