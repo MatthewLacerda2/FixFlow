@@ -1,0 +1,27 @@
+.days-bar {
+    display: flex;
+    justify-content: space-between;
+}
+  
+.day-button {
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+  
+.day-button:hover {
+    background-color: lightblue;
+}
+  
+.day-number {
+    font-size: 24px;
+}
+  
+.month-name {
+    font-size: 14px;
+}
