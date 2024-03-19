@@ -3,9 +3,9 @@ import './App.css'
 import Header from './Components/Header/Header';
 import MainPage from './Pages/MainPage';
 import NotFoundPage from './Pages/NotFoundPage';
-import UserPage from './Pages/Shared/UserPage';
 import CreateLogPage from './Pages/Shared/CreateLogPage';
 import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
+import UserPage from './Pages/Shared/UserPage';
 import UserSettingsPage from './Pages/Shared/UserSettingsPage';
 import RegisterUser from './Pages/Business/RegisterUserPage';
 import WeekOverviewPage from './Pages/Business/WeekOverviewPage';

@@ -2,18 +2,18 @@
     display: flex;
     background-color: var(--main-background-color);
     border-top: 1px solid #888888;
-  }
-  
-  .action-button {
+}
+
+.action-button {
     flex: 1;
     padding: 10px;
     border: 1px solid #888888;
+    border-radius: 12px;
     background-color: var(--main-background-color);
-    color: white;
+    color: green;
     cursor: pointer;
-  }
+}
   
-  .action-button:hover {
-    background-color: #666666;
-  }
-  
+.action-button:hover {
+    background-color: #999;
+}
