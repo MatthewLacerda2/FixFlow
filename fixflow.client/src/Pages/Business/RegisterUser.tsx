@@ -1,10 +1,3 @@
-interface UserProps {
-  FullName: string;
-  CPF: string;
-  Email: string;
-  PhoneNumber: string;
-}
-
 const RegisterUser = () => {
 
   return (
