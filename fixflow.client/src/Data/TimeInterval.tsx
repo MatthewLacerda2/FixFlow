@@ -1,6 +1,6 @@
-class TimeInterval {
-    start = new Date();
-    finish = new Date();
+interface TimeInterval {
+    start : Date;
+    finish : Date;
 }
   
 export default TimeInterval;

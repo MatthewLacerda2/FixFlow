@@ -1,12 +1,12 @@
-class ScheduleAppointment {
+interface ScheduleAppointment {
 
-    id: string = '';
-    clientId: string = '';
-    attendantId: string = '';
-    secretaryId: string = '';
-    expectedPrice: number = 30;
-    dateTime: Date = new Date();
-    observation: string = '';
+    id: string;
+    clientId: string;
+    attendantId: string;
+    secretaryId: string;
+    expectedPrice: number;
+    dateTime: Date;
+    observation: string;
 
 }
 
