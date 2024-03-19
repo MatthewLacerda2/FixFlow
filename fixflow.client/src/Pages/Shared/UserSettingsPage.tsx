@@ -2,6 +2,13 @@ import React from 'react';
 import Card from '../../Components/Card/Card';
 import LogExpandable from '../../Components/LogExpandable/LogExpandable';
 
+interface UserData {
+  fullName : string,
+  CPF : string,
+  Email : string,
+  Phone : string
+}
+
 const UserSettingsPage: React.FC = () => {
   
   const generateLogs = (count: number) => {

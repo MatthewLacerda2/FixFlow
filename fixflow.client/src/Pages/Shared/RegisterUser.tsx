@@ -1,4 +1,4 @@
-const RegisterSecretaryPage = () => {
+const RegisterUser = () => {
   return (
     <div>
       <h1>Hello, this is an example component!</h1>
@@ -7,4 +7,4 @@ const RegisterSecretaryPage = () => {
   );
 };
 
-export default RegisterSecretaryPage;
+export default RegisterUser;
