@@ -3,7 +3,7 @@ import './Header.css';
 
 const Header: React.FC = () => {
   return (
-    <div className="header">
+    <div className="main-header">
       <div className="logo">
         FixFlow
       </div>

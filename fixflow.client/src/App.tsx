@@ -3,12 +3,12 @@ import './App.css'
 import Header from './Components/Header/Header';
 import MainPage from './Pages/MainPage';
 import NotFoundPage from './Pages/NotFoundPage';
-import CreateLogPage from './Pages/Shared/CreateLogPage';
-import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
 import UserPage from './Pages/Shared/UserPage';
 import UserSettingsPage from './Pages/Shared/UserSettingsPage';
 import RegisterUser from './Pages/Business/RegisterUserPage';
 import WeekOverviewPage from './Pages/Business/WeekOverviewPage';
+import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
+import CreateLogPage from './Pages/Shared/CreateLogPage';
 
 function App() {
     return (
@@ -33,9 +33,11 @@ function App() {
                     <Route path="RegisterEmployee" element={<RegisterUser/>}/>
                     <Route path="RegisterSecretary" element={<RegisterUser/>}/>
                     <Route path="WeekOverview" element={<WeekOverviewPage/>}/>
+                    
+                    <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
                 </Route>
-                <Route path="/AppointmentLog/:id" element={<CreateLogPage/>}/>
-                <Route path="/AppointmentSchedule" element={<CreateSchedulePage/>}/>
+                <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
+                <Route path="AppointmentLog" element={<CreateLogPage/>}/>
                 <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
         </div>
