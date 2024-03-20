@@ -10,7 +10,6 @@ namespace webserver.Controllers;
 /// <summary>
 /// Controller class for Appointment Log CRUD requests
 /// </summary>
-[Authorize]
 [ApiController]
 [Route("api/v1/logs")]
 [Produces("application/json")]
@@ -53,31 +52,31 @@ public class LogController : ControllerBase {
         var filter = filterBuilder.Empty;
 
         if (!string.IsNullOrEmpty(clientId)) {
-            filter &= filterBuilder.Eq(s => s.clientId, clientId);
+            filter &= filterBuilder.Eq(s => s.ClientId, clientId);
         }
         if (!string.IsNullOrEmpty(attendantId)) {
             filter &= filterBuilder.Eq(s => s.AttendantId, attendantId);
         }
         if (!string.IsNullOrEmpty(place)) {
-            filter &= filterBuilder.Eq(s => s.place, place);
+            filter &= filterBuilder.Eq(s => s.Place, place);
         }
         if (status.HasValue) {
-            filter &= filterBuilder.Eq(s => s.status, status);
+            filter &= filterBuilder.Eq(s => s.Status, status);
         }
         if (interval != null) {
-            filter &= filterBuilder.Gte(s => s.interval.start, interval.start);
-            filter &= filterBuilder.Lte(s => s.interval.finish, interval.finish);
+            filter &= filterBuilder.Gte(s => s.Interval.Start, interval.Start);
+            filter &= filterBuilder.Lte(s => s.Interval.Finish, interval.Finish);
         }
 
         var appointments = _appointmentsCollection.Find(filter);
 
         if (!string.IsNullOrEmpty(sort)) {
             if(sort=="client"){
-                appointments = appointments.SortBy(s => s.clientId).ThenBy(s => s.AttendantId).ThenBy(s => s.interval.start).ThenBy(s=>s.interval.finish);
+                appointments = appointments.SortBy(s => s.ClientId).ThenBy(s => s.AttendantId).ThenBy(s => s.Interval.Start).ThenBy(s=>s.Interval.Finish);
             }else if(sort=="attendant"){
-                appointments = appointments.SortBy(s => s.AttendantId).ThenBy(s => s.clientId).ThenBy(s => s.interval.start).ThenBy(s=>s.interval.finish);
+                appointments = appointments.SortBy(s => s.AttendantId).ThenBy(s => s.ClientId).ThenBy(s => s.Interval.Start).ThenBy(s=>s.Interval.Finish);
             }else{
-                appointments = appointments.SortBy(s => s.interval.start).ThenBy(s=>s.interval.finish);
+                appointments = appointments.SortBy(s => s.Interval.Start).ThenBy(s=>s.Interval.Finish);
             }
         }
 
@@ -99,7 +98,7 @@ public class LogController : ControllerBase {
     [HttpPost]
     public async Task<IActionResult> CreateLog([FromBody] AppointmentLog newAppointment) {
 
-        var existingClient = await _userManager.FindByIdAsync(newAppointment.clientId);
+        var existingClient = await _userManager.FindByIdAsync(newAppointment.ClientId);
         if(existingClient==null){
             return BadRequest("Client does not exist");
         }

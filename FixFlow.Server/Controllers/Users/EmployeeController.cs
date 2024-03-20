@@ -76,8 +76,8 @@ public class EmployeeController : ControllerBase {
         }
 
         if(shift!=null){
-            Employees = Employees.Where(Employee => Employee.shift.start >= shift.start);
-            Employees = Employees.Where(Employee => Employee.shift.finish <= shift.finish);
+            Employees = Employees.Where(Employee => Employee.shift.Start >= shift.Start);
+            Employees = Employees.Where(Employee => Employee.shift.Finish <= shift.Finish);
         }
 
         if(!string.IsNullOrEmpty(sort)){
@@ -87,7 +87,7 @@ public class EmployeeController : ControllerBase {
                     Employees = Employees.OrderBy(emp => emp.UserName);
                     break;
                 case "shift":
-                    Employees = Employees.OrderBy(emp => emp.shift.start).ThenBy(emp=>emp.shift.finish);
+                    Employees = Employees.OrderBy(emp => emp.shift.Start).ThenBy(emp=>emp.shift.Finish);
                     break;
             }
         }

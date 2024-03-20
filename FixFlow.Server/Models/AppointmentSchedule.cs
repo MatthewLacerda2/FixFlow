@@ -1,4 +1,5 @@
 namespace Server.Models;
+
 public class AppointmentSchedule {
     //Remember, anyone can schedule an appointment
     public Guid Id { get; set; }

@@ -76,8 +76,8 @@ public class SecretaryController : ControllerBase {
         }
 
         if(shift!=null){
-            Secretarys = Secretarys.Where(Secretary => Secretary.shift.start >= shift.start);
-            Secretarys = Secretarys.Where(Secretary => Secretary.shift.finish <= shift.finish);
+            Secretarys = Secretarys.Where(Secretary => Secretary.shift.Start >= shift.Start);
+            Secretarys = Secretarys.Where(Secretary => Secretary.shift.Finish <= shift.Finish);
         }
 
         if(!string.IsNullOrEmpty(sort)){
@@ -87,7 +87,7 @@ public class SecretaryController : ControllerBase {
                     Secretarys = Secretarys.OrderBy(emp => emp.UserName);
                     break;
                 case "shift":
-                    Secretarys = Secretarys.OrderBy(emp => emp.shift.start).ThenBy(emp=>emp.shift.finish);
+                    Secretarys = Secretarys.OrderBy(emp => emp.shift.Start).ThenBy(emp=>emp.shift.Finish);
                     break;
             }
         }
