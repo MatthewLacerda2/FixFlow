@@ -1,9 +1,9 @@
 .card {
-    width: 350px;
-    height: 490px;
+    min-width: 350px;
+    min-height: 200px;
     background-color: white;
     border-radius: 13px;
-    padding: 20px;
+    padding: 24px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin: 50px;
 }
@@ -17,7 +17,7 @@
 .line {
     height: 1px;
     background-color: #666;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .content {
