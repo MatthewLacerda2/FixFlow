@@ -8,12 +8,12 @@ interface TextCardProps {
 
 const TextCard: React.FC<TextCardProps> = ({ title, items }) => {
   return (
-    <div className="text-card">
+    <div className="card">
       <h2 className="title">{title}</h2>
       <div className="line"></div>
       <div className="content">
-        {items.map((item, index) => (
-          <div key={index} className="item">
+        {items.map((item) => (
+          <div className="item">
             {item}
           </div>
         ))}

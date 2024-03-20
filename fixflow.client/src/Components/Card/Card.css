@@ -1,8 +1,11 @@
 .card {
+    width: 350px;
+    height: 490px;
     background-color: white;
     border-radius: 13px;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 50px;
 }
 
 .title {
