@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ScheduleAppointment from '../../Data/ScheduleAppointment';
 import Card from '../../Components/Card/Card';
+import './CreateSchedulePage.css';
 
 const CreateSchedulePage = () => {
   
@@ -22,30 +23,32 @@ const CreateSchedulePage = () => {
   };
 
   return (
-    <Card title = "something">
+    <Card title = "Create schedule">
+      
+      
+      <div className='input-container'>
+        <label className='babel'>Attendant ID:</label>
+        <input type="text" value={schedule.attendantId} onChange={(e) => handleChange('attendantId', e.target.value)} required className='input-area'/>
+      </div>
+      <div className='input-container'>
+        <label className='babel'>Client:</label>
+        <input type="text" value={schedule.clientId} onChange={(e) => handleChange('clientId', e.target.value)} required className='input-area'/>
+      </div>
+      <div className='input-container'>
+        <label className='babel'>Secretary ID:</label>
+        <input type="text" value={schedule.secretaryId} onChange={(e) => handleChange('secretaryId', e.target.value)} required className='input-area'/>
+      </div>
+      <div className='input-container'>
+        <label className='babel'>Price:</label>
+        <input type="text" value={schedule.expectedPrice} onChange={(e) => handleChange('expectedPrice', e.target.value)} required className='input-area'/>
+      </div>
+      <div className='input-container'>
+        <label className='babel'>Observation:</label>
+        <input type="text" value={schedule.observation} onChange={(e) => handleChange('observation', e.target.value)} required className='input-area'/>
+      </div>
 
-      <div>
-        <label>Attendant ID:</label>
-        <input type="text" value={schedule.attendantId} onChange={(e) => handleChange('attendantId', e.target.value)} required />
-      </div>
-      <div>
-        <label>Client ID:</label>
-        <input type="text" value={schedule.clientId} onChange={(e) => handleChange('clientId', e.target.value)} required />
-      </div>
-      <div>
-        <label>Secretary ID:</label>
-        <input type="text" value={schedule.secretaryId} onChange={(e) => handleChange('secretaryId', e.target.value)} required />
-      </div>
-      <div>
-        <label>Price:</label>
-        <input type="text" value={schedule.expectedPrice} onChange={(e) => handleChange('expectedPrice', e.target.value)} required />
-      </div>
-      <div>
-        <label>Observation:</label>
-        <input type="text" value={schedule.observation} onChange={(e) => handleChange('observation', e.target.value)} required />
-      </div>
-
-      <button style={{ backgroundColor: buttonColor }} onClick={handleSend}>Send</button>
+      <br></br>
+      <button style={{ backgroundColor: 'green' }} onClick={handleSend}>Send</button>
 
     </Card>
   );

@@ -19,7 +19,7 @@ const Card: React.FC<CardProps> = ({ title, items, children }) => {
           </div>
         ))}
       </div>
-      {children} {/* Render children */}
+      {children}
     </div>
   );
 };
