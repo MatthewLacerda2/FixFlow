@@ -6,11 +6,11 @@ import './CreateSchedulePage.css';
 const CreateSchedulePage = () => {
   
   const [schedule, setSchedule] = useState<ScheduleAppointment>(new ScheduleAppointment);
-  const [buttonColor, setButtonColor] = useState('yellow');
+  const [buttonColor, setButtonColor] = useState('green');
 
   const handleSend = () => {
     if (schedule.clientId) {
-      setButtonColor('green');
+      setButtonColor('blue');
       // Lógica para enviar dados
     }
   };
@@ -25,14 +25,13 @@ const CreateSchedulePage = () => {
   return (
     <Card title = "Create schedule">
       
-      
-      <div className='input-container'>
-        <label className='babel'>Attendant ID:</label>
-        <input type="text" value={schedule.attendantId} onChange={(e) => handleChange('attendantId', e.target.value)} required className='input-area'/>
-      </div>
       <div className='input-container'>
         <label className='babel'>Client:</label>
         <input type="text" value={schedule.clientId} onChange={(e) => handleChange('clientId', e.target.value)} required className='input-area'/>
+      </div>
+      <div className='input-container'>
+        <label className='babel'>Attendant ID:</label>
+        <input type="text" value={schedule.attendantId} onChange={(e) => handleChange('attendantId', e.target.value)} required className='input-area'/>
       </div>
       <div className='input-container'>
         <label className='babel'>Secretary ID:</label>
@@ -48,7 +47,7 @@ const CreateSchedulePage = () => {
       </div>
 
       <br></br>
-      <button style={{ backgroundColor: 'green' }} onClick={handleSend}>Send</button>
+      <button style={{ backgroundColor: buttonColor }} onClick={handleSend}>Send</button>
 
     </Card>
   );

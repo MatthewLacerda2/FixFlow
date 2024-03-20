@@ -35,6 +35,7 @@ function App() {
                     <Route path="WeekOverview" element={<WeekOverviewPage/>}/>
                     
                     <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
+                    <Route path="AppointmentLog" element={<CreateLogPage/>}/>
                 </Route>
                 <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
                 <Route path="AppointmentLog" element={<CreateLogPage/>}/>
