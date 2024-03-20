@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ScheduleAppointment from '../../Data/ScheduleAppointment';
+import Card from '../../Components/Card/Card';
 
 const CreateSchedulePage = () => {
   
@@ -21,7 +22,7 @@ const CreateSchedulePage = () => {
   };
 
   return (
-    <div>
+    <Card title = "something">
 
       <div>
         <label>Attendant ID:</label>
@@ -46,7 +47,7 @@ const CreateSchedulePage = () => {
 
       <button style={{ backgroundColor: buttonColor }} onClick={handleSend}>Send</button>
 
-    </div>
+    </Card>
   );
 };
 
