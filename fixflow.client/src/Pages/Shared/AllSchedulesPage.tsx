@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './AllSchedulesPage.css';
 import ScheduleAppointment from '../../Data/ScheduleAppointment';
-
+//filter and paginate this shit
 const AllSchedulesPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortDescending, setSortDescending] = useState<boolean>(false);
@@ -26,7 +26,24 @@ const AllSchedulesPage: React.FC = () => {
       dateTime: new Date(),
       observation: 'Observation 2',
     },
-    // Add more ScheduleAppointment objects as needed
+    {
+      id: '2',
+      clientId: 'client2',
+      attendantId: 'attendant2',
+      secretaryId: 'secretary2',
+      expectedPrice: 40,
+      dateTime: new Date(),
+      observation: 'Observation 2',
+    },
+    {
+      id: '2',
+      clientId: 'client2',
+      attendantId: 'attendant2',
+      secretaryId: 'secretary2',
+      expectedPrice: 40,
+      dateTime: new Date(),
+      observation: 'Observation 2',
+    },
   ];
 
   const toggleSort = (field: string) => {
@@ -48,6 +65,7 @@ const AllSchedulesPage: React.FC = () => {
 
   return (
     <table className="schedule-table">
+      <br></br>
       <thead>
         <tr>
           <th>
