@@ -4,24 +4,34 @@
 }
   
 .day-button {
-    background-color: blue;
+    background-color: #3333ff;
     color: white;
     border: none;
     border-radius: 50%;
     width: 60px;
     height: 60px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: border-color 0.3s ease;
+    margin: 30px;
+    padding: 10px;
 }
   
 .day-button:hover {
-    background-color: lightblue;
+    border: 2px solid black;
 }
   
 .day-number {
-    font-size: 24px;
+    font-size: 27px;
+    margin-top: -4px;
 }
   
 .month-name {
-    font-size: 14px;
+    font-size: 13px;
+    margin-top: -4px;
+    transition: margin-top 0.3s ease;
 }
+  
+.day-button:hover .month-name {
+    margin-top: -8px;
+}
+  
