@@ -21,29 +21,33 @@ function App() {
                 <Route path="/Client">
                     <Route index element={<UserPage/>}/>
                     <Route path="UserSettings" element={<UserSettingsPage/>}/>
+
+                    <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
+                    <Route path="AppointmentLog" element={<CreateLogPage/>}/>
                 </Route>
                 <Route path="/Employee">
                     <Route index element={<UserPage/>}/>
                     <Route path="UserSettings" element={<UserSettingsPage/>}/>
+
                     <Route path="RegisterClient" element={<RegisterUser/>}/>
                     <Route path="WeekOverview" element={<WeekOverviewPage/>}/>
+                    <Route path="AllSchedules" element={<AllSchedulesPage/>}/>
+                    <Route path="AllLogs" element={<AllLogsPage/>}/>
+                    <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
+                    <Route path="AppointmentLog" element={<CreateLogPage/>}/>
                 </Route>
                 <Route path="/Secretary">
                     <Route index element={<UserPage/>}/>
                     <Route path="UserSettings" element={<UserSettingsPage/>}/>
-                    <Route path="RegisterClient" element={<RegisterUser/>}/>
-                    <Route path="RegisterEmployee" element={<RegisterUser/>}/>
-                    <Route path="RegisterSecretary" element={<RegisterUser/>}/>
-                    <Route path="WeekOverview" element={<WeekOverviewPage/>}/>
 
+                    <Route path="RegisterClient" element={<RegisterUser/>}/>
+                    <Route path="WeekOverview" element={<WeekOverviewPage/>}/>
                     <Route path="AllSchedules" element={<AllSchedulesPage/>}/>
                     <Route path="AllLogs" element={<AllLogsPage/>}/>
-                    
-                    <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
-                    <Route path="AppointmentLog" element={<CreateLogPage/>}/>
+
+                    <Route path="RegisterEmployee" element={<RegisterUser/>}/>
+                    <Route path="RegisterSecretary" element={<RegisterUser/>}/>
                 </Route>
-                <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
-                <Route path="AppointmentLog" element={<CreateLogPage/>}/>
                 <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
         </div>

@@ -3,7 +3,6 @@ import './AllSchedulesPage.css';
 import LogAppointment from '../../Data/LogAppointment';
 import CompletedStatus from '../../Data/enumCompletedStatus';
 import TimeInterval from '../../Data/TimeInterval';
-import Card from '../../Components/Card/Card';
 //filter and paginate this shit
 const AllLogsPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<string | null>(null);

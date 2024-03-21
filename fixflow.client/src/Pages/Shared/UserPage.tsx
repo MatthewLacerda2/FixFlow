@@ -2,6 +2,7 @@ import React from 'react';
 import Card from '../../Components/Card/Card';
 import Actions from '../../Components/Actions/Actions';
 import LogExpandable from '../../Components/LogExpandable/LogExpandable';
+import SideBar from '../../Components/SideBar/SideBar';
 
 const UserPage: React.FC = () => {
   
@@ -16,6 +17,7 @@ const UserPage: React.FC = () => {
   return (
     <div>
       <Actions/>
+      <SideBar/>
       <div style={{ display: 'flex' }}>
         <Card
           title="Log of Appointments"
