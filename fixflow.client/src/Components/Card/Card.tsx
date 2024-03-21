@@ -3,8 +3,8 @@ import './Card.css';
 
 interface CardProps {
   title: string;
-  items?: React.ReactNode[] | string[]; // Making 'items' optional
-  children?: React.ReactNode; // Adding children prop
+  items?: React.ReactNode[] | string[];
+  children?: React.ReactNode;
 }
 
 const Card: React.FC<CardProps> = ({ title, items, children }) => {
