@@ -21,7 +21,7 @@ const WeekOverviewPage = () => {
           const date = new Date(startDate);
           date.setDate(startDate.getDate() + index); // Get the date for each day of the week
           const dayOfMonth = date.getDate();
-          const monthName = date.toLocaleString('default', { month: 'short' });
+          const monthName = date.toLocaleString('default', { weekday: 'short' });
           const isToday = index === today;
           return (
             <button
@@ -34,13 +34,6 @@ const WeekOverviewPage = () => {
             </button>
           );
         })}
-      </div>
-      <div className="list-container">
-        <div className="list-item">
-          <h3>Title</h3>
-          <p>Description</p>
-        </div>
-        {/* Add more list items here */}
       </div>
     </div>
   );
