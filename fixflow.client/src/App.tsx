@@ -9,6 +9,7 @@ import RegisterUser from './Pages/Business/RegisterUserPage';
 import WeekOverviewPage from './Pages/Business/WeekOverviewPage';
 import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
 import CreateLogPage from './Pages/Shared/CreateLogPage';
+import AllSchedulesPage from './Pages/Shared/AllSchedulesPage';
 
 function App() {
     return (
@@ -33,6 +34,8 @@ function App() {
                     <Route path="RegisterEmployee" element={<RegisterUser/>}/>
                     <Route path="RegisterSecretary" element={<RegisterUser/>}/>
                     <Route path="WeekOverview" element={<WeekOverviewPage/>}/>
+
+                    <Route path="AllSchedulesPage" element={<AllSchedulesPage/>}/>
                     
                     <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
                     <Route path="AppointmentLog" element={<CreateLogPage/>}/>
