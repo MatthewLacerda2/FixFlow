@@ -3,5 +3,5 @@ enum CompletedStatus {
     Successful = 'Successful',
     Failed = 'Failed'
 }
-  
+
 export default CompletedStatus;

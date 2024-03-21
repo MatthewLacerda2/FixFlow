@@ -56,8 +56,8 @@ const AllSchedulesPage: React.FC = () => {
   };
 
   const sortedData = sortBy ? [...data].sort((a, b) => {
-    const aValue: string | number | Date = a[sortBy as keyof ScheduleAppointment]; // Type annotation for aValue
-    const bValue: string | number | Date = b[sortBy as keyof ScheduleAppointment]; // Type annotation for bValue
+    const aValue: string | number | Date = a[sortBy as keyof ScheduleAppointment];
+    const bValue: string | number | Date = b[sortBy as keyof ScheduleAppointment];
     if (aValue < bValue) return sortDescending ? 1 : -1;
     if (aValue > bValue) return sortDescending ? -1 : 1;
     return 0;
