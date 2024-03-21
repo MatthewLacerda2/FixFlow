@@ -3,6 +3,7 @@ import './AllSchedulesPage.css';
 import LogAppointment from '../../Data/LogAppointment';
 import CompletedStatus from '../../Data/enumCompletedStatus';
 import TimeInterval from '../../Data/TimeInterval';
+import Card from '../../Components/Card/Card';
 //filter and paginate this shit
 const AllLogsPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<string | null>(null);
@@ -34,7 +35,7 @@ const AllLogsPage: React.FC = () => {
         id: '1',
         attendantId: 'attendant1',
         clientId: 'client1',
-        status: CompletedStatus.Successful,
+        status: CompletedStatus.Rescheduled,
         price: 30,
         scheduleId: 'client1',
         interval: new TimeInterval(),
@@ -44,7 +45,7 @@ const AllLogsPage: React.FC = () => {
         id: '1',
         attendantId: 'attendant1',
         clientId: 'client1',
-        status: CompletedStatus.Successful,
+        status: CompletedStatus.Failed,
         price: 30,
         scheduleId: 'client1',
         interval: new TimeInterval(),
@@ -62,12 +63,25 @@ const AllLogsPage: React.FC = () => {
   };
 
   const sortedData = sortBy ? [...data].sort((a, b) => {
-    const aValue: string | number | TimeInterval = a[sortBy as keyof LogAppointment]; // Type annotation for aValue
-    const bValue: string | number | TimeInterval = b[sortBy as keyof LogAppointment]; // Type annotation for bValue
+    const aValue: string | number | TimeInterval = a[sortBy as keyof LogAppointment];
+    const bValue: string | number | TimeInterval = b[sortBy as keyof LogAppointment];
     if (aValue < bValue) return sortDescending ? 1 : -1;
     if (aValue > bValue) return sortDescending ? -1 : 1;
     return 0;
   }) : data;
+
+  const getStatusColor = (status: CompletedStatus): string => {
+    switch (status) {
+      case CompletedStatus.Rescheduled:
+        return 'grey';
+      case CompletedStatus.Successful:
+        return 'green';
+      case CompletedStatus.Failed:
+        return 'red';
+      default:
+        return '';
+    }
+  };  
 
   return (
     <table className="schedule-table">
@@ -108,14 +122,13 @@ const AllLogsPage: React.FC = () => {
       </thead>
       <tbody>
         {sortedData.map((appointment, index) => (
-            //attendantId, clientId, status, price, scheduleId, interval, place
           <tr key={index}>
             <td>{appointment.attendantId}</td>
             <td>{appointment.clientId}</td>
             <td>{appointment.price}</td>
             <td>{appointment.scheduleId}</td>
             <td>{appointment.place}</td>
-            <td>{appointment.status}</td>
+            <td style={{ backgroundColor: getStatusColor(appointment.status) }}>{appointment.status}</td>
           </tr>
         ))}
       </tbody>
