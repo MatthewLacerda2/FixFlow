@@ -35,7 +35,7 @@ function App() {
                     <Route path="RegisterSecretary" element={<RegisterUser/>}/>
                     <Route path="WeekOverview" element={<WeekOverviewPage/>}/>
 
-                    <Route path="AllSchedulesPage" element={<AllSchedulesPage/>}/>
+                    <Route path="AllSchedules" element={<AllSchedulesPage/>}/>
                     
                     <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
                     <Route path="AppointmentLog" element={<CreateLogPage/>}/>

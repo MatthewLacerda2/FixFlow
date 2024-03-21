@@ -1,14 +1,33 @@
 import React, { useState } from 'react';
-import './ScheduleAppointmentTable.css';
+import './AllSchedulesPage.css';
 import ScheduleAppointment from '../../Data/ScheduleAppointment';
 
-interface ScheduleAppointmentTableProps {
-  data: ScheduleAppointment[];
-}
-
-const AllSchedulesPage: React.FC<ScheduleAppointmentTableProps> = ({ data }) => {
+const AllSchedulesPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortDescending, setSortDescending] = useState<boolean>(false);
+
+  // Sample array of ScheduleAppointment
+  const data: ScheduleAppointment[] = [
+    {
+      id: '1',
+      clientId: 'client1',
+      attendantId: 'attendant1',
+      secretaryId: 'secretary1',
+      expectedPrice: 30,
+      dateTime: new Date(),
+      observation: 'Observation 1',
+    },
+    {
+      id: '2',
+      clientId: 'client2',
+      attendantId: 'attendant2',
+      secretaryId: 'secretary2',
+      expectedPrice: 40,
+      dateTime: new Date(),
+      observation: 'Observation 2',
+    },
+    // Add more ScheduleAppointment objects as needed
+  ];
 
   const toggleSort = (field: string) => {
     if (sortBy === field) {
@@ -25,7 +44,7 @@ const AllSchedulesPage: React.FC<ScheduleAppointmentTableProps> = ({ data }) => 
     if (aValue < bValue) return sortDescending ? 1 : -1;
     if (aValue > bValue) return sortDescending ? -1 : 1;
     return 0;
-}) : data;
+  }) : data;
 
   return (
     <table className="schedule-table">
