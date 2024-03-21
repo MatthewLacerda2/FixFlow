@@ -10,6 +10,7 @@ import WeekOverviewPage from './Pages/Business/WeekOverviewPage';
 import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
 import CreateLogPage from './Pages/Shared/CreateLogPage';
 import AllSchedulesPage from './Pages/Shared/AllSchedulesPage';
+import AllLogsPage from './Pages/Shared/AllLogsPage';
 
 function App() {
     return (
@@ -36,6 +37,7 @@ function App() {
                     <Route path="WeekOverview" element={<WeekOverviewPage/>}/>
 
                     <Route path="AllSchedules" element={<AllSchedulesPage/>}/>
+                    <Route path="AllLogs" element={<AllLogsPage/>}/>
                     
                     <Route path="AppointmentSchedule" element={<CreateSchedulePage/>}/>
                     <Route path="AppointmentLog" element={<CreateLogPage/>}/>
