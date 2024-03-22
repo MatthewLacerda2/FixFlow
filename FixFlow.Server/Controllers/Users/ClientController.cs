@@ -163,7 +163,7 @@ public class ClientController : ControllerBase {
     [HttpPatch]
     public async Task<IActionResult> UpdateClient([FromBody] ClientDTO upClient) {
 
-        var existingClient = _context.Clients.Find(upClient.Id);
+        var existingClient = await _context.Clients.FindAsync(upClient.Id);
         if (existingClient==null) {
             return BadRequest("Client does not Exist!");
         }
@@ -188,7 +188,7 @@ public class ClientController : ControllerBase {
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteClient(string id) {
 
-        var client = _context.Clients.Find(id);
+        var client = await _context.Clients.FindAsync(id);
         if(client == null){
             return BadRequest("Client does not Exist!");
         }
