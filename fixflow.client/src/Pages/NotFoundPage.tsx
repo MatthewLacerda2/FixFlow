@@ -1,7 +1,7 @@
 const NotFoundPage = () => {
   return (
     <div>
-      <h1>Not Found</h1>
+      <h1 style={{ fontSize: '4em' }}>Not Found</h1>
       <p>This content does not seem to exist</p>
     </div>
   );
