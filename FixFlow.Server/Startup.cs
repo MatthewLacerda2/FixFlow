@@ -5,6 +5,8 @@ using Microsoft.OpenApi.Models;
 using Server.Models;
 using Server.Data;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 namespace Server;
 
@@ -18,15 +20,15 @@ public class Startup {
 
     public void ConfigureServices(IServiceCollection services) {
 
-        services.AddIdentity<Client, IdentityRole>()
+        services.AddIdentityCore<Client>()
             .AddEntityFrameworkStores<ServerContext>()
             .AddDefaultTokenProviders();
 
-        services.AddIdentity<Employee, IdentityRole>()
+        services.AddIdentityCore<Employee>()
             .AddEntityFrameworkStores<ServerContext>()
             .AddDefaultTokenProviders();
 
-        services.AddIdentity<Secretary, IdentityRole>()
+        services.AddIdentityCore<Secretary>()
             .AddEntityFrameworkStores<ServerContext>()
             .AddDefaultTokenProviders();
 
@@ -57,10 +59,21 @@ public class Startup {
 
         services.AddControllersWithViews();
 
+        services.AddRateLimiter(_ => _
+            .AddFixedWindowLimiter(policyName: "fixed", options =>
+            {
+                options.PermitLimit = 10;
+                options.Window = TimeSpan.FromSeconds(5);
+                options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                options.QueueLimit = 10;
+            }));
+
         // Add Swagger
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "FlowAPI", Version = "v1" });
+            c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
         });
 
         // Add other services as needed
@@ -71,18 +84,20 @@ public class Startup {
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Flow API v0.5"));
         }
 
-        app.UseHttpsRedirection();
+        app.UseSwagger();
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Flow API v1"));
+
         app.UseRouting();
-        app.UseAuthorization();
         app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseHttpsRedirection();
 
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
         });
     }
-    }
+}

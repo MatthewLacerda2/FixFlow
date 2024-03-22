@@ -6,6 +6,8 @@
 *.sln.docstates
 
 # Common files to ignore across all projects
+mongo-data
+mysql-data
 .vs
 .vscode/
 node_modules/
