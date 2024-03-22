@@ -19,6 +19,7 @@ const Card: React.FC<CardProps> = ({ title, items, children }) => {
           </div>
         ))}
       </div>
+      <br></br>
       {children}
     </div>
   );

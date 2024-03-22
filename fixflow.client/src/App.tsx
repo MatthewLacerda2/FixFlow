@@ -12,6 +12,7 @@ import CreateLogPage from './Pages/Shared/CreateLogPage';
 import AllSchedulesPage from './Pages/Shared/AllSchedulesPage';
 import AllLogsPage from './Pages/Shared/AllLogsPage';
 import EmployeesSchedules from './Pages/Secretary/EmployeesSchedules';
+import Login from './Pages/Login';
 
 function App() {
     return (
@@ -50,6 +51,7 @@ function App() {
                     <Route path="RegisterEmployee" element={<RegisterUser/>}/>
                     <Route path="RegisterSecretary" element={<RegisterUser/>}/>
                 </Route>
+                <Route path="/Login" element={<Login/>}/>
                 <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
         </div>

@@ -9,15 +9,14 @@
 }
 
 .title {
-    color: #444444;
-    font-size: 23px;
+    color: #333333;
+    font-size: 27px;
     margin-bottom: 13px;
 }
 
 .line {
-    height: 10px;
+    height: 20px;
     background-color: #666;
-    margin-bottom: 15px;
 }
 
 .content {
