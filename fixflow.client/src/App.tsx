@@ -11,6 +11,7 @@ import CreateSchedulePage from './Pages/Shared/CreateSchedulePage';
 import CreateLogPage from './Pages/Shared/CreateLogPage';
 import AllSchedulesPage from './Pages/Shared/AllSchedulesPage';
 import AllLogsPage from './Pages/Shared/AllLogsPage';
+import EmployeesSchedules from './Pages/Secretary/EmployeesSchedules';
 
 function App() {
     return (
@@ -45,6 +46,7 @@ function App() {
                     <Route path="AllSchedules" element={<AllSchedulesPage/>}/>
                     <Route path="AllLogs" element={<AllLogsPage/>}/>
 
+                    <Route path="EmployeesSchedules" element={<EmployeesSchedules/>}/>
                     <Route path="RegisterEmployee" element={<RegisterUser/>}/>
                     <Route path="RegisterSecretary" element={<RegisterUser/>}/>
                 </Route>

@@ -1,15 +1,22 @@
+import { Link } from 'react-router-dom';
 import './SideBar.css';
 
 const SideBar = () => {
   return (
     <div className="sidebar">
-      <button className="bar-item">Something</button>
+      <Link to="WeekOverview" className="bar-item">Week Overview</Link>
       <div className='line'/>
       <br/>
-      <button className="bar-item">Else</button>
+      <Link to="EmployeesSchedules" className="bar-item">Employees Schedules</Link>
       <div className='line'/>
       <br/>
-      <button className="bar-item">Anything</button>
+      <Link to="RegisterClient" className="bar-item">Register Client</Link>
+      <div className='line'/>
+      <br/>
+      <Link to="RegisterEmployee" className="bar-item">Register Employee</Link>
+      <div className='line'/>
+      <br/>
+      <Link to="RegisterSecretary" className="bar-item">Register Secretary</Link>
       <div className='line'/>
     </div>
   );
