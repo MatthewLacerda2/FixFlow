@@ -4,8 +4,8 @@ public class SecretaryDTO {
     
     public string Id;
     public string FullName;
-    public string Email;
     public string CPF;
+    public string Email;    
     public string PhoneNumber;
     public TimeInterval shift;
 

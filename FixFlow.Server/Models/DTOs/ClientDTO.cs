@@ -4,9 +4,9 @@ public class ClientDTO {
 
     public string Id;
     public string FullName;
-    public string PhoneNumber;
     public string CPF = string.Empty;
     public string Email = string.Empty;
+    public string PhoneNumber;
     public string additionalNote;
 
     public ClientDTO(string id, string fullname, string cpf, string _phoneNumber, string _email, string _additionalNote){

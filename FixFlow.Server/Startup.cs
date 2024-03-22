@@ -22,14 +22,6 @@ public class Startup {
             .AddEntityFrameworkStores<ServerContext>()
             .AddDefaultTokenProviders();
 
-        services.AddIdentity<Employee, IdentityRole>()
-            .AddEntityFrameworkStores<ServerContext>()
-            .AddDefaultTokenProviders();
-
-        services.AddIdentity<Secretary, IdentityRole>()
-            .AddEntityFrameworkStores<ServerContext>()
-            .AddDefaultTokenProviders();
-
         // Configure DbContext for MySQL
         services.AddDbContext<ServerContext>(options =>
             options.UseMySql(Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 23))));
@@ -72,17 +64,18 @@ public class Startup {
         {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Flow API v0.5"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Flow API v1"));
         }
 
-        app.UseHttpsRedirection();
         app.UseRouting();
-        app.UseAuthorization();
         app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseHttpsRedirection();
 
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
         });
     }
-    }
+}

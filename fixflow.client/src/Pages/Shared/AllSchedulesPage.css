@@ -1,0 +1,31 @@
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.schedule-table th, .schedule-table td {
+    padding: 20px;
+    text-align: left;
+    border-bottom: 1px solid #dddddd;
+    border-color: grey;
+}
+
+.sort-button {
+    background: none;
+    cursor: pointer;
+    color: #333333;
+    border-color: #333333;
+    border-width: 1px;
+    transition: cursor 0.3s;
+}
+
+.sort-button:hover {
+    cursor: pointer;
+    border-color: #333333;
+    color: black;
+    background-color: #c3c3c3;
+}
+
+.sort-button:focus {
+    outline: none;
+}

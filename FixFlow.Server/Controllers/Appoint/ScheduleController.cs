@@ -4,14 +4,15 @@ using Microsoft.AspNetCore.Identity;
 using Server.Models;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using Server.Models.Utils;
 
 namespace webserver.Controllers;
 
 /// <summary>
 /// Controller class for Scheduled Appointment CRUD requests
 /// </summary>
-[Authorize]
 [ApiController]
+[Authorize]
 [Route("api/v1/schedules")]
 [Produces("application/json")]
 public class ScheduleController : ControllerBase {
@@ -29,6 +30,7 @@ public class ScheduleController : ControllerBase {
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentSchedule))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadSchedule(Guid id) {
 
@@ -44,6 +46,7 @@ public class ScheduleController : ControllerBase {
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentSchedule>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [Authorize(Roles = Common.Employee_Role+", "+Common.Secretary_Role)]
     [HttpGet]
     public IActionResult ReadSchedules( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
 

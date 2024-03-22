@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Server.Models;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using Server.Models.Utils;
 
 namespace webserver.Controllers;
 
@@ -44,6 +45,7 @@ public class LogController : ControllerBase {
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentLog>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [Authorize(Roles = Common.Employee_Role+", "+Common.Secretary_Role)]
     [HttpGet]
     public IActionResult ReadLogs( string? clientId, string? attendantId, [FromQuery] TimeInterval? interval,
                                     CompletedStatus? status, string? sort,
@@ -96,6 +98,7 @@ public class LogController : ControllerBase {
     
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AppointmentLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [Authorize(Roles = Common.Employee_Role+", "+Common.Secretary_Role)]
     [HttpPost]
     public async Task<IActionResult> CreateLog([FromBody] AppointmentLog newAppointment) {
 
@@ -113,6 +116,7 @@ public class LogController : ControllerBase {
     
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [Authorize(Roles = Common.Employee_Role+", "+Common.Secretary_Role)]
     [HttpPut]
     public async Task<IActionResult> UpdateLog([FromBody] AppointmentLog upAppointment) {
         
@@ -128,6 +132,7 @@ public class LogController : ControllerBase {
     
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Secretary))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [Authorize(Roles = Common.Employee_Role+", "+Common.Secretary_Role)]
     [HttpDelete]
     public async Task<IActionResult> DeleteLog(Guid id) {
 
