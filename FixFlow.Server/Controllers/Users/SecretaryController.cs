@@ -163,7 +163,7 @@ public class SecretaryController : ControllerBase {
     [HttpPatch]
     public async Task<IActionResult> UpdateSecretary([FromBody] SecretaryDTO upSecretary) {
 
-        var existingSecretary = await _context.Secretarys.FindAsync(upSecretary.Id);
+        var existingSecretary = _context.Secretarys.Find(upSecretary.Id);
         if (existingSecretary==null) {
             return BadRequest("Secretary does not Exist!");
         }
@@ -188,7 +188,7 @@ public class SecretaryController : ControllerBase {
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteSecretary(string id) {
 
-        var Secretary = await _context.Secretarys.FindAsync(id);
+        var Secretary = _context.Secretarys.Find(id);
         if(Secretary == null){
             return BadRequest("Secretary does not Exist!");
         }

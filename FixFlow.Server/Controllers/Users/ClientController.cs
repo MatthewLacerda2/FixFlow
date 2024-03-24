@@ -113,21 +113,24 @@ public class ClientController : ControllerBase {
     [HttpPost]
     public async Task<IActionResult> CreateClient([FromBody] ClientDTO clientDto, string password) {
 
-        var existingName = _context.Clients.Where(c=>c.FullName == clientDto.FullName);
-        if(existingName != null){
-            return BadRequest("FullName already registered!");
-        }
+        if(!string.IsNullOrEmpty(clientDto.PhoneNumber)){
 
-        var existingPhone = _context.Clients.Where(c=>c.PhoneNumber == clientDto.PhoneNumber);
-        if(existingPhone != null){
-            return BadRequest("PhoneNumber already registered!");
+            var existingPhone = _context.Clients.Where(c=>c.PhoneNumber == clientDto.PhoneNumber);
+            if(existingPhone != null){
+                return BadRequest("PhoneNumber already registered!");
+            }
+
+        }else{
+            clientDto.PhoneNumber = string.Empty;
         }
 
         if(!string.IsNullOrEmpty(clientDto.CPF)){
+
             var existingCPF = _context.Clients.Where(c=>c.CPF == clientDto.CPF);
             if (existingCPF != null) {
                 return BadRequest("CPF already registered!");
             }
+
         }else{
             clientDto.CPF = string.Empty;
         }
@@ -163,7 +166,7 @@ public class ClientController : ControllerBase {
     [HttpPatch]
     public async Task<IActionResult> UpdateClient([FromBody] ClientDTO upClient) {
 
-        var existingClient = await _context.Clients.FindAsync(upClient.Id);
+        var existingClient = _context.Clients.Find(upClient.Id);
         if (existingClient==null) {
             return BadRequest("Client does not Exist!");
         }
@@ -188,7 +191,7 @@ public class ClientController : ControllerBase {
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteClient(string id) {
 
-        var client = await _context.Clients.FindAsync(id);
+        var client = _context.Clients.Find(id);
         if(client == null){
             return BadRequest("Client does not Exist!");
         }
