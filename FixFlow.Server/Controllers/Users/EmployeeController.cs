@@ -163,7 +163,7 @@ public class EmployeeController : ControllerBase {
     [HttpPatch]
     public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeDTO upEmployee) {
 
-        var existingEmployee = await _context.Employees.FindAsync(upEmployee.Id);
+        var existingEmployee = _context.Employees.Find(upEmployee.Id);
         if (existingEmployee==null) {
             return BadRequest("Employee does not Exist!");
         }
@@ -188,7 +188,7 @@ public class EmployeeController : ControllerBase {
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployee(string id) {
 
-        var Employee = await _context.Employees.FindAsync(id);
+        var Employee = _context.Employees.Find(id);
         if(Employee == null){
             return BadRequest("Employee does not Exist!");
         }
