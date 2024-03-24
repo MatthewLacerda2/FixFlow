@@ -127,7 +127,7 @@ public class LogController : ControllerBase {
     
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteLog(Guid id) {
 
         var logToDelete = await _appointmentsCollection.Find(s => s.Id == id).FirstOrDefaultAsync();
