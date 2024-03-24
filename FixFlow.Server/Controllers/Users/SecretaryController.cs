@@ -60,7 +60,7 @@ public class SecretaryController : ControllerBase {
     /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
     /// <response code="200">Returns an array of Secretary DTOs</response>
     /// <response code="404">If no Secretarys fit the given filters</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SecretaryDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SecretaryDTO[]>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public async Task<IActionResult> ReadSecretarys(string? username, TimeInterval? shift, int? offset, int limit, string? sort) {

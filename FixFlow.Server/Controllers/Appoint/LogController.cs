@@ -41,7 +41,7 @@ public class LogController : ControllerBase {
         return Ok(response);
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentLog>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentLog[]>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadLogs( string? clientId, string? attendantId, [FromQuery] TimeInterval? interval,

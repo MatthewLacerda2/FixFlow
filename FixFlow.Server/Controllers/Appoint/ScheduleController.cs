@@ -41,7 +41,7 @@ public class ScheduleController : ControllerBase {
         return Ok(response);
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentSchedule>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentSchedule[]>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadSchedules( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
