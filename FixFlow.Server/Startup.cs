@@ -48,8 +48,8 @@ public class Startup {
         // Configure authentication
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options => {
-                options.LoginPath = "/Accounts/Login";
-                options.AccessDeniedPath = "/Accounts/Login";
+                options.LoginPath = "/Login";
+                options.AccessDeniedPath = "/Login";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 options.SlidingExpiration = true;
                 options.Cookie.Name = "Flow_Cookie";
