@@ -12,11 +12,12 @@ namespace webserver.Controllers;
 /// <summary>
 /// Controller class for Secretary CRUD requests
 /// </summary>
-[Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
+[Authorize(Roles = Server.Models.Utils.Common.Secretary_Role)]
 [ApiController]
 [Route("api/v1/Secretary")]
 [Produces("application/json")]
-public class SecretaryController : ControllerBase {
+public class SecretaryController : ControllerBase
+{
 
     private readonly ServerContext _context;
     private readonly UserManager<Secretary> _userManager;
@@ -24,7 +25,8 @@ public class SecretaryController : ControllerBase {
     /// <summary>
     /// Controller class for Secretary CRUD requests
     /// </summary>
-    public SecretaryController(ServerContext context, UserManager<Secretary> userManager){
+    public SecretaryController(ServerContext context, UserManager<Secretary> userManager)
+    {
         _context = context;
         _userManager = userManager;
     }
@@ -38,10 +40,12 @@ public class SecretaryController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SecretaryDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public async Task<IActionResult> ReadSecretary(string id) {
+    public async Task<IActionResult> ReadSecretary(string id)
+    {
 
         var Secretary = await _context.Secretarys.FindAsync(id);
-        if(Secretary==null){
+        if (Secretary == null)
+        {
             return NotFound();
         }
 
@@ -63,47 +67,46 @@ public class SecretaryController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SecretaryDTO[]>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public async Task<IActionResult> ReadSecretarys(string? username, TimeInterval? shift, int? offset, int limit, string? sort) {
-        
-        if (limit < 1) {
+    public async Task<IActionResult> ReadSecretarys(string? username, int? offset, int limit, string? sort)
+    {
+
+        if (limit < 1)
+        {
             return BadRequest("Limit parameter must be a natural number greater than 0");
         }
 
         var Secretarys = _context.Secretarys.AsQueryable();
 
-        if(!string.IsNullOrEmpty(username)){
+        if (!string.IsNullOrEmpty(username))
+        {
             Secretarys = Secretarys.Where(Secretary => Secretary.UserName!.Contains(username));
         }
 
-        if(shift!=null){
-            Secretarys = Secretarys.Where(Secretary => Secretary.shift.Start >= shift.Start);
-            Secretarys = Secretarys.Where(Secretary => Secretary.shift.Finish <= shift.Finish);
-        }
-
-        if(!string.IsNullOrEmpty(sort)){
+        if (!string.IsNullOrEmpty(sort))
+        {
             sort = sort.ToLower();
-            switch (sort) {
+            switch (sort)
+            {
                 case "name":
                     Secretarys = Secretarys.OrderBy(emp => emp.UserName);
-                    break;
-                case "shift":
-                    Secretarys = Secretarys.OrderBy(emp => emp.shift.Start).ThenBy(emp=>emp.shift.Finish);
                     break;
             }
         }
 
-        if(offset.HasValue){
+        if (offset.HasValue)
+        {
             Secretarys = Secretarys.Skip(offset.Value);
         }
         Secretarys = Secretarys.Take(limit);
 
         var resultQuery = await Secretarys.ToArrayAsync();
-        var resultsArray = resultQuery.Select(c=>(SecretaryDTO)c).ToArray();
-        
-        if(resultsArray.Length==0){
+        var resultsArray = resultQuery.Select(c => (SecretaryDTO)c).ToArray();
+
+        if (resultsArray.Length == 0)
+        {
             return NotFound();
         }
-        
+
         var response = JsonConvert.SerializeObject(resultsArray);
 
         return Ok(response);
@@ -119,33 +122,39 @@ public class SecretaryController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SecretaryDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPost]
-    public async Task<IActionResult> CreateSecretary([FromBody] SecretaryDTO SecretaryDto, string password) {
+    public async Task<IActionResult> CreateSecretary([FromBody] SecretaryDTO SecretaryDto, string password)
+    {
 
-        var existingName = _context.Secretarys.Where(c=>c.FullName == SecretaryDto.FullName);
-        if(existingName != null){
+        var existingName = _context.Secretarys.Where(c => c.FullName == SecretaryDto.FullName);
+        if (existingName != null)
+        {
             return BadRequest("FullName already registered!");
         }
 
         var existingEmail = await _userManager.FindByEmailAsync(SecretaryDto.Email);
-        if (existingEmail != null) {
+        if (existingEmail != null)
+        {
             return BadRequest("Email already registered!");
         }
 
-        var existingCPF = _context.Secretarys.Where(c=>c.CPF == SecretaryDto.CPF);
-        if (existingCPF != null) {
+        var existingCPF = _context.Secretarys.Where(c => c.CPF == SecretaryDto.CPF);
+        if (existingCPF != null)
+        {
             return BadRequest("CPF already registered!");
         }
-        
-        var existingPhone = _context.Secretarys.Where(c=>c.PhoneNumber == SecretaryDto.PhoneNumber);
-        if(existingPhone != null){
+
+        var existingPhone = _context.Secretarys.Where(c => c.PhoneNumber == SecretaryDto.PhoneNumber);
+        if (existingPhone != null)
+        {
             return BadRequest("PhoneNumber already registered!");
         }
 
-        Secretary Secretary = new Secretary(SecretaryDto.FullName, SecretaryDto.Email, SecretaryDto.CPF, SecretaryDto.PhoneNumber, SecretaryDto.salary, SecretaryDto.shift);
+        Secretary Secretary = new Secretary(SecretaryDto.FullName, SecretaryDto.Email, SecretaryDto.CPF, SecretaryDto.PhoneNumber, SecretaryDto.salary);
 
         var result = await _userManager.CreateAsync(Secretary, password);
 
-        if(!result.Succeeded){
+        if (!result.Succeeded)
+        {
             return StatusCode(500, "Internal Server Error: Register Secretary Unsuccessful");
         }
 
@@ -161,15 +170,17 @@ public class SecretaryController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SecretaryDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPatch]
-    public async Task<IActionResult> UpdateSecretary([FromBody] SecretaryDTO upSecretary) {
+    public async Task<IActionResult> UpdateSecretary([FromBody] SecretaryDTO upSecretary)
+    {
 
         var existingSecretary = _context.Secretarys.Find(upSecretary.Id);
-        if (existingSecretary==null) {
+        if (existingSecretary == null)
+        {
             return BadRequest("Secretary does not Exist!");
         }
 
         existingSecretary = (Secretary)upSecretary;
-        
+
         await _context.SaveChangesAsync();
 
         var response = JsonConvert.SerializeObject((SecretaryDTO)existingSecretary);
@@ -186,17 +197,19 @@ public class SecretaryController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(SecretaryDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteSecretary(string id) {
+    public async Task<IActionResult> DeleteSecretary(string id)
+    {
 
         var Secretary = _context.Secretarys.Find(id);
-        if(Secretary == null){
+        if (Secretary == null)
+        {
             return BadRequest("Secretary does not Exist!");
         }
-        
+
         _context.Secretarys.Remove(Secretary);
 
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }    
+    }
 }

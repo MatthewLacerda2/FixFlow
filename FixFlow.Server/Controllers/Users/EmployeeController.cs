@@ -12,11 +12,12 @@ namespace webserver.Controllers;
 /// <summary>
 /// Controller class for Employee CRUD requests
 /// </summary>
-[Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
+[Authorize(Roles = Server.Models.Utils.Common.Secretary_Role)]
 [ApiController]
 [Route("api/v1/employee")]
 [Produces("application/json")]
-public class EmployeeController : ControllerBase {
+public class EmployeeController : ControllerBase
+{
 
     private readonly ServerContext _context;
     private readonly UserManager<Employee> _userManager;
@@ -24,7 +25,8 @@ public class EmployeeController : ControllerBase {
     /// <summary>
     /// Controller class for Employee CRUD requests
     /// </summary>
-    public EmployeeController(ServerContext context, UserManager<Employee> userManager){
+    public EmployeeController(ServerContext context, UserManager<Employee> userManager)
+    {
         _context = context;
         _userManager = userManager;
     }
@@ -38,10 +40,12 @@ public class EmployeeController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public async Task<IActionResult> ReadEmployee(string id) {
+    public async Task<IActionResult> ReadEmployee(string id)
+    {
 
         var employee = await _context.Employees.FindAsync(id);
-        if(employee==null){
+        if (employee == null)
+        {
             return NotFound();
         }
 
@@ -63,47 +67,46 @@ public class EmployeeController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO[]>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public async Task<IActionResult> ReadEmployees(string? username, TimeInterval? shift, int? offset, int limit, string? sort) {
-        
-        if (limit < 1) {
+    public async Task<IActionResult> ReadEmployees(string? username, int? offset, int limit, string? sort)
+    {
+
+        if (limit < 1)
+        {
             return BadRequest("Limit parameter must be a natural number greater than 0");
         }
 
         var Employees = _context.Employees.AsQueryable();
 
-        if(!string.IsNullOrEmpty(username)){
+        if (!string.IsNullOrEmpty(username))
+        {
             Employees = Employees.Where(Employee => Employee.UserName!.Contains(username));
         }
 
-        if(shift!=null){
-            Employees = Employees.Where(Employee => Employee.shift.Start >= shift.Start);
-            Employees = Employees.Where(Employee => Employee.shift.Finish <= shift.Finish);
-        }
-
-        if(!string.IsNullOrEmpty(sort)){
+        if (!string.IsNullOrEmpty(sort))
+        {
             sort = sort.ToLower();
-            switch (sort) {
+            switch (sort)
+            {
                 case "name":
                     Employees = Employees.OrderBy(emp => emp.UserName);
-                    break;
-                case "shift":
-                    Employees = Employees.OrderBy(emp => emp.shift.Start).ThenBy(emp=>emp.shift.Finish);
                     break;
             }
         }
 
-        if(offset.HasValue){
+        if (offset.HasValue)
+        {
             Employees = Employees.Skip(offset.Value);
         }
         Employees = Employees.Take(limit);
 
         var resultQuery = await Employees.ToArrayAsync();
-        var resultsArray = resultQuery.Select(c=>(EmployeeDTO)c).ToArray();
-        
-        if(resultsArray.Length==0){
+        var resultsArray = resultQuery.Select(c => (EmployeeDTO)c).ToArray();
+
+        if (resultsArray.Length == 0)
+        {
             return NotFound();
         }
-        
+
         var response = JsonConvert.SerializeObject(resultsArray);
 
         return Ok(response);
@@ -119,33 +122,39 @@ public class EmployeeController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPost]
-    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDTO EmployeeDto, string password) {
+    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDTO EmployeeDto, string password)
+    {
 
-        var existingName = _context.Employees.Where(c=>c.FullName == EmployeeDto.FullName);
-        if(existingName != null){
+        var existingName = _context.Employees.Where(c => c.FullName == EmployeeDto.FullName);
+        if (existingName != null)
+        {
             return BadRequest("FullName already registered!");
         }
 
         var existingEmail = await _userManager.FindByEmailAsync(EmployeeDto.Email);
-        if (existingEmail != null) {
+        if (existingEmail != null)
+        {
             return BadRequest("Email already registered!");
         }
 
-        var existingCPF = _context.Employees.Where(c=>c.CPF == EmployeeDto.CPF);
-        if (existingCPF != null) {
+        var existingCPF = _context.Employees.Where(c => c.CPF == EmployeeDto.CPF);
+        if (existingCPF != null)
+        {
             return BadRequest("CPF already registered!");
         }
-        
-        var existingPhone = _context.Employees.Where(c=>c.PhoneNumber == EmployeeDto.PhoneNumber);
-        if(existingPhone != null){
+
+        var existingPhone = _context.Employees.Where(c => c.PhoneNumber == EmployeeDto.PhoneNumber);
+        if (existingPhone != null)
+        {
             return BadRequest("PhoneNumber already registered!");
         }
 
-        Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.Email, EmployeeDto.CPF, EmployeeDto.PhoneNumber, EmployeeDto.salary, EmployeeDto.shift);
+        Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.Email, EmployeeDto.CPF, EmployeeDto.PhoneNumber, EmployeeDto.salary);
 
         var result = await _userManager.CreateAsync(Employee, password);
 
-        if(!result.Succeeded){
+        if (!result.Succeeded)
+        {
             return StatusCode(500, "Internal Server Error: Register Employee Unsuccessful");
         }
 
@@ -161,15 +170,17 @@ public class EmployeeController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPatch]
-    public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeDTO upEmployee) {
+    public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeDTO upEmployee)
+    {
 
         var existingEmployee = _context.Employees.Find(upEmployee.Id);
-        if (existingEmployee==null) {
+        if (existingEmployee == null)
+        {
             return BadRequest("Employee does not Exist!");
         }
 
         existingEmployee = (Employee)upEmployee;
-        
+
         await _context.SaveChangesAsync();
 
         var response = JsonConvert.SerializeObject((EmployeeDTO)existingEmployee);
@@ -186,17 +197,19 @@ public class EmployeeController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteEmployee(string id) {
+    public async Task<IActionResult> DeleteEmployee(string id)
+    {
 
         var Employee = _context.Employees.Find(id);
-        if(Employee == null){
+        if (Employee == null)
+        {
             return BadRequest("Employee does not Exist!");
         }
-        
+
         _context.Employees.Remove(Employee);
 
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }    
+    }
 }
