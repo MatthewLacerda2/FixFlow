@@ -32,11 +32,11 @@ jobs:
         run: dotnet build
 
       - name: Install xUnit dependencies
-        working-directory: FixFlow.Server.Tests
+        working-directory: FixFlow.Tests
         run: dotnet restore
 
       - name: Dotnet test
-        working-directory: FixFlow.Server.Tests
+        working-directory: FixFlow.Tests
         run: dotnet test
 
       - name: Npm (React) dependencies
