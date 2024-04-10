@@ -19,8 +19,7 @@ public class ClientDTO {
     }
 
     public static explicit operator Client(ClientDTO clientDTO){
-        return new Client( clientDTO.FullName, clientDTO.PhoneNumber!, clientDTO.CPF, clientDTO.Email!, clientDTO.additionalNote
-        );
+        return new Client( clientDTO.FullName, clientDTO.PhoneNumber!, clientDTO.CPF, clientDTO.Email!, clientDTO.additionalNote);
     }
 
     public static explicit operator ClientDTO(Client client){

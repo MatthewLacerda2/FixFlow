@@ -6,6 +6,8 @@
 *.sln.docstates
 
 # Common files to ignore across all projects
+mongo-data
+mysql-data
 .vs
 .vscode/
 node_modules/
@@ -48,6 +50,7 @@ dist-ssr
 /frontend/node_modules/
 
 # .NET WebAPI specific rules
+/webapi/Migrations/
 /webapi/bin/
 /webapi/obj/
 

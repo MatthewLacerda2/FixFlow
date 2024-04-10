@@ -10,7 +10,6 @@ namespace webserver.Controllers;
 /// <summary>
 /// Controller class for Scheduled Appointment CRUD requests
 /// </summary>
-[Authorize]
 [ApiController]
 [Route("api/v1/schedules")]
 [Produces("application/json")]
@@ -42,7 +41,7 @@ public class ScheduleController : ControllerBase {
         return Ok(response);
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentSchedule>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentSchedule[]>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadSchedules( string? clientId, string? attendantId, [FromQuery] DateTime? fromDate, string? sort, int offset = 0, int limit = 20) {
@@ -51,24 +50,24 @@ public class ScheduleController : ControllerBase {
         var filter = filterBuilder.Empty;
 
         if (!string.IsNullOrEmpty(clientId)) {
-            filter &= filterBuilder.Eq(s => s.clientId, clientId);
+            filter &= filterBuilder.Eq(s => s.ClientId, clientId);
         }
         if (!string.IsNullOrEmpty(attendantId)) {
             filter &= filterBuilder.Eq(s => s.AttendantId, attendantId);
         }
         if (fromDate.HasValue) {
-            filter &= filterBuilder.Gte(s => s.dateTime, fromDate.Value);
+            filter &= filterBuilder.Gte(s => s.DateTime, fromDate.Value);
         }
 
         var appointments = _appointmentsCollection.Find(filter);
 
         if (!string.IsNullOrEmpty(sort)) {
             if(sort=="client"){
-                appointments = appointments.SortBy(s => s.clientId).ThenBy(s => s.AttendantId).ThenBy(s => s.dateTime);
+                appointments = appointments.SortBy(s => s.ClientId).ThenBy(s => s.AttendantId).ThenBy(s => s.DateTime);
             }else if(sort=="attendant"){
-                appointments = appointments.SortBy(s => s.AttendantId).ThenBy(s => s.clientId).ThenBy(s => s.dateTime);
+                appointments = appointments.SortBy(s => s.AttendantId).ThenBy(s => s.ClientId).ThenBy(s => s.DateTime);
             }else{
-                appointments = appointments.SortBy(s => s.dateTime);
+                appointments = appointments.SortBy(s => s.DateTime);
             }
         }
 
@@ -90,14 +89,7 @@ public class ScheduleController : ControllerBase {
     [HttpPost]
     public async Task<IActionResult> CreateSchedule([FromBody] AppointmentSchedule newAppointment) {
 
-        var existingClient = await _userManager.FindByIdAsync(newAppointment.clientId);
-        if(existingClient==null){
-            return BadRequest("Client does not exist");
-        }
-
-        newAppointment.Id = Guid.NewGuid();
-
-        _appointmentsCollection.InsertOne(newAppointment);
+        await _appointmentsCollection.InsertOneAsync(newAppointment);
 
         return CreatedAtAction(nameof(CreateSchedule), newAppointment);
     }
@@ -117,9 +109,9 @@ public class ScheduleController : ControllerBase {
         return Ok(upAppointment);
     }
 
-    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Secretary))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteSchedule(Guid id) {
 
         var scheduleToDelete = await _appointmentsCollection.Find(s => s.Id == id).FirstOrDefaultAsync();

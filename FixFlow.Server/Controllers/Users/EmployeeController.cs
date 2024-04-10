@@ -12,11 +12,12 @@ namespace webserver.Controllers;
 /// <summary>
 /// Controller class for Employee CRUD requests
 /// </summary>
-[Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
+[Authorize(Roles = Server.Models.Utils.Common.Secretary_Role)]
 [ApiController]
 [Route("api/v1/employee")]
 [Produces("application/json")]
-public class EmployeeController : ControllerBase {
+public class EmployeeController : ControllerBase
+{
 
     private readonly ServerContext _context;
     private readonly UserManager<Employee> _userManager;
@@ -24,7 +25,8 @@ public class EmployeeController : ControllerBase {
     /// <summary>
     /// Controller class for Employee CRUD requests
     /// </summary>
-    public EmployeeController(ServerContext context, UserManager<Employee> userManager){
+    public EmployeeController(ServerContext context, UserManager<Employee> userManager)
+    {
         _context = context;
         _userManager = userManager;
     }
@@ -35,13 +37,15 @@ public class EmployeeController : ControllerBase {
     /// <returns>Employee with the given Id. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Employee's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
-    public async Task<IActionResult> ReadEmployee(string id) {
+    public async Task<IActionResult> ReadEmployee(string id)
+    {
 
         var employee = await _context.Employees.FindAsync(id);
-        if(employee==null){
+        if (employee == null)
+        {
             return NotFound();
         }
 
@@ -60,50 +64,49 @@ public class EmployeeController : ControllerBase {
     /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
     /// <response code="200">Returns an array of Employee DTOs</response>
     /// <response code="404">If no Employees fit the given filters</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Employee>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO[]>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public async Task<IActionResult> ReadEmployees(string? username, TimeInterval? shift, int? offset, int limit, string? sort) {
-        
-        if (limit < 1) {
+    public async Task<IActionResult> ReadEmployees(string? username, int? offset, int limit, string? sort)
+    {
+
+        if (limit < 1)
+        {
             return BadRequest("Limit parameter must be a natural number greater than 0");
         }
 
         var Employees = _context.Employees.AsQueryable();
 
-        if(!string.IsNullOrEmpty(username)){
+        if (!string.IsNullOrEmpty(username))
+        {
             Employees = Employees.Where(Employee => Employee.UserName!.Contains(username));
         }
 
-        if(shift!=null){
-            Employees = Employees.Where(Employee => Employee.shift.start >= shift.start);
-            Employees = Employees.Where(Employee => Employee.shift.finish <= shift.finish);
-        }
-
-        if(!string.IsNullOrEmpty(sort)){
+        if (!string.IsNullOrEmpty(sort))
+        {
             sort = sort.ToLower();
-            switch (sort) {
+            switch (sort)
+            {
                 case "name":
                     Employees = Employees.OrderBy(emp => emp.UserName);
-                    break;
-                case "shift":
-                    Employees = Employees.OrderBy(emp => emp.shift.start).ThenBy(emp=>emp.shift.finish);
                     break;
             }
         }
 
-        if(offset.HasValue){
+        if (offset.HasValue)
+        {
             Employees = Employees.Skip(offset.Value);
         }
         Employees = Employees.Take(limit);
 
         var resultQuery = await Employees.ToArrayAsync();
-        var resultsArray = resultQuery.Select(c=>(EmployeeDTO)c).ToArray();
-        
-        if(resultsArray.Length==0){
+        var resultsArray = resultQuery.Select(c => (EmployeeDTO)c).ToArray();
+
+        if (resultsArray.Length == 0)
+        {
             return NotFound();
         }
-        
+
         var response = JsonConvert.SerializeObject(resultsArray);
 
         return Ok(response);
@@ -116,36 +119,42 @@ public class EmployeeController : ControllerBase {
     /// <response code="200">EmployeeDTO</response>
     /// <response code="400">Returns a string with the requirements that were not filled</response>
     /// <response code="400">In case the Employee's data is already Registered (it will tell which data)</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPost]
-    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDTO EmployeeDto, string password) {
+    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDTO EmployeeDto, string password)
+    {
 
-        var existingName = _context.Employees.Where(c=>c.FullName == EmployeeDto.FullName);
-        if(existingName != null){
+        var existingName = _context.Employees.Where(c => c.FullName == EmployeeDto.FullName);
+        if (existingName != null)
+        {
             return BadRequest("FullName already registered!");
         }
 
         var existingEmail = await _userManager.FindByEmailAsync(EmployeeDto.Email);
-        if (existingEmail != null) {
+        if (existingEmail != null)
+        {
             return BadRequest("Email already registered!");
         }
 
-        var existingCPF = _context.Employees.Where(c=>c.CPF == EmployeeDto.CPF);
-        if (existingCPF != null) {
+        var existingCPF = _context.Employees.Where(c => c.CPF == EmployeeDto.CPF);
+        if (existingCPF != null)
+        {
             return BadRequest("CPF already registered!");
         }
-        
-        var existingPhone = _context.Employees.Where(c=>c.PhoneNumber == EmployeeDto.PhoneNumber);
-        if(existingPhone != null){
+
+        var existingPhone = _context.Employees.Where(c => c.PhoneNumber == EmployeeDto.PhoneNumber);
+        if (existingPhone != null)
+        {
             return BadRequest("PhoneNumber already registered!");
         }
 
-        Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.Email, EmployeeDto.CPF, EmployeeDto.PhoneNumber, EmployeeDto.salary, EmployeeDto.shift);
+        Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.Email, EmployeeDto.CPF, EmployeeDto.PhoneNumber, EmployeeDto.salary);
 
         var result = await _userManager.CreateAsync(Employee, password);
 
-        if(!result.Succeeded){
+        if (!result.Succeeded)
+        {
             return StatusCode(500, "Internal Server Error: Register Employee Unsuccessful");
         }
 
@@ -158,18 +167,20 @@ public class EmployeeController : ControllerBase {
     /// <returns>Employee's DTO with the updated Data</returns>
     /// <response code="200">Employee's DTO with the updated data</response>
     /// <response code="400">If a Employee with the given Id was not found</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Employee))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPatch]
-    public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeDTO upEmployee) {
+    public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeDTO upEmployee)
+    {
 
         var existingEmployee = _context.Employees.Find(upEmployee.Id);
-        if (existingEmployee==null) {
+        if (existingEmployee == null)
+        {
             return BadRequest("Employee does not Exist!");
         }
 
         existingEmployee = (Employee)upEmployee;
-        
+
         await _context.SaveChangesAsync();
 
         var response = JsonConvert.SerializeObject((EmployeeDTO)existingEmployee);
@@ -183,20 +194,22 @@ public class EmployeeController : ControllerBase {
     /// <returns>NoContent if successfull</returns>
     /// <response code="200">Employee was found, and thus deleted</response>
     /// <response code="400">Employee not found</response>
-    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Employee))]
+    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteEmployee(string id) {
+    public async Task<IActionResult> DeleteEmployee(string id)
+    {
 
         var Employee = _context.Employees.Find(id);
-        if(Employee == null){
+        if (Employee == null)
+        {
             return BadRequest("Employee does not Exist!");
         }
-        
+
         _context.Employees.Remove(Employee);
 
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }    
+    }
 }

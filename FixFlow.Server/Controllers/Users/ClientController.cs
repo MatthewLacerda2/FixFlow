@@ -35,7 +35,7 @@ public class ClientController : ControllerBase {
     /// <returns>Client with the given Id. NotFoundResult if there is none</returns>
     /// <response code="200">Returns the Client's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadClient(string id) {
@@ -60,7 +60,7 @@ public class ClientController : ControllerBase {
     /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
     /// <response code="200">Returns an array of Client DTOs</response>
     /// <response code="404">If no Clients fit the given filters</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Client>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO[]>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public async Task<IActionResult> ReadClients(string? username, int? offset, int limit, string? sort) {
@@ -108,26 +108,29 @@ public class ClientController : ControllerBase {
     /// <response code="200">ClientDTO</response>
     /// <response code="400">Returns a string with the requirements that were not filled</response>
     /// <response code="400">In case the Client's data is already Registered (it will tell which data)</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Client))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPost]
     public async Task<IActionResult> CreateClient([FromBody] ClientDTO clientDto, string password) {
 
-        var existingName = _context.Clients.Where(c=>c.FullName == clientDto.FullName);
-        if(existingName != null){
-            return BadRequest("FullName already registered!");
-        }
+        if(!string.IsNullOrEmpty(clientDto.PhoneNumber)){
 
-        var existingPhone = _context.Clients.Where(c=>c.PhoneNumber == clientDto.PhoneNumber);
-        if(existingPhone != null){
-            return BadRequest("PhoneNumber already registered!");
+            var existingPhone = _context.Clients.Where(c=>c.PhoneNumber == clientDto.PhoneNumber);
+            if(existingPhone != null){
+                return BadRequest("PhoneNumber already registered!");
+            }
+
+        }else{
+            clientDto.PhoneNumber = string.Empty;
         }
 
         if(!string.IsNullOrEmpty(clientDto.CPF)){
+
             var existingCPF = _context.Clients.Where(c=>c.CPF == clientDto.CPF);
             if (existingCPF != null) {
                 return BadRequest("CPF already registered!");
             }
+
         }else{
             clientDto.CPF = string.Empty;
         }
@@ -158,7 +161,7 @@ public class ClientController : ControllerBase {
     /// <returns>Client's DTO with the updated Data</returns>
     /// <response code="200">Client's DTO with the updated data</response>
     /// <response code="400">If a Client with the given Id was not found</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Client))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpPatch]
     public async Task<IActionResult> UpdateClient([FromBody] ClientDTO upClient) {
@@ -183,7 +186,7 @@ public class ClientController : ControllerBase {
     /// <returns>NoContent if successfull</returns>
     /// <response code="200">Client was found, and thus deleted</response>
     /// <response code="400">Client not found</response>
-    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(Client))]
+    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(ClientDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteClient(string id) {
