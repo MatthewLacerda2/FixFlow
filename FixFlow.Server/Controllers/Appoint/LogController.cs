@@ -28,7 +28,7 @@ public class LogController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentLog))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadLog(string id)
     {
@@ -44,7 +44,7 @@ public class LogController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentLog[]>))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadLogs(string? ClientId, float? minPrice, float? maxPrice,
                                     DateOnly? minDate, DateOnly? maxDate, CompletedStatus? status,
@@ -147,7 +147,7 @@ public class LogController : ControllerBase
         var existingLog = _appointmentsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefault();
         if (existingLog == null)
         {
-            return NotFound("Log not found");
+            return BadRequest("Log does not exist");
         }
 
         await _appointmentsCollection.ReplaceOneAsync(s => s.Id == upAppointment.Id, upAppointment);
@@ -156,7 +156,7 @@ public class LogController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteLog(string id)
     {

@@ -28,7 +28,7 @@ public class ScheduleController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentSchedule))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadSchedule(string id)
     {
@@ -131,7 +131,7 @@ public class ScheduleController : ControllerBase
         var existingAppointment = _appointmentsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefault();
         if (existingAppointment == null)
         {
-            return NotFound("Schedule not found");
+            return BadRequest("Schedule does not exist");
         }
 
         await _appointmentsCollection.ReplaceOneAsync(s => s.Id == upAppointment.Id, upAppointment);
@@ -140,7 +140,7 @@ public class ScheduleController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteSchedule(string id)
     {

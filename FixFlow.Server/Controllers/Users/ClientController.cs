@@ -61,7 +61,6 @@ public class ClientController : ControllerBase
     /// <response code="200">Returns an array of Client DTOs</response>
     /// <response code="404">If no Clients fit the given filters</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO[]>))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
     public async Task<IActionResult> ReadClients(string? username, int? offset, int? limit, string? sort)
     {
@@ -78,7 +77,7 @@ public class ClientController : ControllerBase
             sort = sort.ToLower();
             if (sort.Contains("name"))
             {
-                clientsQuery = clientsQuery.OrderBy(c => c.UserName);
+                clientsQuery = clientsQuery.OrderBy(c => c.FullName).ThenBy(c => c.UserName);
             }
         }
 
@@ -104,16 +103,17 @@ public class ClientController : ControllerBase
     /// <response code="200">ClientDTO</response>
     /// <response code="400">Returns a string with the requirements that were not filled</response>
     /// <response code="400">In case the Client's data is already Registered (it will tell which data)</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDTO))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
     [HttpPost]
-    public async Task<IActionResult> CreateClient([FromBody] ClientDTO clientDto, string password)
+    public async Task<IActionResult> CreateClient([FromBody] ClientRegister clientRegister)
     {
 
-        if (!string.IsNullOrWhiteSpace(clientDto.PhoneNumber))
+        if (!string.IsNullOrWhiteSpace(clientRegister.PhoneNumber))
         {
 
-            var existingPhone = _context.Clients.Where(c => c.PhoneNumber == clientDto.PhoneNumber);
+            var existingPhone = _context.Clients.Where(c => c.PhoneNumber == clientRegister.PhoneNumber);
             if (existingPhone != null)
             {
                 return BadRequest("PhoneNumber already registered!");
@@ -122,13 +122,13 @@ public class ClientController : ControllerBase
         }
         else
         {
-            clientDto.PhoneNumber = string.Empty;
+            clientRegister.PhoneNumber = string.Empty;
         }
 
-        if (!string.IsNullOrWhiteSpace(clientDto.CPF))
+        if (!string.IsNullOrWhiteSpace(clientRegister.CPF))
         {
 
-            var existingCPF = _context.Clients.Where(c => c.CPF == clientDto.CPF);
+            var existingCPF = _context.Clients.Where(c => c.CPF == clientRegister.CPF);
             if (existingCPF != null)
             {
                 return BadRequest("CPF already registered!");
@@ -137,12 +137,12 @@ public class ClientController : ControllerBase
         }
         else
         {
-            clientDto.CPF = string.Empty;
+            clientRegister.CPF = string.Empty;
         }
 
-        if (!string.IsNullOrWhiteSpace(clientDto.Email))
+        if (!string.IsNullOrWhiteSpace(clientRegister.Email))
         {
-            var existingEmail = await _userManager.FindByEmailAsync(clientDto.Email);
+            var existingEmail = await _userManager.FindByEmailAsync(clientRegister.Email);
             if (existingEmail != null)
             {
                 return BadRequest("Email already registered!");
@@ -150,12 +150,12 @@ public class ClientController : ControllerBase
         }
         else
         {
-            clientDto.Email = string.Empty;
+            clientRegister.Email = string.Empty;
         }
 
-        Client client = new Client(clientDto.FullName, clientDto.CPF, clientDto.PhoneNumber, clientDto.Email, clientDto.additionalNote);
+        Client client = new Client(clientRegister.FullName, clientRegister.CPF, clientRegister.PhoneNumber, clientRegister.Email, clientRegister.additionalNote);
 
-        var result = await _userManager.CreateAsync(client, password);
+        var result = await _userManager.CreateAsync(client, clientRegister.newPassword);
 
         if (!result.Succeeded)
         {
@@ -172,9 +172,9 @@ public class ClientController : ControllerBase
     /// <response code="200">Client's DTO with the updated data</response>
     /// <response code="400">If a Client with the given Id was not found</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDTO))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPatch]
-    public async Task<IActionResult> UpdateClient([FromBody] ClientDTO upClient)
+    public async Task<IActionResult> UpdateClient([FromBody] ClientRegister upClient)
     {
 
         var existingClient = _context.Clients.Find(upClient.Id);
@@ -184,6 +184,11 @@ public class ClientController : ControllerBase
         }
 
         existingClient = (Client)upClient;
+
+        if (!string.IsNullOrWhiteSpace(upClient.currentPassword) && !string.IsNullOrWhiteSpace(upClient.newPassword))
+        {
+            await _userManager.ChangePasswordAsync(existingClient, upClient.currentPassword, upClient.newPassword);
+        }
 
         await _context.SaveChangesAsync();
 
