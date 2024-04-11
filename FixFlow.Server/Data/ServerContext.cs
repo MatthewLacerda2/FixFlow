@@ -26,7 +26,6 @@ namespace Server.Data
 
         public DbSet<Client> Clients { get; set; } = default!;
         public DbSet<Employee> Employees { get; set; } = default!;
-        public DbSet<Secretary> Secretarys { get; set; } = default!;
 
     }
 }

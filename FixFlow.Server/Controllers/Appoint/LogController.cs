@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Server.Models;
 using MongoDB.Driver;
@@ -29,9 +28,9 @@ public class LogController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentLog))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet("{id}")]
-    public async Task<IActionResult> ReadLog(Guid id)
+    public async Task<IActionResult> ReadLog(string id)
     {
 
         var log = await _appointmentsCollection.FindAsync(s => s.Id == id);
@@ -41,33 +40,35 @@ public class LogController : ControllerBase
             return NotFound();
         }
 
-        var response = JsonConvert.SerializeObject(log);
-        return Ok(response);
+        return Ok(log);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentLog[]>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public IActionResult ReadLogs(string? clientId, string? attendantId,
-                                    CompletedStatus? status, string? sort,
-                                    string? place, int offset = 0, int limit = 20)
+    public IActionResult ReadLogs(string? ClientId, float? minPrice, float? maxPrice,
+                                    DateOnly? minDate, DateOnly? maxDate, CompletedStatus? status,
+                                    string? sort, int? offset = 0, int? limit = 10)
     {
 
         var filterBuilder = Builders<AppointmentLog>.Filter;
         var filter = filterBuilder.Empty;
 
-        if (!string.IsNullOrEmpty(clientId))
+        if (!string.IsNullOrWhiteSpace(ClientId))
         {
-            filter &= filterBuilder.Eq(s => s.ClientId, clientId);
+            filter &= filterBuilder.Eq(s => s.ClientId, ClientId);
         }
-        if (!string.IsNullOrEmpty(attendantId))
+
+        if (minPrice.HasValue)
         {
-            filter &= filterBuilder.Eq(s => s.AttendantId, attendantId);
+            filter &= filterBuilder.Gte(s => s.Price, minPrice);
         }
-        if (!string.IsNullOrEmpty(place))
+
+        if (maxPrice.HasValue)
         {
-            filter &= filterBuilder.Eq(s => s.Place, place);
+            filter &= filterBuilder.Lte(s => s.Price, maxPrice);
         }
+
         if (status.HasValue)
         {
             filter &= filterBuilder.Eq(s => s.Status, status);
@@ -75,15 +76,24 @@ public class LogController : ControllerBase
 
         var appointments = _appointmentsCollection.Find(filter);
 
-        if (!string.IsNullOrEmpty(sort))
+        if (!string.IsNullOrWhiteSpace(sort))
         {
-            if (sort == "client")
+            sort = sort.ToLower();
+            if (sort.Contains("client"))
             {
-                appointments = appointments.SortBy(s => s.ClientId);
+                appointments = appointments.SortBy(s => s.ClientId).ThenBy(s => s.DateTime);
             }
-            else if (sort == "attendant")
+            else if (sort.Contains("price"))
             {
-                appointments = appointments.SortBy(s => s.AttendantId);
+                appointments = appointments.SortBy(s => s.Price).ThenBy(s => s.DateTime);
+            }
+            else if (sort.Contains("date"))
+            {
+                appointments = appointments.SortBy(s => s.DateTime);
+            }
+            else
+            {
+                return BadRequest("Bad 'Sort' string");
             }
         }
 
@@ -93,12 +103,12 @@ public class LogController : ControllerBase
             .ToList()
             .ToArray();
 
-        if (result.Length == 0)
+        if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
         {
-            return NotFound();
+            result.Reverse();
         }
 
-        return Ok(JsonConvert.SerializeObject(result));
+        return Ok(result);
     }
 
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AppointmentLog))]
@@ -107,15 +117,23 @@ public class LogController : ControllerBase
     public async Task<IActionResult> CreateLog([FromBody] AppointmentLog newAppointment)
     {
 
-        var existingClient = await _userManager.FindByIdAsync(newAppointment.ClientId);
+        var existingClient = _userManager.FindByIdAsync(newAppointment.ClientId);
         if (existingClient == null)
         {
             return BadRequest("Client does not exist");
         }
 
-        newAppointment.Id = Guid.NewGuid();
+        if (!string.IsNullOrWhiteSpace(newAppointment.ScheduleId))
+        {
+            var existingSchedule = _appointmentsCollection.Find(newAppointment.ScheduleId);
 
-        _appointmentsCollection.InsertOne(newAppointment);
+            if (existingSchedule == null)
+            {
+                return BadRequest("Schedule does not exist");
+            }
+        }
+
+        await _appointmentsCollection.InsertOneAsync(newAppointment);
 
         return CreatedAtAction(nameof(CreateLog), newAppointment);
     }
@@ -126,7 +144,7 @@ public class LogController : ControllerBase
     public async Task<IActionResult> UpdateLog([FromBody] AppointmentLog upAppointment)
     {
 
-        var existingLog = await _appointmentsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefaultAsync();
+        var existingLog = _appointmentsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefault();
         if (existingLog == null)
         {
             return NotFound("Log not found");
@@ -138,12 +156,12 @@ public class LogController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteLog(Guid id)
+    public async Task<IActionResult> DeleteLog(string id)
     {
 
-        var logToDelete = await _appointmentsCollection.Find(s => s.Id == id).FirstOrDefaultAsync();
+        var logToDelete = _appointmentsCollection.Find(s => s.Id == id).FirstOrDefault();
         if (logToDelete == null)
         {
             return BadRequest("Log Appointment does not exist");

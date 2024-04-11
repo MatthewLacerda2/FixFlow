@@ -124,13 +124,6 @@ public class EmployeeController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateEmployee([FromBody] EmployeeDTO EmployeeDto, string password)
     {
-
-        var existingName = _context.Employees.Where(c => c.FullName == EmployeeDto.FullName);
-        if (existingName != null)
-        {
-            return BadRequest("FullName already registered!");
-        }
-
         var existingEmail = await _userManager.FindByEmailAsync(EmployeeDto.Email);
         if (existingEmail != null)
         {
@@ -149,7 +142,7 @@ public class EmployeeController : ControllerBase
             return BadRequest("PhoneNumber already registered!");
         }
 
-        Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.Email, EmployeeDto.CPF, EmployeeDto.PhoneNumber, EmployeeDto.salary);
+        Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.CPF, EmployeeDto.salary, EmployeeDto.Email, EmployeeDto.PhoneNumber);
 
         var result = await _userManager.CreateAsync(Employee, password);
 
