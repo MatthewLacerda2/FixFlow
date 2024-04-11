@@ -1,20 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Models;
 using Server.Models.DTO;
-using Newtonsoft.Json;
+using Server.Models.Utils;
 
 namespace webserver.Controllers;
 
 /// <summary>
 /// Controller class for Employee CRUD requests
 /// </summary>
-[Authorize(Roles = Server.Models.Utils.Common.Secretary_Role)]
 [ApiController]
-[Route("api/v1/employee")]
+[Route(Common.api_route + "employee")]
 [Produces("application/json")]
 public class EmployeeController : ControllerBase
 {
@@ -49,9 +47,7 @@ public class EmployeeController : ControllerBase
             return NotFound();
         }
 
-        var response = JsonConvert.SerializeObject((EmployeeDTO)employee);
-
-        return Ok(response);
+        return Ok((EmployeeDTO)employee);
     }
 
     /// <summary>
@@ -67,49 +63,38 @@ public class EmployeeController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO[]>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public async Task<IActionResult> ReadEmployees(string? username, int? offset, int limit, string? sort)
+    public async Task<IActionResult> ReadEmployees(string? username, int? offset, int? limit, string? sort)
     {
 
-        if (limit < 1)
+        var employeesQuery = _context.Employees.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(username))
         {
-            return BadRequest("Limit parameter must be a natural number greater than 0");
+            employeesQuery = employeesQuery.Where(Employee => Employee.UserName!.Contains(username, StringComparison.OrdinalIgnoreCase));
         }
 
-        var Employees = _context.Employees.AsQueryable();
-
-        if (!string.IsNullOrEmpty(username))
-        {
-            Employees = Employees.Where(Employee => Employee.UserName!.Contains(username));
-        }
-
-        if (!string.IsNullOrEmpty(sort))
+        if (!string.IsNullOrWhiteSpace(sort))
         {
             sort = sort.ToLower();
-            switch (sort)
+            if (sort.Contains("name"))
             {
-                case "name":
-                    Employees = Employees.OrderBy(emp => emp.UserName);
-                    break;
+
             }
         }
 
-        if (offset.HasValue)
-        {
-            Employees = Employees.Skip(offset.Value);
-        }
-        Employees = Employees.Take(limit);
+        offset = offset.HasValue ? offset : 0;
+        limit = limit.HasValue ? limit : 10;
 
-        var resultQuery = await Employees.ToArrayAsync();
-        var resultsArray = resultQuery.Select(c => (EmployeeDTO)c).ToArray();
+        employeesQuery = employeesQuery.Skip((int)offset).Take((int)limit);
 
-        if (resultsArray.Length == 0)
+        var resultsArray = await employeesQuery.Select(c => (EmployeeDTO)c).ToArrayAsync();
+
+        if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
         {
-            return NotFound();
+            resultsArray.Reverse();
         }
 
-        var response = JsonConvert.SerializeObject(resultsArray);
-
-        return Ok(response);
+        return Ok(resultsArray);
     }
 
     /// <summary>
@@ -161,7 +146,7 @@ public class EmployeeController : ControllerBase
     /// <response code="200">Employee's DTO with the updated data</response>
     /// <response code="400">If a Employee with the given Id was not found</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPatch]
     public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeDTO upEmployee)
     {
@@ -176,9 +161,7 @@ public class EmployeeController : ControllerBase
 
         await _context.SaveChangesAsync();
 
-        var response = JsonConvert.SerializeObject((EmployeeDTO)existingEmployee);
-
-        return Ok(response);
+        return Ok((EmployeeDTO)existingEmployee);
     }
 
     /// <summary>

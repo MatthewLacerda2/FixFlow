@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Server.Models;
 using MongoDB.Driver;
-using Newtonsoft.Json;
+using Server.Models;
+using Server.Models.Utils;
 
 namespace webserver.Controllers;
 
@@ -10,7 +10,7 @@ namespace webserver.Controllers;
 /// Controller class for Scheduled Appointment CRUD requests
 /// </summary>
 [ApiController]
-[Route("api/v1/schedules")]
+[Route(Common.api_route + "schedules")]
 [Produces("application/json")]
 public class ScheduleController : ControllerBase
 {
@@ -47,33 +47,33 @@ public class ScheduleController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadSchedules(string? ClientId, float? minPrice, float? maxPrice,
-                                        string? sort, int? offset = 0, int? limit = 20)
+                                        string? sort, int? offset = 0, int? limit = 10)
     {
 
         var filterBuilder = Builders<AppointmentSchedule>.Filter;
         var filter = filterBuilder.Empty;
 
-        if (!string.IsNullOrEmpty(ClientId))
+        if (!string.IsNullOrWhiteSpace(ClientId))
         {
             filter &= filterBuilder.Eq(s => s.ClientId, ClientId);
         }
 
         var appointments = _appointmentsCollection.Find(filter);
 
-        if (!string.IsNullOrEmpty(sort))
+        if (!string.IsNullOrWhiteSpace(sort))
         {
             sort = sort.ToLower();
             if (sort.Contains("client"))
             {
-                appointments = appointments.SortBy(s => s.ClientId).ThenBy(s => s.DateTime);
+                appointments = appointments.SortBy(s => s.ClientId).ThenBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
             else if (sort.Contains("price"))
             {
-                appointments = appointments.SortBy(s => s.Price).ThenBy(s => s.DateTime);
+                appointments = appointments.SortBy(s => s.Price).ThenBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
             else if (sort.Contains("date"))
             {
-                appointments = appointments.SortBy(s => s.DateTime);
+                appointments = appointments.SortBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
             else
             {

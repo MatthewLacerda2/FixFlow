@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Server.Models;
 using MongoDB.Driver;
-using Newtonsoft.Json;
+using Server.Models;
+using Server.Models.Utils;
 
 namespace webserver.Controllers;
 
@@ -10,7 +10,7 @@ namespace webserver.Controllers;
 /// Controller class for Appointment Log CRUD requests
 /// </summary>
 [ApiController]
-[Route("api/v1/logs")]
+[Route(Common.api_route + "logs")]
 [Produces("application/json")]
 public class LogController : ControllerBase
 {
@@ -81,15 +81,15 @@ public class LogController : ControllerBase
             sort = sort.ToLower();
             if (sort.Contains("client"))
             {
-                appointments = appointments.SortBy(s => s.ClientId).ThenBy(s => s.DateTime);
+                appointments = appointments.SortBy(s => s.ClientId).ThenBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
             else if (sort.Contains("price"))
             {
-                appointments = appointments.SortBy(s => s.Price).ThenBy(s => s.DateTime);
+                appointments = appointments.SortBy(s => s.Price).ThenBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
             else if (sort.Contains("date"))
             {
-                appointments = appointments.SortBy(s => s.DateTime);
+                appointments = appointments.SortBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
             else
             {
