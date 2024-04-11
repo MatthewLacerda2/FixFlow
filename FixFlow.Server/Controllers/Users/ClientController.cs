@@ -41,7 +41,7 @@ public class ClientController : ControllerBase
     public async Task<IActionResult> ReadClient(string id)
     {
 
-        var client = await _context.Clients.FindAsync(id);
+        var client = await _userManager.FindByIdAsync(id);
         if (client == null)
         {
             return NotFound();
@@ -246,7 +246,7 @@ public class ClientController : ControllerBase
     public async Task<IActionResult> DeleteClient(string id)
     {
 
-        var client = _context.Clients.Find(id);
+        var client = await _userManager.FindByIdAsync(id);
         if (client == null)
         {
             return BadRequest("Client does not Exist!");

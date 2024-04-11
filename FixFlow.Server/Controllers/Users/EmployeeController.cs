@@ -41,7 +41,7 @@ public class EmployeeController : ControllerBase
     public async Task<IActionResult> ReadEmployee(string id)
     {
 
-        var employee = await _context.Employees.FindAsync(id);
+        var employee = await _userManager.FindByIdAsync(id);
         if (employee == null)
         {
             return NotFound();
@@ -220,7 +220,7 @@ public class EmployeeController : ControllerBase
     public async Task<IActionResult> DeleteEmployee(string id)
     {
 
-        var Employee = _context.Employees.Find(id);
+        var Employee = await _userManager.FindByIdAsync(id);
         if (Employee == null)
         {
             return BadRequest("Employee does not Exist!");
