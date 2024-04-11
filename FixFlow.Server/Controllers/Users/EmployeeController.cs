@@ -157,6 +157,45 @@ public class EmployeeController : ControllerBase
             return BadRequest("Employee does not Exist!");
         }
 
+        if (existingEmployee.CPF != upEmployee.CPF)
+        {
+            var existingCPF = _context.Clients.Where(x => x.CPF == upEmployee.CPF);
+            if (existingCPF.Any())
+            {
+                return BadRequest("CPF taken");
+            }
+            else
+            {
+                await _userManager.SetUserNameAsync(existingEmployee, upEmployee.UserName);
+            }
+        }
+
+        if (existingEmployee.UserName != upEmployee.UserName)
+        {
+            var existingUsername = _context.Clients.Where(x => x.UserName == upEmployee.UserName);
+            if (existingUsername.Any())
+            {
+                return BadRequest("Username already exists");
+            }
+            else
+            {
+                await _userManager.SetUserNameAsync(existingEmployee, upEmployee.UserName);
+            }
+        }
+
+        if (existingEmployee.PhoneNumber != upEmployee.PhoneNumber)
+        {
+            var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upEmployee.PhoneNumber);
+            if (existingPhonenumber.Any())
+            {
+                return BadRequest("PhoneNumber taken");
+            }
+            else
+            {
+                await _userManager.SetPhoneNumberAsync(existingEmployee, upEmployee.PhoneNumber);
+            }
+        }
+
         existingEmployee = (Employee)upEmployee;
 
         if (!string.IsNullOrWhiteSpace(upEmployee.currentPassword) && !string.IsNullOrWhiteSpace(upEmployee.newPassword))

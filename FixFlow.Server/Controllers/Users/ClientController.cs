@@ -183,6 +183,45 @@ public class ClientController : ControllerBase
             return BadRequest("Client does not Exist!");
         }
 
+        if (existingClient.CPF != upClient.CPF)
+        {
+            var existingCPF = _context.Clients.Where(x => x.CPF == upClient.CPF);
+            if (existingCPF.Any())
+            {
+                return BadRequest("CPF taken");
+            }
+            else
+            {
+                await _userManager.SetUserNameAsync(existingClient, upClient.UserName);
+            }
+        }
+
+        if (existingClient.UserName != upClient.UserName)
+        {
+            var existingUsername = _context.Clients.Where(x => x.UserName == upClient.UserName);
+            if (existingUsername.Any())
+            {
+                return BadRequest("Username already exists");
+            }
+            else
+            {
+                await _userManager.SetUserNameAsync(existingClient, upClient.UserName);
+            }
+        }
+
+        if (existingClient.PhoneNumber != upClient.PhoneNumber)
+        {
+            var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upClient.PhoneNumber);
+            if (existingPhonenumber.Any())
+            {
+                return BadRequest("PhoneNumber taken");
+            }
+            else
+            {
+                await _userManager.SetPhoneNumberAsync(existingClient, upClient.PhoneNumber);
+            }
+        }
+
         existingClient = (Client)upClient;
 
         if (!string.IsNullOrWhiteSpace(upClient.currentPassword) && !string.IsNullOrWhiteSpace(upClient.newPassword))

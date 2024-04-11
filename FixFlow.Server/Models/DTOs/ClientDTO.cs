@@ -5,28 +5,29 @@ public class ClientDTO
     public string Id;
     public string FullName;
     public string CPF;
-    public string additionalNote;
+    public string additionalNote = string.Empty;
 
+    public string UserName;
     public string PhoneNumber;
     public string Email;
 
-    public ClientDTO(string id, string fullname, string cpf, string _additionalNote, string _phoneNumber, string _email)
+    public ClientDTO(string id, string fullname, string cpf, string _userName, string _phoneNumber, string _email)
     {
         Id = id;
         FullName = fullname;
         CPF = cpf;
+        UserName = _userName;
         PhoneNumber = _phoneNumber;
         Email = _email;
-        additionalNote = _additionalNote;
     }
 
     public static explicit operator Client(ClientDTO clientDTO)
     {
-        return new Client(clientDTO.FullName, clientDTO.PhoneNumber!, clientDTO.CPF, clientDTO.Email!, clientDTO.additionalNote);
+        return new Client(clientDTO.FullName, clientDTO.PhoneNumber!, clientDTO.additionalNote, clientDTO.CPF, clientDTO.Email!);
     }
 
     public static explicit operator ClientDTO(Client client)
     {
-        return new ClientDTO(client.Id, client.FullName, client.PhoneNumber!, client.CPF, client.Email!, client.additionalNote);
+        return new ClientDTO(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!);
     }
 }
