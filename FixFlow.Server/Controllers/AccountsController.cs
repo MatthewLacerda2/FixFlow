@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using MongoDB.Driver;
 using Server.Models;
 using Server.Models.Utils;
 using Server.Data;
@@ -29,5 +28,12 @@ public class AccountsController : ControllerBase
         _signInManager = signInManager;
         _configuration = configuration;
         _context = context;
+    }
+
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    public async Task<IActionResult> Login([FromBody] FlowLoginRequest credentials)
+    {
+
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using MongoDB.Driver;
 using Server.Models;
 using Server.Models.Utils;
-using MongoDB.Bson;
+using Server.Models.Appointments;
 
 namespace webserver.Controllers;
 

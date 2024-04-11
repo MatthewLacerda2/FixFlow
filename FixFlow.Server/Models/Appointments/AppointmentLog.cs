@@ -1,4 +1,6 @@
-namespace Server.Models;
+using Server.Models.Utils;
+
+namespace Server.Models.Appointments;
 
 public class AppointmentLog
 {
