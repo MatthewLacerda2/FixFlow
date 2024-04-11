@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using MongoDB.Driver;
 using Server.Models;
 using Server.Models.Utils;
+using MongoDB.Bson;
 
 namespace webserver.Controllers;
 
@@ -15,16 +16,16 @@ namespace webserver.Controllers;
 public class LogController : ControllerBase
 {
 
-    private readonly IMongoCollection<AppointmentLog> _appointmentsCollection;
+    private readonly IMongoCollection<AppointmentLog> _logsCollection;
     private readonly UserManager<Client> _userManager;
 
     /// <summary>
     /// Controller class for Appointment Log CRUD requests
     /// </summary>
-    public LogController(UserManager<Client> userManager, IMongoClient mongoClient)
+    public LogController(IMongoClient mongoClient, UserManager<Client> userManager)
     {
+        _logsCollection = mongoClient.GetDatabase("mongo_db").GetCollection<AppointmentLog>("AppointmentLogs");
         _userManager = userManager;
-        _appointmentsCollection = mongoClient.GetDatabase("mongo_db").GetCollection<AppointmentLog>("AppointmentLogs");
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentLog))]
@@ -33,7 +34,7 @@ public class LogController : ControllerBase
     public async Task<IActionResult> ReadLog(string id)
     {
 
-        var log = await _appointmentsCollection.FindAsync(s => s.Id == id);
+        var log = await _logsCollection.FindAsync(s => s.Id == id);
 
         if (log == null)
         {
@@ -74,7 +75,7 @@ public class LogController : ControllerBase
             filter &= filterBuilder.Eq(s => s.Status, status);
         }
 
-        var appointments = _appointmentsCollection.Find(filter);
+        var appointments = _logsCollection.Find(filter);
 
         if (!string.IsNullOrWhiteSpace(sort))
         {
@@ -125,7 +126,7 @@ public class LogController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(newAppointment.ScheduleId))
         {
-            var existingSchedule = _appointmentsCollection.Find(newAppointment.ScheduleId);
+            var existingSchedule = _logsCollection.Find(newAppointment.ScheduleId);
 
             if (existingSchedule == null)
             {
@@ -133,7 +134,7 @@ public class LogController : ControllerBase
             }
         }
 
-        await _appointmentsCollection.InsertOneAsync(newAppointment);
+        await _logsCollection.InsertOneAsync(newAppointment);
 
         return CreatedAtAction(nameof(CreateLog), newAppointment);
     }
@@ -144,13 +145,13 @@ public class LogController : ControllerBase
     public async Task<IActionResult> UpdateLog([FromBody] AppointmentLog upAppointment)
     {
 
-        var existingLog = _appointmentsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefault();
+        var existingLog = _logsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefault();
         if (existingLog == null)
         {
             return BadRequest("Log does not exist");
         }
 
-        await _appointmentsCollection.ReplaceOneAsync(s => s.Id == upAppointment.Id, upAppointment);
+        await _logsCollection.ReplaceOneAsync(s => s.Id == upAppointment.Id, upAppointment);
 
         return Ok(upAppointment);
     }
@@ -161,13 +162,13 @@ public class LogController : ControllerBase
     public async Task<IActionResult> DeleteLog(string id)
     {
 
-        var logToDelete = _appointmentsCollection.Find(s => s.Id == id).FirstOrDefault();
+        var logToDelete = _logsCollection.Find(s => s.Id == id).FirstOrDefault();
         if (logToDelete == null)
         {
             return BadRequest("Log Appointment does not exist");
         }
 
-        await _appointmentsCollection.DeleteOneAsync(s => s.Id == id);
+        await _logsCollection.DeleteOneAsync(s => s.Id == id);
         return NoContent();
     }
 }

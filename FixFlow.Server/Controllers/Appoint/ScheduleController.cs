@@ -15,16 +15,18 @@ namespace webserver.Controllers;
 public class ScheduleController : ControllerBase
 {
 
-    private readonly IMongoCollection<AppointmentSchedule> _appointmentsCollection;
+    private readonly IMongoCollection<AppointmentSchedule> _schedulesCollection;
     private readonly UserManager<Client> _userManager;
+    private readonly IMongoCollection<AppointmentReminder> _reminderCollection;
 
     /// <summary>
     /// Controller class for Scheduled Appointment CRUD requests
     /// </summary>
-    public ScheduleController(UserManager<Client> userManager, IMongoClient mongoClient)
+    public ScheduleController(IMongoClient mongoClient, UserManager<Client> userManager)
     {
+        _schedulesCollection = mongoClient.GetDatabase("mongo_db").GetCollection<AppointmentSchedule>("ScheduledAppointments");
+        _reminderCollection = mongoClient.GetDatabase("mongo_db").GetCollection<AppointmentReminder>("AppointmentReminders");
         _userManager = userManager;
-        _appointmentsCollection = mongoClient.GetDatabase("mongo_db").GetCollection<AppointmentSchedule>("ScheduledAppointments");
     }
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentSchedule))]
@@ -33,7 +35,7 @@ public class ScheduleController : ControllerBase
     public async Task<IActionResult> ReadSchedule(string id)
     {
 
-        var schedule = await _appointmentsCollection.FindAsync(s => s.Id == id);
+        var schedule = await _schedulesCollection.FindAsync(s => s.Id == id);
 
         if (schedule == null)
         {
@@ -58,7 +60,7 @@ public class ScheduleController : ControllerBase
             filter &= filterBuilder.Eq(s => s.ClientId, ClientId);
         }
 
-        var appointments = _appointmentsCollection.Find(filter);
+        var appointments = _schedulesCollection.Find(filter);
 
         if (!string.IsNullOrWhiteSpace(sort))
         {
@@ -109,7 +111,7 @@ public class ScheduleController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(newAppointment.reminderId))
         {
-            var existingReminder = _appointmentsCollection.Find(newAppointment.reminderId);
+            var existingReminder = _reminderCollection.Find(r => r.Id == newAppointment.reminderId);
 
             if (existingReminder == null)
             {
@@ -117,7 +119,7 @@ public class ScheduleController : ControllerBase
             }
         }
 
-        await _appointmentsCollection.InsertOneAsync(newAppointment);
+        await _schedulesCollection.InsertOneAsync(newAppointment);
 
         return CreatedAtAction(nameof(CreateSchedule), newAppointment);
     }
@@ -128,13 +130,13 @@ public class ScheduleController : ControllerBase
     public async Task<IActionResult> UpdateSchedule([FromBody] AppointmentSchedule upAppointment)
     {
 
-        var existingAppointment = _appointmentsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefault();
+        var existingAppointment = _schedulesCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefault();
         if (existingAppointment == null)
         {
             return BadRequest("Schedule does not exist");
         }
 
-        await _appointmentsCollection.ReplaceOneAsync(s => s.Id == upAppointment.Id, upAppointment);
+        await _schedulesCollection.ReplaceOneAsync(s => s.Id == upAppointment.Id, upAppointment);
 
         return Ok(upAppointment);
     }
@@ -145,13 +147,13 @@ public class ScheduleController : ControllerBase
     public async Task<IActionResult> DeleteSchedule(string id)
     {
 
-        var scheduleToDelete = _appointmentsCollection.Find(s => s.Id == id).FirstOrDefault();
+        var scheduleToDelete = _schedulesCollection.Find(s => s.Id == id).FirstOrDefault();
         if (scheduleToDelete == null)
         {
             return BadRequest("Schedule Appointment does not exist");
         }
 
-        await _appointmentsCollection.DeleteOneAsync(s => s.Id == id);
+        await _schedulesCollection.DeleteOneAsync(s => s.Id == id);
         return NoContent();
     }
 }
