@@ -6,7 +6,7 @@ using Server.Models;
 using Server.Models.DTO;
 using Server.Models.Utils;
 
-namespace webserver.Controllers;
+namespace Server.Controllers;
 
 /// <summary>
 /// Controller class for Employee CRUD requests

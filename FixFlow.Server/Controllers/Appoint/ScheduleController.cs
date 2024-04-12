@@ -5,7 +5,7 @@ using Server.Models;
 using Server.Models.Utils;
 using Server.Models.Appointments;
 
-namespace webserver.Controllers;
+namespace Server.Controllers;
 
 /// <summary>
 /// Controller class for Scheduled Appointment CRUD requests
