@@ -1,22 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Models;
 using Server.Models.DTO;
-using Newtonsoft.Json;
+using Server.Models.Utils;
 
-namespace webserver.Controllers;
+namespace Server.Controllers;
 
 /// <summary>
 /// Controller class for Client CRUD requests
 /// </summary>
-[Authorize(Roles=Server.Models.Utils.Common.Secretary_Role)]
 [ApiController]
-[Route("api/v1/client")]
+[Route(Common.api_route + "client")]
 [Produces("application/json")]
-public class ClientController : ControllerBase {
+public class ClientController : ControllerBase
+{
 
     private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
@@ -24,7 +23,8 @@ public class ClientController : ControllerBase {
     /// <summary>
     /// Controller class for Client CRUD requests
     /// </summary>
-    public ClientController(ServerContext context, UserManager<Client> userManager){
+    public ClientController(ServerContext context, UserManager<Client> userManager)
+    {
         _context = context;
         _userManager = userManager;
     }
@@ -36,18 +36,18 @@ public class ClientController : ControllerBase {
     /// <response code="200">Returns the Client's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO>))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
-    public async Task<IActionResult> ReadClient(string id) {
+    public async Task<IActionResult> ReadClient(string id)
+    {
 
-        var client = await _context.Clients.FindAsync(id);
-        if(client==null){
+        var client = await _userManager.FindByIdAsync(id);
+        if (client == null)
+        {
             return NotFound();
         }
 
-        var response = JsonConvert.SerializeObject((ClientDTO)client);
-
-        return Ok(response);
+        return Ok((ClientDTO)client);
     }
 
     /// <summary>
@@ -61,44 +61,39 @@ public class ClientController : ControllerBase {
     /// <response code="200">Returns an array of Client DTOs</response>
     /// <response code="404">If no Clients fit the given filters</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO[]>))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet]
-    public async Task<IActionResult> ReadClients(string? username, int? offset, int limit, string? sort) {
+    public async Task<IActionResult> ReadClients(string? username, int? offset, int? limit, string? sort)
+    {
 
-        if (limit < 1) {
-            return BadRequest("Limit parameter must be a natural number greater than 0");
+        var clientsQuery = _context.Clients.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(username))
+        {
+            clientsQuery = clientsQuery.Where(client => client.UserName!.Contains(username, StringComparison.OrdinalIgnoreCase));
         }
 
-        var clients = _context.Clients.AsQueryable();
-
-        if(!string.IsNullOrEmpty(username)){
-            clients = clients.Where(client => client.UserName!.Contains(username)); //Is this case sensitive???
-        }
-
-        if(!string.IsNullOrEmpty(sort)){
+        if (!string.IsNullOrWhiteSpace(sort))
+        {
             sort = sort.ToLower();
-            switch (sort) {
-                case "name":
-                    clients = clients.OrderBy(c => c.UserName);
-                    break;
+            if (sort.Contains("name"))
+            {
+                clientsQuery = clientsQuery.OrderBy(c => c.FullName).ThenBy(c => c.UserName);
             }
         }
 
-        if(offset.HasValue){
-            clients = clients.Skip(offset.Value);
-        }
-        clients = clients.Take(limit);
+        offset = offset.HasValue ? offset : 0;
+        limit = limit.HasValue ? limit : 10;
 
-        var resultQuery = await clients.ToArrayAsync();
-        var resultsArray = resultQuery.Select(c=>(ClientDTO)c).ToArray();
-        
-        if(resultsArray.Length==0){
-            return NotFound();
-        }
-        
-        var response = JsonConvert.SerializeObject(resultsArray);
+        clientsQuery = clientsQuery.Skip((int)offset).Take((int)limit);
 
-        return Ok(response);
+        var resultsArray = await clientsQuery.Select(c => (ClientDTO)c).ToArrayAsync();
+
+        if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
+        {
+            resultsArray.Reverse();
+        }
+
+        return Ok(resultsArray);
     }
 
     /// <summary>
@@ -108,47 +103,62 @@ public class ClientController : ControllerBase {
     /// <response code="200">ClientDTO</response>
     /// <response code="400">Returns a string with the requirements that were not filled</response>
     /// <response code="400">In case the Client's data is already Registered (it will tell which data)</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDTO))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
     [HttpPost]
-    public async Task<IActionResult> CreateClient([FromBody] ClientDTO clientDto, string password) {
+    public async Task<IActionResult> CreateClient([FromBody] ClientRegister clientRegister)
+    {
 
-        if(!string.IsNullOrEmpty(clientDto.PhoneNumber)){
+        if (!string.IsNullOrWhiteSpace(clientRegister.PhoneNumber))
+        {
 
-            var existingPhone = _context.Clients.Where(c=>c.PhoneNumber == clientDto.PhoneNumber);
-            if(existingPhone != null){
+            var existingPhone = _context.Clients.Where(c => c.PhoneNumber == clientRegister.PhoneNumber);
+            if (existingPhone != null)
+            {
                 return BadRequest("PhoneNumber already registered!");
             }
 
-        }else{
-            clientDto.PhoneNumber = string.Empty;
+        }
+        else
+        {
+            clientRegister.PhoneNumber = string.Empty;
         }
 
-        if(!string.IsNullOrEmpty(clientDto.CPF)){
+        if (!string.IsNullOrWhiteSpace(clientRegister.CPF))
+        {
 
-            var existingCPF = _context.Clients.Where(c=>c.CPF == clientDto.CPF);
-            if (existingCPF != null) {
+            var existingCPF = _context.Clients.Where(c => c.CPF == clientRegister.CPF);
+            if (existingCPF != null)
+            {
                 return BadRequest("CPF already registered!");
             }
 
-        }else{
-            clientDto.CPF = string.Empty;
         }
-        
-        if(!string.IsNullOrEmpty(clientDto.Email)){
-            var existingEmail = await _userManager.FindByEmailAsync(clientDto.Email);
-            if (existingEmail != null) {
+        else
+        {
+            clientRegister.CPF = string.Empty;
+        }
+
+        if (!string.IsNullOrWhiteSpace(clientRegister.Email))
+        {
+            var existingEmail = await _userManager.FindByEmailAsync(clientRegister.Email);
+            if (existingEmail != null)
+            {
                 return BadRequest("Email already registered!");
             }
-        }else{
-            clientDto.Email = string.Empty;
+        }
+        else
+        {
+            clientRegister.Email = string.Empty;
         }
 
-        Client client = new Client (clientDto.FullName, clientDto.CPF, clientDto.PhoneNumber, clientDto.Email, clientDto.additionalNote);
+        Client client = new Client(clientRegister.FullName, clientRegister.CPF, clientRegister.PhoneNumber, clientRegister.Email, clientRegister.additionalNote);
 
-        var result = await _userManager.CreateAsync(client, password);
+        var result = await _userManager.CreateAsync(client, clientRegister.newPassword);
 
-        if(!result.Succeeded){
+        if (!result.Succeeded)
+        {
             return StatusCode(500, "Internal Server Error: Register Client Unsuccessful");
         }
 
@@ -162,22 +172,66 @@ public class ClientController : ControllerBase {
     /// <response code="200">Client's DTO with the updated data</response>
     /// <response code="400">If a Client with the given Id was not found</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDTO))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPatch]
-    public async Task<IActionResult> UpdateClient([FromBody] ClientDTO upClient) {
+    public async Task<IActionResult> UpdateClient([FromBody] ClientRegister upClient)
+    {
 
         var existingClient = _context.Clients.Find(upClient.Id);
-        if (existingClient==null) {
+        if (existingClient == null)
+        {
             return BadRequest("Client does not Exist!");
+        }
+
+        if (existingClient.CPF != upClient.CPF)
+        {
+            var existingCPF = _context.Clients.Where(x => x.CPF == upClient.CPF);
+            if (existingCPF.Any())
+            {
+                return BadRequest("CPF taken");
+            }
+            else
+            {
+                await _userManager.SetUserNameAsync(existingClient, upClient.UserName);
+            }
+        }
+
+        if (existingClient.UserName != upClient.UserName)
+        {
+            var existingUsername = _context.Clients.Where(x => x.UserName == upClient.UserName);
+            if (existingUsername.Any())
+            {
+                return BadRequest("Username already exists");
+            }
+            else
+            {
+                await _userManager.SetUserNameAsync(existingClient, upClient.UserName);
+            }
+        }
+
+        if (existingClient.PhoneNumber != upClient.PhoneNumber)
+        {
+            var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upClient.PhoneNumber);
+            if (existingPhonenumber.Any())
+            {
+                return BadRequest("PhoneNumber taken");
+            }
+            else
+            {
+                await _userManager.SetPhoneNumberAsync(existingClient, upClient.PhoneNumber);
+            }
         }
 
         existingClient = (Client)upClient;
 
+        if (!string.IsNullOrWhiteSpace(upClient.currentPassword) && !string.IsNullOrWhiteSpace(upClient.newPassword))
+        {
+            await _userManager.ChangePasswordAsync(existingClient, upClient.currentPassword, upClient.newPassword);
+        }
+
         await _context.SaveChangesAsync();
 
-        var response = JsonConvert.SerializeObject((ClientDTO)existingClient);
-
-        return Ok(response);
+        return Ok((ClientDTO)existingClient);
     }
 
     /// <summary>
@@ -189,17 +243,19 @@ public class ClientController : ControllerBase {
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(ClientDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteClient(string id) {
+    public async Task<IActionResult> DeleteClient(string id)
+    {
 
-        var client = _context.Clients.Find(id);
-        if(client == null){
+        var client = await _userManager.FindByIdAsync(id);
+        if (client == null)
+        {
             return BadRequest("Client does not Exist!");
         }
-        
+
         _context.Clients.Remove(client);
 
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }    
+    }
 }

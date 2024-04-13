@@ -1,4 +1,6 @@
-namespace Server.Models;
-public enum CompletedStatus {
-    Rescheduled, Successfull, Failed
+namespace Server.Models.Utils;
+
+public enum CompletedStatus
+{
+    Successfull, Failed, Rescheduled
 }

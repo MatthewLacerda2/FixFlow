@@ -1,28 +1,33 @@
 namespace Server.Models.DTO;
 
-public class ClientDTO {
-
+public class ClientDTO
+{
     public string Id;
     public string FullName;
-    public string PhoneNumber;
-    public string CPF = string.Empty;
-    public string Email = string.Empty;
-    public string additionalNote;
+    public string CPF;
+    public string additionalNote = string.Empty;
 
-    public ClientDTO(string id, string fullname, string cpf, string _phoneNumber, string _email, string _additionalNote){
+    public string UserName;
+    public string PhoneNumber;
+    public string Email;
+
+    public ClientDTO(string id, string fullname, string cpf, string _userName, string _phoneNumber, string _email)
+    {
         Id = id;
         FullName = fullname;
         CPF = cpf;
+        UserName = _userName;
         PhoneNumber = _phoneNumber;
         Email = _email;
-        additionalNote = _additionalNote;
     }
 
-    public static explicit operator Client(ClientDTO clientDTO){
-        return new Client( clientDTO.FullName, clientDTO.PhoneNumber!, clientDTO.CPF, clientDTO.Email!, clientDTO.additionalNote);
+    public static explicit operator Client(ClientDTO clientDTO)
+    {
+        return new Client(clientDTO.FullName, clientDTO.PhoneNumber!, clientDTO.additionalNote, clientDTO.CPF, clientDTO.Email!);
     }
 
-    public static explicit operator ClientDTO(Client client){
-        return new ClientDTO( client.Id, client.FullName, client.PhoneNumber!, client.CPF, client.Email!, client.additionalNote);
+    public static explicit operator ClientDTO(Client client)
+    {
+        return new ClientDTO(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!);
     }
 }
