@@ -4,7 +4,6 @@ using Server.Models.Utils;
 
 public class EmployeeValidator : AbstractValidator<Employee>
 {
-
     public EmployeeValidator()
     {
         RuleFor(x => x.CreatedDate).GreaterThanOrEqualTo(new DateTime(2023, 1, 1)).WithErrorCode("Date must be from 2023 and forward");
