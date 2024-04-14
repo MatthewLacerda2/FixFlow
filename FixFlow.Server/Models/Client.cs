@@ -8,6 +8,7 @@ public class Client : IdentityUser
     public DateTime LastLogin { get; set; }
     public string FullName { get; set; }
     public string CPF { get; set; }
+
     public string additionalNote { get; set; }
 
     public Client()
