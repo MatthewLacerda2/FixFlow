@@ -34,6 +34,8 @@ public class LogController : ControllerBase
     public async Task<IActionResult> ReadLog(string id)
     {
 
+        DeleteExpiredSchedules();
+
         var log = await _logsCollection.FindAsync(s => s.Id == id);
 
         if (log == null)
@@ -51,6 +53,8 @@ public class LogController : ControllerBase
                                     DateTime? minDate, DateTime? maxDate, CompletedStatus? status,
                                     string? sort, int? offset = 0, int? limit = 10)
     {
+
+        DeleteExpiredSchedules();
 
         var filterBuilder = Builders<AppointmentLog>.Filter;
         var filter = filterBuilder.Empty;
@@ -170,6 +174,8 @@ public class LogController : ControllerBase
     public async Task<IActionResult> DeleteLog(string id)
     {
 
+        DeleteExpiredSchedules();
+
         var logToDelete = _logsCollection.Find(s => s.Id == id).FirstOrDefault();
         if (logToDelete == null)
         {
@@ -178,5 +184,11 @@ public class LogController : ControllerBase
 
         await _logsCollection.DeleteOneAsync(s => s.Id == id);
         return NoContent();
+    }
+
+    public async void DeleteExpiredSchedules()
+    {
+        var cutoff = DateTime.UtcNow.AddHours(-12);
+        await _logsCollection.DeleteManyAsync(s => s.DateTime < cutoff);
     }
 }

@@ -35,6 +35,7 @@ public class ScheduleController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadSchedule(string id)
     {
+        DeleteExpiredSchedules();
 
         var schedule = await _schedulesCollection.FindAsync(s => s.Id == id);
 
@@ -52,6 +53,7 @@ public class ScheduleController : ControllerBase
     public IActionResult ReadSchedules(string? ClientId, float? minPrice, float? maxPrice,
                                         string? sort, int? offset = 0, int? limit = 10)
     {
+        DeleteExpiredSchedules();
 
         var filterBuilder = Builders<AppointmentSchedule>.Filter;
         var filter = filterBuilder.Empty;
@@ -148,6 +150,8 @@ public class ScheduleController : ControllerBase
     public async Task<IActionResult> DeleteSchedule(string id)
     {
 
+        DeleteExpiredSchedules();
+
         var scheduleToDelete = _schedulesCollection.Find(s => s.Id == id).FirstOrDefault();
         if (scheduleToDelete == null)
         {
@@ -156,5 +160,11 @@ public class ScheduleController : ControllerBase
 
         await _schedulesCollection.DeleteOneAsync(s => s.Id == id);
         return NoContent();
+    }
+
+    public async void DeleteExpiredSchedules()
+    {
+        var cutoff = DateTime.UtcNow.AddHours(-12);
+        await _schedulesCollection.DeleteManyAsync(s => s.DateTime < cutoff);
     }
 }

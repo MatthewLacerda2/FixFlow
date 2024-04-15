@@ -223,7 +223,7 @@ public class ClientController : ControllerBase
 
         if (existingClient.PhoneNumber != upClient.PhoneNumber)
         {
-            var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upClient.PhoneNumber);
+            var existingPhonenumber = _context.Clients.IgnoreQueryFilters().Where(x => x.PhoneNumber == upClient.PhoneNumber);
             if (existingPhonenumber.Any())
             {
                 return BadRequest("PhoneNumber taken");
