@@ -7,7 +7,6 @@ using Server.Data;
 using Server.Models;
 using System.Text;
 using System.Threading.RateLimiting;
-using MongoDB.Driver;
 using FluentValidation.AspNetCore;
 using Server.Validators;
 
@@ -20,14 +19,6 @@ builder.Services.AddIdentity<Client, IdentityRole>()
 
 builder.Services.AddDbContext<ServerContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 23))));
-
-string connectionString = builder.Configuration.GetConnectionString("MongoDbConnection")!;
-builder.Services.AddSingleton<IMongoClient>(new MongoClient(connectionString));
-builder.Services.AddSingleton<IMongoDatabase>(provider =>
-{
-    var client = provider.GetRequiredService<IMongoClient>();
-    return client.GetDatabase("mongo_db");
-});
 
 var secretKey = builder.Configuration["Jwt:SecretKey"];
 var verifiedIssuerSigningKey = secretKey != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))

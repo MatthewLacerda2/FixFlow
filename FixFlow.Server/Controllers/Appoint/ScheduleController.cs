@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using MongoDB.Driver;
 using Server.Models;
 using Server.Models.Utils;
 using Server.Models.Appointments;
+using Server.Data;
 
 namespace Server.Controllers;
 
@@ -16,17 +16,15 @@ namespace Server.Controllers;
 public class ScheduleController : ControllerBase
 {
 
-    private readonly IMongoCollection<AppointmentSchedule> _schedulesCollection;
+    private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
-    private readonly IMongoCollection<AppointmentReminder> _reminderCollection;
 
     /// <summary>
     /// Controller class for Scheduled Appointment CRUD requests
     /// </summary>
-    public ScheduleController(IMongoClient mongoClient, UserManager<Client> userManager)
+    public ScheduleController(ServerContext context, UserManager<Client> userManager)
     {
-        _schedulesCollection = mongoClient.GetDatabase("mongo_db").GetCollection<AppointmentSchedule>("ScheduledAppointments");
-        _reminderCollection = mongoClient.GetDatabase("mongo_db").GetCollection<AppointmentReminder>("AppointmentReminders");
+        _context = context;
         _userManager = userManager;
     }
 
@@ -36,7 +34,7 @@ public class ScheduleController : ControllerBase
     public async Task<IActionResult> ReadSchedule(string id)
     {
 
-        var schedule = await _schedulesCollection.FindAsync(s => s.Id == id);
+        var schedule = await _context.Schedules.FindAsync(id);
 
         if (schedule == null)
         {
@@ -50,50 +48,65 @@ public class ScheduleController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadSchedules(string? ClientId, float? minPrice, float? maxPrice,
+                                        DateTime? minDateTime, DateTime? maxDateTime,
                                         string? sort, int? offset = 0, int? limit = 10)
     {
 
-        var filterBuilder = Builders<AppointmentSchedule>.Filter;
-        var filter = filterBuilder.Empty;
+        var schedules = _context.Schedules.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(ClientId))
         {
-            filter &= filterBuilder.Eq(s => s.ClientId, ClientId);
+            schedules = schedules.Where(x => x.ClientId == ClientId);
         }
 
-        var appointments = _schedulesCollection.Find(filter);
+        if (minPrice.HasValue)
+        {
+            schedules = schedules.Where(x => x.Price >= minPrice);
+        }
+
+        if (maxPrice.HasValue)
+        {
+            schedules = schedules.Where(x => x.Price <= maxPrice);
+        }
+
+        if (minDateTime.HasValue)
+        {
+            schedules = schedules.Where(x => x.DateTime >= minDateTime);
+        }
+
+        if (maxDateTime.HasValue)
+        {
+            schedules = schedules.Where(x => x.DateTime <= maxDateTime);
+        }
+
 
         if (!string.IsNullOrWhiteSpace(sort))
         {
             sort = sort.ToLower();
             if (sort.Contains("client"))
             {
-                appointments = appointments.SortBy(s => s.ClientId).ThenBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                schedules = schedules.OrderBy(s => s.ClientId).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
             }
             else if (sort.Contains("price"))
             {
-                appointments = appointments.SortBy(s => s.Price).ThenBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                schedules = schedules.OrderBy(s => s.Price).ThenByDescending(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
             else if (sort.Contains("date"))
             {
-                appointments = appointments.SortBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
-            }
-            else
-            {
-                return BadRequest("Bad 'Sort' string");
+                schedules = schedules.OrderByDescending(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
         }
-
-        var result = appointments
-            .Skip(offset)
-            .Limit(limit)
-            .ToList()
-            .ToArray();
 
         if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
         {
-            result.Reverse();
+            schedules.Reverse();
         }
+
+        var result = schedules
+            .Skip(offset ?? 0)
+            .Take(limit ?? 10)
+            .ToList()
+            .ToArray();
 
         return Ok(result);
     }
@@ -112,7 +125,7 @@ public class ScheduleController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(newAppointment.reminderId))
         {
-            var existingReminder = _reminderCollection.Find(r => r.Id == newAppointment.reminderId);
+            var existingReminder = _context.Reminders.Find(newAppointment.reminderId);
 
             if (existingReminder == null)
             {
@@ -120,7 +133,8 @@ public class ScheduleController : ControllerBase
             }
         }
 
-        await _schedulesCollection.InsertOneAsync(newAppointment);
+        await _context.Schedules.AddAsync(newAppointment);
+        await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(CreateSchedule), newAppointment);
     }
@@ -131,13 +145,14 @@ public class ScheduleController : ControllerBase
     public async Task<IActionResult> UpdateSchedule([FromBody] AppointmentSchedule upAppointment)
     {
 
-        var existingAppointment = _schedulesCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefault();
+        var existingAppointment = _context.Schedules.Find(upAppointment.Id);
         if (existingAppointment == null)
         {
             return BadRequest("Schedule does not exist");
         }
 
-        await _schedulesCollection.ReplaceOneAsync(s => s.Id == upAppointment.Id, upAppointment);
+        _context.Schedules.Update(upAppointment);
+        await _context.SaveChangesAsync();
 
         return Ok(upAppointment);
     }
@@ -148,13 +163,13 @@ public class ScheduleController : ControllerBase
     public async Task<IActionResult> DeleteSchedule(string id)
     {
 
-        var scheduleToDelete = _schedulesCollection.Find(s => s.Id == id).FirstOrDefault();
+        var scheduleToDelete = await _context.Schedules.FindAsync(id);
         if (scheduleToDelete == null)
         {
             return BadRequest("Schedule Appointment does not exist");
         }
 
-        await _schedulesCollection.DeleteOneAsync(s => s.Id == id);
+        _context.Schedules.Remove(scheduleToDelete);
         return NoContent();
     }
 }
