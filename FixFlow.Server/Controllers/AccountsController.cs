@@ -31,7 +31,6 @@ public class LoginController : ControllerBase
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] FlowLoginRequest model)
@@ -86,7 +85,8 @@ public class LoginController : ControllerBase
         return tokenHandler.WriteToken(token);
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpPatch]
     public async Task<IActionResult> PasswordChange([FromBody] FlowLoginRequest userRegister)
@@ -98,12 +98,12 @@ public class LoginController : ControllerBase
             return BadRequest("There is no User with this email");
         }
 
-        if (StringChecker.IsPasswordStrong(userRegister.newPassword))
-        {
-            return BadRequest("Password must have an Upper-Case, a Lower-Case, a number and a special character");
-        }
+        var result = await _userManager.ChangePasswordAsync(user, userRegister.password, userRegister.newPassword);
 
-        await _userManager.ChangePasswordAsync(user, userRegister.password, userRegister.newPassword);
+        if (!result.Succeeded)
+        {
+            return BadRequest("Password Change Unsuccessfull. " + result.Errors);
+        }
 
         await _context.SaveChangesAsync();
 
