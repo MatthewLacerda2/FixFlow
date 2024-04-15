@@ -11,12 +11,10 @@ public class EmployeeValidator : AbstractValidator<Employee>
 
         RuleFor(x => x.FullName).Custom((fullname, context) =>
         {
-
             if (StringChecker.IsFullNameValid(fullname))
             {
                 context.AddFailure("Fullname invalid");
             }
-
         });
 
         RuleFor(x => x.CPF).Custom((cpf, context) =>

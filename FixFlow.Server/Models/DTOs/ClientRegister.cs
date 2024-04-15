@@ -1,14 +1,24 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Server.Models.DTO;
 
 public class ClientRegister
 {
     public string Id;
+
+    [Required]
     public string FullName;
+
     public string CPF;
     public string additionalNote = string.Empty;
 
     public string UserName;
+
+    [Required]
+    [Phone]
     public string PhoneNumber;
+
+    [EmailAddress]
     public string Email;
 
     public string currentPassword = string.Empty;
