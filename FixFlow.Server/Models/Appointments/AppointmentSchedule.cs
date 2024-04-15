@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Server.Models.Appointments;
 
 public class AppointmentSchedule
 {
+    [Key]
     public string Id { get; set; }
     public string ClientId { get; set; }
 

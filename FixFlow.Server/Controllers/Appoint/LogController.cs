@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using MongoDB.Driver;
 using Server.Models;
 using Server.Models.Utils;
 using Server.Models.Appointments;
+using Server.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Server.Controllers;
 
@@ -16,15 +17,15 @@ namespace Server.Controllers;
 public class LogController : ControllerBase
 {
 
-    private readonly IMongoCollection<AppointmentLog> _logsCollection;
+    private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
 
     /// <summary>
     /// Controller class for Appointment Log CRUD requests
     /// </summary>
-    public LogController(IMongoClient mongoClient, UserManager<Client> userManager)
+    public LogController(ServerContext context, UserManager<Client> userManager)
     {
-        _logsCollection = mongoClient.GetDatabase("mongo_db").GetCollection<AppointmentLog>("AppointmentLogs");
+        _context = context;
         _userManager = userManager;
     }
 
@@ -34,7 +35,7 @@ public class LogController : ControllerBase
     public async Task<IActionResult> ReadLog(string id)
     {
 
-        var log = await _logsCollection.FindAsync(s => s.Id == id);
+        var log = await _context.Logs.FindAsync(id);
 
         if (log == null)
         {
@@ -48,66 +49,68 @@ public class LogController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadLogs(string? ClientId, float? minPrice, float? maxPrice,
-                                    DateOnly? minDate, DateOnly? maxDate, CompletedStatus? status,
-                                    string? sort, int? offset = 0, int? limit = 10)
+                                    DateTime? minDate, DateTime? maxDate, CompletedStatus? status,
+                                    string? sort, int? offset, int? limit)
     {
 
-        var filterBuilder = Builders<AppointmentLog>.Filter;
-        var filter = filterBuilder.Empty;
+        var logs = _context.Logs.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(ClientId))
         {
-            filter &= filterBuilder.Eq(s => s.ClientId, ClientId);
+            logs = logs.Where(x => x.ClientId == ClientId);
         }
 
         if (minPrice.HasValue)
         {
-            filter &= filterBuilder.Gte(s => s.Price, minPrice);
+            logs = logs.Where(x => x.Price >= minPrice);
         }
 
         if (maxPrice.HasValue)
         {
-            filter &= filterBuilder.Lte(s => s.Price, maxPrice);
+            logs = logs.Where(x => x.Price <= maxPrice);
+        }
+
+        if (minDate.HasValue)
+        {
+            logs = logs.Where(x => x.DateTime >= minDate);
+        }
+
+        if (maxDate.HasValue)
+        {
+            logs = logs.Where(x => x.DateTime <= maxDate);
         }
 
         if (status.HasValue)
         {
-            filter &= filterBuilder.Eq(s => s.Status, status);
+            logs = logs.Where(x => x.Status == status);
         }
-
-        var appointments = _logsCollection.Find(filter);
 
         if (!string.IsNullOrWhiteSpace(sort))
         {
             sort = sort.ToLower();
             if (sort.Contains("client"))
             {
-                appointments = appointments.SortBy(s => s.ClientId).ThenBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                logs = logs.OrderBy(s => s.ClientId).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
             }
             else if (sort.Contains("price"))
             {
-                appointments = appointments.SortBy(s => s.Price).ThenBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                logs = logs.OrderBy(s => s.Price).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
             }
             else if (sort.Contains("date"))
             {
-                appointments = appointments.SortBy(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
-            }
-            else
-            {
-                return BadRequest("Bad 'Sort' string");
+                logs = logs.OrderByDescending(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
         }
-
-        var result = appointments
-            .Skip(offset)
-            .Limit(limit)
-            .ToList()
-            .ToArray();
 
         if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
         {
-            result.Reverse();
+            logs.Reverse();
         }
+
+        var result = logs
+            .Skip(offset ?? 0)
+            .Take(limit ?? 10)
+            .ToArray();
 
         return Ok(result);
     }
@@ -126,7 +129,7 @@ public class LogController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(newAppointment.ScheduleId))
         {
-            var existingSchedule = _logsCollection.Find(newAppointment.ScheduleId);
+            var existingSchedule = _context.Schedules.Find(newAppointment.ScheduleId);
 
             if (existingSchedule == null)
             {
@@ -134,7 +137,8 @@ public class LogController : ControllerBase
             }
         }
 
-        await _logsCollection.InsertOneAsync(newAppointment);
+        await _context.Logs.AddAsync(newAppointment);
+        await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(CreateLog), newAppointment);
     }
@@ -145,13 +149,14 @@ public class LogController : ControllerBase
     public async Task<IActionResult> UpdateLog([FromBody] AppointmentLog upAppointment)
     {
 
-        var existingLog = _logsCollection.Find(s => s.Id == upAppointment.Id).FirstOrDefault();
+        var existingLog = _context.Logs.Find(upAppointment.Id);
         if (existingLog == null)
         {
             return BadRequest("Log does not exist");
         }
 
-        await _logsCollection.ReplaceOneAsync(s => s.Id == upAppointment.Id, upAppointment);
+        _context.Logs.Update(upAppointment);
+        await _context.SaveChangesAsync();
 
         return Ok(upAppointment);
     }
@@ -162,13 +167,13 @@ public class LogController : ControllerBase
     public async Task<IActionResult> DeleteLog(string id)
     {
 
-        var logToDelete = _logsCollection.Find(s => s.Id == id).FirstOrDefault();
+        var logToDelete = await _context.Logs.FindAsync(id);
         if (logToDelete == null)
         {
             return BadRequest("Log Appointment does not exist");
         }
 
-        await _logsCollection.DeleteOneAsync(s => s.Id == id);
+        _context.Logs.Remove(logToDelete);
         return NoContent();
     }
 }

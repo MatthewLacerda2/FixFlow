@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using Server.Models.Utils;
 namespace Server.Models.Appointments;
 
 public class AppointmentLog
 {
+    [Key]
     public string Id { get; set; }
     public string ClientId { get; set; }
 

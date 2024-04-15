@@ -1,6 +1,7 @@
 using Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Server.Models.Appointments;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext
@@ -15,8 +16,8 @@ public class ServerContext : IdentityDbContext
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<Client>().HasQueryFilter(x => x.isDeleted == false); //Only Read those NOT DELETED
-        builder.Entity<Employee>().HasQueryFilter(x => x.isDeleted == false);
+        builder.Entity<Employee>().HasQueryFilter(x => x.isDeleted == false); //Only Read those NOT DELETED
+        builder.Entity<Client>().HasQueryFilter(x => x.isDeleted == false);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -30,4 +31,8 @@ public class ServerContext : IdentityDbContext
 
     public DbSet<Client> Clients { get; set; } = default!;
     public DbSet<Employee> Employees { get; set; } = default!;
+
+    public DbSet<AppointmentLog> Logs { get; set; } = default!;
+    public DbSet<AppointmentReminder> Reminders { get; set; } = default!;
+    public DbSet<AppointmentSchedule> Schedules { get; set; } = default!;
 }
