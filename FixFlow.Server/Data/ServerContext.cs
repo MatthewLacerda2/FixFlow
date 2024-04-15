@@ -1,7 +1,6 @@
 using Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext
@@ -10,12 +9,18 @@ public class ServerContext : IdentityDbContext
     public ServerContext(DbContextOptions<ServerContext> options)
         : base(options)
     {
+    }
 
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<Client>().HasQueryFilter(x => x.isDeleted == false); //Only Read those NOT DELETED
+        builder.Entity<Employee>().HasQueryFilter(x => x.isDeleted == false);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-
         base.OnConfiguring(optionsBuilder);
 
         optionsBuilder.UseMySql(
@@ -25,5 +30,4 @@ public class ServerContext : IdentityDbContext
 
     public DbSet<Client> Clients { get; set; } = default!;
     public DbSet<Employee> Employees { get; set; } = default!;
-
 }

@@ -252,7 +252,7 @@ public class ClientController : ControllerBase
             return BadRequest("Client does not Exist!");
         }
 
-        _context.Clients.Remove(client);
+        client.isDeleted = true;
 
         await _context.SaveChangesAsync();
 

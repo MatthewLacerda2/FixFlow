@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-
 namespace Server.Models;
 
 public class Client : IdentityUser
@@ -10,6 +9,8 @@ public class Client : IdentityUser
     public string CPF { get; set; }
 
     public string additionalNote { get; set; }
+
+    public bool isDeleted { get; set; } = false;
 
     public Client()
     {
