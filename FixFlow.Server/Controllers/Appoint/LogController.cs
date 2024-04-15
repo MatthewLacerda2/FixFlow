@@ -64,7 +64,6 @@ public class LogController : ControllerBase
         {
             logs = logs.Where(x => x.Price >= minPrice);
         }
-
         if (maxPrice.HasValue)
         {
             logs = logs.Where(x => x.Price <= maxPrice);

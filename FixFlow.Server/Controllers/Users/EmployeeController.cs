@@ -44,6 +44,10 @@ public class EmployeeController : ControllerBase
         var employee = await _userManager.FindByIdAsync(id);
         if (employee == null)
         {
+            employee = await _context.Employees.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+        }
+        if (employee == null)
+        {
             return NotFound();
         }
 
@@ -109,19 +113,26 @@ public class EmployeeController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateEmployee([FromBody] EmployeeRegister EmployeeDto)
     {
+
+        DeleteInactiveEmployees();
+
         var existingEmail = await _userManager.FindByEmailAsync(EmployeeDto.Email);
+        if (existingEmail == null)
+        {
+            existingEmail = await _context.Employees.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Email == EmployeeDto.Email);
+        }
         if (existingEmail != null)
         {
             return BadRequest("Email already registered!");
         }
 
-        var existingCPF = _context.Employees.Where(c => c.CPF == EmployeeDto.CPF);
+        var existingCPF = _context.Employees.IgnoreQueryFilters().Where(c => c.CPF == EmployeeDto.CPF);
         if (existingCPF != null)
         {
             return BadRequest("CPF already registered!");
         }
 
-        var existingPhone = _context.Employees.Where(c => c.PhoneNumber == EmployeeDto.PhoneNumber);
+        var existingPhone = _context.Employees.IgnoreQueryFilters().Where(c => c.PhoneNumber == EmployeeDto.PhoneNumber);
         if (existingPhone != null)
         {
             return BadRequest("PhoneNumber already registered!");
@@ -151,7 +162,13 @@ public class EmployeeController : ControllerBase
     public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeRegister upEmployee)
     {
 
-        var existingEmployee = _context.Employees.Find(upEmployee.Id);
+        DeleteInactiveEmployees();
+
+        var existingEmployee = await _userManager.FindByIdAsync(upEmployee.Id);
+        if (existingEmployee == null)
+        {
+            existingEmployee = await _context.Employees.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == upEmployee.Id);
+        }
         if (existingEmployee == null)
         {
             return BadRequest("Employee does not Exist!");
@@ -159,7 +176,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.CPF != upEmployee.CPF)
         {
-            var existingCPF = _context.Clients.Where(x => x.CPF == upEmployee.CPF);
+            var existingCPF = _context.Clients.IgnoreQueryFilters().Where(x => x.CPF == upEmployee.CPF);
             if (existingCPF.Any())
             {
                 return BadRequest("CPF taken");
@@ -172,7 +189,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.UserName != upEmployee.UserName)
         {
-            var existingUsername = _context.Clients.Where(x => x.UserName == upEmployee.UserName);
+            var existingUsername = _context.Clients.IgnoreQueryFilters().Where(x => x.UserName == upEmployee.UserName);
             if (existingUsername.Any())
             {
                 return BadRequest("Username already exists");
@@ -185,7 +202,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.PhoneNumber != upEmployee.PhoneNumber)
         {
-            var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upEmployee.PhoneNumber);
+            var existingPhonenumber = _context.Clients.IgnoreQueryFilters().Where(x => x.PhoneNumber == upEmployee.PhoneNumber);
             if (existingPhonenumber.Any())
             {
                 return BadRequest("PhoneNumber taken");
@@ -231,5 +248,18 @@ public class EmployeeController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    public void DeleteInactiveEmployees()
+    {
+
+        var cutoffDate = DateTime.UtcNow.AddDays(-90);
+        var usersToDelete = _userManager.Users.Where(u => u.LastLogin < cutoffDate);
+
+        foreach (var user in usersToDelete)
+        {
+            user.isDeleted = true;
+        }
+
     }
 }

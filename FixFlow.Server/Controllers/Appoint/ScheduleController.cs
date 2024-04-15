@@ -4,6 +4,7 @@ using Server.Models;
 using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Server.Controllers;
 
@@ -33,7 +34,6 @@ public class ScheduleController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadSchedule(string id)
     {
-
         var schedule = await _context.Schedules.FindAsync(id);
 
         if (schedule == null)
@@ -51,7 +51,6 @@ public class ScheduleController : ControllerBase
                                         DateTime? minDateTime, DateTime? maxDateTime,
                                         string? sort, int? offset = 0, int? limit = 10)
     {
-
         var schedules = _context.Schedules.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(ClientId))
@@ -162,7 +161,6 @@ public class ScheduleController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteSchedule(string id)
     {
-
         var scheduleToDelete = await _context.Schedules.FindAsync(id);
         if (scheduleToDelete == null)
         {
