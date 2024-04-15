@@ -48,7 +48,7 @@ public class LogController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadLogs(string? ClientId, float? minPrice, float? maxPrice,
-                                    DateOnly? minDate, DateOnly? maxDate, CompletedStatus? status,
+                                    DateTime? minDate, DateTime? maxDate, CompletedStatus? status,
                                     string? sort, int? offset = 0, int? limit = 10)
     {
 
@@ -64,10 +64,18 @@ public class LogController : ControllerBase
         {
             filter &= filterBuilder.Gte(s => s.Price, minPrice);
         }
-
         if (maxPrice.HasValue)
         {
             filter &= filterBuilder.Lte(s => s.Price, maxPrice);
+        }
+
+        if (minDate.HasValue)
+        {
+            filter &= filterBuilder.Gte(s => s.DateTime, minDate);
+        }
+        if (maxDate.HasValue)
+        {
+            filter &= filterBuilder.Lte(s => s.DateTime, maxDate);
         }
 
         if (status.HasValue)

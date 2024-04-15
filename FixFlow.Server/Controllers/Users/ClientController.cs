@@ -188,7 +188,7 @@ public class ClientController : ControllerBase
         var existingClient = await _userManager.FindByIdAsync(upClient.Id);
         if (existingClient == null)
         {
-            existingClient = await _context.Clients.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == upClient.Id);
+            existingClient = await _context.Clients.FirstOrDefaultAsync(x => x.Id == upClient.Id);
         }
         if (existingClient == null)
         {
@@ -210,7 +210,7 @@ public class ClientController : ControllerBase
 
         if (existingClient.UserName != upClient.UserName)
         {
-            var existingUsername = _context.Clients.Where(x => x.UserName == upClient.UserName);
+            var existingUsername = _context.Clients.IgnoreQueryFilters().Where(x => x.UserName == upClient.UserName);
             if (existingUsername.Any())
             {
                 return BadRequest("Username already exists");
