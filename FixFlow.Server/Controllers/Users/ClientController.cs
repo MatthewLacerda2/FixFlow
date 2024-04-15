@@ -44,6 +44,10 @@ public class ClientController : ControllerBase
         var client = await _userManager.FindByIdAsync(id);
         if (client == null)
         {
+            client = await _context.Clients.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+        }
+        if (client == null)
+        {
             return NotFound();
         }
 
@@ -113,7 +117,7 @@ public class ClientController : ControllerBase
         if (!string.IsNullOrWhiteSpace(clientRegister.PhoneNumber))
         {
 
-            var existingPhone = _context.Clients.Where(c => c.PhoneNumber == clientRegister.PhoneNumber);
+            var existingPhone = _context.Clients.IgnoreQueryFilters().Where(c => c.PhoneNumber == clientRegister.PhoneNumber);
             if (existingPhone != null)
             {
                 return BadRequest("PhoneNumber already registered!");
@@ -128,7 +132,7 @@ public class ClientController : ControllerBase
         if (!string.IsNullOrWhiteSpace(clientRegister.CPF))
         {
 
-            var existingCPF = _context.Clients.Where(c => c.CPF == clientRegister.CPF);
+            var existingCPF = _context.Clients.IgnoreQueryFilters().Where(c => c.CPF == clientRegister.CPF);
             if (existingCPF != null)
             {
                 return BadRequest("CPF already registered!");
@@ -143,6 +147,10 @@ public class ClientController : ControllerBase
         if (!string.IsNullOrWhiteSpace(clientRegister.Email))
         {
             var existingEmail = await _userManager.FindByEmailAsync(clientRegister.Email);
+            if (existingEmail == null)
+            {
+                existingEmail = await _context.Clients.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Email == clientRegister.Email);
+            }
             if (existingEmail != null)
             {
                 return BadRequest("Email already registered!");
@@ -177,7 +185,11 @@ public class ClientController : ControllerBase
     public async Task<IActionResult> UpdateClient([FromBody] ClientRegister upClient)
     {
 
-        var existingClient = _context.Clients.Find(upClient.Id);
+        var existingClient = await _userManager.FindByIdAsync(upClient.Id);
+        if (existingClient == null)
+        {
+            existingClient = await _context.Clients.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == upClient.Id);
+        }
         if (existingClient == null)
         {
             return BadRequest("Client does not Exist!");
@@ -185,7 +197,7 @@ public class ClientController : ControllerBase
 
         if (existingClient.CPF != upClient.CPF)
         {
-            var existingCPF = _context.Clients.Where(x => x.CPF == upClient.CPF);
+            var existingCPF = _context.Clients.IgnoreQueryFilters().Where(x => x.CPF == upClient.CPF);
             if (existingCPF.Any())
             {
                 return BadRequest("CPF taken");
