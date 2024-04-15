@@ -36,7 +36,7 @@ public class EmployeeController : ControllerBase
     /// <response code="200">Returns the Employee's DTO</response>
     /// <response code="404">If there is none with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO>))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadEmployee(string id)
     {
@@ -104,7 +104,7 @@ public class EmployeeController : ControllerBase
     /// <response code="400">Returns a string with the requirements that were not filled</response>
     /// <response code="400">In case the Employee's data is already Registered (it will tell which data)</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
     [HttpPost]
     public async Task<IActionResult> CreateEmployee([FromBody] EmployeeRegister EmployeeDto)

@@ -104,7 +104,7 @@ public class ClientController : ControllerBase
     /// <response code="400">Returns a string with the requirements that were not filled</response>
     /// <response code="400">In case the Client's data is already Registered (it will tell which data)</response>
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientDTO))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
     [HttpPost]
     public async Task<IActionResult> CreateClient([FromBody] ClientRegister clientRegister)
@@ -241,7 +241,7 @@ public class ClientController : ControllerBase
     /// <response code="200">Client was found, and thus deleted</response>
     /// <response code="400">Client not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(ClientDTO))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestObjectResult))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteClient(string id)
     {
