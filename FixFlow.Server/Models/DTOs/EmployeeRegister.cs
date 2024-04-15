@@ -1,15 +1,25 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Server.Models.DTO;
 
 public class EmployeeRegister
 {
     public string Id;
+
+    [Required]
     public string FullName;
+
     public string CPF;
+    public float salary;
 
     public string UserName;
-    public string Email;
+
+    [Required]
+    [Phone]
     public string PhoneNumber;
-    public float salary;
+
+    [EmailAddress]
+    public string Email;
 
     public string currentPassword = string.Empty;
     public string newPassword = string.Empty;

@@ -8,6 +8,8 @@ using Server.Models;
 using System.Text;
 using System.Threading.RateLimiting;
 using MongoDB.Driver;
+using FluentValidation.AspNetCore;
+using Server.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +63,8 @@ builder.Services.AddRateLimiter(_ => _
         options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         options.QueueLimit = 10;
     }));
+
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
 builder.Services.AddCors(options =>
 {
