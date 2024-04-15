@@ -1,15 +1,25 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Server.Models.DTO;
 
 public class EmployeeDTO
 {
     public string Id;
+
+    [Required]
     public string FullName;
+
     public string CPF;
+    public float salary;
 
     public string UserName;
-    public string Email;
+
+    [Required]
+    [Phone]
     public string PhoneNumber;
-    public float salary;
+
+    [EmailAddress]
+    public string Email;
 
     public EmployeeDTO(string id, string fullname, string cpf, string _userName, string email, string phonenumber, float _salary)
     {

@@ -47,7 +47,7 @@ public class LoginController : ControllerBase
 
             var token = GenerateToken(user!, roles.ToArray());
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(new { token });
         }
@@ -82,8 +82,6 @@ public class LoginController : ControllerBase
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
-
-        _context.SaveChanges();
 
         return tokenHandler.WriteToken(token);
     }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+
 namespace Server.Models;
 
 public class Employee : IdentityUser
@@ -10,6 +11,8 @@ public class Employee : IdentityUser
 
     public float salary { get; set; }
 
+    public bool isDeleted { get; set; } = false;
+
     public Employee()
     {
         CreatedDate = DateTime.Now;
@@ -17,6 +20,7 @@ public class Employee : IdentityUser
 
         FullName = string.Empty;
         CPF = string.Empty;
+
     }
 
     public Employee(string fullname, string cpf, float _salary, string email, string phonenumber)
