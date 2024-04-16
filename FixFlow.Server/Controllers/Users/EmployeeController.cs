@@ -37,14 +37,14 @@ public class EmployeeController : ControllerBase
     /// <response code="404">If there is none with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{id}")]
-    public async Task<IActionResult> ReadEmployee(string id)
+    [HttpGet("{Id}")]
+    public async Task<IActionResult> ReadEmployee(string Id)
     {
 
-        var employee = await _userManager.FindByIdAsync(id);
+        var employee = await _userManager.FindByIdAsync(Id);
         if (employee == null)
         {
-            employee = await _context.Employees.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+            employee = await _context.Employees.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == Id);
         }
         if (employee == null)
         {
@@ -114,8 +114,6 @@ public class EmployeeController : ControllerBase
     public async Task<IActionResult> CreateEmployee([FromBody] EmployeeRegister EmployeeDto)
     {
 
-        DeleteInactiveEmployees();
-
         var existingEmail = await _userManager.FindByEmailAsync(EmployeeDto.Email);
         if (existingEmail == null)
         {
@@ -161,8 +159,6 @@ public class EmployeeController : ControllerBase
     [HttpPatch]
     public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeRegister upEmployee)
     {
-
-        DeleteInactiveEmployees();
 
         var existingEmployee = await _userManager.FindByIdAsync(upEmployee.Id);
         if (existingEmployee == null)
@@ -233,11 +229,11 @@ public class EmployeeController : ControllerBase
     /// <response code="400">Employee not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteEmployee(string id)
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> DeleteEmployee(string Id)
     {
 
-        var employee = await _userManager.FindByIdAsync(id);
+        var employee = await _userManager.FindByIdAsync(Id);
         if (employee == null)
         {
             return BadRequest("Employee does not Exist!");
@@ -248,18 +244,5 @@ public class EmployeeController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    public void DeleteInactiveEmployees()
-    {
-
-        var cutoffDate = DateTime.UtcNow.AddDays(-90);
-        var usersToDelete = _userManager.Users.Where(u => u.LastLogin < cutoffDate);
-
-        foreach (var user in usersToDelete)
-        {
-            user.isDeleted = true;
-        }
-
     }
 }
