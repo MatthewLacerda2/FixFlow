@@ -3,7 +3,7 @@ using Server.Models.Appointments;
 
 namespace Server.Validators;
 
-public class ScheduleValidator : AbstractValidator<AppointmentSchedule>
+public class ScheduleValidator : AbstractValidator<AptSchedule>
 {
 
     public ScheduleValidator()

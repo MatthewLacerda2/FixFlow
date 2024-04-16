@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Server.Models;
 
 public class FlowLoginRequest
@@ -6,7 +8,9 @@ public class FlowLoginRequest
     public string UserName { get; set; }
     public string Email { get; set; } = string.Empty;
 
+    [Required]
     public string password { get; set; }
+
     public string newPassword { get; set; } = string.Empty;
 
     public FlowLoginRequest(string _username, string _password)

@@ -3,7 +3,7 @@ using Server.Models.Appointments;
 
 namespace Server.Validators;
 
-public class LogValidator : AbstractValidator<AppointmentLog>
+public class LogValidator : AbstractValidator<AptLog>
 {
 
     public LogValidator()
