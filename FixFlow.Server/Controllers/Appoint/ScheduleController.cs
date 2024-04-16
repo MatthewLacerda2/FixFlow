@@ -30,10 +30,10 @@ public class ScheduleController : ControllerBase
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{id}")]
-    public async Task<IActionResult> ReadSchedule(string id)
+    [HttpGet("{Id}")]
+    public async Task<IActionResult> ReadSchedule(string Id)
     {
-        var schedule = await _context.Schedules.FindAsync(id);
+        var schedule = await _context.Schedules.FindAsync(Id);
 
         if (schedule == null)
         {
@@ -157,10 +157,10 @@ public class ScheduleController : ControllerBase
 
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteSchedule(string id)
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> DeleteSchedule(string Id)
     {
-        var scheduleToDelete = await _context.Schedules.FindAsync(id);
+        var scheduleToDelete = await _context.Schedules.FindAsync(Id);
         if (scheduleToDelete == null)
         {
             return BadRequest("Schedule Appointment does not exist");

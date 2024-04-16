@@ -37,14 +37,14 @@ public class ClientController : ControllerBase
     /// <response code="404">If there is none with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{id}")]
-    public async Task<IActionResult> ReadClient(string id)
+    [HttpGet("{Id}")]
+    public async Task<IActionResult> ReadClient(string Id)
     {
 
-        var client = await _userManager.FindByIdAsync(id);
+        var client = await _userManager.FindByIdAsync(Id);
         if (client == null)
         {
-            client = await _context.Clients.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == id);
+            client = await _context.Clients.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == Id);
         }
         if (client == null)
         {
@@ -254,11 +254,11 @@ public class ClientController : ControllerBase
     /// <response code="400">Client not found</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(ClientDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteClient(string id)
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> DeleteClient(string Id)
     {
 
-        var client = await _userManager.FindByIdAsync(id);
+        var client = await _userManager.FindByIdAsync(Id);
         if (client == null)
         {
             return BadRequest("Client does not Exist!");

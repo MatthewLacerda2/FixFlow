@@ -30,11 +30,11 @@ public class ReminderController : ControllerBase
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptReminder))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-    [HttpGet("{id}")]
-    public async Task<IActionResult> ReadReminder(string id)
+    [HttpGet("{Id}")]
+    public async Task<IActionResult> ReadReminder(string Id)
     {
 
-        var remind = await _context.Reminders.FindAsync(id);
+        var remind = await _context.Reminders.FindAsync(Id);
 
         if (remind == null)
         {
@@ -142,7 +142,7 @@ public class ReminderController : ControllerBase
 
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpDelete("{id}")]
+    [HttpDelete("{Id}")]
     public async Task<IActionResult> DeleteReminder(string Id)
     {
 
