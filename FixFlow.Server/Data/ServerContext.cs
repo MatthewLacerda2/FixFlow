@@ -32,7 +32,7 @@ public class ServerContext : IdentityDbContext
     public DbSet<Client> Clients { get; set; } = default!;
     public DbSet<Employee> Employees { get; set; } = default!;
 
-    public DbSet<AppointmentLog> Logs { get; set; } = default!;
-    public DbSet<AppointmentReminder> Reminders { get; set; } = default!;
-    public DbSet<AppointmentSchedule> Schedules { get; set; } = default!;
+    public DbSet<AptLog> Logs { get; set; } = default!;
+    public DbSet<AptReminder> Reminders { get; set; } = default!;
+    public DbSet<AptSchedule> Schedules { get; set; } = default!;
 }

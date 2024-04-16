@@ -4,7 +4,6 @@ using Server.Models;
 using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Server.Controllers;
 
@@ -29,7 +28,7 @@ public class LogController : ControllerBase
         _userManager = userManager;
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentLog))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadLog(string id)
@@ -45,7 +44,7 @@ public class LogController : ControllerBase
         return Ok(log);
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentLog[]>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadLogs(string? ClientId, float? minPrice, float? maxPrice,
@@ -114,10 +113,10 @@ public class LogController : ControllerBase
         return Ok(result);
     }
 
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AppointmentLog))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPost]
-    public async Task<IActionResult> CreateLog([FromBody] AppointmentLog newAppointment)
+    public async Task<IActionResult> CreateLog([FromBody] AptLog newAppointment)
     {
 
         var existingClient = _userManager.FindByIdAsync(newAppointment.ClientId);
@@ -142,10 +141,10 @@ public class LogController : ControllerBase
         return CreatedAtAction(nameof(CreateLog), newAppointment);
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentLog))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPut]
-    public async Task<IActionResult> UpdateLog([FromBody] AppointmentLog upAppointment)
+    public async Task<IActionResult> UpdateLog([FromBody] AptLog upAppointment)
     {
 
         var existingLog = _context.Logs.Find(upAppointment.Id);

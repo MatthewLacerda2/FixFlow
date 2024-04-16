@@ -4,7 +4,6 @@ using Server.Models;
 using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Server.Controllers;
 
@@ -29,7 +28,7 @@ public class ScheduleController : ControllerBase
         _userManager = userManager;
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentSchedule))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadSchedule(string id)
@@ -44,7 +43,7 @@ public class ScheduleController : ControllerBase
         return Ok(schedule);
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AppointmentSchedule[]>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptSchedule[]>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadSchedules(string? ClientId, float? minPrice, float? maxPrice,
@@ -110,10 +109,10 @@ public class ScheduleController : ControllerBase
         return Ok(result);
     }
 
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AppointmentSchedule))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptSchedule))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPost]
-    public async Task<IActionResult> CreateSchedule([FromBody] AppointmentSchedule newAppointment)
+    public async Task<IActionResult> CreateSchedule([FromBody] AptSchedule newAppointment)
     {
 
         var existingClient = _userManager.FindByIdAsync(newAppointment.ClientId);
@@ -138,10 +137,10 @@ public class ScheduleController : ControllerBase
         return CreatedAtAction(nameof(CreateSchedule), newAppointment);
     }
 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AppointmentSchedule))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPut]
-    public async Task<IActionResult> UpdateSchedule([FromBody] AppointmentSchedule upAppointment)
+    public async Task<IActionResult> UpdateSchedule([FromBody] AptSchedule upAppointment)
     {
 
         var existingAppointment = _context.Schedules.Find(upAppointment.Id);

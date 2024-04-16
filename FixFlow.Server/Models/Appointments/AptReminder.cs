@@ -1,16 +1,15 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Server.Models.Appointments;
 
-public class AppointmentReminder
+public class AptReminder
 {
-    [Key]
     public string Id { get; set; }
     public string ClientId { get; set; }
 
     public string previousAppointmentId { get; set; }
 
-    public AppointmentReminder(string _clientId, string _prevAppoint)
+    public DateTime dateTime { get; set; }
+
+    public AptReminder(string _clientId, string _prevAppoint)
     {
         Id = new Guid().ToString();
         ClientId = _clientId;
