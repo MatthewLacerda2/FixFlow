@@ -15,6 +15,12 @@ public class AptSchedule
     public float Price { get; set; }
     public string Observation { get; set; } = string.Empty;
 
+    public AptSchedule()
+    {
+        Id = string.Empty;
+        ClientId = string.Empty;
+    }
+
     public AptSchedule(string clientId, DateTime _dateTime)
     {
         Id = new Guid().ToString();

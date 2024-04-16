@@ -44,7 +44,7 @@ public class EmployeeController : ControllerBase
         var employee = await _userManager.FindByIdAsync(Id);
         if (employee == null)
         {
-            employee = await _context.Employees.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == Id);
+            employee = await _context.Employees.FirstOrDefaultAsync(x => x.Id == Id);
         }
         if (employee == null)
         {
@@ -117,20 +117,20 @@ public class EmployeeController : ControllerBase
         var existingEmail = await _userManager.FindByEmailAsync(EmployeeDto.Email);
         if (existingEmail == null)
         {
-            existingEmail = await _context.Employees.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Email == EmployeeDto.Email);
+            existingEmail = await _context.Employees.FirstOrDefaultAsync(x => x.Email == EmployeeDto.Email);
         }
         if (existingEmail != null)
         {
             return BadRequest("Email already registered!");
         }
 
-        var existingCPF = _context.Employees.IgnoreQueryFilters().Where(c => c.CPF == EmployeeDto.CPF);
+        var existingCPF = _context.Employees.Where(c => c.CPF == EmployeeDto.CPF);
         if (existingCPF != null)
         {
             return BadRequest("CPF already registered!");
         }
 
-        var existingPhone = _context.Employees.IgnoreQueryFilters().Where(c => c.PhoneNumber == EmployeeDto.PhoneNumber);
+        var existingPhone = _context.Employees.Where(c => c.PhoneNumber == EmployeeDto.PhoneNumber);
         if (existingPhone != null)
         {
             return BadRequest("PhoneNumber already registered!");
@@ -163,7 +163,7 @@ public class EmployeeController : ControllerBase
         var existingEmployee = await _userManager.FindByIdAsync(upEmployee.Id);
         if (existingEmployee == null)
         {
-            existingEmployee = await _context.Employees.IgnoreQueryFilters().FirstOrDefaultAsync(x => x.Id == upEmployee.Id);
+            existingEmployee = await _context.Employees.FirstOrDefaultAsync(x => x.Id == upEmployee.Id);
         }
         if (existingEmployee == null)
         {
@@ -172,7 +172,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.CPF != upEmployee.CPF)
         {
-            var existingCPF = _context.Clients.IgnoreQueryFilters().Where(x => x.CPF == upEmployee.CPF);
+            var existingCPF = _context.Clients.Where(x => x.CPF == upEmployee.CPF);
             if (existingCPF.Any())
             {
                 return BadRequest("CPF taken");
@@ -185,7 +185,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.UserName != upEmployee.UserName)
         {
-            var existingUsername = _context.Clients.IgnoreQueryFilters().Where(x => x.UserName == upEmployee.UserName);
+            var existingUsername = _context.Clients.Where(x => x.UserName == upEmployee.UserName);
             if (existingUsername.Any())
             {
                 return BadRequest("Username already exists");
@@ -198,7 +198,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.PhoneNumber != upEmployee.PhoneNumber)
         {
-            var existingPhonenumber = _context.Clients.IgnoreQueryFilters().Where(x => x.PhoneNumber == upEmployee.PhoneNumber);
+            var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upEmployee.PhoneNumber);
             if (existingPhonenumber.Any())
             {
                 return BadRequest("PhoneNumber taken");
@@ -239,7 +239,7 @@ public class EmployeeController : ControllerBase
             return BadRequest("Employee does not Exist!");
         }
 
-        employee.isDeleted = true;
+        await _userManager.DeleteAsync(employee);
 
         await _context.SaveChangesAsync();
 

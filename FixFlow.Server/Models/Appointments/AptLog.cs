@@ -16,6 +16,12 @@ public class AptLog
     public float Price { get; set; }
     public string Observation { get; set; } = string.Empty;
 
+    public AptLog()
+    {
+        Id = string.Empty;
+        ClientId = string.Empty;
+    }
+
     public AptLog(string _clientId, float _price)
     {
         Id = new Guid().ToString();
