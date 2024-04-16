@@ -30,11 +30,11 @@ public class LogController : ControllerBase
 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-    [HttpGet("{id}")]
-    public async Task<IActionResult> ReadLog(string id)
+    [HttpGet("{Id}")]
+    public async Task<IActionResult> ReadLog(string Id)
     {
 
-        var log = await _context.Logs.FindAsync(id);
+        var log = await _context.Logs.FindAsync(Id);
 
         if (log == null)
         {
@@ -161,11 +161,11 @@ public class LogController : ControllerBase
 
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteLog(string id)
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> DeleteLog(string Id)
     {
 
-        var logToDelete = await _context.Logs.FindAsync(id);
+        var logToDelete = await _context.Logs.FindAsync(Id);
         if (logToDelete == null)
         {
             return BadRequest("Log Appointment does not exist");
