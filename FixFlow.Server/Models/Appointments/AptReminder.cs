@@ -13,6 +13,13 @@ public class AptReminder
 
     public DateTime dateTime { get; set; }
 
+    public AptReminder()
+    {
+        Id = string.Empty;
+        ClientId = string.Empty;
+        previousAppointmentId = string.Empty;
+    }
+
     public AptReminder(string _clientId, string _prevAppoint)
     {
         Id = new Guid().ToString();

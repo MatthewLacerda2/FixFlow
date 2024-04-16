@@ -11,8 +11,6 @@ public class Employee : IdentityUser
 
     public float salary { get; set; }
 
-    public bool isDeleted { get; set; } = false;
-
     public Employee()
     {
         CreatedDate = DateTime.Now;
