@@ -10,8 +10,6 @@ public class Client : IdentityUser
 
     public string additionalNote { get; set; }
 
-    public bool isDeleted { get; set; } = false;
-
     public Client()
     {
         CreatedDate = DateTime.Now;
