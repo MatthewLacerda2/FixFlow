@@ -8,7 +8,6 @@ using Server.Models;
 using System.Text;
 using System.Threading.RateLimiting;
 using FluentValidation.AspNetCore;
-using Server.Seeder;
 
 var builder = WebApplication.CreateBuilder(args);
 
