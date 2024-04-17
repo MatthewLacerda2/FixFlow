@@ -1,9 +1,10 @@
 **Technical aspects**
 
-Everything is CRUDed via an ASP.NET Core JSON WebApi. The webapp uses Token Authentication and Authorization
-The Users database is in MySQL, and the Appointments are saved in MongoDB
+The BackEnd is entirely a ASP.NET Core WebApi which handles HTTP CRUD requests to a MySQL database
+Authentication, Authorization, Validation and Rate Limitation middlewares are implemented
+We are using Tokens for this one
 
-On the Front-End, we are using a React with Typescript project. Everything there is done via http requests. Glad to be using a Token on this
+On the Front-End, we are using a React with Typescript project using Vite
 
 ---
 
@@ -18,11 +19,12 @@ Once you have it, download the 'mysql' docker image:
 
 Then, get the MySQL container online
 
-`docker run -d -p 3306:3306 --name mysql_container -e MYSQL_ROOT_PASSWORD=xpvista7810 -e MYSQL_DATABASE=fixflow -e MYSQL_USER=lendacerda -e MYSQL_PASSWORD=xpvista7810 mysql`
+`docker run -d -p 3306:3306 --name fixflow -e MYSQL_ROOT_PASSWORD=xpvista7810 -e MYSQL_DATABASE=fixflow -e MYSQL_USER=lendacerda -e MYSQL_PASSWORD=xpvista7810 mysql`
 
-And the MongoDB
+At the MySQL terminal, you'll need to Grant \* PRIVILEGES to the 'lendacerda' User
 
-`docker run --name mongo_db -d -p 27017:27017 mongo`
+`GRANT ALL PRIVILEGES ON mysql.* TO 'lendacerda'@'%';`
+`FLUSH PRIVILEGES;`
 
 Than, get into the Server folder
 

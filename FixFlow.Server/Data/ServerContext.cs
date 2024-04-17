@@ -15,9 +15,6 @@ public class ServerContext : IdentityDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        builder.Entity<Employee>().HasQueryFilter(x => x.isDeleted == false); //Only Read those NOT DELETED
-        builder.Entity<Client>().HasQueryFilter(x => x.isDeleted == false);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -25,7 +22,7 @@ public class ServerContext : IdentityDbContext
         base.OnConfiguring(optionsBuilder);
 
         optionsBuilder.UseMySql(
-            "Server=localhost;port=3306;Database=mysql;User=lendacerda;Password=xpvista7810;",
+            "Server=localhost;port=3306;Database=fixflow;User=lendacerda;Password=xpvista7810;",
             new MariaDbServerVersion(new Version(10, 5, 11)));
     }
 
