@@ -12,7 +12,6 @@ public class AptSchedule
     public string reminderId { get; set; } = string.Empty;
 
     public DateTime DateTime { get; set; }
-    public float Price { get; set; }
     public string Observation { get; set; } = string.Empty;
 
     public AptSchedule()
