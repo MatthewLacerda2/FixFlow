@@ -31,6 +31,10 @@ jobs:
         working-directory: FixFlow.Server
         run: dotnet add package Swashbuckle.AspNetCore.SwaggerGen
 
+      - name: Install Swagger CLI
+        working-directory: fixflow.client
+        run: npm install -g swagger-cli
+
       - name: Dotnet Build
         working-directory: FixFlow.Server
         run: dotnet build -c Release .\FixFlow.Server.csproj
