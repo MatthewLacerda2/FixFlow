@@ -27,21 +27,9 @@ jobs:
         working-directory: FixFlow.Server
         run: dotnet restore
 
-      - name: Install SwaggerGen
-        working-directory: FixFlow.Server
-        run: dotnet add package Swashbuckle.AspNetCore.SwaggerGen
-
-      - name: Install Swagger CLI
-        working-directory: fixflow.client
-        run: npm install -g swagger-cli
-
       - name: Dotnet Build
         working-directory: FixFlow.Server
-        run: dotnet build -c Release .\FixFlow.Server.csproj
-
-      - name: Generate Client SDK using Open Api
-        working-directory: FixFlow.Server
-        run: swagger tofile --output swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
+        run: dotnet build
 
       - name: Install xUnit dependencies
         working-directory: FixFlow.Tests
