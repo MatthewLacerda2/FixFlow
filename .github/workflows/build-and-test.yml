@@ -29,7 +29,11 @@ jobs:
 
       - name: Dotnet Build
         working-directory: FixFlow.Server
-        run: dotnet build
+        run: dotnet build -c Release .\FixFlow.Server.csproj
+
+      - name: Generate Client SDK using Open Api
+        working-directory: FixFlow.Server
+        run: swagger tofile --output swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
       - name: Install xUnit dependencies
         working-directory: FixFlow.Tests

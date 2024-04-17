@@ -24,6 +24,10 @@ var secretKey = builder.Configuration["Jwt:SecretKey"];
 var verifiedIssuerSigningKey = secretKey != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
     : throw new InvalidOperationException("JWT secret key is missing in configuration.");
 
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,10 +46,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
-
-builder.Services.AddControllersWithViews();
-
 builder.Services.AddRateLimiter(_ => _
     .AddFixedWindowLimiter(policyName: "fixed", options =>
     {
@@ -54,8 +54,6 @@ builder.Services.AddRateLimiter(_ => _
         options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         options.QueueLimit = 10;
     }));
-
-builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
 builder.Services.AddCors(options =>
 {
@@ -67,6 +65,8 @@ builder.Services.AddCors(options =>
                    .AllowAnyHeader();
         });
 });
+
+builder.Services.AddControllersWithViews();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
