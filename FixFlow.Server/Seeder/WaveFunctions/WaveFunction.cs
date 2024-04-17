@@ -1,7 +1,9 @@
 namespace Server.Seeder.WaveFunctions
 {
-    public class WaveFunctions
+    public class WaveFunction
     {
+        public static int BogusSeed = 666;
+
         public static float Lerp(int min, int max, int seed)
         {
             float t = (float)seed / int.MaxValue;

@@ -8,6 +8,7 @@ using Server.Models;
 using System.Text;
 using System.Threading.RateLimiting;
 using FluentValidation.AspNetCore;
+using Server.Seeder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +17,10 @@ builder.Services.AddIdentity<Client, IdentityRole>()
     .AddEntityFrameworkStores<ServerContext>()
     .AddDefaultTokenProviders();
 
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+
 builder.Services.AddDbContext<ServerContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 23))));
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 23))));
 
 var secretKey = builder.Configuration["Jwt:SecretKey"];
 var verifiedIssuerSigningKey = secretKey != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
@@ -70,6 +73,8 @@ builder.Services.AddCors(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// - - - - - Finished Bogus
 
 var app = builder.Build();
 
