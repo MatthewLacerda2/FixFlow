@@ -10,11 +10,7 @@ public class LogValidator : AbstractValidator<FlowLoginRequest>
         {
             if (StringChecker.IsPasswordStrong(password))
             {
-                context.AddFailure("Password is invalid");
-            }
-            if (password.Length < 7)
-            {
-                context.AddFailure("Password must be at least 7 characters long");
+                context.AddFailure("Password must contain an upper case, lower case, number and special character");
             }
         });
 
@@ -23,10 +19,6 @@ public class LogValidator : AbstractValidator<FlowLoginRequest>
             if (StringChecker.IsPasswordStrong(newPassword))
             {
                 context.AddFailure("Password must contain an upper case, lower case, number and special character");
-            }
-            if (newPassword.Length < 7)
-            {
-                context.AddFailure("Password must be at least 7 characters long");
             }
         });
     }
