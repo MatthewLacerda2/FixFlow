@@ -5,33 +5,33 @@ namespace Server.Models.DTO;
 public class EmployeeDTO
 {
     [Required]
-    public string Id;
+    public string Id { get; set; }
 
     [Required]
-    public string FullName;
+    public string FullName { get; set; }
 
     /// <summary>
     /// CPF. Must be only precisely 11 numbers
     /// </summary>
     [Length(11, 11)]
-    public string CPF;
+    public string CPF { get; set; }
 
-    public float salary;
+    public float salary { get; set; }
 
     /// <summary>
     /// NickName. Must not contain spaces
     /// </summary>
-    public string UserName;
+    public string UserName { get; set; }
 
     /// <summary>
     /// Phone Number. Must contain only numbers, and may be preceded by a '+'
     /// </summary>
     [Required]
     [Phone]
-    public string PhoneNumber;
+    public string PhoneNumber { get; set; }
 
     [EmailAddress]
-    public string Email;
+    public string Email { get; set; }
 
     public EmployeeDTO(string id, string fullname, string cpf, string _userName, string email, string phonenumber, float _salary)
     {
