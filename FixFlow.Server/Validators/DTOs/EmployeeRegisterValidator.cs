@@ -34,10 +34,6 @@ public class EmployeeRegisterValidator : AbstractValidator<EmployeeRegister>
             {
                 context.AddFailure("Password must contain an upper case, lower case, number and special character");
             }
-            if (currentPassword.Length < 7)
-            {
-                context.AddFailure("Password must be at least 7 characters long");
-            }
         });
 
         RuleFor(x => x.newPassword).Custom((newPassword, context) =>
@@ -45,10 +41,6 @@ public class EmployeeRegisterValidator : AbstractValidator<EmployeeRegister>
             if (newPassword != null && StringChecker.IsPasswordStrong(newPassword) == false)
             {
                 context.AddFailure("Password must contain an upper case, lower case, number and special character");
-            }
-            if (newPassword!.Length < 7)
-            {
-                context.AddFailure("Password must be at least 7 characters long");
             }
         });
     }
