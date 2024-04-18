@@ -10,6 +10,9 @@ namespace Server.Controllers;
 /// <summary>
 /// Controller class for Appointment Log CRUD requests
 /// </summary>
+/// <remarks>
+/// Logs are simply registration that the Appointment was done
+/// </remarks>
 [ApiController]
 [Route(Common.api_route + "logs")]
 [Produces("application/json")]
@@ -19,15 +22,19 @@ public class LogController : ControllerBase
     private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
 
-    /// <summary>
-    /// Controller class for Appointment Log CRUD requests
-    /// </summary>
     public LogController(ServerContext context, UserManager<Client> userManager)
     {
         _context = context;
         _userManager = userManager;
     }
 
+    /// <summary>
+    /// Get a Log by it's unique Id
+    /// </summary>
+    /// <returns>AppointmentLog</returns>
+    /// <param name="Id">The Log's Id</param>
+    /// <response code="200">The Appointment Log</response>
+    /// <response code="404">There was no Appointment Log with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{Id}")]
@@ -44,11 +51,26 @@ public class LogController : ControllerBase
         return Ok(log);
     }
 
+    /// <summary>
+    /// Gets a number of Appointment Logs, with optional filters
+    /// </summary>
+    /// <remarks>
+    /// Returns an Array of size 0 instead of Not Found
+    /// </remarks>
+    /// <returns>AppointmentLog Array</returns>
+    /// <param name="ClientId">Filter by a specific Client</param>
+    /// <param name="minPrice">Minimum Price of the Appointments</param>
+    /// <param name="maxPrice">Maximum Price of the Appointments</param>/// 
+    /// <param name="minDateTime">The oldest DateTime the Appointment took place</param>
+    /// <param name="maxDateTime">The most recent DateTime the Appointment took placet</param>/// 
+    /// <param name="sort">Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending</param>
+    /// <param name="offset">Offsets the result by a given amount</param>
+    /// <param name="limit">Limits the result by a given amount</param>
+    /// <response code="200">Returns an array of AppointmentLogs</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadLogs(string? ClientId, float? minPrice, float? maxPrice,
-                                    DateTime? minDateTime, DateTime? maxDateTime, CompletedStatus? status,
+                                    DateTime? minDateTime, DateTime? maxDateTime,
                                     string? sort, int? offset, int? limit)
     {
 
@@ -76,11 +98,6 @@ public class LogController : ControllerBase
         if (maxDateTime.HasValue)
         {
             logs = logs.Where(x => x.DateTime <= maxDateTime);
-        }
-
-        if (status.HasValue)
-        {
-            logs = logs.Where(x => x.Status == status);
         }
 
         if (!string.IsNullOrWhiteSpace(sort))
@@ -113,6 +130,12 @@ public class LogController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Create an Appointment Log
+    /// </summary>
+    /// <returns>The created Appointment Log</returns>
+    /// <response code="200">The created Appointment Log</response>
+    /// <response code="400">The given (ClientId || ScheduleId) does not exist</response>
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPost]
@@ -141,6 +164,12 @@ public class LogController : ControllerBase
         return CreatedAtAction(nameof(CreateLog), newAppointment);
     }
 
+    /// <summary>
+    /// Update the Appointment Log with the given Id
+    /// </summary>
+    /// <returns>The updated Appointment Log</returns>
+    /// <response code="200">The updated Appointment Log</response>
+    /// <response code="400">There was no AptLog with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPut]
@@ -159,6 +188,12 @@ public class LogController : ControllerBase
         return Ok(upAppointment);
     }
 
+    /// <summary>
+    /// Deletes the Appointment Log with the given Id
+    /// </summary>
+    /// <param name="Id">The Id of the AptLog to be deleted</param>
+    /// <response code="204">No Content</response>
+    /// <response code="400">The Id was invalid</response>
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpDelete("{Id}")]

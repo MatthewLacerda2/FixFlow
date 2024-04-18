@@ -10,7 +10,6 @@ public class AptLog
     public string ClientId { get; set; }
 
     public string ScheduleId { get; set; } = string.Empty;
-    public CompletedStatus Status { get; set; }
 
     public DateTime DateTime { get; set; }
     public float Price { get; set; }
