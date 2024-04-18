@@ -41,6 +41,22 @@ public class LoginController : ControllerBase
     public async Task<IActionResult> Login([FromBody] FlowLoginRequest model)
     {
 
+        if (!string.IsNullOrEmpty(model.Email))
+        {
+
+            var userExists = _userManager.FindByEmailAsync(model.Email).Result;
+
+            if (userExists == null)
+            {
+                return BadRequest("There is no user with that Email");
+            }
+            else
+            {
+                model.UserName = userExists.UserName!;
+            }
+
+        }
+
         var result = await _signInManager.PasswordSignInAsync(model.UserName, model.password, true, false);
 
         if (result.Succeeded)
