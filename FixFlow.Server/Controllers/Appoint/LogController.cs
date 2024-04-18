@@ -29,7 +29,7 @@ public class LogController : ControllerBase
     }
 
     /// <summary>
-    /// Get a Log by it's unique Id
+    /// Get the Log with the given Id
     /// </summary>
     /// <returns>AppointmentLog</returns>
     /// <param name="Id">The Log's Id</param>
@@ -55,7 +55,7 @@ public class LogController : ControllerBase
     /// Gets a number of Appointment Logs, with optional filters
     /// </summary>
     /// <remarks>
-    /// Returns an Array of size 0 instead of Not Found
+    /// Does not return Not Found, but an Array of size 0 instead
     /// </remarks>
     /// <returns>AppointmentLog Array</returns>
     /// <param name="ClientId">Filter by a specific Client</param>
@@ -193,7 +193,7 @@ public class LogController : ControllerBase
     /// </summary>
     /// <param name="Id">The Id of the AptLog to be deleted</param>
     /// <response code="204">No Content</response>
-    /// <response code="400">The Id was invalid</response>
+    /// <response code="400">There was no Log with the given Id</response>
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpDelete("{Id}")]
