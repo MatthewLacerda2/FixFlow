@@ -4,16 +4,28 @@ namespace Server.Models.DTO;
 
 public class EmployeeDTO
 {
+    [Required]
     public string Id;
 
     [Required]
     public string FullName;
 
+    /// <summary>
+    /// CPF. Must be only precisely 11 numbers
+    /// </summary>
+    [Length(11, 11)]
     public string CPF;
+
     public float salary;
 
+    /// <summary>
+    /// NickName. Must not contain spaces
+    /// </summary>
     public string UserName;
 
+    /// <summary>
+    /// Phone Number. Must contain only numbers, and may be preceded by a '+'
+    /// </summary>
     [Required]
     [Phone]
     public string PhoneNumber;

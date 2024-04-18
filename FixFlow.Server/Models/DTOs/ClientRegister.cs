@@ -4,16 +4,31 @@ namespace Server.Models.DTO;
 
 public class ClientRegister
 {
+    [Required]
     public string Id;
 
     [Required]
     public string FullName;
 
+    /// <summary>
+    /// CPF. Must be only precisely 11 numbers
+    /// </summary>
+    [Length(11, 11)]
     public string CPF;
+
+    /// <summary>
+    /// Special information about the Client, if applicable
+    /// </summary>
     public string additionalNote = string.Empty;
 
+    /// <summary>
+    /// NickName. Must not contain spaces
+    /// </summary>
     public string UserName;
 
+    /// <summary>
+    /// Phone Number. Must contain only numbers and/or a '+'
+    /// </summary>
     [Required]
     [Phone]
     public string PhoneNumber;
@@ -22,6 +37,11 @@ public class ClientRegister
     public string Email;
 
     public string currentPassword = string.Empty;
+
+    /// <summary>
+    /// New Password. Only used when registering the user or changing the password
+    /// For Logging in, use FlowLoginRequest instead
+    /// </summary>
     public string newPassword = string.Empty;
 
     public ClientRegister(string _Id, string _FullName, string _CPF, string _userName, string _PhoneNumber, string _Email)
