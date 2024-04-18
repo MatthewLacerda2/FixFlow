@@ -57,13 +57,13 @@ public class ReminderController : ControllerBase
     /// <remarks>
     /// Does not return Not Found, but an Array of size 0 instead
     /// </remarks>
-    /// <returns>AptReminder[]</returns>
     /// <param name="ClientId">Filter by a specific Client</param>
     /// <param name="minDateTime">The nearest Reminder set up</param>
     /// <param name="maxDateTime">The furthest Reminder set up</param>/// 
     /// <param name="sort">Orders the result by Client, or DateTime. Add suffix 'desc' to order descending</param>
     /// <param name="offset">Offsets the result by a given amount</param>
     /// <param name="limit">Limits the result by a given amount</param>
+    /// <returns>AptReminder[]</returns>
     /// <response code="200">Returns an array of AppointmentReminder</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptReminder[]>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -72,21 +72,21 @@ public class ReminderController : ControllerBase
                                     string? sort, int? offset, int? limit)
     {
 
-        var reminders = _context.Reminders.AsQueryable();
+        var remindersQuery = _context.Reminders.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(ClientId))
         {
-            reminders = reminders.Where(x => x.ClientId == ClientId);
+            remindersQuery = remindersQuery.Where(x => x.ClientId == ClientId);
         }
 
         if (minDateTime.HasValue)
         {
-            reminders = reminders.Where(x => x.dateTime >= minDateTime);
+            remindersQuery = remindersQuery.Where(x => x.dateTime >= minDateTime);
         }
 
         if (maxDateTime.HasValue)
         {
-            reminders = reminders.Where(x => x.dateTime <= maxDateTime);
+            remindersQuery = remindersQuery.Where(x => x.dateTime <= maxDateTime);
         }
 
         if (!string.IsNullOrWhiteSpace(sort))
@@ -94,25 +94,25 @@ public class ReminderController : ControllerBase
             sort = sort.ToLower();
             if (sort.Contains("client"))
             {
-                reminders = reminders.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+                remindersQuery = remindersQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
             }
             else
             {
-                reminders = reminders.OrderBy(s => s.dateTime).ThenByDescending(s => s.ClientId).ThenBy(s => s.Id);
+                remindersQuery = remindersQuery.OrderBy(s => s.dateTime).ThenByDescending(s => s.ClientId).ThenBy(s => s.Id);
             }
         }
 
         if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
         {
-            reminders.Reverse();
+            remindersQuery.Reverse();
         }
 
-        var result = reminders
+        var resultArray = remindersQuery
             .Skip(offset ?? 0)
             .Take(limit ?? 10)
             .ToArray();
 
-        return Ok(result);
+        return Ok(resultArray);
     }
 
     /// <summary>
@@ -177,6 +177,7 @@ public class ReminderController : ControllerBase
     /// Deletes the Appointment Reminder with the given Id
     /// </summary>
     /// <param name="Id">The Id of the AptReminder to be deleted</param>
+    /// <returns>NoContentResult</returns>
     /// <response code="204">No Content</response>
     /// <response code="400">There was no Reminder with the given Id</response>
     [ProducesResponseType(StatusCodes.Status204NoContent)]

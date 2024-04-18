@@ -29,8 +29,8 @@ public class EmployeeController : ControllerBase
     /// <summary>
     /// Get the Employee with the given Id
     /// </summary>
-    /// <returns>EmployeeDTO</returns>
     /// <param name="Id">The Client's Id</param>
+    /// <returns>EmployeeDTO</returns>/// 
     /// <response code="200">The Employee's DTO</response>
     /// <response code="404">There was no Employee with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO>))]
@@ -55,7 +55,6 @@ public class EmployeeController : ControllerBase
     /// <summary>
     /// Gets a number of Employees, with optional filters
     /// </summary>
-    /// <returns>EmployeeDTO[]</returns>
     /// <remarks>
     /// Does not return Not Found, but an Array of size 0 instead
     /// </remarks>
@@ -63,6 +62,7 @@ public class EmployeeController : ControllerBase
     /// <param name="offset">Offsets the result by a given amount</param>
     /// <param name="limit">Limits the number of results</param>
     /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
+    /// <returns>EmployeeDTO[]</returns>
     /// <response code="200">Returns an array of EmployeeDTO</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO[]>))]
     [HttpGet]

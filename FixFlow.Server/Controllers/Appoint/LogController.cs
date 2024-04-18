@@ -31,8 +31,8 @@ public class LogController : ControllerBase
     /// <summary>
     /// Get the Log with the given Id
     /// </summary>
-    /// <returns>AptLog</returns>
     /// <param name="Id">The Log's Id</param>
+    /// <returns>AptLog</returns>
     /// <response code="200">The Appointment Log</response>
     /// <response code="404">There was no Appointment Log with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
@@ -57,7 +57,6 @@ public class LogController : ControllerBase
     /// <remarks>
     /// Does not return Not Found, but an Array of size 0 instead
     /// </remarks>
-    /// <returns>AptLog[]</returns>
     /// <param name="ClientId">Filter by a specific Client</param>
     /// <param name="minPrice">Minimum Price of the Appointments</param>
     /// <param name="maxPrice">Maximum Price of the Appointments</param>/// 
@@ -66,6 +65,7 @@ public class LogController : ControllerBase
     /// <param name="sort">Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending</param>
     /// <param name="offset">Offsets the result by a given amount</param>
     /// <param name="limit">Limits the result by a given amount</param>
+    /// <returns>AptLog[]</returns>
     /// <response code="200">Returns an array of AppointmentLog</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
     [HttpGet]
@@ -74,30 +74,30 @@ public class LogController : ControllerBase
                                     string? sort, int? offset, int? limit)
     {
 
-        var logs = _context.Logs.AsQueryable();
+        var logsQuery = _context.Logs.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(ClientId))
         {
-            logs = logs.Where(x => x.ClientId == ClientId);
+            logsQuery = logsQuery.Where(x => x.ClientId == ClientId);
         }
 
         if (minPrice.HasValue)
         {
-            logs = logs.Where(x => x.Price >= minPrice);
+            logsQuery = logsQuery.Where(x => x.Price >= minPrice);
         }
         if (maxPrice.HasValue)
         {
-            logs = logs.Where(x => x.Price <= maxPrice);
+            logsQuery = logsQuery.Where(x => x.Price <= maxPrice);
         }
 
         if (minDateTime.HasValue)
         {
-            logs = logs.Where(x => x.DateTime >= minDateTime);
+            logsQuery = logsQuery.Where(x => x.DateTime >= minDateTime);
         }
 
         if (maxDateTime.HasValue)
         {
-            logs = logs.Where(x => x.DateTime <= maxDateTime);
+            logsQuery = logsQuery.Where(x => x.DateTime <= maxDateTime);
         }
 
         if (!string.IsNullOrWhiteSpace(sort))
@@ -105,29 +105,29 @@ public class LogController : ControllerBase
             sort = sort.ToLower();
             if (sort.Contains("client"))
             {
-                logs = logs.OrderBy(s => s.ClientId).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
             }
             else if (sort.Contains("price"))
             {
-                logs = logs.OrderBy(s => s.Price).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderBy(s => s.Price).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
             }
             else if (sort.Contains("date"))
             {
-                logs = logs.OrderByDescending(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderByDescending(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
         }
 
         if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
         {
-            logs.Reverse();
+            logsQuery.Reverse();
         }
 
-        var result = logs
+        var resultsArray = logsQuery
             .Skip(offset ?? 0)
             .Take(limit ?? 10)
             .ToArray();
 
-        return Ok(result);
+        return Ok(resultsArray);
     }
 
     /// <summary>
@@ -192,6 +192,7 @@ public class LogController : ControllerBase
     /// Deletes the Appointment Log with the given Id
     /// </summary>
     /// <param name="Id">The Id of the AptLog to be deleted</param>
+    /// <returns>NoContentResult</returns>
     /// <response code="204">No Content</response>
     /// <response code="400">There was no Log with the given Id</response>
     [ProducesResponseType(StatusCodes.Status204NoContent)]
