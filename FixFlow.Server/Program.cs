@@ -73,6 +73,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Flow API", Version = "1.0" });
+
+    var xmlFile = "FixFlow.Server.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+    options.IncludeXmlComments(xmlPath);
 });
 
 var app = builder.Build();
