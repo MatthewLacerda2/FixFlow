@@ -3,9 +3,18 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AptReminder = {
-    id?: string | null;
+    id: string;
+    /**
+     * The Id of the Client who took the Appointment
+     */
     clientId: string;
-    previousAppointmentId?: string | null;
+    /**
+     * The Id of the Appointment Log that precedes this Reminder
+     */
+    previousAppointmentId: string;
+    /**
+     * The Date to Contact the Client
+     */
     dateTime?: string;
 };
 

@@ -2,14 +2,24 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CompletedStatus } from './CompletedStatus';
 export type AptLog = {
-    id?: string | null;
+    id: string;
+    /**
+     * The Id of the Client who took the Appointment
+     */
     clientId: string;
+    /**
+     * The Id of the Schedule that precedes the Log, if any
+     */
     scheduleId?: string | null;
-    status?: CompletedStatus;
+    /**
+     * The DateTime when the Log was created
+     */
     dateTime?: string;
     price?: number;
+    /**
+     * Special information about the Appointment, if applicable
+     */
     observation?: string | null;
 };
 

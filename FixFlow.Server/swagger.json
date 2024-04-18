@@ -10,10 +10,12 @@
         "tags": [
           "Client"
         ],
+        "summary": "Get a Client with the given Id",
         "parameters": [
           {
             "name": "Id",
             "in": "path",
+            "description": "The Client's Id",
             "required": true,
             "schema": {
               "type": "string"
@@ -22,7 +24,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The ClientDTO",
             "content": {
               "application/json": {
                 "schema": {
@@ -35,7 +37,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "There was no Client with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -50,10 +52,12 @@
         "tags": [
           "Client"
         ],
+        "summary": "Deletes the Client with the given Id",
         "parameters": [
           {
             "name": "Id",
             "in": "path",
+            "description": "The Id of the Client to be deleted",
             "required": true,
             "schema": {
               "type": "string"
@@ -62,7 +66,7 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content",
+            "description": "Client was found, and thus deleted",
             "content": {
               "application/json": {
                 "schema": {
@@ -72,7 +76,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "There was no Client with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -89,10 +93,13 @@
         "tags": [
           "Client"
         ],
+        "summary": "Gets a number of Clients, with optional filters",
+        "description": "Does not return Not Found, but an Array of size 0 instead",
         "parameters": [
           {
-            "name": "username",
+            "name": "fullname",
             "in": "query",
+            "description": "Filter the Clients whose fullname contain the given string",
             "schema": {
               "type": "string"
             }
@@ -100,6 +107,7 @@
           {
             "name": "offset",
             "in": "query",
+            "description": "Offsets the result by a given amount",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -108,6 +116,7 @@
           {
             "name": "limit",
             "in": "query",
+            "description": "Limits the result by a given amount",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -116,6 +125,7 @@
           {
             "name": "sort",
             "in": "query",
+            "description": "Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending",
             "schema": {
               "type": "string"
             }
@@ -123,7 +133,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Returns an array of ClientDTO",
             "content": {
               "application/json": {
                 "schema": {
@@ -144,6 +154,7 @@
         "tags": [
           "Client"
         ],
+        "summary": "Create a Client Account",
         "requestBody": {
           "content": {
             "application/json": {
@@ -175,7 +186,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "The Client's (PhoneNumber || CPF || Email) does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -193,6 +204,9 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "The created Client's DTO"
           }
         }
       },
@@ -200,6 +214,7 @@
         "tags": [
           "Client"
         ],
+        "summary": "Updates the Client with the given Id",
         "requestBody": {
           "content": {
             "application/json": {
@@ -221,7 +236,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Updated Client's DTO",
             "content": {
               "application/json": {
                 "schema": {
@@ -231,7 +246,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "There was no Client with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -248,10 +263,12 @@
         "tags": [
           "Employee"
         ],
+        "summary": "Get the Employee with the given Id",
         "parameters": [
           {
             "name": "Id",
             "in": "path",
+            "description": "The Client's Id",
             "required": true,
             "schema": {
               "type": "string"
@@ -260,7 +277,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The Employee's DTO",
             "content": {
               "application/json": {
                 "schema": {
@@ -273,7 +290,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "There was no Employee with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -288,10 +305,12 @@
         "tags": [
           "Employee"
         ],
+        "summary": "Deletes the Employee with the given Id",
         "parameters": [
           {
             "name": "Id",
             "in": "path",
+            "description": "The Id of the Employee to be deleted",
             "required": true,
             "schema": {
               "type": "string"
@@ -310,7 +329,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "There was no Employee with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -318,6 +337,9 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Employee was found, and thus deleted"
           }
         }
       }
@@ -327,10 +349,13 @@
         "tags": [
           "Employee"
         ],
+        "summary": "Gets a number of Employees, with optional filters",
+        "description": "Does not return Not Found, but an Array of size 0 instead",
         "parameters": [
           {
             "name": "username",
             "in": "query",
+            "description": "Filters results to only Users whose username contains this string",
             "schema": {
               "type": "string"
             }
@@ -338,6 +363,7 @@
           {
             "name": "offset",
             "in": "query",
+            "description": "Offsets the result by a given amount",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -346,6 +372,7 @@
           {
             "name": "limit",
             "in": "query",
+            "description": "Limits the number of results",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -354,6 +381,7 @@
           {
             "name": "sort",
             "in": "query",
+            "description": "Orders the result by a given field. Does not order if the field does not exist",
             "schema": {
               "type": "string"
             }
@@ -361,7 +389,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Returns an array of EmployeeDTO",
             "content": {
               "application/json": {
                 "schema": {
@@ -382,6 +410,7 @@
         "tags": [
           "Employee"
         ],
+        "summary": "Creates a Employee User",
         "requestBody": {
           "content": {
             "application/json": {
@@ -403,7 +432,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "EmployeeDTO",
             "content": {
               "application/json": {
                 "schema": {
@@ -413,7 +442,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "The Client's (PhoneNumber || CPF || Email) does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -438,6 +467,7 @@
         "tags": [
           "Employee"
         ],
+        "summary": "Updates the Employee with the given Id",
         "requestBody": {
           "content": {
             "application/json": {
@@ -459,7 +489,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Updated Employee's DTO",
             "content": {
               "application/json": {
                 "schema": {
@@ -469,7 +499,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "There was no Employee with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -486,10 +516,12 @@
         "tags": [
           "Log"
         ],
+        "summary": "Get the Log with the given Id",
         "parameters": [
           {
             "name": "Id",
             "in": "path",
+            "description": "The Log's Id",
             "required": true,
             "schema": {
               "type": "string"
@@ -498,7 +530,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The Appointment Log",
             "content": {
               "application/json": {
                 "schema": {
@@ -508,7 +540,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "There was no Appointment Log with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -523,10 +555,12 @@
         "tags": [
           "Log"
         ],
+        "summary": "Deletes the Appointment Log with the given Id",
         "parameters": [
           {
             "name": "Id",
             "in": "path",
+            "description": "The Id of the AptLog to be deleted",
             "required": true,
             "schema": {
               "type": "string"
@@ -538,7 +572,7 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request",
+            "description": "There was no Log with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -555,10 +589,13 @@
         "tags": [
           "Log"
         ],
+        "summary": "Gets a number of Appointment Logs, with optional filters",
+        "description": "Does not return Not Found, but an Array of size 0 instead",
         "parameters": [
           {
             "name": "ClientId",
             "in": "query",
+            "description": "Filter by a specific Client",
             "schema": {
               "type": "string"
             }
@@ -566,6 +603,7 @@
           {
             "name": "minPrice",
             "in": "query",
+            "description": "Minimum Price of the Appointments",
             "schema": {
               "type": "number",
               "format": "float"
@@ -574,6 +612,7 @@
           {
             "name": "maxPrice",
             "in": "query",
+            "description": "Maximum Price of the Appointments",
             "schema": {
               "type": "number",
               "format": "float"
@@ -582,6 +621,7 @@
           {
             "name": "minDateTime",
             "in": "query",
+            "description": "The oldest DateTime the Appointment took place",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -590,21 +630,16 @@
           {
             "name": "maxDateTime",
             "in": "query",
+            "description": "The most recent DateTime the Appointment took placet",
             "schema": {
               "type": "string",
               "format": "date-time"
             }
           },
           {
-            "name": "status",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/CompletedStatus"
-            }
-          },
-          {
             "name": "sort",
             "in": "query",
+            "description": "Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending",
             "schema": {
               "type": "string"
             }
@@ -612,6 +647,7 @@
           {
             "name": "offset",
             "in": "query",
+            "description": "Offsets the result by a given amount",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -620,6 +656,7 @@
           {
             "name": "limit",
             "in": "query",
+            "description": "Limits the result by a given amount",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -628,7 +665,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Returns an array of AppointmentLog",
             "content": {
               "application/json": {
                 "schema": {
@@ -642,16 +679,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
           }
         }
       },
@@ -659,6 +686,7 @@
         "tags": [
           "Log"
         ],
+        "summary": "Create an Appointment Log",
         "requestBody": {
           "content": {
             "application/json": {
@@ -690,7 +718,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "The given (ClientId || ScheduleId) does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -698,6 +726,9 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "The created Appointment Log"
           }
         }
       },
@@ -705,6 +736,7 @@
         "tags": [
           "Log"
         ],
+        "summary": "Update the Appointment Log with the given Id",
         "requestBody": {
           "content": {
             "application/json": {
@@ -726,7 +758,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The updated Appointment Log",
             "content": {
               "application/json": {
                 "schema": {
@@ -736,7 +768,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "There was no AptLog with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -753,6 +785,7 @@
         "tags": [
           "Login"
         ],
+        "summary": "Get a Token when Logging in, with either UserName or Email, and Password",
         "requestBody": {
           "content": {
             "application/json": {
@@ -774,10 +807,10 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Successfull login"
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Unauthorized login",
             "content": {
               "text/plain": {
                 "schema": {
@@ -802,6 +835,7 @@
         "tags": [
           "Login"
         ],
+        "summary": "Change password of the User with the given Email",
         "requestBody": {
           "content": {
             "application/json": {
@@ -823,7 +857,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Password change successfull",
             "content": {
               "text/plain": {
                 "schema": {
@@ -843,7 +877,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Unauthorized",
             "content": {
               "text/plain": {
                 "schema": {
@@ -863,7 +897,7 @@
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "description": "Password change unsucessfull",
             "content": {
               "text/plain": {
                 "schema": {
@@ -890,9 +924,10 @@
         "tags": [
           "Login"
         ],
+        "summary": "Logout method",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Logout successfull"
           },
           "401": {
             "description": "Unauthorized",
@@ -913,6 +948,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Logout unsucessfull. Probable Internal Server Error"
           }
         }
       }
@@ -922,10 +960,12 @@
         "tags": [
           "Reminder"
         ],
+        "summary": "Get the Reminder with the given Id",
         "parameters": [
           {
             "name": "Id",
             "in": "path",
+            "description": "The Reminder's Id",
             "required": true,
             "schema": {
               "type": "string"
@@ -934,7 +974,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The AppointmentReminder with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -944,7 +984,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "There was no Appointment Reminder with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -959,10 +999,12 @@
         "tags": [
           "Reminder"
         ],
+        "summary": "Deletes the Appointment Reminder with the given Id",
         "parameters": [
           {
             "name": "Id",
             "in": "path",
+            "description": "The Id of the AptReminder to be deleted",
             "required": true,
             "schema": {
               "type": "string"
@@ -974,7 +1016,7 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request",
+            "description": "There was no Reminder with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -991,10 +1033,13 @@
         "tags": [
           "Reminder"
         ],
+        "summary": "Gets a number of Appointment Reminders, with optional filters",
+        "description": "Does not return Not Found, but an Array of size 0 instead",
         "parameters": [
           {
             "name": "ClientId",
             "in": "query",
+            "description": "Filter by a specific Client",
             "schema": {
               "type": "string"
             }
@@ -1002,6 +1047,7 @@
           {
             "name": "minDateTime",
             "in": "query",
+            "description": "The nearest Reminder set up",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -1010,6 +1056,7 @@
           {
             "name": "maxDateTime",
             "in": "query",
+            "description": "The furthest Reminder set up",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -1018,6 +1065,7 @@
           {
             "name": "sort",
             "in": "query",
+            "description": "Orders the result by Client, or DateTime. Add suffix 'desc' to order descending",
             "schema": {
               "type": "string"
             }
@@ -1025,6 +1073,7 @@
           {
             "name": "offset",
             "in": "query",
+            "description": "Offsets the result by a given amount",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1033,6 +1082,7 @@
           {
             "name": "limit",
             "in": "query",
+            "description": "Limits the result by a given amount",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1041,7 +1091,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Returns an array of AppointmentReminder",
             "content": {
               "application/json": {
                 "schema": {
@@ -1072,6 +1122,7 @@
         "tags": [
           "Reminder"
         ],
+        "summary": "Create an Appointment Reminder",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1103,7 +1154,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "The given (ClientId || LogId) does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -1111,6 +1162,9 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "The created Appointment Reminder"
           }
         }
       },
@@ -1118,6 +1172,7 @@
         "tags": [
           "Reminder"
         ],
+        "summary": "Update the Appointment Reminder with the given Id",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1139,7 +1194,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The updated Appointment Reminder",
             "content": {
               "application/json": {
                 "schema": {
@@ -1149,7 +1204,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "There was no AptReminder with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -1166,10 +1221,12 @@
         "tags": [
           "Schedule"
         ],
+        "summary": "Get the Schedule with the given Id",
         "parameters": [
           {
             "name": "Id",
             "in": "path",
+            "description": "The Schedule's Id",
             "required": true,
             "schema": {
               "type": "string"
@@ -1178,7 +1235,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The AppointmentSchedule with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -1188,7 +1245,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "There was no Appointment Schedule with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -1203,10 +1260,12 @@
         "tags": [
           "Schedule"
         ],
+        "summary": "Deletes the Appointment Schedule with the given Id",
         "parameters": [
           {
             "name": "Id",
             "in": "path",
+            "description": "The Id of the AptSchedule to be deleted",
             "required": true,
             "schema": {
               "type": "string"
@@ -1218,7 +1277,7 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request",
+            "description": "There was no Schedule with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -1235,10 +1294,13 @@
         "tags": [
           "Schedule"
         ],
+        "summary": "Gets a number of Appointment Schedules, with optional filters",
+        "description": "Does not return Not Found, but an Array of size 0 instead",
         "parameters": [
           {
             "name": "ClientId",
             "in": "query",
+            "description": "Filter by a specific Client",
             "schema": {
               "type": "string"
             }
@@ -1246,6 +1308,7 @@
           {
             "name": "minPrice",
             "in": "query",
+            "description": "Minimum Price of the Appointments",
             "schema": {
               "type": "number",
               "format": "float"
@@ -1254,6 +1317,7 @@
           {
             "name": "maxPrice",
             "in": "query",
+            "description": "Maximum Price of the Appointments",
             "schema": {
               "type": "number",
               "format": "float"
@@ -1262,6 +1326,7 @@
           {
             "name": "minDateTime",
             "in": "query",
+            "description": "The nearest Reminder set up",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -1270,6 +1335,7 @@
           {
             "name": "maxDateTime",
             "in": "query",
+            "description": "The furthest Reminder set up",
             "schema": {
               "type": "string",
               "format": "date-time"
@@ -1278,6 +1344,7 @@
           {
             "name": "sort",
             "in": "query",
+            "description": "Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending",
             "schema": {
               "type": "string"
             }
@@ -1285,6 +1352,7 @@
           {
             "name": "offset",
             "in": "query",
+            "description": "Offsets the result by a given amount",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -1294,6 +1362,7 @@
           {
             "name": "limit",
             "in": "query",
+            "description": "Limits the result by a given amount",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -1303,7 +1372,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Returns an array of AppointmentSchedule",
             "content": {
               "application/json": {
                 "schema": {
@@ -1334,6 +1403,7 @@
         "tags": [
           "Schedule"
         ],
+        "summary": "Create an Appointment Schedule",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1365,7 +1435,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "The given (ClientId || ReminderId) does not exist",
             "content": {
               "application/json": {
                 "schema": {
@@ -1373,6 +1443,9 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "The created Appointment Schedule"
           }
         }
       },
@@ -1380,6 +1453,7 @@
         "tags": [
           "Schedule"
         ],
+        "summary": "Update the Appointment Schedule with the given Id",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1401,7 +1475,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The updated Appointment Schedule",
             "content": {
               "application/json": {
                 "schema": {
@@ -1411,7 +1485,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "There was no AptSchedule with the given Id",
             "content": {
               "application/json": {
                 "schema": {
@@ -1428,27 +1502,28 @@
     "schemas": {
       "AptLog": {
         "required": [
-          "clientId"
+          "clientId",
+          "id"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "clientId": {
             "minLength": 1,
             "type": "string"
           },
+          "clientId": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The Id of the Client who took the Appointment"
+          },
           "scheduleId": {
             "type": "string",
+            "description": "The Id of the Schedule that precedes the Log, if any",
             "nullable": true
-          },
-          "status": {
-            "$ref": "#/components/schemas/CompletedStatus"
           },
           "dateTime": {
             "type": "string",
+            "description": "The DateTime when the Log was created",
             "format": "date-time"
           },
           "price": {
@@ -1457,6 +1532,7 @@
           },
           "observation": {
             "type": "string",
+            "description": "Special information about the Appointment, if applicable",
             "nullable": true
           }
         },
@@ -1464,24 +1540,29 @@
       },
       "AptReminder": {
         "required": [
-          "clientId"
+          "clientId",
+          "id",
+          "previousAppointmentId"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "clientId": {
             "minLength": 1,
             "type": "string"
           },
-          "previousAppointmentId": {
+          "clientId": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "description": "The Id of the Client who took the Appointment"
+          },
+          "previousAppointmentId": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The Id of the Appointment Log that precedes this Reminder"
           },
           "dateTime": {
             "type": "string",
+            "description": "The Date to Contact the Client",
             "format": "date-time"
           }
         },
@@ -1489,24 +1570,28 @@
       },
       "AptSchedule": {
         "required": [
-          "clientId"
+          "clientId",
+          "id"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "clientId": {
             "minLength": 1,
             "type": "string"
           },
+          "clientId": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The Id of the Client who took the Appointment"
+          },
           "reminderId": {
             "type": "string",
+            "description": "The Id of the Reminder that precedes this Schedule, if applicable",
             "nullable": true
           },
           "dateTime": {
             "type": "string",
+            "description": "The Date to Contact the Client",
             "format": "date-time"
           },
           "price": {
@@ -1523,13 +1608,14 @@
       "ClientDTO": {
         "required": [
           "fullName",
+          "id",
           "phoneNumber"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "fullName": {
             "minLength": 1,
@@ -1537,19 +1623,23 @@
           },
           "cpf": {
             "type": "string",
+            "description": "CPF. Must be only precisely 11 numbers",
             "nullable": true
           },
           "additionalNote": {
             "type": "string",
+            "description": "Special information about the Client, if applicable",
             "nullable": true
           },
           "userName": {
             "type": "string",
+            "description": "NickName. Must not contain spaces",
             "nullable": true
           },
           "phoneNumber": {
             "minLength": 1,
             "type": "string",
+            "description": "Phone Number. Must contain only numbers, and may be preceded by a '+'",
             "format": "tel"
           },
           "email": {
@@ -1563,13 +1653,14 @@
       "ClientRegister": {
         "required": [
           "fullName",
+          "id",
           "phoneNumber"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "fullName": {
             "minLength": 1,
@@ -1577,19 +1668,23 @@
           },
           "cpf": {
             "type": "string",
+            "description": "CPF. Must be only precisely 11 numbers",
             "nullable": true
           },
           "additionalNote": {
             "type": "string",
+            "description": "Special information about the Client, if applicable",
             "nullable": true
           },
           "userName": {
             "type": "string",
+            "description": "NickName. Must not contain spaces",
             "nullable": true
           },
           "phoneNumber": {
             "minLength": 1,
             "type": "string",
+            "description": "Phone Number. Must contain only numbers and/or a '+'",
             "format": "tel"
           },
           "email": {
@@ -1603,30 +1698,23 @@
           },
           "newPassword": {
             "type": "string",
+            "description": "New Password. Only used when registering the user or changing the password\r\nFor Logging in, use FlowLoginRequest instead",
             "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "CompletedStatus": {
-        "enum": [
-          0,
-          1,
-          2
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
       "EmployeeDTO": {
         "required": [
           "fullName",
+          "id",
           "phoneNumber"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "fullName": {
             "minLength": 1,
@@ -1634,6 +1722,7 @@
           },
           "cpf": {
             "type": "string",
+            "description": "CPF. Must be only precisely 11 numbers",
             "nullable": true
           },
           "salary": {
@@ -1642,11 +1731,13 @@
           },
           "userName": {
             "type": "string",
+            "description": "NickName. Must not contain spaces",
             "nullable": true
           },
           "phoneNumber": {
             "minLength": 1,
             "type": "string",
+            "description": "Phone Number. Must contain only numbers, and may be preceded by a '+'",
             "format": "tel"
           },
           "email": {
@@ -1660,13 +1751,14 @@
       "EmployeeRegister": {
         "required": [
           "fullName",
+          "id",
           "phoneNumber"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "fullName": {
             "minLength": 1,
@@ -1674,6 +1766,7 @@
           },
           "cpf": {
             "type": "string",
+            "description": "CPF. Must be only precisely 11 numbers",
             "nullable": true
           },
           "salary": {
@@ -1682,11 +1775,13 @@
           },
           "userName": {
             "type": "string",
+            "description": "NickName. Must not contain spaces",
             "nullable": true
           },
           "phoneNumber": {
             "minLength": 1,
             "type": "string",
+            "description": "Phone Number. Must contain only numbers and/or a '+'",
             "format": "tel"
           },
           "email": {
@@ -1695,7 +1790,9 @@
             "nullable": true
           },
           "newPassword": {
+            "minLength": 7,
             "type": "string",
+            "description": "New Password. Only used when registering the user or changing the password\r\nFor Logging in, use FlowLoginRequest instead",
             "nullable": true
           }
         },
@@ -1716,10 +1813,11 @@
             "nullable": true
           },
           "password": {
-            "minLength": 1,
+            "minLength": 7,
             "type": "string"
           },
           "newPassword": {
+            "minLength": 7,
             "type": "string",
             "nullable": true
           }

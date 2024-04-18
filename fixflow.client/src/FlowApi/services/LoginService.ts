@@ -8,8 +8,9 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class LoginService {
     /**
+     * Get a Token when Logging in, with either UserName or Email, and Password
      * @param requestBody
-     * @returns any Success
+     * @returns any Successfull login
      * @throws ApiError
      */
     public static postApiV1Login(
@@ -21,13 +22,14 @@ export class LoginService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                401: `Unauthorized`,
+                401: `Unauthorized login`,
             },
         });
     }
     /**
+     * Change password of the User with the given Email
      * @param requestBody
-     * @returns string Success
+     * @returns string Password change successfull
      * @throws ApiError
      */
     public static patchApiV1Login(
@@ -39,13 +41,14 @@ export class LoginService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad Request`,
-                401: `Unauthorized`,
+                400: `Unauthorized`,
+                401: `Password change unsucessfull`,
             },
         });
     }
     /**
-     * @returns any Success
+     * Logout method
+     * @returns any Logout successfull
      * @throws ApiError
      */
     public static postApiV1LoginLogout(): CancelablePromise<any> {
@@ -54,6 +57,7 @@ export class LoginService {
             url: '/api/v1/login/logout',
             errors: {
                 401: `Unauthorized`,
+                500: `Logout unsucessfull. Probable Internal Server Error`,
             },
         });
     }

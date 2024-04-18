@@ -12,7 +12,6 @@ export type { AptReminder } from './models/AptReminder';
 export type { AptSchedule } from './models/AptSchedule';
 export type { ClientDTO } from './models/ClientDTO';
 export type { ClientRegister } from './models/ClientRegister';
-export { CompletedStatus } from './models/CompletedStatus';
 export type { EmployeeDTO } from './models/EmployeeDTO';
 export type { EmployeeRegister } from './models/EmployeeRegister';
 export type { FlowLoginRequest } from './models/FlowLoginRequest';
