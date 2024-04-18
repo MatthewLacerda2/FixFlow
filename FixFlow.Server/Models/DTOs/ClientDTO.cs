@@ -4,22 +4,22 @@ namespace Server.Models.DTO;
 
 public class ClientDTO
 {
-    public string Id;
+    public string Id { get; set; }
 
     [Required]
-    public string FullName;
+    public string FullName { get; set; }
 
-    public string CPF;
-    public string additionalNote = string.Empty;
+    public string CPF { get; set; }
+    public string additionalNote { get; set; } = string.Empty;
 
-    public string UserName;
+    public string UserName { get; set; }
 
     [Required]
     [Phone]
-    public string PhoneNumber;
+    public string PhoneNumber { get; set; }
 
     [EmailAddress]
-    public string Email;
+    public string Email { get; set; }
 
     public ClientDTO(string id, string fullname, string cpf, string _userName, string _phoneNumber, string _email)
     {

@@ -4,25 +4,25 @@ namespace Server.Models.DTO;
 
 public class ClientRegister
 {
-    public string Id;
+    public string Id { get; set; }
 
     [Required]
-    public string FullName;
+    public string FullName { get; set; }
 
-    public string CPF;
-    public string additionalNote = string.Empty;
+    public string CPF { get; set; }
+    public string additionalNote { get; set; } = string.Empty;
 
-    public string UserName;
+    public string UserName { get; set; }
 
     [Required]
     [Phone]
-    public string PhoneNumber;
+    public string PhoneNumber { get; set; }
 
     [EmailAddress]
-    public string Email;
+    public string Email { get; set; }
 
-    public string currentPassword = string.Empty;
-    public string newPassword = string.Empty;
+    public string currentPassword { get; set; } = string.Empty;
+    public string newPassword { get; set; } = string.Empty;
 
     public ClientRegister(string _Id, string _FullName, string _CPF, string _userName, string _PhoneNumber, string _Email)
     {

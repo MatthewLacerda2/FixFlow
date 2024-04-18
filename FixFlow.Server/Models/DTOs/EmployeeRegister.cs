@@ -4,25 +4,25 @@ namespace Server.Models.DTO;
 
 public class EmployeeRegister
 {
-    public string Id;
+    public string Id { get; set; }
 
     [Required]
-    public string FullName;
+    public string FullName { get; set; }
 
-    public string CPF;
-    public float salary;
+    public string CPF { get; set; }
+    public float salary { get; set; }
 
-    public string UserName;
+    public string UserName { get; set; }
 
     [Required]
     [Phone]
-    public string PhoneNumber;
+    public string PhoneNumber { get; set; }
 
     [EmailAddress]
-    public string Email;
+    public string Email { get; set; }
 
     public string currentPassword = string.Empty;
-    public string newPassword = string.Empty;
+    public string newPassword { get; set; } = string.Empty;
 
     public EmployeeRegister(string id, string fullname, string cpf, string _userName, string email, string phonenumber, float _salary)
     {
