@@ -31,7 +31,7 @@ public class LogController : ControllerBase
     /// <summary>
     /// Get the Log with the given Id
     /// </summary>
-    /// <returns>AppointmentLog</returns>
+    /// <returns>AptLog</returns>
     /// <param name="Id">The Log's Id</param>
     /// <response code="200">The Appointment Log</response>
     /// <response code="404">There was no Appointment Log with the given Id</response>
@@ -57,7 +57,7 @@ public class LogController : ControllerBase
     /// <remarks>
     /// Does not return Not Found, but an Array of size 0 instead
     /// </remarks>
-    /// <returns>AppointmentLog Array</returns>
+    /// <returns>AptLog[]</returns>
     /// <param name="ClientId">Filter by a specific Client</param>
     /// <param name="minPrice">Minimum Price of the Appointments</param>
     /// <param name="maxPrice">Maximum Price of the Appointments</param>/// 
@@ -133,7 +133,7 @@ public class LogController : ControllerBase
     /// <summary>
     /// Create an Appointment Log
     /// </summary>
-    /// <returns>The created Appointment Log</returns>
+    /// <returns>AptLog</returns>
     /// <response code="200">The created Appointment Log</response>
     /// <response code="400">The given (ClientId || ScheduleId) does not exist</response>
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptLog))]
@@ -167,7 +167,7 @@ public class LogController : ControllerBase
     /// <summary>
     /// Update the Appointment Log with the given Id
     /// </summary>
-    /// <returns>The updated Appointment Log</returns>
+    /// <returns>AptLog</returns>
     /// <response code="200">The updated Appointment Log</response>
     /// <response code="400">There was no AptLog with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]

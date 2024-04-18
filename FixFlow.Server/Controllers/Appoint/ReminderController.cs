@@ -31,7 +31,7 @@ public class ReminderController : ControllerBase
     /// <summary>
     /// Get the Reminder with the given Id
     /// </summary>
-    /// <returns>AppointmentReminder</returns>
+    /// <returns>AptReminder</returns>
     /// <param name="Id">The Reminder's Id</param>
     /// <response code="200">The AppointmentReminder with the given Id</response>
     /// <response code="404">There was no Appointment Reminder with the given Id</response>/// 
@@ -57,7 +57,7 @@ public class ReminderController : ControllerBase
     /// <remarks>
     /// Does not return Not Found, but an Array of size 0 instead
     /// </remarks>
-    /// <returns>AppointmentReminder Array</returns>
+    /// <returns>AptReminder[]</returns>
     /// <param name="ClientId">Filter by a specific Client</param>
     /// <param name="minDateTime">The nearest Reminder set up</param>
     /// <param name="maxDateTime">The furthest Reminder set up</param>/// 
@@ -118,7 +118,7 @@ public class ReminderController : ControllerBase
     /// <summary>
     /// Create an Appointment Reminder
     /// </summary>
-    /// <returns>The created Appointment Reminder</returns>
+    /// <returns>AptReminder</returns>
     /// <response code="200">The created Appointment Reminder</response>
     /// <response code="400">The given (ClientId || LogId) does not exist</response>
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptReminder))]
@@ -152,7 +152,7 @@ public class ReminderController : ControllerBase
     /// <summary>
     /// Update the Appointment Reminder with the given Id
     /// </summary>
-    /// <returns>The updated Appointment Reminder</returns>
+    /// <returns>AptReminder</returns>
     /// <response code="200">The updated Appointment Reminder</response>
     /// <response code="400">There was no AptReminder with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptReminder))]

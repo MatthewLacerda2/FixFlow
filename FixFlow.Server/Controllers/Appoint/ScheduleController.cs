@@ -31,7 +31,7 @@ public class ScheduleController : ControllerBase
     /// <summary>
     /// Get the Schedule with the given Id
     /// </summary>
-    /// <returns>AppointmentSchedule</returns>
+    /// <returns>AptSchedule</returns>
     /// <param name="Id">The Schedule's Id</param>
     /// <response code="200">The AppointmentSchedule with the given Id</response>
     /// <response code="404">There was no Appointment Schedule with the given Id</response>/// 
@@ -56,7 +56,7 @@ public class ScheduleController : ControllerBase
     /// <remarks>
     /// Does not return Not Found, but an Array of size 0 instead
     /// </remarks>
-    /// <returns>AppointmentSchedule Array</returns>
+    /// <returns>AptSchedule[]</returns>
     /// <param name="ClientId">Filter by a specific Client</param>
     /// <param name="minPrice">Minimum Price of the Appointments</param>
     /// <param name="maxPrice">Maximum Price of the Appointments</param>/// 
@@ -126,7 +126,6 @@ public class ScheduleController : ControllerBase
         var result = schedules
             .Skip(offset ?? 0)
             .Take(limit ?? 10)
-            .ToList()
             .ToArray();
 
         return Ok(result);
@@ -135,7 +134,7 @@ public class ScheduleController : ControllerBase
     /// <summary>
     /// Create an Appointment Schedule
     /// </summary>
-    /// <returns>The created Appointment Schedule</returns>
+    /// <returns>AptSchedule</returns>
     /// <response code="200">The created Appointment Schedule</response>
     /// <response code="400">The given (ClientId || ReminderId) does not exist</response>
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptSchedule))]
@@ -169,7 +168,7 @@ public class ScheduleController : ControllerBase
     /// <summary>
     /// Update the Appointment Schedule with the given Id
     /// </summary>
-    /// <returns>The updated Appointment Schedule</returns>
+    /// <returns>AptSchedule</returns>
     /// <response code="200">The updated Appointment Schedule</response>
     /// <response code="400">There was no AptSchedule with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule))]
