@@ -66,7 +66,7 @@ public class LogController : ControllerBase
     /// <param name="sort">Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending</param>
     /// <param name="offset">Offsets the result by a given amount</param>
     /// <param name="limit">Limits the result by a given amount</param>
-    /// <response code="200">Returns an array of AppointmentLogs</response>
+    /// <response code="200">Returns an array of AppointmentLog</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
     [HttpGet]
     public IActionResult ReadLogs(string? ClientId, float? minPrice, float? maxPrice,

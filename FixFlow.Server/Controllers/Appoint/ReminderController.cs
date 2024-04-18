@@ -33,7 +33,7 @@ public class ReminderController : ControllerBase
     /// </summary>
     /// <returns>AppointmentReminder</returns>
     /// <param name="Id">The Reminder's Id</param>
-    /// <response code="200">Returns an array of AppointmentLogs</response>
+    /// <response code="200">The AppointmentReminder with the given Id</response>
     /// <response code="404">There was no Appointment Reminder with the given Id</response>/// 
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptReminder))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
@@ -59,12 +59,12 @@ public class ReminderController : ControllerBase
     /// </remarks>
     /// <returns>AppointmentReminder Array</returns>
     /// <param name="ClientId">Filter by a specific Client</param>
-    /// <param name="minDateTime">The oldest DateTime the Appointment took place</param>
-    /// <param name="maxDateTime">The most recent DateTime the Appointment took placet</param>/// 
+    /// <param name="minDateTime">The nearest Reminder set up</param>
+    /// <param name="maxDateTime">The furthest Reminder set up</param>/// 
     /// <param name="sort">Orders the result by Client, or DateTime. Add suffix 'desc' to order descending</param>
     /// <param name="offset">Offsets the result by a given amount</param>
     /// <param name="limit">Limits the result by a given amount</param>
-    /// <response code="200">Returns an array of AppointmentLogs</response>
+    /// <response code="200">Returns an array of AppointmentReminder</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptReminder[]>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
