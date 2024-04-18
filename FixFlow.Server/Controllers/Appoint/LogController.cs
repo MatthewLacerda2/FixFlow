@@ -78,11 +78,6 @@ public class LogController : ControllerBase
             logs = logs.Where(x => x.DateTime <= maxDateTime);
         }
 
-        if (status.HasValue)
-        {
-            logs = logs.Where(x => x.Status == status);
-        }
-
         if (!string.IsNullOrWhiteSpace(sort))
         {
             sort = sort.ToLower();
