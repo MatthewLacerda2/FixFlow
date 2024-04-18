@@ -35,7 +35,7 @@ jobs:
         working-directory: FixFlow.Server
         run: dotnet build -c Release .\FixFlow.Server.csproj
 
-      - name: Generate Client SDK using Open Api
+      - name: Generate OpenApi Documentation
         working-directory: FixFlow.Server
         run: swagger tofile --output swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
@@ -49,8 +49,11 @@ jobs:
 
       - name: Npm (React) dependencies
         working-directory: fixflow.client
-        run: |
-          npm ci
+        run: npm ci
+
+      - name: Generate Client SDK from
+        working-directory: fixflow.client
+        run: openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
 
       - name: Npm (React) Build
         working-directory: fixflow.client
