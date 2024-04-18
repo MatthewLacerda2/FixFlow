@@ -9,8 +9,10 @@ public class FlowLoginRequest
     public string Email { get; set; } = string.Empty;
 
     [Required]
+    [MinLength(7)]
     public string password { get; set; }
 
+    [MinLength(7)]
     public string newPassword { get; set; } = string.Empty;
 
     public FlowLoginRequest(string _username, string _password)
