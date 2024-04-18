@@ -1,0 +1,7 @@
+{
+  "$schema": "../../FixFlow.Server/swagger.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.4.0"
+  }
+}
