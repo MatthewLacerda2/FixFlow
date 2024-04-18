@@ -8,8 +8,9 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class ScheduleService {
     /**
-     * @param id
-     * @returns AptSchedule Success
+     * Get the Schedule with the given Id
+     * @param id The Schedule's Id
+     * @returns AptSchedule The AppointmentSchedule with the given Id
      * @throws ApiError
      */
     public static getApiV1Schedules(
@@ -22,12 +23,13 @@ export class ScheduleService {
                 'Id': id,
             },
             errors: {
-                404: `Not Found`,
+                404: `There was no Appointment Schedule with the given Id`,
             },
         });
     }
     /**
-     * @param id
+     * Deletes the Appointment Schedule with the given Id
+     * @param id The Id of the AptSchedule to be deleted
      * @returns void
      * @throws ApiError
      */
@@ -41,20 +43,22 @@ export class ScheduleService {
                 'Id': id,
             },
             errors: {
-                400: `Bad Request`,
+                400: `There was no Schedule with the given Id`,
             },
         });
     }
     /**
-     * @param clientId
-     * @param minPrice
-     * @param maxPrice
-     * @param minDateTime
-     * @param maxDateTime
-     * @param sort
-     * @param offset
-     * @param limit
-     * @returns AptSchedule Success
+     * Gets a number of Appointment Schedules, with optional filters
+     * Does not return Not Found, but an Array of size 0 instead
+     * @param clientId Filter by a specific Client
+     * @param minPrice Minimum Price of the Appointments
+     * @param maxPrice Maximum Price of the Appointments
+     * @param minDateTime The nearest Reminder set up
+     * @param maxDateTime The furthest Reminder set up
+     * @param sort Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending
+     * @param offset Offsets the result by a given amount
+     * @param limit Limits the result by a given amount
+     * @returns AptSchedule Returns an array of AppointmentSchedule
      * @throws ApiError
      */
     public static getApiV1Schedules1(
@@ -86,26 +90,29 @@ export class ScheduleService {
         });
     }
     /**
+     * Create an Appointment Schedule
      * @param requestBody
+     * @returns any The created Appointment Schedule
      * @returns AptSchedule Created
      * @throws ApiError
      */
     public static postApiV1Schedules(
         requestBody?: AptSchedule,
-    ): CancelablePromise<AptSchedule> {
+    ): CancelablePromise<any | AptSchedule> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/schedules',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad Request`,
+                400: `The given (ClientId || ReminderId) does not exist`,
             },
         });
     }
     /**
+     * Update the Appointment Schedule with the given Id
      * @param requestBody
-     * @returns AptSchedule Success
+     * @returns AptSchedule The updated Appointment Schedule
      * @throws ApiError
      */
     public static putApiV1Schedules(
@@ -117,7 +124,7 @@ export class ScheduleService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad Request`,
+                400: `There was no AptSchedule with the given Id`,
             },
         });
     }

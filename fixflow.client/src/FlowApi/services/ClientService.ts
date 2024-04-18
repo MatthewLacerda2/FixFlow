@@ -9,8 +9,9 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class ClientService {
     /**
-     * @param id
-     * @returns ClientDTO Success
+     * Get a Client with the given Id
+     * @param id The Client's Id
+     * @returns ClientDTO The ClientDTO
      * @throws ApiError
      */
     public static getApiV1Client(
@@ -23,12 +24,13 @@ export class ClientService {
                 'Id': id,
             },
             errors: {
-                404: `Not Found`,
+                404: `There was no Client with the given Id`,
             },
         });
     }
     /**
-     * @param id
+     * Deletes the Client with the given Id
+     * @param id The Id of the Client to be deleted
      * @returns void
      * @throws ApiError
      */
@@ -42,20 +44,22 @@ export class ClientService {
                 'Id': id,
             },
             errors: {
-                400: `Bad Request`,
+                400: `There was no Client with the given Id`,
             },
         });
     }
     /**
-     * @param username
-     * @param offset
-     * @param limit
-     * @param sort
-     * @returns ClientDTO Success
+     * Gets a number of Clients, with optional filters
+     * Does not return Not Found, but an Array of size 0 instead
+     * @param fullname Filter the Clients whose fullname contain the given string
+     * @param offset Offsets the result by a given amount
+     * @param limit Limits the result by a given amount
+     * @param sort Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending
+     * @returns ClientDTO Returns an array of ClientDTO
      * @throws ApiError
      */
     public static getApiV1Client1(
-        username?: string,
+        fullname?: string,
         offset?: number,
         limit?: number,
         sort?: string,
@@ -64,7 +68,7 @@ export class ClientService {
             method: 'GET',
             url: '/api/v1/client',
             query: {
-                'username': username,
+                'fullname': fullname,
                 'offset': offset,
                 'limit': limit,
                 'sort': sort,
@@ -72,27 +76,30 @@ export class ClientService {
         });
     }
     /**
+     * Create a Client Account
      * @param requestBody
+     * @returns any The created Client's DTO
      * @returns ClientDTO Created
      * @throws ApiError
      */
     public static postApiV1Client(
         requestBody?: ClientRegister,
-    ): CancelablePromise<ClientDTO> {
+    ): CancelablePromise<any | ClientDTO> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/client',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad Request`,
+                400: `The Client's (PhoneNumber || CPF || Email) does not exist`,
                 500: `Server Error`,
             },
         });
     }
     /**
+     * Updates the Client with the given Id
      * @param requestBody
-     * @returns ClientDTO Success
+     * @returns ClientDTO Updated Client's DTO
      * @throws ApiError
      */
     public static patchApiV1Client(
@@ -104,7 +111,7 @@ export class ClientService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad Request`,
+                400: `There was no Client with the given Id`,
             },
         });
     }
