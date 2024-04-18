@@ -9,8 +9,9 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class EmployeeService {
     /**
-     * @param id
-     * @returns EmployeeDTO Success
+     * Get the Employee with the given Id
+     * @param id The Client's Id
+     * @returns EmployeeDTO The Employee's DTO
      * @throws ApiError
      */
     public static getApiV1Employee(
@@ -23,18 +24,19 @@ export class EmployeeService {
                 'Id': id,
             },
             errors: {
-                404: `Not Found`,
+                404: `There was no Employee with the given Id`,
             },
         });
     }
     /**
-     * @param id
-     * @returns void
+     * Deletes the Employee with the given Id
+     * @param id The Id of the Employee to be deleted
+     * @returns any Employee was found, and thus deleted
      * @throws ApiError
      */
     public static deleteApiV1Employee(
         id: string,
-    ): CancelablePromise<void> {
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/v1/employee/{Id}',
@@ -42,16 +44,18 @@ export class EmployeeService {
                 'Id': id,
             },
             errors: {
-                400: `Bad Request`,
+                400: `There was no Employee with the given Id`,
             },
         });
     }
     /**
-     * @param username
-     * @param offset
-     * @param limit
-     * @param sort
-     * @returns EmployeeDTO Success
+     * Gets a number of Employees, with optional filters
+     * Does not return Not Found, but an Array of size 0 instead
+     * @param username Filters results to only Users whose username contains this string
+     * @param offset Offsets the result by a given amount
+     * @param limit Limits the number of results
+     * @param sort Orders the result by a given field. Does not order if the field does not exist
+     * @returns EmployeeDTO Returns an array of EmployeeDTO
      * @throws ApiError
      */
     public static getApiV1Employee1(
@@ -72,8 +76,9 @@ export class EmployeeService {
         });
     }
     /**
+     * Creates a Employee User
      * @param requestBody
-     * @returns EmployeeDTO Success
+     * @returns EmployeeDTO EmployeeDTO
      * @throws ApiError
      */
     public static postApiV1Employee(
@@ -85,14 +90,15 @@ export class EmployeeService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad Request`,
+                400: `The Client's (PhoneNumber || CPF || Email) does not exist`,
                 500: `Server Error`,
             },
         });
     }
     /**
+     * Updates the Employee with the given Id
      * @param requestBody
-     * @returns EmployeeDTO Success
+     * @returns EmployeeDTO Updated Employee's DTO
      * @throws ApiError
      */
     public static patchApiV1Employee(
@@ -104,7 +110,7 @@ export class EmployeeService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `Bad Request`,
+                400: `There was no Employee with the given Id`,
             },
         });
     }
