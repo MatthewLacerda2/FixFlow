@@ -1521,11 +1521,91 @@
         "additionalProperties": false
       },
       "ClientDTO": {
+        "required": [
+          "fullName",
+          "phoneNumber"
+        ],
         "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "fullName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "minLength": 1,
+            "type": "string",
+            "format": "tel"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          }
+        },
         "additionalProperties": false
       },
       "ClientRegister": {
+        "required": [
+          "fullName",
+          "phoneNumber"
+        ],
         "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "fullName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalNote": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "minLength": 1,
+            "type": "string",
+            "format": "tel"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "currentPassword": {
+            "type": "string",
+            "nullable": true
+          },
+          "newPassword": {
+            "type": "string",
+            "nullable": true
+          }
+        },
         "additionalProperties": false
       },
       "CompletedStatus": {
@@ -1538,11 +1618,87 @@
         "format": "int32"
       },
       "EmployeeDTO": {
+        "required": [
+          "fullName",
+          "phoneNumber"
+        ],
         "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "fullName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string",
+            "nullable": true
+          },
+          "salary": {
+            "type": "number",
+            "format": "float"
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "minLength": 1,
+            "type": "string",
+            "format": "tel"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          }
+        },
         "additionalProperties": false
       },
       "EmployeeRegister": {
+        "required": [
+          "fullName",
+          "phoneNumber"
+        ],
         "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "fullName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string",
+            "nullable": true
+          },
+          "salary": {
+            "type": "number",
+            "format": "float"
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "minLength": 1,
+            "type": "string",
+            "format": "tel"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "newPassword": {
+            "type": "string",
+            "nullable": true
+          }
+        },
         "additionalProperties": false
       },
       "FlowLoginRequest": {
