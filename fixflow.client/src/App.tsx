@@ -14,13 +14,15 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="*" element={<NotFoundPage />} />
-        <Route path="/sh/*">
+        <Route path="/sh">
           <Route index element={<EmployeePage />} />
           <Route path="Settings" element={<SettingsPage />} />
+          <Route path="*" element={<EmployeeSidebar />} />
         </Route>
         <Route path="/in">
           <Route index element={<ClientPage />} />
           <Route path="Settings" element={<SettingsPage />} />
+          <Route path="*" element={<EmployeeSidebar />} />
         </Route>
       </Routes>
     </div>
