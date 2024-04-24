@@ -5,7 +5,7 @@ import NotFoundPage from "./NotFoundPage";
 import SettingsPage from "./Pages/SettingsPage/SettingsPage";
 import EmployeePage from "./Pages/EmployeePage/EmployeePage";
 import ClientPage from "./Pages/ClientPage/ClientPage";
-import EmployeeSidebar from "./Components/EmployeeSidebar/EmployeeSidebar";
+import EmployeeSidebar from "./Components/Sidebar/EmployeeSidebar/EmployeeSidebar";
 
 function App() {
   return (

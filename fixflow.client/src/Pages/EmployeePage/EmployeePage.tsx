@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "../../Components/Card/Card";
-import EmployeeSidebar from "../../Components/EmployeeSidebar/EmployeeSidebar";
+import EmployeeSidebar from "../../Components/Sidebar/EmployeeSidebar/EmployeeSidebar";
 
 const EmployeePage: React.FC = () => {
   return (
