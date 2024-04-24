@@ -1,0 +1,36 @@
+.form-container {
+    width: 300px;
+    margin: 0 auto;
+}
+  
+.form-group {
+    margin-bottom: 20px;
+}
+
+.label {
+    display: inline-block;
+    width: 120px;
+    text-align: right;
+    margin-right: 10px;
+    color: #333;
+}
+  
+.input-field {
+    width: calc(100% - 130px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #333;
+}
+  
+.input-field::placeholder {
+    color: #aaa;
+}
+
+.input-field:focus,
+.input-field:hover {
+    border-color: #007bff;
+    outline: none;
+}
