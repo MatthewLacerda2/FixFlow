@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.RateLimiting;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
+using Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,6 +68,9 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
