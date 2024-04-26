@@ -23,6 +23,9 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Install Swagger CLI
+        run: npm install -g swagger-cli
+
       - name: Install Dotnet dependencies
         working-directory: FixFlow.Server
         run: dotnet restore
