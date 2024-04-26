@@ -19,11 +19,13 @@ public class EmployeeController : ControllerBase
 
     private readonly ServerContext _context;
     private readonly UserManager<Employee> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    public EmployeeController(ServerContext context, UserManager<Employee> userManager)
+    public EmployeeController(ServerContext context, UserManager<Employee> userManager, RoleManager<IdentityRole> roleManager)
     {
         _context = context;
         _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     /// <summary>
@@ -137,12 +139,27 @@ public class EmployeeController : ControllerBase
 
         Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.CPF, EmployeeDto.salary, EmployeeDto.Email, EmployeeDto.PhoneNumber);
 
-        var result = await _userManager.CreateAsync(Employee, EmployeeDto.newPassword);
+        var userCreationResult = await _userManager.CreateAsync(Employee, EmployeeDto.newPassword);
 
-        if (!result.Succeeded)
+        if (!userCreationResult.Succeeded)
         {
             return StatusCode(500, "Internal Server Error: Register Employee Unsuccessful");
         }
+
+        var roleExist = await _roleManager.RoleExistsAsync(Common.Employee_Role);
+        if (!roleExist)
+        {
+            await _roleManager.CreateAsync(new IdentityRole(Common.Employee_Role));
+        }
+
+        var userRoleAddResult = await _userManager.AddToRoleAsync(Employee, Common.Employee_Role);
+
+        if (!userRoleAddResult.Succeeded)
+        {
+            return StatusCode(500, "Internal Server Error: Add Employee Role Unsuccessful");
+        }
+
+        _context.SaveChanges();
 
         return CreatedAtAction(nameof(CreateEmployee), (EmployeeDTO)Employee);
     }
@@ -171,7 +188,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.CPF != upEmployee.CPF)
         {
-            var existingCPF = _context.Clients.Where(x => x.CPF == upEmployee.CPF);
+            var existingCPF = _context.Employees.Where(x => x.CPF == upEmployee.CPF);
             if (existingCPF.Any())
             {
                 return BadRequest("CPF taken");
@@ -184,7 +201,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.UserName != upEmployee.UserName)
         {
-            var existingUsername = _context.Clients.Where(x => x.UserName == upEmployee.UserName);
+            var existingUsername = _context.Employees.Where(x => x.UserName == upEmployee.UserName);
             if (existingUsername.Any())
             {
                 return BadRequest("Username already exists");
@@ -197,7 +214,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.PhoneNumber != upEmployee.PhoneNumber)
         {
-            var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upEmployee.PhoneNumber);
+            var existingPhonenumber = _context.Employees.Where(x => x.PhoneNumber == upEmployee.PhoneNumber);
             if (existingPhonenumber.Any())
             {
                 return BadRequest("PhoneNumber taken");
