@@ -8,8 +8,13 @@ using Server.Models;
 using System.Text;
 using System.Threading.RateLimiting;
 using FluentValidation.AspNetCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var secretKey = builder.Configuration["Jwt:SecretKey"];
+var verifiedIssuerSigningKey = secretKey != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    : throw new InvalidOperationException("JWT secret key is missing in configuration.");
 
 builder.Services.AddIdentity<Client, IdentityRole>()
     .AddRoles<IdentityRole>()
@@ -21,9 +26,9 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 builder.Services.AddDbContext<ServerContext>(options =>
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 23))));
 
-var secretKey = builder.Configuration["Jwt:SecretKey"];
-var verifiedIssuerSigningKey = secretKey != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-    : throw new InvalidOperationException("JWT secret key is missing in configuration.");
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -43,10 +48,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
-
-builder.Services.AddControllersWithViews();
-
 builder.Services.AddRateLimiter(_ => _
     .AddFixedWindowLimiter(policyName: "fixed", options =>
     {
@@ -55,8 +56,6 @@ builder.Services.AddRateLimiter(_ => _
         options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         options.QueueLimit = 10;
     }));
-
-builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
 builder.Services.AddCors(options =>
 {
@@ -69,9 +68,21 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddControllersWithViews();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Flow API", Version = "1.0" });
+
+    var xmlFile = "FixFlow.Server.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+    options.IncludeXmlComments(xmlPath);
+});
+
+// - - - - - - -
 
 // - - - - - Bogus generator here
 /*

@@ -4,26 +4,41 @@ namespace Server.Models.DTO;
 
 public class ClientDTO
 {
-    public string Id;
+    [Required]
+    public string Id { get; set; }
 
     [Required]
-    public string FullName;
+    public string FullName { get; set; }
 
-    public string CPF;
-    public string additionalNote = string.Empty;
+    /// <summary>
+    /// CPF. Must be only precisely 11 numbers
+    /// </summary>
+    [Length(11, 11)]
+    public string CPF { get; set; }
 
-    public string UserName;
+    /// <summary>
+    /// Special information about the Client, if applicable
+    /// </summary>
+    public string additionalNote { get; set; } = string.Empty;
 
+    /// <summary>
+    /// NickName. Must not contain spaces
+    /// </summary>
+    public string UserName { get; set; }
+
+    /// <summary>
+    /// Phone Number. Must contain only numbers, and may be preceded by a '+'
+    /// </summary>
     [Required]
     [Phone]
-    public string PhoneNumber;
+    public string PhoneNumber { get; set; }
 
     [EmailAddress]
-    public string Email;
+    public string Email { get; set; }
 
-    public ClientDTO(string id, string fullname, string cpf, string _userName, string _phoneNumber, string _email)
+    public ClientDTO(string _Id, string fullname, string cpf, string _userName, string _phoneNumber, string _email)
     {
-        Id = id;
+        Id = _Id;
         FullName = fullname;
         CPF = cpf;
         UserName = _userName;

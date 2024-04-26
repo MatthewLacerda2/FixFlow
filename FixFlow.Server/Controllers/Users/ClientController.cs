@@ -19,22 +19,22 @@ public class ClientController : ControllerBase
 
     private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    /// <summary>
-    /// Controller class for Client CRUD requests
-    /// </summary>
-    public ClientController(ServerContext context, UserManager<Client> userManager)
+    public ClientController(ServerContext context, UserManager<Client> userManager, RoleManager<IdentityRole> roleManager)
     {
         _context = context;
         _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     /// <summary>
-    /// Get the Client with the given Id
+    /// Get a Client with the given Id
     /// </summary>
-    /// <returns>Client with the given Id. NotFoundResult if there is none</returns>
-    /// <response code="200">Returns the Client's DTO</response>
-    /// <response code="404">If there is none with the given Id</response>
+    /// <returns>ClientDTO</returns>
+    /// <param name="Id">The Client's Id</param>
+    /// <response code="200">The ClientDTO</response>
+    /// <response code="404">There was no Client with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{Id}")]
@@ -55,25 +55,27 @@ public class ClientController : ControllerBase
     }
 
     /// <summary>
-    /// Get all Clients within optional filters
+    /// Gets a number of Clients, with optional filters
     /// </summary>
-    /// <returns>ClientDTO Array</returns>
-    /// <param name="username">Filters results to only Users whose username contains this string</param>
+    /// <remarks>
+    /// Does not return Not Found, but an Array of size 0 instead
+    /// </remarks>
+    /// <returns>ClientDTO[]</returns>
+    /// <param name="fullname">Filter the Clients whose fullname contain the given string</param>
     /// <param name="offset">Offsets the result by a given amount</param>
-    /// <param name="limit">Limits the number of results</param>
-    /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
-    /// <response code="200">Returns an array of Client DTOs</response>
-    /// <response code="404">If no Clients fit the given filters</response>
+    /// <param name="limit">Limits the result by a given amount</param>
+    /// <param name="sort">Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending</param>
+    /// <response code="200">Returns an array of ClientDTO</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO[]>))]
     [HttpGet]
-    public async Task<IActionResult> ReadClients(string? username, int? offset, int? limit, string? sort)
+    public async Task<IActionResult> ReadClients(string? fullname, int? offset, int? limit, string? sort)
     {
 
         var clientsQuery = _context.Clients.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(username))
+        if (!string.IsNullOrWhiteSpace(fullname))
         {
-            clientsQuery = clientsQuery.Where(client => client.UserName!.Contains(username, StringComparison.OrdinalIgnoreCase));
+            clientsQuery = clientsQuery.Where(client => client.FullName!.Contains(fullname, StringComparison.OrdinalIgnoreCase));
         }
 
         if (!string.IsNullOrWhiteSpace(sort))
@@ -85,6 +87,11 @@ public class ClientController : ControllerBase
             }
         }
 
+        if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
+        {
+            clientsQuery.Reverse();
+        }
+
         offset = offset.HasValue ? offset : 0;
         limit = limit.HasValue ? limit : 10;
 
@@ -92,21 +99,15 @@ public class ClientController : ControllerBase
 
         var resultsArray = await clientsQuery.Select(c => (ClientDTO)c).ToArrayAsync();
 
-        if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
-        {
-            resultsArray.Reverse();
-        }
-
         return Ok(resultsArray);
     }
 
     /// <summary>
-    /// Creates a Client User
+    /// Create a Client Account
     /// </summary>
-    /// <returns>The created Client's Data</returns>
-    /// <response code="200">ClientDTO</response>
-    /// <response code="400">Returns a string with the requirements that were not filled</response>
-    /// <response code="400">In case the Client's data is already Registered (it will tell which data)</response>
+    /// <returns>ClientDTO</returns>
+    /// <response code="200">The created Client's DTO</response>
+    /// <response code="400">The Client's (PhoneNumber || CPF || Email) does not exist</response>
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -163,12 +164,27 @@ public class ClientController : ControllerBase
 
         Client client = new Client(clientRegister.FullName, clientRegister.CPF, clientRegister.PhoneNumber, clientRegister.Email, clientRegister.additionalNote);
 
-        var result = await _userManager.CreateAsync(client, clientRegister.newPassword);
+        var userCreationResult = await _userManager.CreateAsync(client, clientRegister.newPassword);
 
-        if (!result.Succeeded)
+        if (!userCreationResult.Succeeded)
         {
             return StatusCode(500, "Internal Server Error: Register Client Unsuccessful");
         }
+
+        var roleExist = await _roleManager.RoleExistsAsync(Common.Client_Role);
+        if (!roleExist)
+        {
+            await _roleManager.CreateAsync(new IdentityRole(Common.Client_Role));
+        }
+
+        var userRoleAddResult = await _userManager.AddToRoleAsync(client, Common.Client_Role);
+
+        if (!userRoleAddResult.Succeeded)
+        {
+            return StatusCode(500, "Internal Server Error: Add Client Role Unsuccessful");
+        }
+
+        _context.SaveChanges();
 
         return CreatedAtAction(nameof(CreateClient), (ClientDTO)client);
     }
@@ -176,9 +192,9 @@ public class ClientController : ControllerBase
     /// <summary>
     /// Updates the Client with the given Id
     /// </summary>
-    /// <returns>Client's DTO with the updated Data</returns>
-    /// <response code="200">Client's DTO with the updated data</response>
-    /// <response code="400">If a Client with the given Id was not found</response>
+    /// <returns>ClientDTO</returns>
+    /// <response code="200">Updated Client's DTO</response>
+    /// <response code="400">There was no Client with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPatch]
@@ -249,9 +265,10 @@ public class ClientController : ControllerBase
     /// <summary>
     /// Deletes the Client with the given Id
     /// </summary>
-    /// <returns>NoContent if successfull</returns>
-    /// <response code="200">Client was found, and thus deleted</response>
-    /// <response code="400">Client not found</response>
+    /// <param name="Id">The Id of the Client to be deleted</param>
+    /// <returns>NoContentResult</returns>
+    /// <response code="204">Client was found, and thus deleted</response>
+    /// <response code="400">There was no Client with the given Id</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(ClientDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpDelete("{Id}")]

@@ -19,22 +19,22 @@ public class EmployeeController : ControllerBase
 
     private readonly ServerContext _context;
     private readonly UserManager<Employee> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    /// <summary>
-    /// Controller class for Employee CRUD requests
-    /// </summary>
-    public EmployeeController(ServerContext context, UserManager<Employee> userManager)
+    public EmployeeController(ServerContext context, UserManager<Employee> userManager, RoleManager<IdentityRole> roleManager)
     {
         _context = context;
         _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     /// <summary>
     /// Get the Employee with the given Id
     /// </summary>
-    /// <returns>Employee with the given Id. NotFoundResult if there is none</returns>
-    /// <response code="200">Returns the Employee's DTO</response>
-    /// <response code="404">If there is none with the given Id</response>
+    /// <param name="Id">The Client's Id</param>
+    /// <returns>EmployeeDTO</returns>/// 
+    /// <response code="200">The Employee's DTO</response>
+    /// <response code="404">There was no Employee with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{Id}")]
@@ -55,15 +55,17 @@ public class EmployeeController : ControllerBase
     }
 
     /// <summary>
-    /// Get all Employees within optional filters
+    /// Gets a number of Employees, with optional filters
     /// </summary>
-    /// <returns>EmployeeDTO Array</returns>
+    /// <remarks>
+    /// Does not return Not Found, but an Array of size 0 instead
+    /// </remarks>
     /// <param name="username">Filters results to only Users whose username contains this string</param>
     /// <param name="offset">Offsets the result by a given amount</param>
     /// <param name="limit">Limits the number of results</param>
     /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
-    /// <response code="200">Returns an array of Employee DTOs</response>
-    /// <response code="404">If no Employees fit the given filters</response>
+    /// <returns>EmployeeDTO[]</returns>
+    /// <response code="200">Returns an array of EmployeeDTO</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO[]>))]
     [HttpGet]
     public async Task<IActionResult> ReadEmployees(string? username, int? offset, int? limit, string? sort)
@@ -85,17 +87,17 @@ public class EmployeeController : ControllerBase
             }
         }
 
+        if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
+        {
+            employeesQuery.Reverse();
+        }
+
         offset = offset.HasValue ? offset : 0;
         limit = limit.HasValue ? limit : 10;
 
         employeesQuery = employeesQuery.Skip((int)offset).Take((int)limit);
 
         var resultsArray = await employeesQuery.Select(c => (EmployeeDTO)c).ToArrayAsync();
-
-        if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
-        {
-            resultsArray.Reverse();
-        }
 
         return Ok(resultsArray);
     }
@@ -105,8 +107,7 @@ public class EmployeeController : ControllerBase
     /// </summary>
     /// <returns>The created Employee's Data</returns>
     /// <response code="200">EmployeeDTO</response>
-    /// <response code="400">Returns a string with the requirements that were not filled</response>
-    /// <response code="400">In case the Employee's data is already Registered (it will tell which data)</response>
+    /// <response code="400">The Client's (PhoneNumber || CPF || Email) does not exist</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -138,12 +139,27 @@ public class EmployeeController : ControllerBase
 
         Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.CPF, EmployeeDto.salary, EmployeeDto.Email, EmployeeDto.PhoneNumber);
 
-        var result = await _userManager.CreateAsync(Employee, EmployeeDto.newPassword);
+        var userCreationResult = await _userManager.CreateAsync(Employee, EmployeeDto.newPassword);
 
-        if (!result.Succeeded)
+        if (!userCreationResult.Succeeded)
         {
             return StatusCode(500, "Internal Server Error: Register Employee Unsuccessful");
         }
+
+        var roleExist = await _roleManager.RoleExistsAsync(Common.Employee_Role);
+        if (!roleExist)
+        {
+            await _roleManager.CreateAsync(new IdentityRole(Common.Employee_Role));
+        }
+
+        var userRoleAddResult = await _userManager.AddToRoleAsync(Employee, Common.Employee_Role);
+
+        if (!userRoleAddResult.Succeeded)
+        {
+            return StatusCode(500, "Internal Server Error: Add Employee Role Unsuccessful");
+        }
+
+        _context.SaveChanges();
 
         return CreatedAtAction(nameof(CreateEmployee), (EmployeeDTO)Employee);
     }
@@ -151,9 +167,9 @@ public class EmployeeController : ControllerBase
     /// <summary>
     /// Updates the Employee with the given Id
     /// </summary>
-    /// <returns>Employee's DTO with the updated Data</returns>
-    /// <response code="200">Employee's DTO with the updated data</response>
-    /// <response code="400">If a Employee with the given Id was not found</response>
+    /// <returns>EmployeeDTO</returns>
+    /// <response code="200">Updated Employee's DTO</response>
+    /// <response code="400">There was no Employee with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPatch]
@@ -172,7 +188,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.CPF != upEmployee.CPF)
         {
-            var existingCPF = _context.Clients.Where(x => x.CPF == upEmployee.CPF);
+            var existingCPF = _context.Employees.Where(x => x.CPF == upEmployee.CPF);
             if (existingCPF.Any())
             {
                 return BadRequest("CPF taken");
@@ -185,7 +201,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.UserName != upEmployee.UserName)
         {
-            var existingUsername = _context.Clients.Where(x => x.UserName == upEmployee.UserName);
+            var existingUsername = _context.Employees.Where(x => x.UserName == upEmployee.UserName);
             if (existingUsername.Any())
             {
                 return BadRequest("Username already exists");
@@ -198,7 +214,7 @@ public class EmployeeController : ControllerBase
 
         if (existingEmployee.PhoneNumber != upEmployee.PhoneNumber)
         {
-            var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upEmployee.PhoneNumber);
+            var existingPhonenumber = _context.Employees.Where(x => x.PhoneNumber == upEmployee.PhoneNumber);
             if (existingPhonenumber.Any())
             {
                 return BadRequest("PhoneNumber taken");
@@ -224,9 +240,10 @@ public class EmployeeController : ControllerBase
     /// <summary>
     /// Deletes the Employee with the given Id
     /// </summary>
-    /// <returns>NoContent if successfull</returns>
+    /// <param name="Id">The Id of the Employee to be deleted</param>
+    /// <returns>NoContentResult</returns>
     /// <response code="200">Employee was found, and thus deleted</response>
-    /// <response code="400">Employee not found</response>
+    /// <response code="400">There was no Employee with the given Id</response>
     [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(EmployeeDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpDelete("{Id}")]

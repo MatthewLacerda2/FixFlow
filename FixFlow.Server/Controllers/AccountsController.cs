@@ -8,7 +8,6 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Server.Models;
-using Server.Models.Utils;
 
 namespace Server.Controllers;
 
@@ -30,11 +29,33 @@ public class LoginController : ControllerBase
         _context = context;
     }
 
+    /// <summary>
+    /// Get a Token when Logging in, with either UserName or Email, and Password
+    /// </summary>
+    /// <returns>string</returns>
+    /// <response code="200">Successfull login</response>
+    /// <response code="401">Unauthorized login</response>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] FlowLoginRequest model)
     {
+
+        if (!string.IsNullOrEmpty(model.Email))
+        {
+
+            var userExists = _userManager.FindByEmailAsync(model.Email).Result;
+
+            if (userExists == null)
+            {
+                return BadRequest("There is no user with that Email");
+            }
+            else
+            {
+                model.UserName = userExists.UserName!;
+            }
+
+        }
 
         var result = await _signInManager.PasswordSignInAsync(model.UserName, model.password, true, false);
 
@@ -51,7 +72,7 @@ public class LoginController : ControllerBase
             return Ok(new { token });
         }
 
-        return Unauthorized();
+        return Unauthorized("Error: ");
     }
 
     private string GenerateToken(IdentityUser user, string[] roles)
@@ -85,6 +106,13 @@ public class LoginController : ControllerBase
         return tokenHandler.WriteToken(token);
     }
 
+    /// <summary>
+    /// Change password of the User with the given Email
+    /// </summary>
+    /// <returns>string</returns>
+    /// <response code="200">Password change successfull</response>
+    /// <response code="400">Unauthorized</response>
+    /// <response code="401">Password change unsucessfull</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -110,6 +138,12 @@ public class LoginController : ControllerBase
         return Ok("Password change successfully");
     }
 
+    /// <summary>
+    /// Logout method
+    /// </summary>
+    /// <returns>string</returns>
+    /// <response code="200">Logout successfull</response>
+    /// <response code="500">Logout unsucessfull. Probable Internal Server Error</response>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [Authorize]

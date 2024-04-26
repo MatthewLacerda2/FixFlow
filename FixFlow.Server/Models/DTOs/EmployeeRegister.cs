@@ -4,25 +4,44 @@ namespace Server.Models.DTO;
 
 public class EmployeeRegister
 {
-    public string Id;
+    [Required]
+    public string Id { get; set; }
 
     [Required]
-    public string FullName;
+    public string FullName { get; set; }
 
-    public string CPF;
-    public float salary;
+    /// <summary>
+    /// CPF. Must be only precisely 11 numbers
+    /// </summary>
+    [Length(11, 11)]
+    public string CPF { get; set; }
 
-    public string UserName;
+    public float salary { get; set; }
 
+    /// <summary>
+    /// NickName. Must not contain spaces
+    /// </summary>
+    public string UserName { get; set; }
+
+    /// <summary>
+    /// Phone Number. Must contain only numbers and/or a '+'
+    /// </summary>
     [Required]
     [Phone]
-    public string PhoneNumber;
+    public string PhoneNumber { get; set; }
 
     [EmailAddress]
-    public string Email;
+    public string Email { get; set; }
 
+    [MinLength(7)]
     public string currentPassword = string.Empty;
-    public string newPassword = string.Empty;
+
+    /// <summary>
+    /// New Password. Only used when registering the user or changing the password
+    /// For Logging in, use FlowLoginRequest instead
+    /// </summary>
+    [MinLength(7)]
+    public string newPassword { get; set; } = string.Empty;
 
     public EmployeeRegister(string id, string fullname, string cpf, string _userName, string email, string phonenumber, float _salary)
     {
