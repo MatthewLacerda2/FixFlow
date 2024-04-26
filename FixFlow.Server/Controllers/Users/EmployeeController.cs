@@ -19,11 +19,13 @@ public class EmployeeController : ControllerBase
 
     private readonly ServerContext _context;
     private readonly UserManager<Employee> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    public EmployeeController(ServerContext context, UserManager<Employee> userManager)
+    public EmployeeController(ServerContext context, UserManager<Employee> userManager, RoleManager<IdentityRole> roleManager)
     {
         _context = context;
         _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     /// <summary>
@@ -142,6 +144,12 @@ public class EmployeeController : ControllerBase
         if (!userCreationResult.Succeeded)
         {
             return StatusCode(500, "Internal Server Error: Register Employee Unsuccessful");
+        }
+
+        var roleExist = await _roleManager.RoleExistsAsync(Common.Employee_Role);
+        if (!roleExist)
+        {
+            await _roleManager.CreateAsync(new IdentityRole(Common.Employee_Role));
         }
 
         var userRoleAddResult = await _userManager.AddToRoleAsync(Employee, Common.Employee_Role);
