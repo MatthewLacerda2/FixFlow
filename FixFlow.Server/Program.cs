@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.RateLimiting;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
+using Server.Seeder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -125,3 +126,14 @@ app.MapControllers();
 app.MapFallbackToFile("/index.html");
 
 app.Run();
+
+var serviceProvider = new ServiceCollection()
+    .AddDbContext<ServerContext>(options =>
+        options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 23))))
+    .AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ServerContext>()
+    .Services
+    .BuildServiceProvider();
+
+FlowSeeder seeder = new FlowSeeder(serviceProvider);
+seeder.PopulateDbIfEmpty();
