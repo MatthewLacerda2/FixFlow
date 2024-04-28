@@ -28,13 +28,13 @@ public class AptSchedule
 
     public AptSchedule()
     {
-        Id = string.Empty;
+        Id = Guid.NewGuid().ToString();
         ClientId = string.Empty;
     }
 
     public AptSchedule(string clientId, DateTime _dateTime)
     {
-        Id = new Guid().ToString();
+        Id = Guid.NewGuid().ToString();
         ClientId = clientId;
         DateTime = _dateTime;
     }

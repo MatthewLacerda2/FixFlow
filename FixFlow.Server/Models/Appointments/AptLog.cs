@@ -32,13 +32,13 @@ public class AptLog
 
     public AptLog()
     {
-        Id = string.Empty;
+        Id = Guid.NewGuid().ToString();
         ClientId = string.Empty;
     }
 
     public AptLog(string _clientId, float _price)
     {
-        Id = new Guid().ToString();
+        Id = Guid.NewGuid().ToString();
         ClientId = _clientId;
         Price = _price;
     }
