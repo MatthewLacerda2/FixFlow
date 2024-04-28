@@ -40,7 +40,24 @@ public class FlowSeeder
         .RuleFor(e => e.LastLogin, f => f.Date.Between(DateTime.Now.Date.AddDays(-30), DateTime.Now.Date))
         .RuleFor(e => e.Email, (f, e) => f.Internet.Email(e.FullName.ToLower()))
         .RuleFor(e => e.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
-        .RuleFor(e => e.salary, f => f.Random.Float(1500, 5000));
+        .RuleFor(e => e.salary, f => f.Random.Float(1500, 5000))
+
+        .RuleFor(e => e.Id, f => new Guid().ToString())
+        .RuleFor(e => e.PasswordHash, new Guid().ToString())
+
+        .RuleFor(e => e.UserName, (f, e) => e.FullName.Replace(" ", ""))
+        .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
+
+        .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
+        .RuleFor(e => e.EmailConfirmed, false)
+        .RuleFor(e => e.AccessFailedCount, 0)
+
+        .RuleFor(e => e.SecurityStamp, "")
+        .RuleFor(e => e.ConcurrencyStamp, "")
+        .RuleFor(e => e.PhoneNumberConfirmed, false)
+        .RuleFor(e => e.TwoFactorEnabled, false)
+        .RuleFor(e => e.LockoutEnabled, false)
+        .RuleFor(e => e.LockoutEnd, DateTimeOffset.MinValue);
 
         var employees = employees_faker.Generate(amount).ToArray();
 
@@ -58,7 +75,24 @@ public class FlowSeeder
         .RuleFor(c => c.LastLogin, f => f.Date.Between(DateTime.Now.Date.AddDays(-30), DateTime.Now.Date))
         .RuleFor(c => c.Email, (f, c) => f.Internet.Email(c.FullName.ToLower()))
         .RuleFor(c => c.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
-        .RuleFor(c => c.additionalNote, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
+        .RuleFor(c => c.additionalNote, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty)
+
+        .RuleFor(e => e.Id, f => new Guid().ToString())
+        .RuleFor(e => e.PasswordHash, new Guid().ToString())
+
+        .RuleFor(e => e.UserName, (f, e) => e.FullName.Replace(" ", ""))
+        .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
+
+        .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
+        .RuleFor(e => e.EmailConfirmed, false)
+        .RuleFor(e => e.AccessFailedCount, 0)
+
+        .RuleFor(e => e.SecurityStamp, "")
+        .RuleFor(e => e.ConcurrencyStamp, "")
+        .RuleFor(e => e.PhoneNumberConfirmed, false)
+        .RuleFor(e => e.TwoFactorEnabled, false)
+        .RuleFor(e => e.LockoutEnabled, false)
+        .RuleFor(e => e.LockoutEnd, DateTimeOffset.MinValue);
 
         var clients = clients_faker.Generate(amount).ToArray();
 
