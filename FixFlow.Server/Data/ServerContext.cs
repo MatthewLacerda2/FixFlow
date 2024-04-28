@@ -2,6 +2,7 @@ using Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Server.Models.Appointments;
+using Server.Seeder;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext
@@ -15,6 +16,14 @@ public class ServerContext : IdentityDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        FlowSeeder flowSeeder = new FlowSeeder();
+
+        builder.Entity<Employee>().HasData(flowSeeder.employees);
+        builder.Entity<Client>().HasData(flowSeeder.employees);
+        builder.Entity<AptSchedule>().HasData(flowSeeder.employees);
+        builder.Entity<AptLog>().HasData(flowSeeder.employees);
+        builder.Entity<AptReminder>().HasData(flowSeeder.employees);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

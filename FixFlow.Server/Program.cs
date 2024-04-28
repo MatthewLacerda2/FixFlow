@@ -83,30 +83,11 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 });
 
-// - - - - - - -
-
-// - - - - - Bogus generator here
-/*
-var options = new DbContextOptionsBuilder<ServerContext>()
-    .UseMySql(
-        connectionString, new MariaDbServerVersion(new Version(10, 5, 11))
-    )
-    .Options;
-
-using (var context = new ServerContext(options))
-{
-    FlowSeeder seeder = new FlowSeeder(context);
-    seeder.PopulateDbIfEmpty();
-}
-*/
-// - - - - - Finished Bogus
-
 var app = builder.Build();
 
 app.UseCors("AllowAnyOrigin");
 
 app.UseDefaultFiles();
-app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -126,14 +107,3 @@ app.MapControllers();
 app.MapFallbackToFile("/index.html");
 
 app.Run();
-
-var serviceProvider = new ServiceCollection()
-    .AddDbContext<ServerContext>(options =>
-        options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 23))))
-    .AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<ServerContext>()
-    .Services
-    .BuildServiceProvider();
-
-FlowSeeder seeder = new FlowSeeder(serviceProvider);
-seeder.PopulateDbIfEmpty();

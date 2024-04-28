@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using System.Windows.Markup;
 namespace Server.Models.Appointments;
 
