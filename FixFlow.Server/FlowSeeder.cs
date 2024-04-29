@@ -24,27 +24,27 @@ public class FlowSeeder
     public Employee[] employees { get; } = [];
     public Client[] clients { get; } = [];
 
-    public AptReminder[] aptReminders { get; } = [];
-    public AptSchedule[] aptSchedules { get; } = [];
-    public AptLog[] aptLogs { get; } = [];
+    public AptReminder[] aptReminders { get; set; } = [];
+    public AptSchedule[] aptSchedules { get; set; } = [];
+    public AptLog[] aptLogs { get; set; } = [];
 
-    const int employeesCount = 50;
-    const int clientsCount = employeesCount * 50;
+    const int employeesCount = 60;
+    const int clientsCount = employeesCount * 60;
 
     const int bogusSeed = 777;
 
     public FlowSeeder()
     {
-        Console.WriteLine("000");
+        Console.WriteLine("Adding Users at " + DateTime.Now);
 
         employees = GenerateEmployees(employeesCount);
         clients = GenerateClients(clientsCount);
 
-        Console.WriteLine("111");
+        Console.WriteLine("Adding Apts at " + DateTime.Now);
 
         GenerateApts();
 
-        Console.WriteLine("222");
+        Console.WriteLine("Done at " + DateTime.Now);
     }
 
     void GenerateApts()
@@ -82,7 +82,7 @@ public class FlowSeeder
                 schs2add[i].DateTime = schs2add[i].DateTime.AddMonths(i);
 
                 logs2add[i].ScheduleId = schs2add[i].Id;
-                logs2add[i].DateTime = schs2add[i].DateTime.AddHours(1);
+                logs2add[i].DateTime = schs2add[i].DateTime.AddMonths(i).AddHours(1);
 
                 rems2add[i].previousAppointmentId = logs2add[i].Id;
                 rems2add[i].dateTime = schs2add[i].DateTime.AddMonths(i + 1);
@@ -93,6 +93,10 @@ public class FlowSeeder
             reminders.AddRange(rems2add);
 
         }
+
+        aptSchedules = schedules.ToArray();
+        aptLogs = logs.ToArray();
+        aptReminders = reminders.ToArray();
     }
 
     Employee[] GenerateEmployees(int amount)
@@ -104,19 +108,20 @@ public class FlowSeeder
 
         .RuleFor(e => e.FullName, f => f.Name.FullName())
         .RuleFor(e => e.CPF, f => f.Person.Cpf())
-        .RuleFor(e => e.CreatedDate, Jan2nd2023)
-        .RuleFor(e => e.LastLogin, DateTime.Now.AddDays(-1))
+        .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
+        .RuleFor(e => e.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
         .RuleFor(e => e.Email, (f, e) => f.Internet.Email(e.FullName.ToLower()))
         .RuleFor(e => e.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
-        .RuleFor(e => e.salary, f => f.Random.Float(1500, 5000))
-        .RuleFor(e => e.PasswordHash, Guid.NewGuid().ToString())
 
-        .RuleFor(e => e.UserName, (f, e) => e.FullName.Replace(" ", ""))
+        .RuleFor(e => e.salary, f => f.Random.Float(1500, 5000))
+
+        .RuleFor(e => e.UserName, f => f.Internet.UserName())
         .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
 
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
 
+        .RuleFor(e => e.PasswordHash, Guid.NewGuid().ToString())
         .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")
@@ -144,20 +149,20 @@ public class FlowSeeder
 
         .RuleFor(c => c.FullName, f => f.Name.FullName())
         .RuleFor(c => c.CPF, f => f.Person.Cpf())
-        .RuleFor(e => e.CreatedDate, Jan2nd2023)
-        .RuleFor(e => e.LastLogin, DateTime.Now.AddDays(-1))
+        .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
+        .RuleFor(e => e.LastLogin, DateTime.Now.AddDays(-60))
         .RuleFor(c => c.Email, (f, c) => f.Internet.Email(c.FullName.ToLower()))
         .RuleFor(c => c.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
+
         .RuleFor(c => c.additionalNote, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty)
 
-        .RuleFor(e => e.PasswordHash, Guid.NewGuid().ToString())
-
-        .RuleFor(e => e.UserName, (f, e) => e.FullName.Replace(" ", ""))
+        .RuleFor(e => e.UserName, f => f.Internet.UserName())
         .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
 
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
 
+        .RuleFor(e => e.PasswordHash, Guid.NewGuid().ToString())
         .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")
