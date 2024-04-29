@@ -26,14 +26,14 @@ public class AptReminder
 
     public AptReminder()
     {
-        Id = string.Empty;
+        Id = Guid.NewGuid().ToString();
         ClientId = string.Empty;
         previousAppointmentId = string.Empty;
     }
 
     public AptReminder(string _clientId, string _prevAppoint)
     {
-        Id = new Guid().ToString();
+        Id = Guid.NewGuid().ToString();
         ClientId = _clientId;
         previousAppointmentId = _prevAppoint;
     }
