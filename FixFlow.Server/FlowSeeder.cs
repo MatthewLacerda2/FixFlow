@@ -92,18 +92,18 @@ public class FlowSeeder
 
             for (int i = 0; i < num; i++)
             {
-                schs2add[i].DateTime = schs2add[i].DateTime.AddMonths(period);
+                schs2add[i].DateTime = schs2add[i].DateTime.AddMonths(period * i);
 
                 logs2add[i].ScheduleId = schs2add[i].Id;
-                logs2add[i].DateTime = schs2add[i].DateTime.AddMonths(period).AddHours(1);
+                logs2add[i].DateTime = schs2add[i].DateTime.AddHours(1);
 
                 rems2add[i].previousAppointmentId = logs2add[i].Id;
-                rems2add[i].dateTime = schs2add[i].DateTime.AddMonths(period + 1).AddDays(-1);
+                rems2add[i].dateTime = schs2add[i].DateTime.AddMonths(period * i + 1).AddDays(-1);
             }
 
             for (int i = 1; i < num; i++)
             {
-                schs2add[i].reminderId = rems2add[i].Id;
+                schs2add[i].reminderId = rems2add[i - 1].Id;
             }
 
             Array.Copy(schs2add, 0, aptSchedules, index, num);
@@ -161,7 +161,7 @@ public class FlowSeeder
         .RuleFor(c => c.FullName, f => f.Name.FullName())
         .RuleFor(c => c.CPF, f => f.Person.Cpf())
         .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
-        .RuleFor(e => e.LastLogin, DateTime.Now.AddDays(-60))
+        .RuleFor(e => e.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
         .RuleFor(c => c.Email, (f, c) => f.Internet.Email(c.FullName.ToLower()))
         .RuleFor(c => c.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 
