@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Server.Models.Appointments;
 
 public class AptLog
@@ -10,12 +11,13 @@ public class AptLog
     /// The Id of the Client who took the Appointment
     /// </summary>
     [Required]
+    [ForeignKey("Client")]
     public string ClientId { get; set; }
 
     /// <summary>
     /// The Id of the Schedule that precedes the Log, if any
     /// </summary>
-    public string ScheduleId { get; set; } = string.Empty;
+    public string? ScheduleId { get; set; }
 
     /// <summary>
     /// The DateTime when the Log was created
