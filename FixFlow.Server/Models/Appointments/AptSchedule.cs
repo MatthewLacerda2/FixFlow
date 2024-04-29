@@ -9,7 +9,7 @@ public class AptSchedule
     public string Id { get; set; }
 
     /// <summary>
-    /// The Id of the Client who took the Appointment
+    /// The Id of the Client who made the Schedule
     /// </summary>
     [Required]
     [ForeignKey(nameof(Models.Client))]
@@ -21,7 +21,7 @@ public class AptSchedule
     public Client Client { get; set; }
 
     /// <summary>
-    /// The Id of the Reminder that precedes this Schedule, if applicable
+    /// The Id of the Reminder that precedes this Schedule, if any
     /// </summary>
     [Required]
     [ForeignKey(nameof(AptReminder))]
@@ -33,7 +33,7 @@ public class AptSchedule
     public AptReminder? reminder { get; set; }
 
     /// <summary>
-    /// The Date to Contact the Client
+    /// The scheduled DateTime of the Appointment
     /// </summary>
     public DateTime dateTime { get; set; }
 

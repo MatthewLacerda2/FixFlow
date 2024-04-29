@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Server.Models.Appointments;
 
 public class AptLog
@@ -20,16 +21,19 @@ public class AptLog
     public Client Client { get; set; }
 
     /// <summary>
-    /// The Id of the Schedule that precedes the Log, if any
+    /// The Id of the Schedule that precedes this Log, if any
     /// </summary>
     [Required]
     [ForeignKey(nameof(AptSchedule))]
     public string? scheduleId { get; set; }
 
+    /// <summary>
+    /// Navigation Property of the Schedule
+    /// </summary>
     public AptSchedule? schedule { get; set; }
 
     /// <summary>
-    /// The DateTime when the Log was created
+    /// The DateTime when the Log was registered
     /// </summary>
     public DateTime dateTime { get; set; } = DateTime.Now;
 

@@ -9,7 +9,7 @@ public class AptReminder
     public string Id { get; set; }
 
     /// <summary>
-    /// The Id of the Client who took the Appointment
+    /// The Id of the Client to Remind
     /// </summary>
     [Required]
     [ForeignKey(nameof(Models.Client))]
@@ -27,10 +27,14 @@ public class AptReminder
     [ForeignKey(nameof(AptLog))]
     public string aptLogId { get; set; }
 
+    /// <summary>
+    /// Navigation Property of the Log
+    /// </summary>
     public AptLog aptLog { get; set; }
 
     /// <summary>
     /// The Date to Contact the Client
+    /// The Time is used because, chances are, there is a better Time of the day to contact the Client
     /// </summary>
     public DateTime dateTime { get; set; } = DateTime.Now;
 
