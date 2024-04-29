@@ -1,5 +1,6 @@
 using Bogus;
 using Bogus.Extensions.Brazil;
+using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using Server.Models.Appointments;
 namespace Server.Seeder;
@@ -33,12 +34,23 @@ public class FlowSeeder
 
     const int bogusSeed = 777;
 
-    public FlowSeeder()
+    public FlowSeeder(ModelBuilder builder)
     {
+
         employees = GenerateEmployees(employeesCount);
         clients = GenerateClients(clientsCount);
 
         GenerateApts();
+
+        // - - - - -
+
+        builder.Entity<Employee>().HasData(employees);
+        builder.Entity<Client>().HasData(clients);
+
+        builder.Entity<AptSchedule>().HasData(aptSchedules);
+        builder.Entity<AptLog>().HasData(aptLogs);
+        builder.Entity<AptReminder>().HasData(aptReminders);
+
     }
 
     void GenerateApts()
@@ -135,11 +147,6 @@ public class FlowSeeder
 
         var employees = employees_faker.Generate(amount).ToArray();
 
-        foreach (Employee emp in employees)
-        {
-            emp.Id = Guid.NewGuid().ToString();
-        }
-
         return employees;
     }
 
@@ -150,6 +157,7 @@ public class FlowSeeder
         .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023)
 
+        .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
         .RuleFor(c => c.FullName, f => f.Name.FullName())
         .RuleFor(c => c.CPF, f => f.Person.Cpf())
         .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
@@ -165,7 +173,7 @@ public class FlowSeeder
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
 
-        .RuleFor(e => e.PasswordHash, Guid.NewGuid().ToString())
+        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString())
         .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")
@@ -175,11 +183,6 @@ public class FlowSeeder
         .RuleFor(e => e.LockoutEnd, DateTimeOffset.MinValue);
 
         var clients = clients_faker.Generate(amount).ToArray();
-
-        foreach (Client cl in clients)
-        {
-            cl.Id = Guid.NewGuid().ToString();
-        }
 
         return clients;
     }
