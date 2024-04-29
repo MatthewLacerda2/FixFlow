@@ -85,6 +85,11 @@ public class FlowSeeder
                 rems2add[i].dateTime = schs2add[i].DateTime.AddMonths(period + 1).AddDays(-1);
             }
 
+            for (int i = 1; i < num; i++)
+            {
+                schs2add[i].reminderId = rems2add[i].Id;
+            }
+
             schedules.AddRange(schs2add);
             logs.AddRange(logs2add);
             reminders.AddRange(rems2add);
