@@ -77,27 +77,27 @@ public class ScheduleController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(ClientId))
         {
-            schedulesQuery = schedulesQuery.Where(x => x.ClientId == ClientId);
+            schedulesQuery = schedulesQuery.Where(x => x.clientId == ClientId);
         }
 
         if (minPrice.HasValue)
         {
-            schedulesQuery = schedulesQuery.Where(x => x.Price >= minPrice);
+            schedulesQuery = schedulesQuery.Where(x => x.price >= minPrice);
         }
 
         if (maxPrice.HasValue)
         {
-            schedulesQuery = schedulesQuery.Where(x => x.Price <= maxPrice);
+            schedulesQuery = schedulesQuery.Where(x => x.price <= maxPrice);
         }
 
         if (minDateTime.HasValue)
         {
-            schedulesQuery = schedulesQuery.Where(x => x.DateTime >= minDateTime);
+            schedulesQuery = schedulesQuery.Where(x => x.dateTime >= minDateTime);
         }
 
         if (maxDateTime.HasValue)
         {
-            schedulesQuery = schedulesQuery.Where(x => x.DateTime <= maxDateTime);
+            schedulesQuery = schedulesQuery.Where(x => x.dateTime <= maxDateTime);
         }
 
 
@@ -106,15 +106,15 @@ public class ScheduleController : ControllerBase
             sort = sort.ToLower();
             if (sort.Contains("client"))
             {
-                schedulesQuery = schedulesQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
             }
             else if (sort.Contains("price"))
             {
-                schedulesQuery = schedulesQuery.OrderBy(s => s.Price).ThenByDescending(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.Id);
             }
             else if (sort.Contains("date"))
             {
-                schedulesQuery = schedulesQuery.OrderByDescending(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.Id);
             }
         }
 
@@ -143,7 +143,7 @@ public class ScheduleController : ControllerBase
     public async Task<IActionResult> CreateSchedule([FromBody] AptSchedule newAppointment)
     {
 
-        var existingClient = _userManager.FindByIdAsync(newAppointment.ClientId);
+        var existingClient = _userManager.FindByIdAsync(newAppointment.clientId);
         if (existingClient == null)
         {
             return BadRequest("Client does not exist");

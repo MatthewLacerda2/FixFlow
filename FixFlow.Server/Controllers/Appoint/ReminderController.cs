@@ -133,9 +133,9 @@ public class ReminderController : ControllerBase
             return BadRequest("Client does not exist");
         }
 
-        if (!string.IsNullOrWhiteSpace(newReminder.previousAppointmentId))
+        if (!string.IsNullOrWhiteSpace(newReminder.aptLogId))
         {
-            var existingLog = _context.Logs.Find(newReminder.previousAppointmentId);
+            var existingLog = _context.Logs.Find(newReminder.aptLogId);
 
             if (existingLog == null)
             {

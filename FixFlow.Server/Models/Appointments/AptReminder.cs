@@ -12,14 +12,22 @@ public class AptReminder
     /// The Id of the Client who took the Appointment
     /// </summary>
     [Required]
+    [ForeignKey(nameof(Models.Client))]
     public string ClientId { get; set; }
 
     /// <summary>
-    /// The Id of the Appointment Log that precedes this Reminder
+    /// Navigation Property of the Client
+    /// </summary>
+    public Client Client { get; set; }
+
+    /// <summary>
+    /// The Id of the Log that precedes this Reminder
     /// </summary>
     [Required]
-    [ForeignKey("Appointment")]
-    public string? previousAppointmentId { get; set; }
+    [ForeignKey(nameof(AptLog))]
+    public string aptLogId { get; set; }
+
+    public AptLog aptLog { get; set; }
 
     /// <summary>
     /// The Date to Contact the Client
@@ -30,13 +38,17 @@ public class AptReminder
     {
         Id = Guid.NewGuid().ToString();
         ClientId = string.Empty;
-        previousAppointmentId = string.Empty;
+        Client = null!;
+        aptLogId = string.Empty;
+        aptLog = null!;
     }
 
     public AptReminder(string _clientId, string _prevAppoint)
     {
         Id = Guid.NewGuid().ToString();
         ClientId = _clientId;
-        previousAppointmentId = _prevAppoint;
+        Client = null!;
+        aptLog = null!;
+        aptLogId = _prevAppoint;
     }
 }

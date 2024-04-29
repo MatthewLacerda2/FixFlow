@@ -83,21 +83,21 @@ public class LogController : ControllerBase
 
         if (minPrice.HasValue)
         {
-            logsQuery = logsQuery.Where(x => x.Price >= minPrice);
+            logsQuery = logsQuery.Where(x => x.price >= minPrice);
         }
         if (maxPrice.HasValue)
         {
-            logsQuery = logsQuery.Where(x => x.Price <= maxPrice);
+            logsQuery = logsQuery.Where(x => x.price <= maxPrice);
         }
 
         if (minDateTime.HasValue)
         {
-            logsQuery = logsQuery.Where(x => x.DateTime >= minDateTime);
+            logsQuery = logsQuery.Where(x => x.dateTime >= minDateTime);
         }
 
         if (maxDateTime.HasValue)
         {
-            logsQuery = logsQuery.Where(x => x.DateTime <= maxDateTime);
+            logsQuery = logsQuery.Where(x => x.dateTime <= maxDateTime);
         }
 
         if (!string.IsNullOrWhiteSpace(sort))
@@ -105,15 +105,15 @@ public class LogController : ControllerBase
             sort = sort.ToLower();
             if (sort.Contains("client"))
             {
-                logsQuery = logsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
             }
             else if (sort.Contains("price"))
             {
-                logsQuery = logsQuery.OrderBy(s => s.Price).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
             }
             else if (sort.Contains("date"))
             {
-                logsQuery = logsQuery.OrderByDescending(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
         }
 
@@ -148,9 +148,9 @@ public class LogController : ControllerBase
             return BadRequest("Client does not exist");
         }
 
-        if (!string.IsNullOrWhiteSpace(newAppointment.ScheduleId))
+        if (!string.IsNullOrWhiteSpace(newAppointment.scheduleId))
         {
-            var existingSchedule = _context.Schedules.Find(newAppointment.ScheduleId);
+            var existingSchedule = _context.Schedules.Find(newAppointment.scheduleId);
 
             if (existingSchedule == null)
             {
