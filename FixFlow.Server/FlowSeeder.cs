@@ -74,12 +74,12 @@ public class FlowSeeder
             faker_schedules
             .RuleFor(s => s.ClientId, cl.Id)
             .RuleFor(s => s.reminderId, "")
-            .RuleFor(s => s.Price, f => f.Random.Int(30, 100))
-            .RuleFor(x => x.DateTime, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(5)));
+            .RuleFor(s => s.price, f => f.Random.Int(30, 100))
+            .RuleFor(x => x.dateTime, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(5)));
 
             faker_logs
             .RuleFor(s => s.ClientId, cl.Id)
-            .RuleFor(s => s.Price, f => f.Random.Int(30, 300));
+            .RuleFor(s => s.price, f => f.Random.Int(30, 300));
 
             faker_reminders
             .RuleFor(s => s.ClientId, cl.Id);
@@ -92,13 +92,13 @@ public class FlowSeeder
 
             for (int i = 0; i < num; i++)
             {
-                schs2add[i].DateTime = schs2add[i].DateTime.AddMonths(period * i);
+                schs2add[i].dateTime = schs2add[i].dateTime.AddMonths(period * i);
 
-                logs2add[i].ScheduleId = schs2add[i].Id;
-                logs2add[i].DateTime = schs2add[i].DateTime.AddHours(1);
+                logs2add[i].scheduleId = schs2add[i].Id;
+                logs2add[i].DateTime = schs2add[i].dateTime.AddHours(1);
 
-                rems2add[i].previousAppointmentId = logs2add[i].Id;
-                rems2add[i].dateTime = schs2add[i].DateTime.AddMonths(period * i + 1).AddDays(-1);
+                rems2add[i].aptLogId = logs2add[i].Id;
+                rems2add[i].dateTime = schs2add[i].dateTime.AddMonths(period * i + 1).AddDays(-1);
             }
 
             for (int i = 1; i < num; i++)
@@ -195,7 +195,7 @@ public class FlowSeeder
         .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(a => a.Observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
+        .RuleFor(a => a.observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
 
         return schedules_faker;
 
@@ -208,7 +208,7 @@ public class FlowSeeder
         .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(a => a.Observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
+        .RuleFor(a => a.observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
 
         return logs_faker;
     }

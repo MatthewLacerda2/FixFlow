@@ -83,11 +83,11 @@ public class LogController : ControllerBase
 
         if (minPrice.HasValue)
         {
-            logsQuery = logsQuery.Where(x => x.Price >= minPrice);
+            logsQuery = logsQuery.Where(x => x.price >= minPrice);
         }
         if (maxPrice.HasValue)
         {
-            logsQuery = logsQuery.Where(x => x.Price <= maxPrice);
+            logsQuery = logsQuery.Where(x => x.price <= maxPrice);
         }
 
         if (minDateTime.HasValue)
@@ -109,7 +109,7 @@ public class LogController : ControllerBase
             }
             else if (sort.Contains("price"))
             {
-                logsQuery = logsQuery.OrderBy(s => s.Price).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
             }
             else if (sort.Contains("date"))
             {
@@ -148,9 +148,9 @@ public class LogController : ControllerBase
             return BadRequest("Client does not exist");
         }
 
-        if (!string.IsNullOrWhiteSpace(newAppointment.ScheduleId))
+        if (!string.IsNullOrWhiteSpace(newAppointment.scheduleId))
         {
-            var existingSchedule = _context.Schedules.Find(newAppointment.ScheduleId);
+            var existingSchedule = _context.Schedules.Find(newAppointment.scheduleId);
 
             if (existingSchedule == null)
             {

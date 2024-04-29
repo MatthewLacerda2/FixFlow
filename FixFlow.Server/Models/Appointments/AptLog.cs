@@ -11,37 +11,48 @@ public class AptLog
     /// The Id of the Client who took the Appointment
     /// </summary>
     [Required]
-    [ForeignKey("Client")]
+    [ForeignKey(nameof(Models.Client))]
     public string ClientId { get; set; }
+
+    /// <summary>
+    /// Navigation Property of the Client
+    /// </summary>
+    public Client Client { get; set; }
 
     /// <summary>
     /// The Id of the Schedule that precedes the Log, if any
     /// </summary>
-    public string? ScheduleId { get; set; }
+    [Required]
+    [ForeignKey(nameof(AptSchedule))]
+    public string? scheduleId { get; set; }
+
+    public AptSchedule? schedule { get; set; }
 
     /// <summary>
     /// The DateTime when the Log was created
     /// </summary>
     public DateTime DateTime { get; set; } = DateTime.Now;
 
-    public float Price { get; set; }
+    public float price { get; set; }
 
     /// <summary>
     /// Special information about the Appointment, if applicable
     /// </summary>
     /// <value></value>
-    public string Observation { get; set; } = string.Empty;
+    public string observation { get; set; } = string.Empty;
 
     public AptLog()
     {
         Id = Guid.NewGuid().ToString();
         ClientId = string.Empty;
+        Client = null!;
     }
 
     public AptLog(string _clientId, float _price)
     {
         Id = Guid.NewGuid().ToString();
         ClientId = _clientId;
-        Price = _price;
+        Client = null!;
+        price = _price;
     }
 }
