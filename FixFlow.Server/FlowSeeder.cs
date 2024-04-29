@@ -7,7 +7,19 @@ namespace Server.Seeder;
 public class FlowSeeder
 {
 
-    readonly static DateTime Jan1st2023 = new DateTime(2023, 1, 1);
+    /// <summary>
+    /// 
+    /// Let me make something very clear:
+    /// This is NOT meant to simulate real-world behavior. It's more to test API, DB and Performance
+    /// 
+    /// It's meant to generate a BUNCH of data. We'd like to simulate good behavior but don't expect it
+    /// Doing so would be complex and require more effort than it's worth
+    /// 
+    /// This is being done to begin with to test everything before it launches, which is indeed required
+    /// 
+    /// </summary>
+
+    readonly static DateTime Jan2nd2023 = new DateTime(2023, 1, 2, 8, 0, 0);
 
     public Employee[] employees { get; } = [];
     public Client[] clients { get; } = [];
@@ -16,34 +28,87 @@ public class FlowSeeder
     public AptSchedule[] aptSchedules { get; } = [];
     public AptLog[] aptLogs { get; } = [];
 
-    const int employeesCount = 100;
-    const int clientsCount = employeesCount * 100;
+    const int employeesCount = 50;
+    const int clientsCount = employeesCount * 50;
 
     const int bogusSeed = 777;
 
     public FlowSeeder()
     {
+        Console.WriteLine("000");
+
         employees = GenerateEmployees(employeesCount);
         clients = GenerateClients(clientsCount);
 
+        Console.WriteLine("111");
+
         GenerateApts();
+
+        Console.WriteLine("222");
+    }
+
+    void GenerateApts()
+    {
+
+        Faker<AptSchedule> faker_schedules = ScheduleFaker();
+        Faker<AptLog> faker_logs = LogFaker();
+        Faker<AptReminder> faker_reminders = ReminderFaker();
+
+        List<AptSchedule> schedules = new List<AptSchedule>();
+        List<AptLog> logs = new List<AptLog>();
+        List<AptReminder> reminders = new List<AptReminder>();
+
+        foreach (Client cl in clients)
+        {
+            faker_schedules
+            .RuleFor(s => s.ClientId, cl.Id)
+            .RuleFor(s => s.reminderId, "")
+            .RuleFor(s => s.Price, f => f.Random.Int(30, 100))
+            .RuleFor(x => x.DateTime, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(5)));
+
+            faker_logs
+            .RuleFor(s => s.ClientId, cl.Id)
+            .RuleFor(s => s.Price, f => f.Random.Int(30, 300));
+
+            faker_reminders
+            .RuleFor(s => s.ClientId, cl.Id);
+
+            AptSchedule[] schs2add = faker_schedules.Generate(13).ToArray();
+            AptLog[] logs2add = faker_logs.Generate(13).ToArray();
+            AptReminder[] rems2add = faker_reminders.Generate(13).ToArray();
+
+            for (int i = 0; i < 13; i++)
+            {
+                schs2add[i].DateTime = schs2add[i].DateTime.AddMonths(i);
+
+                logs2add[i].ScheduleId = schs2add[i].Id;
+                logs2add[i].DateTime = schs2add[i].DateTime.AddHours(1);
+
+                rems2add[i].previousAppointmentId = logs2add[i].Id;
+                rems2add[i].dateTime = schs2add[i].DateTime.AddMonths(i + 1);
+            }
+
+            schedules.AddRange(schs2add);
+            logs.AddRange(logs2add);
+            reminders.AddRange(rems2add);
+
+        }
     }
 
     Employee[] GenerateEmployees(int amount)
     {
         var employees_faker = new Faker<Employee>()
         .UseSeed(bogusSeed)
-        .UseDateTimeReference(Jan1st2023)
-        .StrictMode(true)
+        .StrictMode(false)
+        .UseDateTimeReference(Jan2nd2023)
+
         .RuleFor(e => e.FullName, f => f.Name.FullName())
         .RuleFor(e => e.CPF, f => f.Person.Cpf())
-        .RuleFor(e => e.CreatedDate, Jan1st2023)
+        .RuleFor(e => e.CreatedDate, Jan2nd2023)
         .RuleFor(e => e.LastLogin, DateTime.Now.AddDays(-1))
         .RuleFor(e => e.Email, (f, e) => f.Internet.Email(e.FullName.ToLower()))
         .RuleFor(e => e.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
         .RuleFor(e => e.salary, f => f.Random.Float(1500, 5000))
-
-        .RuleFor(e => e.Id, Guid.NewGuid().ToString())
         .RuleFor(e => e.PasswordHash, Guid.NewGuid().ToString())
 
         .RuleFor(e => e.UserName, (f, e) => e.FullName.Replace(" ", ""))
@@ -51,8 +116,8 @@ public class FlowSeeder
 
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
-        .RuleFor(e => e.AccessFailedCount, 0)
 
+        .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")
         .RuleFor(e => e.PhoneNumberConfirmed, false)
@@ -62,6 +127,11 @@ public class FlowSeeder
 
         var employees = employees_faker.Generate(amount).ToArray();
 
+        foreach (Employee emp in employees)
+        {
+            emp.Id = Guid.NewGuid().ToString();
+        }
+
         return employees;
     }
 
@@ -69,17 +139,17 @@ public class FlowSeeder
     {
         var clients_faker = new Faker<Client>()
         .UseSeed(bogusSeed)
-        .StrictMode(true)
-        .UseDateTimeReference(Jan1st2023)
+        .StrictMode(false)
+        .UseDateTimeReference(Jan2nd2023)
+
         .RuleFor(c => c.FullName, f => f.Name.FullName())
         .RuleFor(c => c.CPF, f => f.Person.Cpf())
-        .RuleFor(e => e.CreatedDate, Jan1st2023)
+        .RuleFor(e => e.CreatedDate, Jan2nd2023)
         .RuleFor(e => e.LastLogin, DateTime.Now.AddDays(-1))
         .RuleFor(c => c.Email, (f, c) => f.Internet.Email(c.FullName.ToLower()))
         .RuleFor(c => c.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
         .RuleFor(c => c.additionalNote, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty)
 
-        .RuleFor(e => e.Id, Guid.NewGuid().ToString())
         .RuleFor(e => e.PasswordHash, Guid.NewGuid().ToString())
 
         .RuleFor(e => e.UserName, (f, e) => e.FullName.Replace(" ", ""))
@@ -87,8 +157,8 @@ public class FlowSeeder
 
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
-        .RuleFor(e => e.AccessFailedCount, 0)
 
+        .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")
         .RuleFor(e => e.PhoneNumberConfirmed, false)
@@ -98,20 +168,12 @@ public class FlowSeeder
 
         var clients = clients_faker.Generate(amount).ToArray();
 
+        foreach (Client cl in clients)
+        {
+            cl.Id = Guid.NewGuid().ToString();
+        }
+
         return clients;
-    }
-
-    void GenerateApts()
-    {
-
-        List<AptSchedule> schedules = new List<AptSchedule>();
-        List<AptLog> logs = new List<AptLog>();
-        List<AptReminder> reminders = new List<AptReminder>();
-
-        AptSchedule lastSch = new AptSchedule();
-        AptLog lastLog = new AptLog();
-        AptReminder lastRem = new AptReminder();
-
     }
 
     Faker<AptSchedule> ScheduleFaker()
@@ -119,10 +181,9 @@ public class FlowSeeder
 
         var schedules_faker = new Faker<AptSchedule>()
         .UseSeed(bogusSeed)
-        .StrictMode(true)
-        .UseDateTimeReference(Jan1st2023)
+        .StrictMode(false)
+        .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(a => a.Id, Guid.NewGuid().ToString())
         .RuleFor(a => a.Observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
 
         return schedules_faker;
@@ -133,10 +194,9 @@ public class FlowSeeder
     {
         var logs_faker = new Faker<AptLog>()
         .UseSeed(bogusSeed)
-        .StrictMode(true)
-        .UseDateTimeReference(Jan1st2023)
+        .StrictMode(false)
+        .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(a => a.Id, Guid.NewGuid().ToString())
         .RuleFor(a => a.Observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
 
         return logs_faker;
@@ -146,9 +206,8 @@ public class FlowSeeder
     {
         var reminders_faker = new Faker<AptReminder>()
         .UseSeed(bogusSeed)
-        .StrictMode(true)
-        .UseDateTimeReference(Jan1st2023)
-        .RuleFor(a => a.Id, Guid.NewGuid().ToString());
+        .StrictMode(false)
+        .UseDateTimeReference(Jan2nd2023);
 
         return reminders_faker;
     }
