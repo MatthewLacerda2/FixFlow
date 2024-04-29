@@ -24,14 +24,7 @@ public class ServerContext : IdentityDbContext
     {
         base.OnModelCreating(builder);
 
-        FlowSeeder flowSeeder = new FlowSeeder();
-
-        builder.Entity<Employee>().HasData(flowSeeder.employees);
-        builder.Entity<Client>().HasData(flowSeeder.clients);
-
-        builder.Entity<AptSchedule>().HasData(flowSeeder.aptSchedules);
-        builder.Entity<AptLog>().HasData(flowSeeder.aptLogs);
-        builder.Entity<AptReminder>().HasData(flowSeeder.aptReminders);
+        FlowSeeder flowSeeder = new FlowSeeder(builder);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
