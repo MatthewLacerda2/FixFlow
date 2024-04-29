@@ -28,23 +28,17 @@ public class FlowSeeder
     public AptSchedule[] aptSchedules { get; set; } = [];
     public AptLog[] aptLogs { get; set; } = [];
 
-    const int employeesCount = 60;
-    const int clientsCount = employeesCount * 60;
+    const int employeesCount = 50;
+    const int clientsCount = employeesCount * 50;
 
     const int bogusSeed = 777;
 
     public FlowSeeder()
     {
-        Console.WriteLine("Adding Users at " + DateTime.Now);
-
         employees = GenerateEmployees(employeesCount);
         clients = GenerateClients(clientsCount);
 
-        Console.WriteLine("Adding Apts at " + DateTime.Now);
-
         GenerateApts();
-
-        Console.WriteLine("Done at " + DateTime.Now);
     }
 
     void GenerateApts()
@@ -73,19 +67,22 @@ public class FlowSeeder
             faker_reminders
             .RuleFor(s => s.ClientId, cl.Id);
 
-            AptSchedule[] schs2add = faker_schedules.Generate(13).ToArray();
-            AptLog[] logs2add = faker_logs.Generate(13).ToArray();
-            AptReminder[] rems2add = faker_reminders.Generate(13).ToArray();
+            const int num = 3;
+            const int period = 3;
 
-            for (int i = 0; i < 13; i++)
+            AptSchedule[] schs2add = faker_schedules.Generate(num).ToArray();
+            AptLog[] logs2add = faker_logs.Generate(num).ToArray();
+            AptReminder[] rems2add = faker_reminders.Generate(num).ToArray();
+
+            for (int i = 0; i < num; i++)
             {
-                schs2add[i].DateTime = schs2add[i].DateTime.AddMonths(i);
+                schs2add[i].DateTime = schs2add[i].DateTime.AddMonths(period);
 
                 logs2add[i].ScheduleId = schs2add[i].Id;
-                logs2add[i].DateTime = schs2add[i].DateTime.AddMonths(i).AddHours(1);
+                logs2add[i].DateTime = schs2add[i].DateTime.AddMonths(period).AddHours(1);
 
                 rems2add[i].previousAppointmentId = logs2add[i].Id;
-                rems2add[i].dateTime = schs2add[i].DateTime.AddMonths(i + 1);
+                rems2add[i].dateTime = schs2add[i].DateTime.AddMonths(period + 1).AddDays(-1);
             }
 
             schedules.AddRange(schs2add);
