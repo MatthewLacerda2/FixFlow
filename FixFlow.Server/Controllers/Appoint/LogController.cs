@@ -109,11 +109,7 @@ public class LogController : ControllerBase
             }
             else if (sort.Contains("price"))
             {
-<<<<<<< HEAD
                 logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
-=======
-                logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
->>>>>>> 1743b82b96612333fd6d1c989c7e8b1f4383b9c1
             }
             else if (sort.Contains("date"))
             {
