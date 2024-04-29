@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Server.Models.Appointments;
 
@@ -17,7 +19,8 @@ public class AptReminder
     /// The Id of the Appointment Log that precedes this Reminder
     /// </summary>
     [Required]
-    public string previousAppointmentId { get; set; }
+    [ForeignKey("Appointment")]
+    public string? previousAppointmentId { get; set; }
 
     /// <summary>
     /// The Date to Contact the Client
