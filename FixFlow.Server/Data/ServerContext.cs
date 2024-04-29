@@ -12,7 +12,7 @@ public class ServerContext : IdentityDbContext
     public DbSet<Employee> Employees { get; set; } = default!;
 
     public DbSet<AptLog> Logs { get; set; } = default!;
-    public DbSet<AptReminder> Reminders { get; set; } = default!;
+    public DbSet<AptContact> Contacts { get; set; } = default!;
     public DbSet<AptSchedule> Schedules { get; set; } = default!;
 
     public ServerContext(DbContextOptions<ServerContext> options)

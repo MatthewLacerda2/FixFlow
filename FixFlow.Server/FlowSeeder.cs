@@ -25,7 +25,7 @@ public class FlowSeeder
     public Employee[] employees { get; } = [];
     public Client[] clients { get; } = [];
 
-    public AptReminder[] aptReminders { get; set; } = [];
+    public AptContact[] aptContacts { get; set; } = [];
     public AptSchedule[] aptSchedules { get; set; } = [];
     public AptLog[] aptLogs { get; set; } = [];
 
@@ -49,7 +49,7 @@ public class FlowSeeder
 
         builder.Entity<AptSchedule>().HasData(aptSchedules);
         builder.Entity<AptLog>().HasData(aptLogs);
-        builder.Entity<AptReminder>().HasData(aptReminders);
+        builder.Entity<AptContact>().HasData(aptContacts);
 
     }
 
@@ -57,7 +57,7 @@ public class FlowSeeder
     {
         Faker<AptSchedule> faker_schedules = ScheduleFaker();
         Faker<AptLog> faker_logs = LogFaker();
-        Faker<AptReminder> faker_reminders = ReminderFaker();
+        Faker<AptContact> faker_contacts = ContactFaker();
 
         int totalClients = clients.Length;
 
@@ -65,7 +65,7 @@ public class FlowSeeder
 
         aptSchedules = new AptSchedule[totalClients * num];
         aptLogs = new AptLog[totalClients * num];
-        aptReminders = new AptReminder[totalClients * num];
+        aptContacts = new AptContact[totalClients * num];
 
         int index = 0;
 
@@ -73,7 +73,7 @@ public class FlowSeeder
         {
             faker_schedules
             .RuleFor(s => s.ClientId, cl.Id)
-            .RuleFor(s => s.reminderId, "")
+            .RuleFor(s => s.contactId, "")
             .RuleFor(s => s.price, f => f.Random.Int(30, 100))
             .RuleFor(x => x.dateTime, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(5)));
 
@@ -81,14 +81,14 @@ public class FlowSeeder
             .RuleFor(s => s.ClientId, cl.Id)
             .RuleFor(s => s.price, f => f.Random.Int(30, 300));
 
-            faker_reminders
+            faker_contacts
             .RuleFor(s => s.ClientId, cl.Id);
 
             const int period = 3;
 
             AptSchedule[] schs2add = faker_schedules.Generate(num).ToArray();
             AptLog[] logs2add = faker_logs.Generate(num).ToArray();
-            AptReminder[] rems2add = faker_reminders.Generate(num).ToArray();
+            AptContact[] rems2add = faker_contacts.Generate(num).ToArray();
 
             for (int i = 0; i < num; i++)
             {
@@ -103,12 +103,12 @@ public class FlowSeeder
 
             for (int i = 1; i < num; i++)
             {
-                schs2add[i].reminderId = rems2add[i - 1].Id;
+                schs2add[i].contactId = rems2add[i - 1].Id;
             }
 
             Array.Copy(schs2add, 0, aptSchedules, index, num);
             Array.Copy(logs2add, 0, aptLogs, index, num);
-            Array.Copy(rems2add, 0, aptReminders, index, num);
+            Array.Copy(rems2add, 0, aptContacts, index, num);
 
             index += num;
         }
@@ -213,13 +213,13 @@ public class FlowSeeder
         return logs_faker;
     }
 
-    Faker<AptReminder> ReminderFaker()
+    Faker<AptContact> ContactFaker()
     {
-        var reminders_faker = new Faker<AptReminder>()
+        var contact_faker = new Faker<AptContact>()
         .UseSeed(bogusSeed)
         .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023);
 
-        return reminders_faker;
+        return contact_faker;
     }
 }

@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Server.Models.Appointments;
 
-public class AptReminder
+public class AptContact
 {
     [Required]
     public string Id { get; set; }
 
     /// <summary>
-    /// The Id of the Client to Remind
+    /// The Id of the Client to Contact
     /// </summary>
     [Required]
     [ForeignKey(nameof(Models.Client))]
@@ -21,7 +21,7 @@ public class AptReminder
     public Client Client { get; set; }
 
     /// <summary>
-    /// The Id of the Log that precedes this Reminder
+    /// The Id of the Log that precedes this Contact
     /// </summary>
     [Required]
     [ForeignKey(nameof(AptLog))]
@@ -38,7 +38,7 @@ public class AptReminder
     /// </summary>
     public DateTime dateTime { get; set; } = DateTime.Now;
 
-    public AptReminder()
+    public AptContact()
     {
         Id = Guid.NewGuid().ToString();
         ClientId = string.Empty;
@@ -47,7 +47,7 @@ public class AptReminder
         aptLog = null!;
     }
 
-    public AptReminder(string _clientId, string _prevAppoint)
+    public AptContact(string _clientId, string _prevAppoint)
     {
         Id = Guid.NewGuid().ToString();
         ClientId = _clientId;

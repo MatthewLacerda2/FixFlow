@@ -21,16 +21,16 @@ public class AptSchedule
     public Client Client { get; set; }
 
     /// <summary>
-    /// The Id of the Reminder that precedes this Schedule, if any
+    /// The Id of the Contact that precedes this Schedule, if any
     /// </summary>
     [Required]
-    [ForeignKey(nameof(AptReminder))]
-    public string? reminderId { get; set; }
+    [ForeignKey(nameof(AptContact))]
+    public string? contactId { get; set; }
 
     /// <summary>
-    /// Navigation Property of the Reminder
+    /// Navigation Property of the Contact
     /// </summary>
-    public AptReminder? reminder { get; set; }
+    public AptContact? contact { get; set; }
 
     /// <summary>
     /// The scheduled DateTime of the Appointment
@@ -45,7 +45,7 @@ public class AptSchedule
         Id = Guid.NewGuid().ToString();
         ClientId = string.Empty;
         Client = null!;
-        reminder = null!;
+        contact = null!;
     }
 
     public AptSchedule(string clientId, DateTime _dateTime)
@@ -53,7 +53,7 @@ public class AptSchedule
         Id = Guid.NewGuid().ToString();
         ClientId = clientId;
         Client = null!;
-        reminder = null!;
+        contact = null!;
         dateTime = _dateTime;
     }
 }
