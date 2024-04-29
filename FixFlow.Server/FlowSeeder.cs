@@ -28,8 +28,8 @@ public class FlowSeeder
     public AptSchedule[] aptSchedules { get; set; } = [];
     public AptLog[] aptLogs { get; set; } = [];
 
-    const int employeesCount = 50;
-    const int clientsCount = employeesCount * 50;
+    const int employeesCount = 52;
+    const int clientsCount = employeesCount * 52;
 
     const int bogusSeed = 777;
 
@@ -43,14 +43,19 @@ public class FlowSeeder
 
     void GenerateApts()
     {
-
         Faker<AptSchedule> faker_schedules = ScheduleFaker();
         Faker<AptLog> faker_logs = LogFaker();
         Faker<AptReminder> faker_reminders = ReminderFaker();
 
-        List<AptSchedule> schedules = new List<AptSchedule>();
-        List<AptLog> logs = new List<AptLog>();
-        List<AptReminder> reminders = new List<AptReminder>();
+        int totalClients = clients.Length;
+
+        int num = 3;
+
+        aptSchedules = new AptSchedule[totalClients * num];
+        aptLogs = new AptLog[totalClients * num];
+        aptReminders = new AptReminder[totalClients * num];
+
+        int index = 0;
 
         foreach (Client cl in clients)
         {
@@ -67,7 +72,6 @@ public class FlowSeeder
             faker_reminders
             .RuleFor(s => s.ClientId, cl.Id);
 
-            const int num = 3;
             const int period = 3;
 
             AptSchedule[] schs2add = faker_schedules.Generate(num).ToArray();
@@ -90,15 +94,12 @@ public class FlowSeeder
                 schs2add[i].reminderId = rems2add[i].Id;
             }
 
-            schedules.AddRange(schs2add);
-            logs.AddRange(logs2add);
-            reminders.AddRange(rems2add);
+            Array.Copy(schs2add, 0, aptSchedules, index, num);
+            Array.Copy(logs2add, 0, aptLogs, index, num);
+            Array.Copy(rems2add, 0, aptReminders, index, num);
 
+            index += num;
         }
-
-        aptSchedules = schedules.ToArray();
-        aptLogs = logs.ToArray();
-        aptReminders = reminders.ToArray();
     }
 
     Employee[] GenerateEmployees(int amount)
@@ -123,7 +124,7 @@ public class FlowSeeder
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
 
-        .RuleFor(e => e.PasswordHash, Guid.NewGuid().ToString())
+        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString())
         .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")
