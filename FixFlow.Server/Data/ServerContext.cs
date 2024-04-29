@@ -2,10 +2,18 @@ using Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Server.Models.Appointments;
+using Server.Seeder;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext
 {
+
+    public DbSet<Client> Clients { get; set; } = default!;
+    public DbSet<Employee> Employees { get; set; } = default!;
+
+    public DbSet<AptLog> Logs { get; set; } = default!;
+    public DbSet<AptReminder> Reminders { get; set; } = default!;
+    public DbSet<AptSchedule> Schedules { get; set; } = default!;
 
     public ServerContext(DbContextOptions<ServerContext> options)
         : base(options)
@@ -15,6 +23,15 @@ public class ServerContext : IdentityDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        FlowSeeder flowSeeder = new FlowSeeder();
+
+        builder.Entity<Employee>().HasData(flowSeeder.employees);
+        builder.Entity<Client>().HasData(flowSeeder.clients);
+
+        builder.Entity<AptSchedule>().HasData(flowSeeder.aptSchedules);
+        builder.Entity<AptLog>().HasData(flowSeeder.aptLogs);
+        builder.Entity<AptReminder>().HasData(flowSeeder.aptReminders);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -25,11 +42,4 @@ public class ServerContext : IdentityDbContext
             "Server=localhost;port=3306;Database=fixflow;User=lendacerda;Password=xpvista7810;",
             new MariaDbServerVersion(new Version(10, 5, 11)));
     }
-
-    public DbSet<Client> Clients { get; set; } = default!;
-    public DbSet<Employee> Employees { get; set; } = default!;
-
-    public DbSet<AptLog> Logs { get; set; } = default!;
-    public DbSet<AptReminder> Reminders { get; set; } = default!;
-    public DbSet<AptSchedule> Schedules { get; set; } = default!;
 }

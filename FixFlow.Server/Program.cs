@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.RateLimiting;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
+using Server.Seeder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +22,10 @@ builder.Services.AddIdentity<Client, IdentityRole>()
     .AddEntityFrameworkStores<ServerContext>()
     .AddDefaultTokenProviders();
 
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+
 builder.Services.AddDbContext<ServerContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 23))));
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 23))));
 
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
@@ -80,14 +83,11 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 });
 
-// - - - - - - -
-
 var app = builder.Build();
 
 app.UseCors("AllowAnyOrigin");
 
 app.UseDefaultFiles();
-app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
