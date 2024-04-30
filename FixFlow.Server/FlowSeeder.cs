@@ -42,8 +42,6 @@ public class FlowSeeder
 
         GenerateApts();
 
-        // - - - - -
-
         builder.Entity<Business>().HasData(businesses);
         builder.Entity<Client>().HasData(clients);
 
@@ -59,58 +57,59 @@ public class FlowSeeder
         Faker<AptLog> faker_logs = LogFaker();
         Faker<AptContact> faker_contacts = ContactFaker();
 
-        int totalClients = clients.Length;
+        const int num = 3;
+        const int period = 3;
 
-        int num = 3;
+        int totalClients = clients.Length;
+        int index = 0;
+        int indexBusiness = 1;
 
         aptSchedules = new AptSchedule[totalClients * num];
         aptLogs = new AptLog[totalClients * num];
         aptContacts = new AptContact[totalClients * num];
 
-        int index = 0;
-
         foreach (Client cl in clients)
         {
             faker_schedules
             .RuleFor(s => s.ClientId, cl.Id)
-            .RuleFor(s => s.contactId, "")
-            .RuleFor(s => s.price, f => f.Random.Int(30, 100))
-            .RuleFor(x => x.dateTime, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(5)));
+            .RuleFor(s => s.businessId, businesses[indexBusiness % indexBusiness].Id);
 
             faker_logs
             .RuleFor(s => s.ClientId, cl.Id)
-            .RuleFor(s => s.price, f => f.Random.Int(30, 300));
+            .RuleFor(s => s.businessId, businesses[indexBusiness % indexBusiness].Id);
 
             faker_contacts
-            .RuleFor(s => s.ClientId, cl.Id);
-
-            const int period = 3;
+            .RuleFor(s => s.ClientId, cl.Id)
+            .RuleFor(s => s.businessId, businesses[indexBusiness % indexBusiness].Id);
 
             AptSchedule[] schs2add = faker_schedules.Generate(num).ToArray();
             AptLog[] logs2add = faker_logs.Generate(num).ToArray();
-            AptContact[] rems2add = faker_contacts.Generate(num).ToArray();
+            AptContact[] conts2add = faker_contacts.Generate(num).ToArray();
 
             for (int i = 0; i < num; i++)
             {
+
                 schs2add[i].dateTime = schs2add[i].dateTime.AddMonths(period * i);
 
                 logs2add[i].scheduleId = schs2add[i].Id;
                 logs2add[i].dateTime = schs2add[i].dateTime.AddHours(1);
 
-                rems2add[i].aptLogId = logs2add[i].Id;
-                rems2add[i].dateTime = schs2add[i].dateTime.AddMonths(period * i + 1).AddDays(-1);
+                conts2add[i].aptLogId = logs2add[i].Id;
+                conts2add[i].dateTime = schs2add[i].dateTime.AddMonths((period * i) + 1).AddDays(-1);
+
             }
 
             for (int i = 1; i < num; i++)
             {
-                schs2add[i].contactId = rems2add[i - 1].Id;
+                schs2add[i].contactId = conts2add[i - 1].Id;
             }
 
             Array.Copy(schs2add, 0, aptSchedules, index, num);
             Array.Copy(logs2add, 0, aptLogs, index, num);
-            Array.Copy(rems2add, 0, aptContacts, index, num);
+            Array.Copy(conts2add, 0, aptContacts, index, num);
 
             index += num;
+            indexBusiness++;
         }
     }
 
@@ -121,6 +120,7 @@ public class FlowSeeder
         .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
+        .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
         .RuleFor(e => e.Name, f => f.Name.FullName())
         .RuleFor(e => e.CPF, f => f.Person.Cpf())
         .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
@@ -136,7 +136,7 @@ public class FlowSeeder
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
 
-        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString())
+        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString().Replace("-", "/"))
         .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")
@@ -157,7 +157,7 @@ public class FlowSeeder
         .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
+        .RuleFor(e => e.Id, f => Guid.NewGuid().ToString())
         .RuleFor(c => c.FullName, f => f.Name.FullName())
         .RuleFor(c => c.CPF, f => f.Person.Cpf())
         .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
@@ -173,7 +173,7 @@ public class FlowSeeder
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
 
-        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString())
+        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString().Replace("-", "/"))
         .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")
@@ -192,9 +192,12 @@ public class FlowSeeder
 
         var schedules_faker = new Faker<AptSchedule>()
         .UseSeed(bogusSeed)
-        .StrictMode(true)
+        .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023)
 
+        .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
+        .RuleFor(s => s.price, f => f.Random.Int(30, 100))
+        .RuleFor(x => x.dateTime, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(5)))
         .RuleFor(a => a.observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
 
         return schedules_faker;
@@ -205,9 +208,11 @@ public class FlowSeeder
     {
         var logs_faker = new Faker<AptLog>()
         .UseSeed(bogusSeed)
-        .StrictMode(true)
+        .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023)
 
+        .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
+        .RuleFor(s => s.price, f => f.Random.Int(30, 300))
         .RuleFor(a => a.observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
 
         return logs_faker;
@@ -217,8 +222,10 @@ public class FlowSeeder
     {
         var contact_faker = new Faker<AptContact>()
         .UseSeed(bogusSeed)
-        .StrictMode(true)
-        .UseDateTimeReference(Jan2nd2023);
+        .StrictMode(false)
+        .UseDateTimeReference(Jan2nd2023)
+
+        .RuleFor(e => e.Id, f => f.Random.Guid().ToString());
 
         return contact_faker;
     }
