@@ -2,9 +2,9 @@ using FluentValidation;
 using Server.Models.DTO;
 using Server.Models.Utils;
 
-public class EmployeeDTOValidator : AbstractValidator<EmployeeDTO>
+public class BusinessDTOValidator : AbstractValidator<BusinessDTO>
 {
-    public EmployeeDTOValidator()
+    public BusinessDTOValidator()
     {
         RuleFor(x => x.CPF).Custom((cpf, context) =>
         {
@@ -25,7 +25,5 @@ public class EmployeeDTOValidator : AbstractValidator<EmployeeDTO>
                 context.AddFailure("Username can not contain whitespaces");
             }
         });
-
-        RuleFor(x => x.salary).GreaterThanOrEqualTo(0).WithErrorCode("Salary must be equal or greater than 0");
     }
 }

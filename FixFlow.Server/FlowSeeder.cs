@@ -11,45 +11,45 @@ public class FlowSeeder
     /// <summary>
     /// 
     /// Let me make something very clear:
-    /// This is NOT meant to simulate real-world behavior. It's more to test API, DB and Performance
+    /// This is NOT meant to precisely simulate real-world behavior. It's more to test API, DB and Performance
     /// 
-    /// It's meant to generate a BUNCH of data. We'd like to simulate good behavior but don't expect it
-    /// Doing so would be complex and require more effort than it's worth
+    /// The data generated DOES make sense, just the behavior that isn't ground-truth
+    /// What we want is to generate a BUNCH of data
     /// 
-    /// This is being done to begin with to test everything before it launches, which is indeed required
+    /// This generator is here to help test everything before launch, which is indeed required
     /// 
     /// </summary>
 
     readonly static DateTime Jan2nd2023 = new DateTime(2023, 1, 2, 8, 0, 0);
 
-    public Employee[] employees { get; } = [];
+    public Business[] businesses { get; } = [];
     public Client[] clients { get; } = [];
 
-    public AptReminder[] aptReminders { get; set; } = [];
+    public AptContact[] aptContacts { get; set; } = [];
     public AptSchedule[] aptSchedules { get; set; } = [];
     public AptLog[] aptLogs { get; set; } = [];
 
-    const int employeesCount = 52;
-    const int clientsCount = employeesCount * 52;
+    const int businesCount = 52;
+    const int clientsCount = businesCount * 52;
 
     const int bogusSeed = 777;
 
     public FlowSeeder(ModelBuilder builder)
     {
 
-        employees = GenerateEmployees(employeesCount);
+        businesses = GenerateBusinesses(businesCount);
         clients = GenerateClients(clientsCount);
 
         GenerateApts();
 
         // - - - - -
 
-        builder.Entity<Employee>().HasData(employees);
+        builder.Entity<Business>().HasData(businesses);
         builder.Entity<Client>().HasData(clients);
 
         builder.Entity<AptSchedule>().HasData(aptSchedules);
         builder.Entity<AptLog>().HasData(aptLogs);
-        builder.Entity<AptReminder>().HasData(aptReminders);
+        builder.Entity<AptContact>().HasData(aptContacts);
 
     }
 
@@ -57,7 +57,7 @@ public class FlowSeeder
     {
         Faker<AptSchedule> faker_schedules = ScheduleFaker();
         Faker<AptLog> faker_logs = LogFaker();
-        Faker<AptReminder> faker_reminders = ReminderFaker();
+        Faker<AptContact> faker_contacts = ContactFaker();
 
         int totalClients = clients.Length;
 
@@ -65,7 +65,7 @@ public class FlowSeeder
 
         aptSchedules = new AptSchedule[totalClients * num];
         aptLogs = new AptLog[totalClients * num];
-        aptReminders = new AptReminder[totalClients * num];
+        aptContacts = new AptContact[totalClients * num];
 
         int index = 0;
 
@@ -73,62 +73,62 @@ public class FlowSeeder
         {
             faker_schedules
             .RuleFor(s => s.ClientId, cl.Id)
-            .RuleFor(s => s.reminderId, "")
-            .RuleFor(s => s.Price, f => f.Random.Int(30, 100))
-            .RuleFor(x => x.DateTime, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(5)));
+            .RuleFor(s => s.contactId, "")
+            .RuleFor(s => s.price, f => f.Random.Int(30, 100))
+            .RuleFor(x => x.dateTime, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(5)));
 
             faker_logs
             .RuleFor(s => s.ClientId, cl.Id)
-            .RuleFor(s => s.Price, f => f.Random.Int(30, 300));
+            .RuleFor(s => s.price, f => f.Random.Int(30, 300));
 
-            faker_reminders
+            faker_contacts
             .RuleFor(s => s.ClientId, cl.Id);
 
             const int period = 3;
 
             AptSchedule[] schs2add = faker_schedules.Generate(num).ToArray();
             AptLog[] logs2add = faker_logs.Generate(num).ToArray();
-            AptReminder[] rems2add = faker_reminders.Generate(num).ToArray();
+            AptContact[] rems2add = faker_contacts.Generate(num).ToArray();
 
             for (int i = 0; i < num; i++)
             {
-                schs2add[i].DateTime = schs2add[i].DateTime.AddMonths(period * i);
+                schs2add[i].dateTime = schs2add[i].dateTime.AddMonths(period * i);
 
-                logs2add[i].ScheduleId = schs2add[i].Id;
-                logs2add[i].DateTime = schs2add[i].DateTime.AddHours(1);
+                logs2add[i].scheduleId = schs2add[i].Id;
+                logs2add[i].dateTime = schs2add[i].dateTime.AddHours(1);
 
-                rems2add[i].previousAppointmentId = logs2add[i].Id;
-                rems2add[i].dateTime = schs2add[i].DateTime.AddMonths(period * i + 1).AddDays(-1);
+                rems2add[i].aptLogId = logs2add[i].Id;
+                rems2add[i].dateTime = schs2add[i].dateTime.AddMonths(period * i + 1).AddDays(-1);
             }
 
             for (int i = 1; i < num; i++)
             {
-                schs2add[i].reminderId = rems2add[i - 1].Id;
+                schs2add[i].contactId = rems2add[i - 1].Id;
             }
 
             Array.Copy(schs2add, 0, aptSchedules, index, num);
             Array.Copy(logs2add, 0, aptLogs, index, num);
-            Array.Copy(rems2add, 0, aptReminders, index, num);
+            Array.Copy(rems2add, 0, aptContacts, index, num);
 
             index += num;
         }
     }
 
-    Employee[] GenerateEmployees(int amount)
+    Business[] GenerateBusinesses(int amount)
     {
-        var employees_faker = new Faker<Employee>()
+        var business_faker = new Faker<Business>()
         .UseSeed(bogusSeed)
-        .StrictMode(false)
+        .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(e => e.FullName, f => f.Name.FullName())
+        .RuleFor(e => e.Name, f => f.Name.FullName())
         .RuleFor(e => e.CPF, f => f.Person.Cpf())
         .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
         .RuleFor(e => e.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
-        .RuleFor(e => e.Email, (f, e) => f.Internet.Email(e.FullName.ToLower()))
+        .RuleFor(e => e.Email, (f, e) => f.Internet.Email(e.Name.ToLower()))
         .RuleFor(e => e.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 
-        .RuleFor(e => e.salary, f => f.Random.Float(1500, 5000))
+        .RuleFor(e => e.CNPJ, f => f.Company.Cnpj())
 
         .RuleFor(e => e.UserName, f => f.Internet.UserName())
         .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
@@ -145,16 +145,16 @@ public class FlowSeeder
         .RuleFor(e => e.LockoutEnabled, false)
         .RuleFor(e => e.LockoutEnd, DateTimeOffset.MinValue);
 
-        var employees = employees_faker.Generate(amount).ToArray();
+        var generatedBusinesses = business_faker.Generate(amount).ToArray();
 
-        return employees;
+        return generatedBusinesses;
     }
 
     Client[] GenerateClients(int amount)
     {
         var clients_faker = new Faker<Client>()
         .UseSeed(bogusSeed)
-        .StrictMode(false)
+        .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
         .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
@@ -192,10 +192,10 @@ public class FlowSeeder
 
         var schedules_faker = new Faker<AptSchedule>()
         .UseSeed(bogusSeed)
-        .StrictMode(false)
+        .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(a => a.Observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
+        .RuleFor(a => a.observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
 
         return schedules_faker;
 
@@ -205,21 +205,21 @@ public class FlowSeeder
     {
         var logs_faker = new Faker<AptLog>()
         .UseSeed(bogusSeed)
-        .StrictMode(false)
+        .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(a => a.Observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
+        .RuleFor(a => a.observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
 
         return logs_faker;
     }
 
-    Faker<AptReminder> ReminderFaker()
+    Faker<AptContact> ContactFaker()
     {
-        var reminders_faker = new Faker<AptReminder>()
+        var contact_faker = new Faker<AptContact>()
         .UseSeed(bogusSeed)
-        .StrictMode(false)
+        .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023);
 
-        return reminders_faker;
+        return contact_faker;
     }
 }

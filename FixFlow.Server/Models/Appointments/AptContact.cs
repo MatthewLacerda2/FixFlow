@@ -4,13 +4,13 @@ using Newtonsoft.Json;
 
 namespace Server.Models.Appointments;
 
-public class AptSchedule
+public class AptContact
 {
     [Required]
     public string Id { get; set; }
 
     /// <summary>
-    /// The Id of the Client who made the Schedule
+    /// The Id of the Client to Contact
     /// </summary>
     [Required]
     [ForeignKey(nameof(Models.Client))]
@@ -36,43 +36,42 @@ public class AptSchedule
     public Business business { get; set; }
 
     /// <summary>
-    /// The Id of the Contact that precedes this Schedule, if any
+    /// The Id of the Log that precedes this Contact
     /// </summary>
     [Required]
-    [ForeignKey(nameof(AptContact))]
-    public string? contactId { get; set; }
+    [ForeignKey(nameof(AptLog))]
+    public string aptLogId { get; set; }
 
     /// <summary>
-    /// Navigation Property of the Contact
+    /// Navigation Property of the Log
     /// </summary>
     [JsonIgnore]
-    public AptContact? contact { get; set; }
+    public AptLog aptLog { get; set; }
 
     /// <summary>
-    /// The scheduled DateTime of the Appointment
+    /// The Date to Contact the Client
+    /// The Time is used because, chances are, there is a better Time of the day to contact the Client
     /// </summary>
-    public DateTime dateTime { get; set; }
+    public DateTime dateTime { get; set; } = DateTime.Now;
 
-    public float price { get; set; }
-    public string observation { get; set; } = string.Empty;
-
-    public AptSchedule()
+    public AptContact()
     {
         Id = Guid.NewGuid().ToString();
         ClientId = string.Empty;
         Client = null!;
-        contact = null!;
+        aptLogId = string.Empty;
+        aptLog = null!;
         businessId = string.Empty;
         business = null!;
     }
 
-    public AptSchedule(string clientId, DateTime _dateTime)
+    public AptContact(string _clientId, string _prevAppoint)
     {
         Id = Guid.NewGuid().ToString();
-        ClientId = clientId;
+        ClientId = _clientId;
         Client = null!;
-        contact = null!;
-        dateTime = _dateTime;
+        aptLog = null!;
+        aptLogId = _prevAppoint;
         businessId = string.Empty;
         business = null!;
     }

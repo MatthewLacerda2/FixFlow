@@ -2,9 +2,9 @@ using FluentValidation;
 using Server.Models.DTO;
 using Server.Models.Utils;
 
-public class EmployeeRegisterValidator : AbstractValidator<EmployeeRegister>
+public class BusinessRegisterValidator : AbstractValidator<BusinessRegister>
 {
-    public EmployeeRegisterValidator()
+    public BusinessRegisterValidator()
     {
         RuleFor(x => x.CPF).Custom((cpf, context) =>
         {
@@ -25,8 +25,6 @@ public class EmployeeRegisterValidator : AbstractValidator<EmployeeRegister>
                 context.AddFailure("Username can not contain whitespaces");
             }
         });
-
-        RuleFor(x => x.salary).GreaterThanOrEqualTo(0).WithErrorCode("Salary must be equal or greater than 0");
 
         RuleFor(x => x.currentPassword).Custom((currentPassword, context) =>
         {

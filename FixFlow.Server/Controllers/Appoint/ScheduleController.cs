@@ -59,8 +59,8 @@ public class ScheduleController : ControllerBase
     /// <param name="ClientId">Filter by a specific Client</param>
     /// <param name="minPrice">Minimum Price of the Appointments</param>
     /// <param name="maxPrice">Maximum Price of the Appointments</param>/// 
-    /// <param name="minDateTime">The nearest Reminder set up</param>
-    /// <param name="maxDateTime">The furthest Reminder set up</param>/// 
+    /// <param name="minDateTime">The nearest Contact set up</param>
+    /// <param name="maxDateTime">The furthest Contact set up</param>/// 
     /// <param name="sort">Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending</param>
     /// <param name="offset">Offsets the result by a given amount</param>
     /// <param name="limit">Limits the result by a given amount</param>
@@ -82,22 +82,22 @@ public class ScheduleController : ControllerBase
 
         if (minPrice.HasValue)
         {
-            schedulesQuery = schedulesQuery.Where(x => x.Price >= minPrice);
+            schedulesQuery = schedulesQuery.Where(x => x.price >= minPrice);
         }
 
         if (maxPrice.HasValue)
         {
-            schedulesQuery = schedulesQuery.Where(x => x.Price <= maxPrice);
+            schedulesQuery = schedulesQuery.Where(x => x.price <= maxPrice);
         }
 
         if (minDateTime.HasValue)
         {
-            schedulesQuery = schedulesQuery.Where(x => x.DateTime >= minDateTime);
+            schedulesQuery = schedulesQuery.Where(x => x.dateTime >= minDateTime);
         }
 
         if (maxDateTime.HasValue)
         {
-            schedulesQuery = schedulesQuery.Where(x => x.DateTime <= maxDateTime);
+            schedulesQuery = schedulesQuery.Where(x => x.dateTime <= maxDateTime);
         }
 
 
@@ -106,15 +106,15 @@ public class ScheduleController : ControllerBase
             sort = sort.ToLower();
             if (sort.Contains("client"))
             {
-                schedulesQuery = schedulesQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.DateTime).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
             }
             else if (sort.Contains("price"))
             {
-                schedulesQuery = schedulesQuery.OrderBy(s => s.Price).ThenByDescending(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
             else if (sort.Contains("date"))
             {
-                schedulesQuery = schedulesQuery.OrderByDescending(s => s.DateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
             }
         }
 
@@ -136,7 +136,7 @@ public class ScheduleController : ControllerBase
     /// </summary>
     /// <returns>AptSchedule</returns>
     /// <response code="200">The created Appointment Schedule</response>
-    /// <response code="400">The given (ClientId || ReminderId) does not exist</response>
+    /// <response code="400">The given (ClientId || ContactId) does not exist</response>
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptSchedule))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPost]
@@ -149,13 +149,13 @@ public class ScheduleController : ControllerBase
             return BadRequest("Client does not exist");
         }
 
-        if (!string.IsNullOrWhiteSpace(newAppointment.reminderId))
+        if (!string.IsNullOrWhiteSpace(newAppointment.contactId))
         {
-            var existingReminder = _context.Reminders.Find(newAppointment.reminderId);
+            var existingContact = _context.Contacts.Find(newAppointment.contactId);
 
-            if (existingReminder == null)
+            if (existingContact == null)
             {
-                return BadRequest("Reminder does not exist");
+                return BadRequest("Contact reminder does not exist");
             }
         }
 
@@ -201,13 +201,14 @@ public class ScheduleController : ControllerBase
     [HttpDelete("{Id}")]
     public async Task<IActionResult> DeleteSchedule(string Id)
     {
-        var scheduleToDelete = await _context.Schedules.FindAsync(Id);
+        var scheduleToDelete = _context.Schedules.Find(Id);
         if (scheduleToDelete == null)
         {
             return BadRequest("Schedule Appointment does not exist");
         }
 
         _context.Schedules.Remove(scheduleToDelete);
+        await _context.SaveChangesAsync();
         return NoContent();
     }
 }
