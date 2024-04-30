@@ -40,7 +40,7 @@ jobs:
 
       - name: Generate OpenApi Documentation
         working-directory: FixFlow.Server
-        run: swagger tofile --output swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
+        run: swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
       - name: Install xUnit dependencies
         working-directory: FixFlow.Tests
@@ -61,7 +61,7 @@ jobs:
         run: npm install -g @openapitools/openapi-generator-cli
 
       - name: Generate Client SDK from
-        working-directory: fixflow.client
+        working-directory: fixflow.client\src
         run: openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
 
       - name: Npm (React) Build

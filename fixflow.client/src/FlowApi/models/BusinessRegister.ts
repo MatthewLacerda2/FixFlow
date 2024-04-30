@@ -2,14 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type EmployeeRegister = {
+export type BusinessRegister = {
     id: string;
-    fullName: string;
+    name: string;
     /**
      * CPF. Must be only precisely 11 numbers
      */
     cpf?: string | null;
-    salary?: number;
+    cnpj?: string | null;
     /**
      * NickName. Must not contain spaces
      */

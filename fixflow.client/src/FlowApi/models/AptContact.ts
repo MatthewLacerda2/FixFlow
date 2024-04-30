@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AptSchedule } from './AptSchedule';
+import type { AptLog } from './AptLog';
 import type { Business } from './Business';
 import type { Client } from './Client';
-export type AptLog = {
+export type AptContact = {
     id: string;
     /**
-     * The Id of the Client who took the Appointment
+     * The Id of the Client to Contact
      */
     clientId: string;
     client?: Client;
@@ -18,18 +18,14 @@ export type AptLog = {
     businessId: string;
     business?: Business;
     /**
-     * The Id of the Schedule that precedes this Log, if any
+     * The Id of the Log that precedes this Contact
      */
-    scheduleId: string;
-    schedule?: AptSchedule;
+    aptLogId: string;
+    aptLog?: AptLog;
     /**
-     * The DateTime when the Log was registered
+     * The Date to Contact the Client
+     * The Time is used because, chances are, there is a better Time of the day to contact the Client
      */
     dateTime?: string;
-    price?: number;
-    /**
-     * Special information about the Appointment, if applicable
-     */
-    observation?: string | null;
 };
 

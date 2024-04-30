@@ -2,71 +2,71 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { EmployeeDTO } from '../models/EmployeeDTO';
-import type { EmployeeRegister } from '../models/EmployeeRegister';
+import type { BusinessDTO } from '../models/BusinessDTO';
+import type { BusinessRegister } from '../models/BusinessRegister';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class EmployeeService {
+export class BusinessService {
     /**
-     * Get the Employee with the given Id
+     * Get the Business with the given Id
      * @param id The Client's Id
-     * @returns EmployeeDTO The Employee's DTO
+     * @returns BusinessDTO The Business's DTO
      * @throws ApiError
      */
-    public static getApiV1Employee(
+    public static getApiV1Business(
         id: string,
-    ): CancelablePromise<Array<EmployeeDTO>> {
+    ): CancelablePromise<Array<BusinessDTO>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/employee/{Id}',
+            url: '/api/v1/business/{Id}',
             path: {
                 'Id': id,
             },
             errors: {
-                404: `There was no Employee with the given Id`,
+                404: `There was no Business with the given Id`,
             },
         });
     }
     /**
-     * Deletes the Employee with the given Id
-     * @param id The Id of the Employee to be deleted
-     * @returns any Employee was found, and thus deleted
+     * Deletes the Business with the given Id
+     * @param id The Id of the Business to be deleted
+     * @returns any Business was found, and thus deleted
      * @throws ApiError
      */
-    public static deleteApiV1Employee(
+    public static deleteApiV1Business(
         id: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/v1/employee/{Id}',
+            url: '/api/v1/business/{Id}',
             path: {
                 'Id': id,
             },
             errors: {
-                400: `There was no Employee with the given Id`,
+                400: `There was no Business with the given Id`,
             },
         });
     }
     /**
-     * Gets a number of Employees, with optional filters
+     * Gets a number of Business, with optional filters
      * Does not return Not Found, but an Array of size 0 instead
      * @param username Filters results to only Users whose username contains this string
      * @param offset Offsets the result by a given amount
      * @param limit Limits the number of results
      * @param sort Orders the result by a given field. Does not order if the field does not exist
-     * @returns EmployeeDTO Returns an array of EmployeeDTO
+     * @returns BusinessDTO Returns an array ofBusinessDTO
      * @throws ApiError
      */
-    public static getApiV1Employee1(
+    public static getApiV1Business1(
         username?: string,
         offset?: number,
         limit?: number,
         sort?: string,
-    ): CancelablePromise<Array<Array<EmployeeDTO>>> {
+    ): CancelablePromise<Array<Array<BusinessDTO>>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/employee',
+            url: '/api/v1/business',
             query: {
                 'username': username,
                 'offset': offset,
@@ -76,17 +76,17 @@ export class EmployeeService {
         });
     }
     /**
-     * Creates a Employee User
+     * Creates a Business User
      * @param requestBody
-     * @returns EmployeeDTO EmployeeDTO
+     * @returns BusinessDTO BusinessDTO
      * @throws ApiError
      */
-    public static postApiV1Employee(
-        requestBody?: EmployeeRegister,
-    ): CancelablePromise<EmployeeDTO> {
+    public static postApiV1Business(
+        requestBody?: BusinessRegister,
+    ): CancelablePromise<BusinessDTO> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/employee',
+            url: '/api/v1/business',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -96,21 +96,21 @@ export class EmployeeService {
         });
     }
     /**
-     * Updates the Employee with the given Id
+     * Updates the Business with the given Id
      * @param requestBody
-     * @returns EmployeeDTO Updated Employee's DTO
+     * @returns BusinessDTO Updated Business's DTO
      * @throws ApiError
      */
-    public static patchApiV1Employee(
-        requestBody?: EmployeeRegister,
-    ): CancelablePromise<EmployeeDTO> {
+    public static patchApiV1Business(
+        requestBody?: BusinessRegister,
+    ): CancelablePromise<BusinessDTO> {
         return __request(OpenAPI, {
             method: 'PATCH',
-            url: '/api/v1/employee',
+            url: '/api/v1/business',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `There was no Employee with the given Id`,
+                400: `There was no Business with the given Id`,
             },
         });
     }
