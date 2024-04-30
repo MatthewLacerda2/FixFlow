@@ -136,7 +136,7 @@ public class FlowSeeder
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
 
-        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString())
+        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString().Replace("-", "/"))
         .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")
@@ -173,7 +173,7 @@ public class FlowSeeder
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
 
-        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString())
+        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString().Replace("-", "/"))
         .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")
