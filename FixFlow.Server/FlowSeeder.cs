@@ -72,7 +72,6 @@ public class FlowSeeder
         {
             faker_schedules
             .RuleFor(s => s.ClientId, cl.Id)
-            .RuleFor(s => s.Client, cl)
             .RuleFor(s => s.businessId, businesses[indexBusiness % indexBusiness].Id);
 
             faker_logs
@@ -102,7 +101,6 @@ public class FlowSeeder
 
             for (int i = 1; i < num; i++)
             {
-                conts2add[i - 1].Id = Guid.NewGuid().ToString();
                 schs2add[i].contactId = conts2add[i - 1].Id;
             }
 
@@ -159,7 +157,7 @@ public class FlowSeeder
         .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
+        .RuleFor(e => e.Id, f => Guid.NewGuid().ToString())
         .RuleFor(c => c.FullName, f => f.Name.FullName())
         .RuleFor(c => c.CPF, f => f.Person.Cpf())
         .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
