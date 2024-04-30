@@ -11,12 +11,12 @@ public class FlowSeeder
     /// <summary>
     /// 
     /// Let me make something very clear:
-    /// This is NOT meant to simulate real-world behavior. It's more to test API, DB and Performance
+    /// This is NOT meant to precisely simulate real-world behavior. It's more to test API, DB and Performance
     /// 
-    /// It's meant to generate a BUNCH of data. We'd like to simulate good behavior but don't expect it
-    /// Doing so would be complex and require more effort than it's worth
+    /// The data generated DOES make sense, just the behavior that isn't ground-truth
+    /// What we want is to generate a BUNCH of data
     /// 
-    /// This is being done to begin with to test everything before it launches, which is indeed required
+    /// This generator is here to help test everything before launch, which is indeed required
     /// 
     /// </summary>
 
@@ -121,14 +121,14 @@ public class FlowSeeder
         .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(e => e.FullName, f => f.Name.FullName())
+        .RuleFor(e => e.Name, f => f.Name.FullName())
         .RuleFor(e => e.CPF, f => f.Person.Cpf())
         .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
         .RuleFor(e => e.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
-        .RuleFor(e => e.Email, (f, e) => f.Internet.Email(e.FullName.ToLower()))
+        .RuleFor(e => e.Email, (f, e) => f.Internet.Email(e.Name.ToLower()))
         .RuleFor(e => e.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 
-        .RuleFor(e => e.salary, f => f.Random.Float(1500, 5000))
+        .RuleFor(e => e.CNPJ, f => f.Company.Cnpj())
 
         .RuleFor(e => e.UserName, f => f.Internet.UserName())
         .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())

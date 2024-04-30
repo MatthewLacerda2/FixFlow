@@ -6,31 +6,30 @@ public class Business : IdentityUser
 {
     public DateTime CreatedDate { get; }
     public DateTime LastLogin { get; set; }
-    public string FullName { get; set; }
+    public string Name { get; set; }
     public string CPF { get; set; }
-
-    public float salary { get; set; }
+    public string CNPJ { get; set; }
 
     public Business()
     {
         CreatedDate = DateTime.Now;
         LastLogin = DateTime.Now;
 
-        FullName = string.Empty;
+        Name = string.Empty;
         CPF = string.Empty;
-
+        CNPJ = string.Empty;
     }
 
-    public Business(string fullname, string cpf, float _salary, string email, string phonenumber)
+    public Business(string fullname, string cpf, string cnpj, string phonenumber, string email)
     {
         CreatedDate = DateTime.Now;
         LastLogin = DateTime.Now;
 
-        FullName = fullname;
+        Name = fullname;
         CPF = cpf;
-        salary = _salary;
+        CNPJ = cnpj;
 
-        Email = email;
         PhoneNumber = phonenumber;
+        Email = email;
     }
 }

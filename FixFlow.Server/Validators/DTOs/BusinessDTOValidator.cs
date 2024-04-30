@@ -25,7 +25,5 @@ public class BusinessDTOValidator : AbstractValidator<BusinessDTO>
                 context.AddFailure("Username can not contain whitespaces");
             }
         });
-
-        RuleFor(x => x.salary).GreaterThanOrEqualTo(0).WithErrorCode("Salary must be equal or greater than 0");
     }
 }

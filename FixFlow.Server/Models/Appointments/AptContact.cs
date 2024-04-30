@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace Server.Models.Appointments;
 
@@ -18,6 +19,7 @@ public class AptContact
     /// <summary>
     /// Navigation Property of the Client
     /// </summary>
+    [JsonIgnore]
     public Client Client { get; set; }
 
     /// <summary>
@@ -30,6 +32,7 @@ public class AptContact
     /// <summary>
     /// Navigation Property of the Business
     /// </summary>
+    [JsonIgnore]
     public Business business { get; set; }
 
     /// <summary>
@@ -42,6 +45,7 @@ public class AptContact
     /// <summary>
     /// Navigation Property of the Log
     /// </summary>
+    [JsonIgnore]
     public AptLog aptLog { get; set; }
 
     /// <summary>

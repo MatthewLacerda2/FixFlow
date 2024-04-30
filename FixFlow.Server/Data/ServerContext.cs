@@ -24,6 +24,9 @@ public class ServerContext : IdentityDbContext
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<Client>().ToTable("Clients");
+        builder.Entity<Business>().ToTable("Business");
+
         FlowSeeder flowSeeder = new FlowSeeder(builder);
     }
 

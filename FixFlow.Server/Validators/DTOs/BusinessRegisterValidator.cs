@@ -26,8 +26,6 @@ public class BusinessRegisterValidator : AbstractValidator<BusinessRegister>
             }
         });
 
-        RuleFor(x => x.salary).GreaterThanOrEqualTo(0).WithErrorCode("Salary must be equal or greater than 0");
-
         RuleFor(x => x.currentPassword).Custom((currentPassword, context) =>
         {
             if (StringChecker.IsPasswordStrong(currentPassword) == false)

@@ -83,7 +83,7 @@ public class BusinessController : ControllerBase
             sort = sort.ToLower();
             if (sort.Contains("name"))
             {
-                businessQuery.OrderBy(s => s.FullName).ThenBy(s => s.UserName);
+                businessQuery.OrderBy(s => s.Name).ThenBy(s => s.UserName);
             }
         }
 
@@ -137,7 +137,7 @@ public class BusinessController : ControllerBase
             return BadRequest("PhoneNumber already registered!");
         }
 
-        Business Business = new Business(BusinessDto.FullName, BusinessDto.CPF, BusinessDto.salary, BusinessDto.Email, BusinessDto.PhoneNumber);
+        Business Business = new Business(BusinessDto.Name, BusinessDto.CPF, BusinessDto.CNPJ, BusinessDto.PhoneNumber, BusinessDto.Email);
 
         var userCreationResult = await _userManager.CreateAsync(Business, BusinessDto.newPassword);
 
