@@ -30,8 +30,8 @@ public class FlowSeeder
     public AptSchedule[] aptSchedules { get; set; } = [];
     public AptLog[] aptLogs { get; set; } = [];
 
-    const int businesCount = 52;
-    const int clientsCount = businesCount * 52;
+    const int businesCount = 55;
+    const int clientsCount = businesCount * 55;
 
     const int bogusSeed = 777;
 
