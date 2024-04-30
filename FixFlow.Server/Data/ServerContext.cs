@@ -27,7 +27,7 @@ public class ServerContext : IdentityDbContext
         builder.Entity<Client>().ToTable("Clients");
         builder.Entity<Business>().ToTable("Business");
 
-        FlowSeeder flowSeeder = new FlowSeeder(builder);
+        //FlowSeeder flowSeeder = new FlowSeeder(builder);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
