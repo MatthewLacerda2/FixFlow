@@ -38,7 +38,6 @@ public class AptLog
     /// <summary>
     /// The Id of the Schedule that precedes this Log, if any
     /// </summary>
-    [Required]
     [ForeignKey(nameof(AptSchedule))]
     public string? scheduleId { get; set; }
 

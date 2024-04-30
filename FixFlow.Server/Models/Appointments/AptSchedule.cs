@@ -38,7 +38,6 @@ public class AptSchedule
     /// <summary>
     /// The Id of the Contact that precedes this Schedule, if any
     /// </summary>
-    [Required]
     [ForeignKey(nameof(AptContact))]
     public string? contactId { get; set; }
 

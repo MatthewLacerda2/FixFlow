@@ -55,9 +55,11 @@ jobs:
         run: npm ci
 
       - name: Install Swagger CLI
+        working-directory: fixflow.client
         run: npm install -g swagger-cli
 
       - name: Install OpenAPI Generator CLI
+        working-directory: fixflow.client
         run: npm install -g @openapitools/openapi-generator-cli
 
       - name: Generate Client SDK from
