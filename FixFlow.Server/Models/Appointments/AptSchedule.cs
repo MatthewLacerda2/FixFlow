@@ -21,6 +21,18 @@ public class AptSchedule
     public Client Client { get; set; }
 
     /// <summary>
+    /// The Id of the Business who owns this Contact
+    /// </summary>
+    [Required]
+    [ForeignKey(nameof(Business))]
+    public string businessId { get; set; }
+
+    /// <summary>
+    /// Navigation Property of the Business
+    /// </summary>
+    public Business business { get; set; }
+
+    /// <summary>
     /// The Id of the Contact that precedes this Schedule, if any
     /// </summary>
     [Required]
@@ -46,6 +58,8 @@ public class AptSchedule
         ClientId = string.Empty;
         Client = null!;
         contact = null!;
+        businessId = string.Empty;
+        business = null!;
     }
 
     public AptSchedule(string clientId, DateTime _dateTime)
@@ -55,5 +69,7 @@ public class AptSchedule
         Client = null!;
         contact = null!;
         dateTime = _dateTime;
+        businessId = string.Empty;
+        business = null!;
     }
 }

@@ -9,19 +9,19 @@ using Server.Models.Utils;
 namespace Server.Controllers;
 
 /// <summary>
-/// Controller class for Employee CRUD requests
+/// Controller class for Business CRUD requests
 /// </summary>
 [ApiController]
-[Route(Common.api_route + "employee")]
+[Route(Common.api_route + "business")]
 [Produces("application/json")]
-public class EmployeeController : ControllerBase
+public class BusinessController : ControllerBase
 {
 
     private readonly ServerContext _context;
-    private readonly UserManager<Employee> _userManager;
+    private readonly UserManager<Business> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public EmployeeController(ServerContext context, UserManager<Employee> userManager, RoleManager<IdentityRole> roleManager)
+    public BusinessController(ServerContext context, UserManager<Business> userManager, RoleManager<IdentityRole> roleManager)
     {
         _context = context;
         _userManager = userManager;
@@ -29,33 +29,33 @@ public class EmployeeController : ControllerBase
     }
 
     /// <summary>
-    /// Get the Employee with the given Id
+    /// Get the Business with the given Id
     /// </summary>
     /// <param name="Id">The Client's Id</param>
-    /// <returns>EmployeeDTO</returns>/// 
-    /// <response code="200">The Employee's DTO</response>
-    /// <response code="404">There was no Employee with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO>))]
+    /// <returns>BusinessDTO</returns>/// 
+    /// <response code="200">The Business's DTO</response>
+    /// <response code="404">There was no Business with the given Id</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BusinessDTO>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{Id}")]
-    public async Task<IActionResult> ReadEmployee(string Id)
+    public async Task<IActionResult> ReadBusiness(string Id)
     {
 
-        var employee = await _userManager.FindByIdAsync(Id);
-        if (employee == null)
+        var business = await _userManager.FindByIdAsync(Id);
+        if (business == null)
         {
-            employee = await _context.Employees.FirstOrDefaultAsync(x => x.Id == Id);
+            business = await _context.Business.FirstOrDefaultAsync(x => x.Id == Id);
         }
-        if (employee == null)
+        if (business == null)
         {
             return NotFound();
         }
 
-        return Ok((EmployeeDTO)employee);
+        return Ok((BusinessDTO)business);
     }
 
     /// <summary>
-    /// Gets a number of Employees, with optional filters
+    /// Gets a number of Business, with optional filters
     /// </summary>
     /// <remarks>
     /// Does not return Not Found, but an Array of size 0 instead
@@ -64,18 +64,18 @@ public class EmployeeController : ControllerBase
     /// <param name="offset">Offsets the result by a given amount</param>
     /// <param name="limit">Limits the number of results</param>
     /// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
-    /// <returns>EmployeeDTO[]</returns>
-    /// <response code="200">Returns an array of EmployeeDTO</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EmployeeDTO[]>))]
+    /// <returns>BusinessDTO[]</returns>
+    /// <response code="200">Returns an array ofBusinessDTO</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BusinessDTO[]>))]
     [HttpGet]
-    public async Task<IActionResult> ReadEmployees(string? username, int? offset, int? limit, string? sort)
+    public async Task<IActionResult> ReadBusiness(string? username, int? offset, int? limit, string? sort)
     {
 
-        var employeesQuery = _context.Employees.AsQueryable();
+        var businessQuery = _context.Business.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(username))
         {
-            employeesQuery = employeesQuery.Where(Employee => Employee.UserName!.Contains(username, StringComparison.OrdinalIgnoreCase));
+            businessQuery = businessQuery.Where(Business => Business.UserName!.Contains(username, StringComparison.OrdinalIgnoreCase));
         }
 
         if (!string.IsNullOrWhiteSpace(sort))
@@ -83,180 +83,180 @@ public class EmployeeController : ControllerBase
             sort = sort.ToLower();
             if (sort.Contains("name"))
             {
-                employeesQuery.OrderBy(s => s.FullName).ThenBy(s => s.UserName);
+                businessQuery.OrderBy(s => s.FullName).ThenBy(s => s.UserName);
             }
         }
 
         if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
         {
-            employeesQuery.Reverse();
+            businessQuery.Reverse();
         }
 
         offset = offset.HasValue ? offset : 0;
         limit = limit.HasValue ? limit : 10;
 
-        employeesQuery = employeesQuery.Skip((int)offset).Take((int)limit);
+        businessQuery = businessQuery.Skip((int)offset).Take((int)limit);
 
-        var resultsArray = await employeesQuery.Select(c => (EmployeeDTO)c).ToArrayAsync();
+        var resultsArray = await businessQuery.Select(c => (BusinessDTO)c).ToArrayAsync();
 
         return Ok(resultsArray);
     }
 
     /// <summary>
-    /// Creates a Employee User
+    /// Creates a Business User
     /// </summary>
-    /// <returns>The created Employee's Data</returns>
-    /// <response code="200">EmployeeDTO</response>
+    /// <returns>The created Business's Data</returns>
+    /// <response code="200">BusinessDTO</response>
     /// <response code="400">The Client's (PhoneNumber || CPF || Email) does not exist</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
     [HttpPost]
-    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeRegister EmployeeDto)
+    public async Task<IActionResult> CreateBusiness([FromBody] BusinessRegister BusinessDto)
     {
 
-        var existingEmail = await _userManager.FindByEmailAsync(EmployeeDto.Email);
+        var existingEmail = await _userManager.FindByEmailAsync(BusinessDto.Email);
         if (existingEmail == null)
         {
-            existingEmail = await _context.Employees.FirstOrDefaultAsync(x => x.Email == EmployeeDto.Email);
+            existingEmail = await _context.Business.FirstOrDefaultAsync(x => x.Email == BusinessDto.Email);
         }
         if (existingEmail != null)
         {
             return BadRequest("Email already registered!");
         }
 
-        var existingCPF = _context.Employees.Where(c => c.CPF == EmployeeDto.CPF);
+        var existingCPF = _context.Business.Where(c => c.CPF == BusinessDto.CPF);
         if (existingCPF != null)
         {
             return BadRequest("CPF already registered!");
         }
 
-        var existingPhone = _context.Employees.Where(c => c.PhoneNumber == EmployeeDto.PhoneNumber);
+        var existingPhone = _context.Business.Where(c => c.PhoneNumber == BusinessDto.PhoneNumber);
         if (existingPhone != null)
         {
             return BadRequest("PhoneNumber already registered!");
         }
 
-        Employee Employee = new Employee(EmployeeDto.FullName, EmployeeDto.CPF, EmployeeDto.salary, EmployeeDto.Email, EmployeeDto.PhoneNumber);
+        Business Business = new Business(BusinessDto.FullName, BusinessDto.CPF, BusinessDto.salary, BusinessDto.Email, BusinessDto.PhoneNumber);
 
-        var userCreationResult = await _userManager.CreateAsync(Employee, EmployeeDto.newPassword);
+        var userCreationResult = await _userManager.CreateAsync(Business, BusinessDto.newPassword);
 
         if (!userCreationResult.Succeeded)
         {
-            return StatusCode(500, "Internal Server Error: Register Employee Unsuccessful");
+            return StatusCode(500, "Internal Server Error: Register Business Unsuccessful");
         }
 
-        var roleExist = await _roleManager.RoleExistsAsync(Common.Employee_Role);
+        var roleExist = await _roleManager.RoleExistsAsync(Common.Business_Role);
         if (!roleExist)
         {
-            await _roleManager.CreateAsync(new IdentityRole(Common.Employee_Role));
+            await _roleManager.CreateAsync(new IdentityRole(Common.Business_Role));
         }
 
-        var userRoleAddResult = await _userManager.AddToRoleAsync(Employee, Common.Employee_Role);
+        var userRoleAddResult = await _userManager.AddToRoleAsync(Business, Common.Business_Role);
 
         if (!userRoleAddResult.Succeeded)
         {
-            return StatusCode(500, "Internal Server Error: Add Employee Role Unsuccessful");
+            return StatusCode(500, "Internal Server Error: Add Business Role Unsuccessful");
         }
 
         _context.SaveChanges();
 
-        return CreatedAtAction(nameof(CreateEmployee), (EmployeeDTO)Employee);
+        return CreatedAtAction(nameof(CreateBusiness), (BusinessDTO)Business);
     }
 
     /// <summary>
-    /// Updates the Employee with the given Id
+    /// Updates the Business with the given Id
     /// </summary>
-    /// <returns>EmployeeDTO</returns>
-    /// <response code="200">Updated Employee's DTO</response>
-    /// <response code="400">There was no Employee with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EmployeeDTO))]
+    /// <returns>BusinessDTO</returns>
+    /// <response code="200">Updated Business's DTO</response>
+    /// <response code="400">There was no Business with the given Id</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPatch]
-    public async Task<IActionResult> UpdateEmployee([FromBody] EmployeeRegister upEmployee)
+    public async Task<IActionResult> UpdateBusiness([FromBody] BusinessRegister upBusiness)
     {
 
-        var existingEmployee = await _userManager.FindByIdAsync(upEmployee.Id);
-        if (existingEmployee == null)
+        var existingBusiness = await _userManager.FindByIdAsync(upBusiness.Id);
+        if (existingBusiness == null)
         {
-            existingEmployee = await _context.Employees.FirstOrDefaultAsync(x => x.Id == upEmployee.Id);
+            existingBusiness = await _context.Business.FirstOrDefaultAsync(x => x.Id == upBusiness.Id);
         }
-        if (existingEmployee == null)
+        if (existingBusiness == null)
         {
-            return BadRequest("Employee does not Exist!");
+            return BadRequest("Business does not Exist!");
         }
 
-        if (existingEmployee.CPF != upEmployee.CPF)
+        if (existingBusiness.CPF != upBusiness.CPF)
         {
-            var existingCPF = _context.Employees.Where(x => x.CPF == upEmployee.CPF);
+            var existingCPF = _context.Business.Where(x => x.CPF == upBusiness.CPF);
             if (existingCPF.Any())
             {
                 return BadRequest("CPF taken");
             }
             else
             {
-                await _userManager.SetUserNameAsync(existingEmployee, upEmployee.UserName);
+                await _userManager.SetUserNameAsync(existingBusiness, upBusiness.UserName);
             }
         }
 
-        if (existingEmployee.UserName != upEmployee.UserName)
+        if (existingBusiness.UserName != upBusiness.UserName)
         {
-            var existingUsername = _context.Employees.Where(x => x.UserName == upEmployee.UserName);
+            var existingUsername = _context.Business.Where(x => x.UserName == upBusiness.UserName);
             if (existingUsername.Any())
             {
                 return BadRequest("Username already exists");
             }
             else
             {
-                await _userManager.SetUserNameAsync(existingEmployee, upEmployee.UserName);
+                await _userManager.SetUserNameAsync(existingBusiness, upBusiness.UserName);
             }
         }
 
-        if (existingEmployee.PhoneNumber != upEmployee.PhoneNumber)
+        if (existingBusiness.PhoneNumber != upBusiness.PhoneNumber)
         {
-            var existingPhonenumber = _context.Employees.Where(x => x.PhoneNumber == upEmployee.PhoneNumber);
+            var existingPhonenumber = _context.Business.Where(x => x.PhoneNumber == upBusiness.PhoneNumber);
             if (existingPhonenumber.Any())
             {
                 return BadRequest("PhoneNumber taken");
             }
             else
             {
-                await _userManager.SetPhoneNumberAsync(existingEmployee, upEmployee.PhoneNumber);
+                await _userManager.SetPhoneNumberAsync(existingBusiness, upBusiness.PhoneNumber);
             }
         }
 
-        existingEmployee = (Employee)upEmployee;
+        existingBusiness = (Business)upBusiness;
 
-        if (!string.IsNullOrWhiteSpace(upEmployee.currentPassword) && !string.IsNullOrWhiteSpace(upEmployee.newPassword))
+        if (!string.IsNullOrWhiteSpace(upBusiness.currentPassword) && !string.IsNullOrWhiteSpace(upBusiness.newPassword))
         {
-            await _userManager.ChangePasswordAsync(existingEmployee, upEmployee.currentPassword, upEmployee.newPassword);
+            await _userManager.ChangePasswordAsync(existingBusiness, upBusiness.currentPassword, upBusiness.newPassword);
         }
 
         await _context.SaveChangesAsync();
 
-        return Ok((EmployeeDTO)existingEmployee);
+        return Ok((BusinessDTO)existingBusiness);
     }
 
     /// <summary>
-    /// Deletes the Employee with the given Id
+    /// Deletes the Business with the given Id
     /// </summary>
-    /// <param name="Id">The Id of the Employee to be deleted</param>
+    /// <param name="Id">The Id of the Business to be deleted</param>
     /// <returns>NoContentResult</returns>
-    /// <response code="200">Employee was found, and thus deleted</response>
-    /// <response code="400">There was no Employee with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(EmployeeDTO))]
+    /// <response code="200">Business was found, and thus deleted</response>
+    /// <response code="400">There was no Business with the given Id</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpDelete("{Id}")]
-    public async Task<IActionResult> DeleteEmployee(string Id)
+    public async Task<IActionResult> DeleteBusiness(string Id)
     {
 
-        var employee = await _userManager.FindByIdAsync(Id);
-        if (employee == null)
+        var business = await _userManager.FindByIdAsync(Id);
+        if (business == null)
         {
-            return BadRequest("Employee does not Exist!");
+            return BadRequest("Business does not Exist!");
         }
 
-        await _userManager.DeleteAsync(employee);
+        await _userManager.DeleteAsync(business);
 
         await _context.SaveChangesAsync();
 

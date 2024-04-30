@@ -9,7 +9,7 @@ public class ServerContext : IdentityDbContext
 {
 
     public DbSet<Client> Clients { get; set; } = default!;
-    public DbSet<Employee> Employees { get; set; } = default!;
+    public DbSet<Business> Business { get; set; } = default!;
 
     public DbSet<AptLog> Logs { get; set; } = default!;
     public DbSet<AptContact> Contacts { get; set; } = default!;

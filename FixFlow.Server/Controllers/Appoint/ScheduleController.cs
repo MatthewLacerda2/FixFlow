@@ -155,7 +155,7 @@ public class ScheduleController : ControllerBase
 
             if (existingContact == null)
             {
-                return BadRequest("Reminder does not exist");
+                return BadRequest("Contact reminder does not exist");
             }
         }
 

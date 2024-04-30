@@ -21,6 +21,18 @@ public class AptContact
     public Client Client { get; set; }
 
     /// <summary>
+    /// The Id of the Business who owns this Contact
+    /// </summary>
+    [Required]
+    [ForeignKey(nameof(Business))]
+    public string businessId { get; set; }
+
+    /// <summary>
+    /// Navigation Property of the Business
+    /// </summary>
+    public Business business { get; set; }
+
+    /// <summary>
     /// The Id of the Log that precedes this Contact
     /// </summary>
     [Required]
@@ -45,6 +57,8 @@ public class AptContact
         Client = null!;
         aptLogId = string.Empty;
         aptLog = null!;
+        businessId = string.Empty;
+        business = null!;
     }
 
     public AptContact(string _clientId, string _prevAppoint)
@@ -54,5 +68,7 @@ public class AptContact
         Client = null!;
         aptLog = null!;
         aptLogId = _prevAppoint;
+        businessId = string.Empty;
+        business = null!;
     }
 }

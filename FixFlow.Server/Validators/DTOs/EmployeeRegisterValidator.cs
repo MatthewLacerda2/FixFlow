@@ -2,9 +2,9 @@ using FluentValidation;
 using Server.Models.DTO;
 using Server.Models.Utils;
 
-public class EmployeeRegisterValidator : AbstractValidator<EmployeeRegister>
+public class BusinessRegisterValidator : AbstractValidator<BusinessRegister>
 {
-    public EmployeeRegisterValidator()
+    public BusinessRegisterValidator()
     {
         RuleFor(x => x.CPF).Custom((cpf, context) =>
         {

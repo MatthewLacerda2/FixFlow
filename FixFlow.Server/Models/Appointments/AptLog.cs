@@ -21,6 +21,18 @@ public class AptLog
     public Client Client { get; set; }
 
     /// <summary>
+    /// The Id of the Business who owns this Contact
+    /// </summary>
+    [Required]
+    [ForeignKey(nameof(Business))]
+    public string businessId { get; set; }
+
+    /// <summary>
+    /// Navigation Property of the Business
+    /// </summary>
+    public Business business { get; set; }
+
+    /// <summary>
     /// The Id of the Schedule that precedes this Log, if any
     /// </summary>
     [Required]
@@ -50,6 +62,8 @@ public class AptLog
         Id = Guid.NewGuid().ToString();
         ClientId = string.Empty;
         Client = null!;
+        businessId = string.Empty;
+        business = null!;
     }
 
     public AptLog(string _clientId, float _price)
@@ -58,5 +72,7 @@ public class AptLog
         ClientId = _clientId;
         Client = null!;
         price = _price;
+        businessId = string.Empty;
+        business = null!;
     }
 }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models.DTO;
 
-public class EmployeeDTO
+public class BusinessDTO
 {
     [Required]
     public string Id { get; set; }
@@ -33,7 +33,7 @@ public class EmployeeDTO
     [EmailAddress]
     public string Email { get; set; }
 
-    public EmployeeDTO(string id, string fullname, string cpf, string _userName, string email, string phonenumber, float _salary)
+    public BusinessDTO(string id, string fullname, string cpf, string _userName, string email, string phonenumber, float _salary)
     {
         Id = id;
         FullName = fullname;
@@ -44,13 +44,13 @@ public class EmployeeDTO
         salary = _salary;
     }
 
-    public static explicit operator Employee(EmployeeDTO employeeDTO)
+    public static explicit operator Business(BusinessDTO businessDTO)
     {
-        return new Employee(employeeDTO.FullName, employeeDTO.CPF, employeeDTO.salary, employeeDTO.Email!, employeeDTO.PhoneNumber!);
+        return new Business(businessDTO.FullName, businessDTO.CPF, businessDTO.salary, businessDTO.Email!, businessDTO.PhoneNumber!);
     }
 
-    public static explicit operator EmployeeDTO(Employee employee)
+    public static explicit operator BusinessDTO(Business business)
     {
-        return new EmployeeDTO(employee.Id, employee.FullName, employee.CPF, employee.UserName!, employee.Email!, employee.PhoneNumber!, employee.salary);
+        return new BusinessDTO(business.Id, business.FullName, business.CPF, business.UserName!, business.Email!, business.PhoneNumber!, business.salary);
     }
 }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models.DTO;
 
-public class EmployeeRegister
+public class BusinessRegister
 {
     [Required]
     public string Id { get; set; }
@@ -43,7 +43,7 @@ public class EmployeeRegister
     [MinLength(7)]
     public string newPassword { get; set; } = string.Empty;
 
-    public EmployeeRegister(string id, string fullname, string cpf, string _userName, string email, string phonenumber, float _salary)
+    public BusinessRegister(string id, string fullname, string cpf, string _userName, string email, string phonenumber, float _salary)
     {
         Id = id;
         FullName = fullname;
@@ -60,13 +60,13 @@ public class EmployeeRegister
         newPassword = _newPassword;
     }
 
-    public static explicit operator Employee(EmployeeRegister employeeDTO)
+    public static explicit operator Business(BusinessRegister businessDTO)
     {
-        return new Employee(employeeDTO.FullName, employeeDTO.CPF, employeeDTO.salary, employeeDTO.Email!, employeeDTO.PhoneNumber!);
+        return new Business(businessDTO.FullName, businessDTO.CPF, businessDTO.salary, businessDTO.Email!, businessDTO.PhoneNumber!);
     }
 
-    public static explicit operator EmployeeRegister(Employee employee)
+    public static explicit operator BusinessRegister(Business business)
     {
-        return new EmployeeRegister(employee.Id, employee.FullName, employee.CPF, employee.UserName!, employee.Email!, employee.PhoneNumber!, employee.salary);
+        return new BusinessRegister(business.Id, business.FullName, business.CPF, business.UserName!, business.Email!, business.PhoneNumber!, business.salary);
     }
 }

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Server.Models;
 
-public class Employee : IdentityUser
+public class Business : IdentityUser
 {
     public DateTime CreatedDate { get; }
     public DateTime LastLogin { get; set; }
@@ -11,7 +11,7 @@ public class Employee : IdentityUser
 
     public float salary { get; set; }
 
-    public Employee()
+    public Business()
     {
         CreatedDate = DateTime.Now;
         LastLogin = DateTime.Now;
@@ -21,7 +21,7 @@ public class Employee : IdentityUser
 
     }
 
-    public Employee(string fullname, string cpf, float _salary, string email, string phonenumber)
+    public Business(string fullname, string cpf, float _salary, string email, string phonenumber)
     {
         CreatedDate = DateTime.Now;
         LastLogin = DateTime.Now;

@@ -22,29 +22,29 @@ public class FlowSeeder
 
     readonly static DateTime Jan2nd2023 = new DateTime(2023, 1, 2, 8, 0, 0);
 
-    public Employee[] employees { get; } = [];
+    public Business[] businesses { get; } = [];
     public Client[] clients { get; } = [];
 
     public AptContact[] aptContacts { get; set; } = [];
     public AptSchedule[] aptSchedules { get; set; } = [];
     public AptLog[] aptLogs { get; set; } = [];
 
-    const int employeesCount = 52;
-    const int clientsCount = employeesCount * 52;
+    const int businesCount = 52;
+    const int clientsCount = businesCount * 52;
 
     const int bogusSeed = 777;
 
     public FlowSeeder(ModelBuilder builder)
     {
 
-        employees = GenerateEmployees(employeesCount);
+        businesses = GenerateBusinesses(businesCount);
         clients = GenerateClients(clientsCount);
 
         GenerateApts();
 
         // - - - - -
 
-        builder.Entity<Employee>().HasData(employees);
+        builder.Entity<Business>().HasData(businesses);
         builder.Entity<Client>().HasData(clients);
 
         builder.Entity<AptSchedule>().HasData(aptSchedules);
@@ -114,9 +114,9 @@ public class FlowSeeder
         }
     }
 
-    Employee[] GenerateEmployees(int amount)
+    Business[] GenerateBusinesses(int amount)
     {
-        var employees_faker = new Faker<Employee>()
+        var business_faker = new Faker<Business>()
         .UseSeed(bogusSeed)
         .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023)
@@ -145,9 +145,9 @@ public class FlowSeeder
         .RuleFor(e => e.LockoutEnabled, false)
         .RuleFor(e => e.LockoutEnd, DateTimeOffset.MinValue);
 
-        var employees = employees_faker.Generate(amount).ToArray();
+        var generatedBusinesses = business_faker.Generate(amount).ToArray();
 
-        return employees;
+        return generatedBusinesses;
     }
 
     Client[] GenerateClients(int amount)
