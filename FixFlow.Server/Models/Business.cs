@@ -4,10 +4,11 @@ namespace Server.Models;
 
 public class Business : IdentityUser
 {
-    public DateTime CreatedDate { get; }
+    public DateTime CreatedDate { get; set; }
     public DateTime LastLogin { get; set; }
     public string Name { get; set; }
     public string CPF { get; set; }
+
     public string CNPJ { get; set; }
 
     public Business()
