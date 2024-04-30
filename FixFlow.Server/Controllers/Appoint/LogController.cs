@@ -201,13 +201,14 @@ public class LogController : ControllerBase
     public async Task<IActionResult> DeleteLog(string Id)
     {
 
-        var logToDelete = await _context.Logs.FindAsync(Id);
+        var logToDelete = _context.Logs.Find(Id);
         if (logToDelete == null)
         {
             return BadRequest("Log Appointment does not exist");
         }
 
         _context.Logs.Remove(logToDelete);
+        await _context.SaveChangesAsync();
         return NoContent();
     }
 }

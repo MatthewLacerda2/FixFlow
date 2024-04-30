@@ -186,13 +186,14 @@ public class ContactController : ControllerBase
     public async Task<IActionResult> DeleteContact(string Id)
     {
 
-        var ContactToDelete = await _context.Contacts.FindAsync(Id);
+        var ContactToDelete = _context.Contacts.Find(Id);
         if (ContactToDelete == null)
         {
             return BadRequest("Contact does not exist");
         }
 
         _context.Contacts.Remove(ContactToDelete);
+        await _context.SaveChangesAsync();
         return NoContent();
     }
 }

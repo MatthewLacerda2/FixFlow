@@ -118,7 +118,7 @@ public class FlowSeeder
     {
         var business_faker = new Faker<Business>()
         .UseSeed(bogusSeed)
-        .StrictMode(false)
+        .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
         .RuleFor(e => e.Name, f => f.Name.FullName())
@@ -154,7 +154,7 @@ public class FlowSeeder
     {
         var clients_faker = new Faker<Client>()
         .UseSeed(bogusSeed)
-        .StrictMode(false)
+        .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
         .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
@@ -192,7 +192,7 @@ public class FlowSeeder
 
         var schedules_faker = new Faker<AptSchedule>()
         .UseSeed(bogusSeed)
-        .StrictMode(false)
+        .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
         .RuleFor(a => a.observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
@@ -205,7 +205,7 @@ public class FlowSeeder
     {
         var logs_faker = new Faker<AptLog>()
         .UseSeed(bogusSeed)
-        .StrictMode(false)
+        .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
         .RuleFor(a => a.observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty);
@@ -217,7 +217,7 @@ public class FlowSeeder
     {
         var contact_faker = new Faker<AptContact>()
         .UseSeed(bogusSeed)
-        .StrictMode(false)
+        .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023);
 
         return contact_faker;

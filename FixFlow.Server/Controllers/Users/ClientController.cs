@@ -44,10 +44,6 @@ public class ClientController : ControllerBase
         var client = await _userManager.FindByIdAsync(Id);
         if (client == null)
         {
-            client = await _context.Clients.FirstOrDefaultAsync(x => x.Id == Id);
-        }
-        if (client == null)
-        {
             return NotFound();
         }
 
@@ -204,10 +200,6 @@ public class ClientController : ControllerBase
         var existingClient = await _userManager.FindByIdAsync(upClient.Id);
         if (existingClient == null)
         {
-            existingClient = await _context.Clients.FirstOrDefaultAsync(x => x.Id == upClient.Id);
-        }
-        if (existingClient == null)
-        {
             return BadRequest("Client does not Exist!");
         }
 
@@ -220,7 +212,7 @@ public class ClientController : ControllerBase
             }
             else
             {
-                await _userManager.SetUserNameAsync(existingClient, upClient.UserName);
+                existingClient.CPF = upClient.CPF;
             }
         }
 
@@ -250,12 +242,12 @@ public class ClientController : ControllerBase
             }
         }
 
-        existingClient = (Client)upClient;
-
         if (!string.IsNullOrWhiteSpace(upClient.currentPassword) && !string.IsNullOrWhiteSpace(upClient.newPassword))
         {
             await _userManager.ChangePasswordAsync(existingClient, upClient.currentPassword, upClient.newPassword);
         }
+
+        existingClient.additionalNote = upClient.additionalNote;
 
         await _context.SaveChangesAsync();
 

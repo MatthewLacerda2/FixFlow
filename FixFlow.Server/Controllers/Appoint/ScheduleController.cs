@@ -201,13 +201,14 @@ public class ScheduleController : ControllerBase
     [HttpDelete("{Id}")]
     public async Task<IActionResult> DeleteSchedule(string Id)
     {
-        var scheduleToDelete = await _context.Schedules.FindAsync(Id);
+        var scheduleToDelete = _context.Schedules.Find(Id);
         if (scheduleToDelete == null)
         {
             return BadRequest("Schedule Appointment does not exist");
         }
 
         _context.Schedules.Remove(scheduleToDelete);
+        await _context.SaveChangesAsync();
         return NoContent();
     }
 }

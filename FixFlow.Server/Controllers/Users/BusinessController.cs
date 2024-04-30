@@ -42,10 +42,7 @@ public class BusinessController : ControllerBase
     {
 
         var business = await _userManager.FindByIdAsync(Id);
-        if (business == null)
-        {
-            business = await _context.Business.FirstOrDefaultAsync(x => x.Id == Id);
-        }
+
         if (business == null)
         {
             return NotFound();
@@ -116,28 +113,24 @@ public class BusinessController : ControllerBase
     {
 
         var existingEmail = await _userManager.FindByEmailAsync(BusinessDto.Email);
-        if (existingEmail == null)
-        {
-            existingEmail = await _context.Business.FirstOrDefaultAsync(x => x.Email == BusinessDto.Email);
-        }
         if (existingEmail != null)
         {
             return BadRequest("Email already registered!");
         }
 
         var existingCPF = _context.Business.Where(c => c.CPF == BusinessDto.CPF);
-        if (existingCPF != null)
+        if (existingCPF.Any())
         {
             return BadRequest("CPF already registered!");
         }
 
         var existingPhone = _context.Business.Where(c => c.PhoneNumber == BusinessDto.PhoneNumber);
-        if (existingPhone != null)
+        if (existingPhone.Any())
         {
             return BadRequest("PhoneNumber already registered!");
         }
 
-        Business Business = new Business(BusinessDto.Name, BusinessDto.CPF, BusinessDto.CNPJ, BusinessDto.PhoneNumber, BusinessDto.Email);
+        Business Business = new Business(BusinessDto.Name, BusinessDto.CPF, BusinessDto.CNPJ, BusinessDto.Email, BusinessDto.PhoneNumber);
 
         var userCreationResult = await _userManager.CreateAsync(Business, BusinessDto.newPassword);
 
@@ -179,10 +172,6 @@ public class BusinessController : ControllerBase
         var existingBusiness = await _userManager.FindByIdAsync(upBusiness.Id);
         if (existingBusiness == null)
         {
-            existingBusiness = await _context.Business.FirstOrDefaultAsync(x => x.Id == upBusiness.Id);
-        }
-        if (existingBusiness == null)
-        {
             return BadRequest("Business does not Exist!");
         }
 
@@ -195,7 +184,20 @@ public class BusinessController : ControllerBase
             }
             else
             {
-                await _userManager.SetUserNameAsync(existingBusiness, upBusiness.UserName);
+                existingBusiness.CPF = upBusiness.CPF;
+            }
+        }
+
+        if (existingBusiness.CNPJ != upBusiness.CNPJ)
+        {
+            var existingCNPJ = _context.Business.Where(x => x.CNPJ == upBusiness.CNPJ);
+            if (existingCNPJ.Any())
+            {
+                return BadRequest("CNPJ taken");
+            }
+            else
+            {
+                existingBusiness.CNPJ = upBusiness.CNPJ;
             }
         }
 
@@ -225,12 +227,12 @@ public class BusinessController : ControllerBase
             }
         }
 
-        existingBusiness = (Business)upBusiness;
-
         if (!string.IsNullOrWhiteSpace(upBusiness.currentPassword) && !string.IsNullOrWhiteSpace(upBusiness.newPassword))
         {
             await _userManager.ChangePasswordAsync(existingBusiness, upBusiness.currentPassword, upBusiness.newPassword);
         }
+
+        existingBusiness.Name = upBusiness.Name;
 
         await _context.SaveChangesAsync();
 
