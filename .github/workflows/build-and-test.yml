@@ -29,10 +29,6 @@ jobs:
       - name: Install Swagger CLI
         run: dotnet tool install -g Swashbuckle.AspNetCore.Cli
 
-      - name: Install SwaggerGen
-        working-directory: FixFlow.Server
-        run: dotnet add package Swashbuckle.AspNetCore.SwaggerGen
-
       - name: Dotnet Build
         working-directory: FixFlow.Server
         run: dotnet build -c Release .\FixFlow.Server.csproj
@@ -41,25 +37,13 @@ jobs:
         working-directory: FixFlow.Server
         run: swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
-      - name: Install xUnit dependencies
-        working-directory: FixFlow.Tests
-        run: dotnet restore
-
-      - name: Dotnet test
-        working-directory: FixFlow.Tests
-        run: dotnet test
-
       - name: Npm (React) dependencies
         working-directory: fixflow.client
         run: npm ci
 
-      - name: Install Swagger CLI
+      - name: Install OpenAPI Typescript Codegen
         working-directory: fixflow.client
-        run: npm install -g swagger-cli
-
-      - name: Install OpenAPI Generator CLI
-        working-directory: fixflow.client
-        run: npm install -g @openapitools/openapi-generator-cli
+        run: npm install openapi-typescript-codegen -g
 
       - name: Generate Client SDK from
         working-directory: fixflow.client\src
@@ -72,7 +56,7 @@ jobs:
       - name: Check job status and update pull request
         if: ${{ failure() }}
         run: |
-          echo "::error::One or more jobs failed. Please fix the issues before marking this pull request as ready for review."
+          echo "::error::One or more jobs failed. Please fix the issues before marking this pull request as Ready_for_review"
           curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                -H "Content-Type: application/json" \
                -d '{"body": "Build-and-test failed! Fix the issues before merging"}' \
