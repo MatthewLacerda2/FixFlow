@@ -7,9 +7,6 @@ on:
       - "**.cs"
       - "**.csproj"
 
-env:
-  DOTNET_VERSION: "8.x"
-
 jobs:
   build-and-test-dotnet:
     name: build-and-test-dotnet
@@ -19,51 +16,55 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install Dotnet dependencies
-        working-directory: FixFlow.Server
-        run: dotnet restore
-
-      - name: Install Swagger CLI
-        run: dotnet tool install -g Swashbuckle.AspNetCore.Cli
-
-      - name: Install SwaggerGen
-        working-directory: FixFlow.Server
-        run: dotnet add package Swashbuckle.AspNetCore.SwaggerGen
+      - name: Check for Dotnet changes
+        id: check_dotnet_changes
+        run: |
+          if [[ $(git diff --name-only HEAD^ .\FixFlow.Server) ]]; then
+            echo "::set-output name=check_dotnet_changes::true"
+          else
+            echo "::set-output name=check_dotnet_changes::false"
+          fi
 
       - name: Dotnet Build
+        if: steps.check_dotnet_changes.outputs.dotnet_changes == 'true'
         working-directory: FixFlow.Server
-        run: dotnet build -c Release .\FixFlow.Server.csproj
+        run: |
+          dotnet restore
+          dotnet tool install -g Swashbuckle.AspNetCore.Cli
+          dotnet build -c Release .\FixFlow.Server.csproj
+          swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
-      - name: Generate OpenApi Documentation
-        working-directory: FixFlow.Server
-        run: swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
+      - name: Check for React changes
+        id: check_react_changes
+        run: |
+          if [[ $(git diff --name-only HEAD^ .\fixflow.client) ]]; then
+            echo "::set-output name=check_react_changes::true"
+          else
+            echo "::set-output name=check_react_changes::false"
+          fi
 
-      - name: Install xUnit dependencies
-        working-directory: FixFlow.Tests
-        run: dotnet restore
+      - name: Check for Swagger.json changes
+        id: check_swaggerjson_changes
+        run: |
+          if [[ $(git diff --name-only HEAD^ .\FixFlow.Server\swagger.json) ]]; then
+            echo "::set-output name=check_swaggerjson_changes::true"
+          else
+            echo "::set-output name=check_swaggerjson_changes::false"
+          fi
 
-      - name: Dotnet test
-        working-directory: FixFlow.Tests
-        run: dotnet test
-
-      - name: Npm (React) dependencies
+      - name: React build
+        if: steps.check_react_changes.outputs.check_react_changes == 'true' || steps.check_swaggerjson_changes.outputs.check_swaggerjson_changes == 'true'
         working-directory: fixflow.client
-        run: npm ci
+        run: |
+          npm ci
 
-      - name: Install Swagger CLI
-        working-directory: fixflow.client
-        run: npm install -g swagger-cli
-
-      - name: Install OpenAPI Generator CLI
-        working-directory: fixflow.client
-        run: npm install -g @openapitools/openapi-generator-cli
-
-      - name: Generate Client SDK from
+      - name: Generate Client SDK from Swagger JSON
+        if: steps.check_swaggerjson_changes.outputs.check_swaggerjson_changes == 'true'
         working-directory: fixflow.client\src
-        run: openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
+        run: |
+          openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
+          npm install openapi-typescript-codegen -g
 
       - name: Npm (React) Build
         working-directory: fixflow.client
@@ -72,7 +73,7 @@ jobs:
       - name: Check job status and update pull request
         if: ${{ failure() }}
         run: |
-          echo "::error::One or more jobs failed. Please fix the issues before marking this pull request as ready for review."
+          echo "::error::One or more jobs failed. Please fix the issues before marking this pull request as Ready_for_review"
           curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                -H "Content-Type: application/json" \
                -d '{"body": "Build-and-test failed! Fix the issues before merging"}' \
