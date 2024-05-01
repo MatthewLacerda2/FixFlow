@@ -22,26 +22,54 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Check for Dotnet changes
+        id: check_dotnet_changes
+        run: |
+          if [[ $(git diff --name-only HEAD^ .\FixFlow.Server) ]]; then
+            echo "::set-output name=check_dotnet_changes::true"
+          else
+            echo "::set-output name=check_dotnet_changes::false"
+          fi
+
       - name: Dotnet Build
+        if: steps.check_dotnet_changes.outputs.dotnet_changes == 'true'
         working-directory: FixFlow.Server
         run: |
           dotnet restore
           dotnet tool install -g Swashbuckle.AspNetCore.Cli
           dotnet build -c Release .\FixFlow.Server.csproj
+          swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
-      - name: Generate OpenApi Documentation
-        working-directory: FixFlow.Server
-        run: swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
+      - name: Check for React changes
+        id: check_react_changes
+        run: |
+          if [[ $(git diff --name-only HEAD^ .\fixflow.client) ]]; then
+            echo "::set-output name=check_react_changes::true"
+          else
+            echo "::set-output name=check_react_changes::false"
+          fi
+
+      - name: Check for Swagger.json changes
+        id: check_swaggerjson_changes
+        run: |
+          if [[ $(git diff --name-only HEAD^ .\FixFlow.Server\swagger.json) ]]; then
+            echo "::set-output name=check_swaggerjson_changes::true"
+          else
+            echo "::set-output name=check_swaggerjson_changes::false"
+          fi
 
       - name: React build
+        if: steps.check_react_changes.outputs.dotnet_changes == 'true' || steps.check_swaggerjson_changes.outputs.dotnet_changes == 'true'
         working-directory: fixflow.client
         run: |
           npm ci
-          npm install openapi-typescript-codegen -g
 
-      - name: Generate Client SDK from
+      - name: Generate Client SDK from Swagger JSON
+        if: steps.check_swaggerjson_changes.outputs.dotnet_changes == 'true'
         working-directory: fixflow.client\src
-        run: openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
+        run: |
+          openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
+          npm install openapi-typescript-codegen -g
 
       - name: Npm (React) Build
         working-directory: fixflow.client
