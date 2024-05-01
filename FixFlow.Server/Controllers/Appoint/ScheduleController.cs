@@ -149,6 +149,12 @@ public class ScheduleController : ControllerBase
             return BadRequest("Client does not exist");
         }
 
+        var existingBusiness = _context.Business.Find(newAppointment.businessId);
+        if (existingBusiness == null)
+        {
+            return BadRequest("Business does not exist");
+        }
+
         if (!string.IsNullOrWhiteSpace(newAppointment.contactId))
         {
             var existingContact = _context.Contacts.Find(newAppointment.contactId);
@@ -159,7 +165,7 @@ public class ScheduleController : ControllerBase
             }
         }
 
-        await _context.Schedules.AddAsync(newAppointment);
+        _context.Schedules.Add(newAppointment);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(CreateSchedule), newAppointment);

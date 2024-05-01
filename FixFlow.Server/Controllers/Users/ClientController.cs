@@ -242,11 +242,6 @@ public class ClientController : ControllerBase
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(upClient.currentPassword) && !string.IsNullOrWhiteSpace(upClient.newPassword))
-        {
-            await _userManager.ChangePasswordAsync(existingClient, upClient.currentPassword, upClient.newPassword);
-        }
-
         existingClient.additionalNote = upClient.additionalNote;
 
         await _context.SaveChangesAsync();

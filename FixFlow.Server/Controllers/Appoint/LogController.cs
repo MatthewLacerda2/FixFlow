@@ -158,7 +158,7 @@ public class LogController : ControllerBase
             }
         }
 
-        await _context.Logs.AddAsync(newAppointment);
+        _context.Logs.Add(newAppointment);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(CreateLog), newAppointment);

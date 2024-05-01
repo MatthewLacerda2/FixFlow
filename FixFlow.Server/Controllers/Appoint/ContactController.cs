@@ -133,17 +133,20 @@ public class ContactController : ControllerBase
             return BadRequest("Client does not exist");
         }
 
-        if (!string.IsNullOrWhiteSpace(newContact.aptLogId))
+        var existingBusiness = _context.Business.Find(newContact.businessId);
+        if (existingBusiness == null)
         {
-            var existingLog = _context.Logs.Find(newContact.aptLogId);
-
-            if (existingLog == null)
-            {
-                return BadRequest("Log does not exist");
-            }
+            return BadRequest("Business does not exist");
         }
 
-        await _context.Contacts.AddAsync(newContact);
+        var existingLog = _context.Logs.Find(newContact.aptLogId);
+        if (existingLog == null)
+        {
+            return BadRequest("Log does not exist");
+        }
+
+
+        _context.Contacts.Add(newContact);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(CreateContact), newContact);
