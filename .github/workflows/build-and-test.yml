@@ -7,9 +7,6 @@ on:
       - "**.cs"
       - "**.csproj"
 
-env:
-  DOTNET_VERSION: "8.x"
-
 jobs:
   build-and-test-dotnet:
     name: build-and-test-dotnet
@@ -19,8 +16,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Check for Dotnet changes
         id: check_dotnet_changes
@@ -59,13 +54,13 @@ jobs:
           fi
 
       - name: React build
-        if: steps.check_react_changes.outputs.dotnet_changes == 'true' || steps.check_swaggerjson_changes.outputs.dotnet_changes == 'true'
+        if: steps.check_react_changes.outputs.check_react_changes == 'true' || steps.check_swaggerjson_changes.outputs.check_swaggerjson_changes == 'true'
         working-directory: fixflow.client
         run: |
           npm ci
 
       - name: Generate Client SDK from Swagger JSON
-        if: steps.check_swaggerjson_changes.outputs.dotnet_changes == 'true'
+        if: steps.check_swaggerjson_changes.outputs.check_swaggerjson_changes == 'true'
         working-directory: fixflow.client\src
         run: |
           openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
