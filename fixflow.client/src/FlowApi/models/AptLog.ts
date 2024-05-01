@@ -20,7 +20,7 @@ export type AptLog = {
     /**
      * The Id of the Schedule that precedes this Log, if any
      */
-    scheduleId: string;
+    scheduleId?: string | null;
     schedule?: AptSchedule;
     /**
      * The DateTime when the Log was registered

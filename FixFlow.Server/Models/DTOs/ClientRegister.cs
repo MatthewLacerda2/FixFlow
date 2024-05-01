@@ -13,7 +13,7 @@ public class ClientRegister
     /// <summary>
     /// CPF. Must be only precisely 11 numbers
     /// </summary>
-    [Length(11, 11)]
+    [Length(14, 14)]
     public string CPF { get; set; }
 
     /// <summary>

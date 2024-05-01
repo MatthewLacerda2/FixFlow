@@ -36,7 +36,7 @@ public class ClientController : ControllerBase
     /// <response code="200">The ClientDTO</response>
     /// <response code="404">There was no Client with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO>))]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{Id}")]
     public async Task<IActionResult> ReadClient(string Id)
     {
@@ -44,7 +44,7 @@ public class ClientController : ControllerBase
         var client = await _userManager.FindByIdAsync(Id);
         if (client == null)
         {
-            return NotFound();
+            return NotFound("Client does not exist");
         }
 
         return Ok((ClientDTO)client);
@@ -240,11 +240,6 @@ public class ClientController : ControllerBase
             {
                 await _userManager.SetPhoneNumberAsync(existingClient, upClient.PhoneNumber);
             }
-        }
-
-        if (!string.IsNullOrWhiteSpace(upClient.currentPassword) && !string.IsNullOrWhiteSpace(upClient.newPassword))
-        {
-            await _userManager.ChangePasswordAsync(existingClient, upClient.currentPassword, upClient.newPassword);
         }
 
         existingClient.additionalNote = upClient.additionalNote;

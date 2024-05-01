@@ -84,9 +84,6 @@ export class ScheduleService {
                 'offset': offset,
                 'limit': limit,
             },
-            errors: {
-                400: `Bad Request`,
-            },
         });
     }
     /**

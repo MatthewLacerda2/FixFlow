@@ -1,6 +1,7 @@
 using Bogus;
 using Bogus.Extensions.Brazil;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Query.Internal;
 using Server.Models;
 using Server.Models.Appointments;
 namespace Server.Seeder;
@@ -29,8 +30,8 @@ public class FlowSeeder
     public AptSchedule[] aptSchedules { get; set; } = [];
     public AptLog[] aptLogs { get; set; } = [];
 
-    const int businesCount = 52;
-    const int clientsCount = businesCount * 52;
+    const int businesCount = 55;
+    const int clientsCount = businesCount * 55;
 
     const int bogusSeed = 777;
 
@@ -58,7 +59,6 @@ public class FlowSeeder
         Faker<AptContact> faker_contacts = ContactFaker();
 
         const int num = 3;
-        const int period = 3;
 
         int totalClients = clients.Length;
         int index = 0;
@@ -86,23 +86,25 @@ public class FlowSeeder
             AptLog[] logs2add = faker_logs.Generate(num).ToArray();
             AptContact[] conts2add = faker_contacts.Generate(num).ToArray();
 
+            int myMonthSpan = (6 % indexBusiness) + 1;
+
             for (int i = 0; i < num; i++)
             {
 
-                schs2add[i].dateTime = schs2add[i].dateTime.AddMonths(period * i);
+                schs2add[i].dateTime = schs2add[i].dateTime.AddMonths(myMonthSpan * i);
+                schs2add[i].contactId = conts2add[i - 1].Id;
 
                 logs2add[i].scheduleId = schs2add[i].Id;
                 logs2add[i].dateTime = schs2add[i].dateTime.AddHours(1);
 
                 conts2add[i].aptLogId = logs2add[i].Id;
-                conts2add[i].dateTime = schs2add[i].dateTime.AddMonths((period * i) + 1).AddDays(-1);
+                conts2add[i].dateTime = schs2add[i].dateTime.AddMonths((myMonthSpan * i) + 1).AddDays(-1);
 
             }
 
-            for (int i = 1; i < num; i++)
-            {
-                schs2add[i].contactId = conts2add[i - 1].Id;
-            }
+            conts2add[0].aptLogId = "";
+            schs2add[0].contactId = null;
+            logs2add[0].scheduleId = null;
 
             Array.Copy(schs2add, 0, aptSchedules, index, num);
             Array.Copy(logs2add, 0, aptLogs, index, num);
@@ -111,6 +113,10 @@ public class FlowSeeder
             index += num;
             indexBusiness++;
         }
+
+        //I did it this way to be more readable
+
+        aptContacts = aptContacts.Where(c => c.aptLogId != "").ToArray();
     }
 
     Business[] GenerateBusinesses(int amount)

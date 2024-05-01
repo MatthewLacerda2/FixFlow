@@ -2,8 +2,7 @@ name: build-and-test
 
 on:
   pull_request:
-    types:
-      - ready_for_review
+    types: [opened, ready_for_review]
     paths:
       - "**.cs"
       - "**.csproj"

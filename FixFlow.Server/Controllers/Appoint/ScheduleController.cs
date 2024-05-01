@@ -44,7 +44,7 @@ public class ScheduleController : ControllerBase
 
         if (schedule == null)
         {
-            return NotFound();
+            return NotFound("Schedule does not exist");
         }
 
         return Ok(schedule);
@@ -67,7 +67,6 @@ public class ScheduleController : ControllerBase
     /// <returns>AptSchedule[]</returns>
     /// <response code="200">Returns an array of AppointmentSchedule</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptSchedule[]>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadSchedules(string? ClientId, float? minPrice, float? maxPrice,
                                         DateTime? minDateTime, DateTime? maxDateTime,
@@ -149,6 +148,12 @@ public class ScheduleController : ControllerBase
             return BadRequest("Client does not exist");
         }
 
+        var existingBusiness = _context.Business.Find(newAppointment.businessId);
+        if (existingBusiness == null)
+        {
+            return BadRequest("Business does not exist");
+        }
+
         if (!string.IsNullOrWhiteSpace(newAppointment.contactId))
         {
             var existingContact = _context.Contacts.Find(newAppointment.contactId);
@@ -159,7 +164,7 @@ public class ScheduleController : ControllerBase
             }
         }
 
-        await _context.Schedules.AddAsync(newAppointment);
+        _context.Schedules.Add(newAppointment);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(CreateSchedule), newAppointment);

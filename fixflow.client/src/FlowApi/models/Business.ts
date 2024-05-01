@@ -18,7 +18,7 @@ export type Business = {
     lockoutEnd?: string | null;
     lockoutEnabled?: boolean;
     accessFailedCount?: number;
-    readonly createdDate?: string;
+    createdDate?: string;
     lastLogin?: string;
     name?: string | null;
     cpf?: string | null;
