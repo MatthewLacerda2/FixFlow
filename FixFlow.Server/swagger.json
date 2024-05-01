@@ -287,7 +287,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "type": "string"
                 }
               }
             }
@@ -651,16 +651,6 @@
                       "$ref": "#/components/schemas/AptContact"
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -1379,16 +1369,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
           }
         }
       },
@@ -1511,24 +1491,15 @@
             "type": "string",
             "description": "The Id of the Client to Contact"
           },
-          "client": {
-            "$ref": "#/components/schemas/Client"
-          },
           "businessId": {
             "minLength": 1,
             "type": "string",
             "description": "The Id of the Business who owns this Contact"
           },
-          "business": {
-            "$ref": "#/components/schemas/Business"
-          },
           "aptLogId": {
             "minLength": 1,
             "type": "string",
             "description": "The Id of the Log that precedes this Contact"
-          },
-          "aptLog": {
-            "$ref": "#/components/schemas/AptLog"
           },
           "dateTime": {
             "type": "string",
@@ -1542,8 +1513,7 @@
         "required": [
           "businessId",
           "clientId",
-          "id",
-          "scheduleId"
+          "id"
         ],
         "type": "object",
         "properties": {
@@ -1568,9 +1538,9 @@
             "$ref": "#/components/schemas/Business"
           },
           "scheduleId": {
-            "minLength": 1,
             "type": "string",
-            "description": "The Id of the Schedule that precedes this Log, if any"
+            "description": "The Id of the Schedule that precedes this Log, if any",
+            "nullable": true
           },
           "schedule": {
             "$ref": "#/components/schemas/AptSchedule"
@@ -1596,7 +1566,6 @@
         "required": [
           "businessId",
           "clientId",
-          "contactId",
           "id"
         ],
         "type": "object",
@@ -1622,9 +1591,9 @@
             "$ref": "#/components/schemas/Business"
           },
           "contactId": {
-            "minLength": 1,
             "type": "string",
-            "description": "The Id of the Contact that precedes this Schedule, if any"
+            "description": "The Id of the Contact that precedes this Schedule, if any",
+            "nullable": true
           },
           "contact": {
             "$ref": "#/components/schemas/AptContact"
@@ -1707,8 +1676,7 @@
           },
           "createdDate": {
             "type": "string",
-            "format": "date-time",
-            "readOnly": true
+            "format": "date-time"
           },
           "lastLogin": {
             "type": "string",

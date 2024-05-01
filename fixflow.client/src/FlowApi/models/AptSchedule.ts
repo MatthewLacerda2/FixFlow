@@ -20,7 +20,7 @@ export type AptSchedule = {
     /**
      * The Id of the Contact that precedes this Schedule, if any
      */
-    contactId: string;
+    contactId?: string | null;
     contact?: AptContact;
     /**
      * The scheduled DateTime of the Appointment
