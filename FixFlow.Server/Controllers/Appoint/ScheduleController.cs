@@ -44,7 +44,7 @@ public class ScheduleController : ControllerBase
 
         if (schedule == null)
         {
-            return NotFound();
+            return NotFound("Schedule does not exist");
         }
 
         return Ok(schedule);
@@ -67,7 +67,6 @@ public class ScheduleController : ControllerBase
     /// <returns>AptSchedule[]</returns>
     /// <response code="200">Returns an array of AppointmentSchedule</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptSchedule[]>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadSchedules(string? ClientId, float? minPrice, float? maxPrice,
                                         DateTime? minDateTime, DateTime? maxDateTime,

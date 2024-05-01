@@ -45,7 +45,7 @@ public class ContactController : ControllerBase
 
         if (contact == null)
         {
-            return NotFound();
+            return NotFound("Contact does not exist");
         }
 
         return Ok(contact);
@@ -66,7 +66,6 @@ public class ContactController : ControllerBase
     /// <returns>AptContact[]</returns>
     /// <response code="200">Returns an array of AppointmentContact</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptContact[]>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpGet]
     public IActionResult ReadContact(string? ClientId, DateTime? minDateTime, DateTime? maxDateTime,
                                     string? sort, int? offset, int? limit)

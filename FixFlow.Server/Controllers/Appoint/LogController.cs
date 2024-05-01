@@ -45,7 +45,7 @@ public class LogController : ControllerBase
 
         if (log == null)
         {
-            return NotFound();
+            return NotFound("Log does not exist");
         }
 
         return Ok(log);

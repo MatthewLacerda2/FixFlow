@@ -45,7 +45,7 @@ public class BusinessController : ControllerBase
 
         if (business == null)
         {
-            return NotFound();
+            return NotFound("Business does not exist");
         }
 
         return Ok((BusinessDTO)business);
