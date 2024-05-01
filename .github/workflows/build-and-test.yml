@@ -22,28 +22,22 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install Dotnet dependencies
-        working-directory: FixFlow.Server
-        run: dotnet restore
-
-      - name: Install Swagger CLI
-        run: dotnet tool install -g Swashbuckle.AspNetCore.Cli
-
       - name: Dotnet Build
         working-directory: FixFlow.Server
-        run: dotnet build -c Release .\FixFlow.Server.csproj
+        run: |
+          dotnet restore
+          dotnet tool install -g Swashbuckle.AspNetCore.Cli
+          dotnet build -c Release .\FixFlow.Server.csproj
 
       - name: Generate OpenApi Documentation
         working-directory: FixFlow.Server
         run: swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
-      - name: Npm (React) dependencies
+      - name: React build
         working-directory: fixflow.client
-        run: npm ci
-
-      - name: Install OpenAPI Typescript Codegen
-        working-directory: fixflow.client
-        run: npm install openapi-typescript-codegen -g
+        run: |
+          npm ci
+          npm install openapi-typescript-codegen -g
 
       - name: Generate Client SDK from
         working-directory: fixflow.client\src
