@@ -27,19 +27,12 @@ jobs:
           swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
       - name: React build
-        working-directory: fixflow.client
-        run: |
-          npm ci
-
-      - name: Generate Client SDK from Swagger JSON
         working-directory: fixflow.client\src
         run: |
-          openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
+          npm ci
           npm install openapi-typescript-codegen -g
-
-      - name: Npm (React) Build
-        working-directory: fixflow.client
-        run: npm run build
+          openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
+          npm run build
 
       - name: Check job status and update pull request
         if: ${{ failure() }}
