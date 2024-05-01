@@ -22,6 +22,7 @@ jobs:
         run: |
           dotnet restore
           dotnet tool install -g Swashbuckle.AspNetCore.Cli
+          dotnet add package Swashbuckle.AspNetCore.SwaggerGen
           dotnet build -c Release .\FixFlow.Server.csproj
           swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
