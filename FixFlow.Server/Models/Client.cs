@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Server.Models.DTO;
 
 namespace Server.Models;
 
@@ -36,5 +37,16 @@ public class Client : IdentityUser
         Email = _email;
 
         signedUp = _signedup;
+    }
+
+    public Client(ClientRegister register)
+    {
+        CreatedDate = DateTime.Now;
+        LastLogin = DateTime.Now;
+
+        FullName = register.FullName;
+        CPF = register.CPF;
+        additionalNote = register.additionalNote;
+        signedUp = register.signedUp;
     }
 }

@@ -63,14 +63,4 @@ public class ClientRegister
         currentPassword = _currentPassword;
         newPassword = _newPassword;
     }
-
-    public static explicit operator Client(ClientRegister clientDTO)
-    {
-        return new Client(clientDTO.FullName, clientDTO.CPF, clientDTO.additionalNote, clientDTO.PhoneNumber!, clientDTO.Email!, clientDTO.signedUp);
-    }
-
-    public static explicit operator ClientRegister(Client client)
-    {
-        return new ClientRegister(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!, client.signedUp);
-    }
 }
