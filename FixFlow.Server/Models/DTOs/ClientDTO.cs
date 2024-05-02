@@ -36,6 +36,12 @@ public class ClientDTO
     [EmailAddress]
     public string Email { get; set; }
 
+    /// <summary>
+    /// Whether or not the Account was registered by a Client
+    /// 
+    /// If not, this value is false,
+    /// thus Client didn't insert a password and this account is not supposed to be logged in
+    /// </summary>
     [Required]
     public bool signedUp { get; set; }
 
