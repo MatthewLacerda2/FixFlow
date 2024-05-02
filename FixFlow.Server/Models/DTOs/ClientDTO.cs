@@ -56,11 +56,6 @@ public class ClientDTO
         signedUp = _signedUp;
     }
 
-    public static explicit operator Client(ClientDTO clientDTO)
-    {
-        return new Client(clientDTO.FullName, clientDTO.PhoneNumber!, clientDTO.additionalNote, clientDTO.CPF, clientDTO.Email!, clientDTO.signedUp);
-    }
-
     public static explicit operator ClientDTO(Client client)
     {
         return new ClientDTO(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!, client.signedUp);

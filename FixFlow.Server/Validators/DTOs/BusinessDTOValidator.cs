@@ -14,7 +14,7 @@ public class BusinessDTOValidator : AbstractValidator<BusinessDTO>
             }
         });
 
-        RuleFor(x => x.UserName).Custom((userName, context) =>
+        RuleFor(x => x.Name).Custom((userName, context) =>
         {
             if (string.IsNullOrWhiteSpace(userName))
             {

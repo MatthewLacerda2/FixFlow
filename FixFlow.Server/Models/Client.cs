@@ -53,6 +53,9 @@ public class Client : IdentityUser
         FullName = register.FullName;
         CPF = register.CPF;
         additionalNote = register.additionalNote;
+
+        signedUp = register.signedUp;
+        PhoneNumber = register.PhoneNumber;
         signedUp = register.signedUp;
     }
 }

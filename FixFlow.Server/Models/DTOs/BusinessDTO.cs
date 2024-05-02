@@ -7,6 +7,9 @@ public class BusinessDTO
     [Required]
     public string Id { get; set; }
 
+    /// <summary>
+    /// NickName. Must not contain spaces
+    /// </summary>
     [Required]
     public string Name { get; set; }
 
@@ -18,10 +21,7 @@ public class BusinessDTO
 
     public string CNPJ { get; set; }
 
-    /// <summary>
-    /// NickName. Must not contain spaces
-    /// </summary>
-    public string UserName { get; set; }
+    public string description { get; set; }
 
     /// <summary>
     /// Phone Number. Must contain only numbers, and may be preceded by a '+'
@@ -33,25 +33,21 @@ public class BusinessDTO
     [EmailAddress]
     public string Email { get; set; }
 
-    public BusinessDTO(string id, string name, string cpf, string cnpj, string _userName, string phonenumber, string email)
+    public BusinessDTO(string id, string name, string cpf, string cnpj, string _userName, string phonenumber, string email, string _description)
     {
         Id = id;
         Name = name;
         CPF = cpf;
         CNPJ = cnpj;
 
-        UserName = _userName;
+        Name = _userName;
         PhoneNumber = phonenumber;
         Email = email;
-    }
-
-    public static explicit operator Business(BusinessDTO businessDTO)
-    {
-        return new Business(businessDTO.Name, businessDTO.CPF, businessDTO.CNPJ, businessDTO.PhoneNumber!, businessDTO.Email!);
+        description = _description;
     }
 
     public static explicit operator BusinessDTO(Business business)
     {
-        return new BusinessDTO(business.Id, business.Name, business.CPF, business.CNPJ, business.UserName!, business.PhoneNumber!, business.Email!);
+        return new BusinessDTO(business.Id, business.Name, business.CPF, business.CNPJ, business.UserName!, business.PhoneNumber!, business.Email!, business.description);
     }
 }

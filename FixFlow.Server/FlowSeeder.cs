@@ -33,10 +33,11 @@ public class FlowSeeder
     const int businesCount = 55;
     const int clientsCount = businesCount * 55;
 
-    const int bogusSeed = 777;
+    int bogusSeed = 777;
 
-    public FlowSeeder(ModelBuilder builder)
+    public FlowSeeder(ModelBuilder builder, int seed)
     {
+        bogusSeed = seed;
 
         businesses = GenerateBusinesses(businesCount);
         clients = GenerateClients(clientsCount);
