@@ -52,15 +52,16 @@ public class LoginController : ControllerBase
             }
             else
             {
+                var hasPassword = await _userManager.HasPasswordAsync(userExists);
+
+                if (!hasPassword)
+                {
+                    return BadRequest("User is not registered");
+                }
+
                 model.UserName = userExists.UserName!;
             }
 
-        }
-
-        var isUserClient = _context.Clients.Where(x => x.Email == model.Email).First();
-        if (isUserClient != null && !isUserClient.signedUp)
-        {
-            return BadRequest("This Client is not a registered account");
         }
 
         var result = await _signInManager.PasswordSignInAsync(model.UserName, model.password, true, false);
