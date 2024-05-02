@@ -136,6 +136,7 @@ public class FlowSeeder
         .RuleFor(e => e.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 
         .RuleFor(e => e.CNPJ, f => f.Company.Cnpj())
+        .RuleFor(e => e.description, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty)
 
         .RuleFor(e => e.UserName, f => f.Internet.UserName())
         .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
@@ -166,7 +167,7 @@ public class FlowSeeder
 
         .RuleFor(e => e.Id, f => Guid.NewGuid().ToString())
         .RuleFor(c => c.FullName, f => f.Name.FullName())
-        .RuleFor(c => c.CPF, f => f.Person.Cpf())
+        .RuleFor(c => c.CPF, f => f.Random.Bool(0.66f) ? f.Person.Cpf() : string.Empty)
         .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
         .RuleFor(e => e.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
         .RuleFor(c => c.Email, (f, c) => f.Internet.Email(c.FullName.ToLower()))
