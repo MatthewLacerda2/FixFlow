@@ -20,8 +20,12 @@ export type Business = {
     accessFailedCount?: number;
     createdDate?: string;
     lastLogin?: string;
+    /**
+     * The Name of the Business or Business owner
+     */
     name?: string | null;
     cpf?: string | null;
     cnpj?: string | null;
+    description?: string | null;
 };
 
