@@ -27,7 +27,7 @@ public class ClientDTO
     public string UserName { get; set; }
 
     /// <summary>
-    /// Phone Number. Must contain only numbers, and may be preceded by a '+'
+    /// Phone Number. Must contain only numbers
     /// </summary>
     [Required]
     [Phone]

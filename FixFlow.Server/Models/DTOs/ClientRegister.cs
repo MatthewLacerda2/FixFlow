@@ -27,7 +27,7 @@ public class ClientRegister
     public string UserName { get; set; }
 
     /// <summary>
-    /// Phone Number. Must contain only numbers and/or a '+'
+    /// Phone Number. Must contain only numbers
     /// </summary>
     [Required]
     [Phone]
@@ -35,8 +35,6 @@ public class ClientRegister
 
     [EmailAddress]
     public string Email { get; set; }
-
-    public string currentPassword { get; set; } = string.Empty;
 
     /// <summary>
     /// Whether or not the Account was registered by a Client
@@ -46,6 +44,8 @@ public class ClientRegister
     /// </summary>
     [Required]
     public bool signedUp { get; set; }
+
+    public string currentPassword { get; set; } = string.Empty;
 
     /// <summary>
     /// New Password. Only used when registering the user or changing the password
