@@ -52,6 +52,13 @@ public class LoginController : ControllerBase
             }
             else
             {
+                var hasPassword = await _userManager.HasPasswordAsync(userExists);
+
+                if (!hasPassword)
+                {
+                    return BadRequest("User is not registered");
+                }
+
                 model.UserName = userExists.UserName!;
             }
 

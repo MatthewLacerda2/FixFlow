@@ -7,6 +7,9 @@ public class BusinessRegister
     [Required]
     public string Id { get; set; }
 
+    /// <summary>
+    /// NickName. Must not contain spaces
+    /// </summary>
     [Required]
     public string Name { get; set; }
 
@@ -18,10 +21,7 @@ public class BusinessRegister
 
     public string CNPJ { get; set; }
 
-    /// <summary>
-    /// NickName. Must not contain spaces
-    /// </summary>
-    public string UserName { get; set; }
+    public string description { get; set; }
 
     /// <summary>
     /// Phone Number. Must contain only numbers and/or a '+'
@@ -43,31 +43,22 @@ public class BusinessRegister
     [MinLength(7)]
     public string newPassword { get; set; } = string.Empty;
 
-    public BusinessRegister(string id, string name, string cpf, string cnpj, string _userName, string phonenumber, string email)
+    public BusinessRegister(string id, string name, string cpf, string cnpj, string _userName, string phonenumber, string email, string _description)
     {
         Id = id;
         Name = name;
         CPF = cpf;
         CNPJ = cnpj;
 
-        UserName = _userName;
+        Name = _userName;
         PhoneNumber = phonenumber;
         Email = email;
+        description = _description;
     }
 
     public void SetPasswords(string _currentPassword, string _newPassword)
     {
         currentPassword = _currentPassword;
         newPassword = _newPassword;
-    }
-
-    public static explicit operator Business(BusinessRegister businessDTO)
-    {
-        return new Business(businessDTO.Name, businessDTO.CPF, businessDTO.CNPJ, businessDTO.Email!, businessDTO.PhoneNumber!);
-    }
-
-    public static explicit operator BusinessRegister(Business business)
-    {
-        return new BusinessRegister(business.Id, business.Name, business.CPF, business.CNPJ, business.UserName!, business.PhoneNumber!, business.Email!);
     }
 }

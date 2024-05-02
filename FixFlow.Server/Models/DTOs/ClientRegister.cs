@@ -27,7 +27,7 @@ public class ClientRegister
     public string UserName { get; set; }
 
     /// <summary>
-    /// Phone Number. Must contain only numbers and/or a '+'
+    /// Phone Number. Must contain only numbers
     /// </summary>
     [Required]
     [Phone]
@@ -35,6 +35,15 @@ public class ClientRegister
 
     [EmailAddress]
     public string Email { get; set; }
+
+    /// <summary>
+    /// Whether or not the Account was registered by a Client
+    /// 
+    /// If not, this value is false,
+    /// thus Client didn't insert a password and this account is not supposed to be logged in
+    /// </summary>
+    [Required]
+    public bool signedUp { get; set; }
 
     public string currentPassword { get; set; } = string.Empty;
 
@@ -44,7 +53,7 @@ public class ClientRegister
     /// </summary>
     public string newPassword { get; set; } = string.Empty;
 
-    public ClientRegister(string _Id, string _FullName, string _CPF, string _userName, string _PhoneNumber, string _Email)
+    public ClientRegister(string _Id, string _FullName, string _CPF, string _userName, string _PhoneNumber, string _Email, bool _signedUp)
     {
         Id = _Id;
         FullName = _FullName;
@@ -52,21 +61,12 @@ public class ClientRegister
         UserName = _userName;
         PhoneNumber = _PhoneNumber;
         Email = _Email;
+        signedUp = signedUp;
     }
 
     public void SetPasswords(string _currentPassword, string _newPassword)
     {
         currentPassword = _currentPassword;
         newPassword = _newPassword;
-    }
-
-    public static explicit operator Client(ClientRegister clientDTO)
-    {
-        return new Client(clientDTO.FullName, clientDTO.CPF, clientDTO.additionalNote, clientDTO.PhoneNumber!, clientDTO.Email!);
-    }
-
-    public static explicit operator ClientRegister(Client client)
-    {
-        return new ClientRegister(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!);
     }
 }

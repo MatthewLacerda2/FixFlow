@@ -1,7 +1,6 @@
 using Bogus;
 using Bogus.Extensions.Brazil;
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Query.Internal;
 using Server.Models;
 using Server.Models.Appointments;
 namespace Server.Seeder;
@@ -33,10 +32,11 @@ public class FlowSeeder
     const int businesCount = 55;
     const int clientsCount = businesCount * 55;
 
-    const int bogusSeed = 777;
+    int bogusSeed;
 
-    public FlowSeeder(ModelBuilder builder)
+    public FlowSeeder(ModelBuilder builder, int seed)
     {
+        bogusSeed = seed;
 
         businesses = GenerateBusinesses(businesCount);
         clients = GenerateClients(clientsCount);
@@ -135,6 +135,7 @@ public class FlowSeeder
         .RuleFor(e => e.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 
         .RuleFor(e => e.CNPJ, f => f.Company.Cnpj())
+        .RuleFor(e => e.description, f => f.Commerce.Department())
 
         .RuleFor(e => e.UserName, f => f.Internet.UserName())
         .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
@@ -165,13 +166,12 @@ public class FlowSeeder
 
         .RuleFor(e => e.Id, f => Guid.NewGuid().ToString())
         .RuleFor(c => c.FullName, f => f.Name.FullName())
-        .RuleFor(c => c.CPF, f => f.Person.Cpf())
         .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
         .RuleFor(e => e.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
-        .RuleFor(c => c.Email, (f, c) => f.Internet.Email(c.FullName.ToLower()))
         .RuleFor(c => c.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 
         .RuleFor(c => c.additionalNote, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty)
+        .RuleFor(c => c.signedUp, f => f.Random.Bool(0.4f))
 
         .RuleFor(e => e.UserName, f => f.Internet.UserName())
         .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
@@ -179,7 +179,10 @@ public class FlowSeeder
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
 
-        .RuleFor(e => e.PasswordHash, f => f.Random.Guid().ToString().Replace("-", "/"))
+        .RuleFor(c => c.CPF, (f, c) => c.signedUp || f.Random.Bool(0.45f) ? f.Person.Cpf() : string.Empty)
+        .RuleFor(c => c.Email, (f, c) => c.signedUp || f.Random.Bool(0.85f) ? f.Internet.Email(c.FullName.ToLower()) : string.Empty)
+
+        .RuleFor(e => e.PasswordHash, (f, c) => c.signedUp ? f.Random.Guid().ToString().Replace("-", "/") : string.Empty)
         .RuleFor(e => e.AccessFailedCount, 0)
         .RuleFor(e => e.SecurityStamp, "")
         .RuleFor(e => e.ConcurrencyStamp, "")

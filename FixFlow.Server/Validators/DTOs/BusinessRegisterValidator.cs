@@ -14,7 +14,7 @@ public class BusinessRegisterValidator : AbstractValidator<BusinessRegister>
             }
         });
 
-        RuleFor(x => x.UserName).Custom((userName, context) =>
+        RuleFor(x => x.Name).Custom((userName, context) =>
         {
             if (string.IsNullOrWhiteSpace(userName))
             {

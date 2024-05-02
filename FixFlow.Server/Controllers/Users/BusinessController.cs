@@ -80,7 +80,7 @@ public class BusinessController : ControllerBase
             sort = sort.ToLower();
             if (sort.Contains("name"))
             {
-                businessQuery.OrderBy(s => s.Name).ThenBy(s => s.UserName);
+                businessQuery.OrderBy(s => s.Name).ThenBy(s => s.Name);
             }
         }
 
@@ -109,30 +109,30 @@ public class BusinessController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
     [HttpPost]
-    public async Task<IActionResult> CreateBusiness([FromBody] BusinessRegister BusinessDto)
+    public async Task<IActionResult> CreateBusiness([FromBody] BusinessRegister businessDto)
     {
 
-        var existingEmail = await _userManager.FindByEmailAsync(BusinessDto.Email);
+        var existingEmail = await _userManager.FindByEmailAsync(businessDto.Email);
         if (existingEmail != null)
         {
             return BadRequest("Email already registered!");
         }
 
-        var existingCPF = _context.Business.Where(c => c.CPF == BusinessDto.CPF);
+        var existingCPF = _context.Business.Where(c => c.CPF == businessDto.CPF);
         if (existingCPF.Any())
         {
             return BadRequest("CPF already registered!");
         }
 
-        var existingPhone = _context.Business.Where(c => c.PhoneNumber == BusinessDto.PhoneNumber);
+        var existingPhone = _context.Business.Where(c => c.PhoneNumber == businessDto.PhoneNumber);
         if (existingPhone.Any())
         {
             return BadRequest("PhoneNumber already registered!");
         }
 
-        Business Business = new Business(BusinessDto.Name, BusinessDto.CPF, BusinessDto.CNPJ, BusinessDto.Email, BusinessDto.PhoneNumber);
+        Business Business = new Business(businessDto);
 
-        var userCreationResult = await _userManager.CreateAsync(Business, BusinessDto.newPassword);
+        var userCreationResult = await _userManager.CreateAsync(Business, businessDto.newPassword);
 
         if (!userCreationResult.Succeeded)
         {
@@ -201,16 +201,16 @@ public class BusinessController : ControllerBase
             }
         }
 
-        if (existingBusiness.UserName != upBusiness.UserName)
+        if (existingBusiness.UserName != upBusiness.Name)
         {
-            var existingUsername = _context.Business.Where(x => x.UserName == upBusiness.UserName);
+            var existingUsername = _context.Business.Where(x => x.UserName == upBusiness.Name);
             if (existingUsername.Any())
             {
                 return BadRequest("Username already exists");
             }
             else
             {
-                await _userManager.SetUserNameAsync(existingBusiness, upBusiness.UserName);
+                await _userManager.SetUserNameAsync(existingBusiness, upBusiness.Name);
             }
         }
 

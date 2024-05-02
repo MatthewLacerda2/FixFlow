@@ -27,7 +27,7 @@ public class ClientDTO
     public string UserName { get; set; }
 
     /// <summary>
-    /// Phone Number. Must contain only numbers, and may be preceded by a '+'
+    /// Phone Number. Must contain only numbers
     /// </summary>
     [Required]
     [Phone]
@@ -36,7 +36,16 @@ public class ClientDTO
     [EmailAddress]
     public string Email { get; set; }
 
-    public ClientDTO(string _Id, string fullname, string cpf, string _userName, string _phoneNumber, string _email)
+    /// <summary>
+    /// Whether or not the Account was registered by a Client
+    /// 
+    /// If not, this value is false,
+    /// thus Client didn't insert a password and this account is not supposed to be logged in
+    /// </summary>
+    [Required]
+    public bool signedUp { get; set; }
+
+    public ClientDTO(string _Id, string fullname, string cpf, string _userName, string _phoneNumber, string _email, bool _signedUp)
     {
         Id = _Id;
         FullName = fullname;
@@ -44,15 +53,11 @@ public class ClientDTO
         UserName = _userName;
         PhoneNumber = _phoneNumber;
         Email = _email;
-    }
-
-    public static explicit operator Client(ClientDTO clientDTO)
-    {
-        return new Client(clientDTO.FullName, clientDTO.PhoneNumber!, clientDTO.additionalNote, clientDTO.CPF, clientDTO.Email!);
+        signedUp = _signedUp;
     }
 
     public static explicit operator ClientDTO(Client client)
     {
-        return new ClientDTO(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!);
+        return new ClientDTO(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!, client.signedUp);
     }
 }

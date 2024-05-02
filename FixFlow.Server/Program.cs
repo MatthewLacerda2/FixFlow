@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.RateLimiting;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
-using Server.Seeder;
 
 var builder = WebApplication.CreateBuilder(args);
 
