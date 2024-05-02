@@ -18,10 +18,17 @@ export type ClientRegister = {
      */
     userName?: string | null;
     /**
-     * Phone Number. Must contain only numbers and/or a '+'
+     * Phone Number. Must contain only numbers
      */
     phoneNumber: string;
     email?: string | null;
+    /**
+     * Whether or not the Account was registered by a Client
+     *
+     * If not, this value is false,
+     * thus Client didn't insert a password and this account is not supposed to be logged in
+     */
+    signedUp: boolean;
     currentPassword?: string | null;
     /**
      * New Password. Only used when registering the user or changing the password

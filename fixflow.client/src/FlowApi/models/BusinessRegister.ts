@@ -4,16 +4,16 @@
 /* eslint-disable */
 export type BusinessRegister = {
     id: string;
+    /**
+     * NickName. Must not contain spaces
+     */
     name: string;
     /**
      * CPF. Must be only precisely 11 numbers
      */
     cpf?: string | null;
     cnpj?: string | null;
-    /**
-     * NickName. Must not contain spaces
-     */
-    userName?: string | null;
+    description?: string | null;
     /**
      * Phone Number. Must contain only numbers and/or a '+'
      */

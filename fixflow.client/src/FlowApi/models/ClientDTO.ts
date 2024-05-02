@@ -18,9 +18,16 @@ export type ClientDTO = {
      */
     userName?: string | null;
     /**
-     * Phone Number. Must contain only numbers, and may be preceded by a '+'
+     * Phone Number. Must contain only numbers
      */
     phoneNumber: string;
     email?: string | null;
+    /**
+     * Whether or not the Account was registered by a Client
+     *
+     * If not, this value is false,
+     * thus Client didn't insert a password and this account is not supposed to be logged in
+     */
+    signedUp: boolean;
 };
 

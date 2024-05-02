@@ -4,16 +4,16 @@
 /* eslint-disable */
 export type BusinessDTO = {
     id: string;
+    /**
+     * NickName. Must not contain spaces
+     */
     name: string;
     /**
      * CPF. Must be precisely XXX.XXX.XXX-XX
      */
     cpf?: string | null;
     cnpj?: string | null;
-    /**
-     * NickName. Must not contain spaces
-     */
-    userName?: string | null;
+    description?: string | null;
     /**
      * Phone Number. Must contain only numbers, and may be preceded by a '+'
      */

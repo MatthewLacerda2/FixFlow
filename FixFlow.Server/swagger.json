@@ -1491,15 +1491,24 @@
             "type": "string",
             "description": "The Id of the Client to Contact"
           },
+          "client": {
+            "$ref": "#/components/schemas/Client"
+          },
           "businessId": {
             "minLength": 1,
             "type": "string",
             "description": "The Id of the Business who owns this Contact"
           },
+          "business": {
+            "$ref": "#/components/schemas/Business"
+          },
           "aptLogId": {
             "minLength": 1,
             "type": "string",
             "description": "The Id of the Log that precedes this Contact"
+          },
+          "aptLog": {
+            "$ref": "#/components/schemas/AptLog"
           },
           "dateTime": {
             "type": "string",
@@ -1684,6 +1693,7 @@
           },
           "name": {
             "type": "string",
+            "description": "The Name of the Business or Business owner",
             "nullable": true
           },
           "cpf": {
@@ -1691,6 +1701,10 @@
             "nullable": true
           },
           "cnpj": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
             "type": "string",
             "nullable": true
           }
@@ -1711,7 +1725,8 @@
           },
           "name": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "NickName. Must not contain spaces"
           },
           "cpf": {
             "type": "string",
@@ -1722,9 +1737,8 @@
             "type": "string",
             "nullable": true
           },
-          "userName": {
+          "description": {
             "type": "string",
-            "description": "NickName. Must not contain spaces",
             "nullable": true
           },
           "phoneNumber": {
@@ -1755,7 +1769,8 @@
           },
           "name": {
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "NickName. Must not contain spaces"
           },
           "cpf": {
             "type": "string",
@@ -1766,9 +1781,8 @@
             "type": "string",
             "nullable": true
           },
-          "userName": {
+          "description": {
             "type": "string",
-            "description": "NickName. Must not contain spaces",
             "nullable": true
           },
           "phoneNumber": {
@@ -1870,6 +1884,10 @@
           "additionalNote": {
             "type": "string",
             "nullable": true
+          },
+          "signedUp": {
+            "type": "boolean",
+            "description": "Whether or not the Account was registered by a Client\r\n\r\nIf not, this value is false,\r\nthus Client didn't insert a password and this account is not supposed to be logged in"
           }
         },
         "additionalProperties": false
@@ -1878,7 +1896,8 @@
         "required": [
           "fullName",
           "id",
-          "phoneNumber"
+          "phoneNumber",
+          "signedUp"
         ],
         "type": "object",
         "properties": {
@@ -1908,13 +1927,17 @@
           "phoneNumber": {
             "minLength": 1,
             "type": "string",
-            "description": "Phone Number. Must contain only numbers, and may be preceded by a '+'",
+            "description": "Phone Number. Must contain only numbers",
             "format": "tel"
           },
           "email": {
             "type": "string",
             "format": "email",
             "nullable": true
+          },
+          "signedUp": {
+            "type": "boolean",
+            "description": "Whether or not the Account was registered by a Client\r\n\r\nIf not, this value is false,\r\nthus Client didn't insert a password and this account is not supposed to be logged in"
           }
         },
         "additionalProperties": false
@@ -1923,7 +1946,8 @@
         "required": [
           "fullName",
           "id",
-          "phoneNumber"
+          "phoneNumber",
+          "signedUp"
         ],
         "type": "object",
         "properties": {
@@ -1953,13 +1977,17 @@
           "phoneNumber": {
             "minLength": 1,
             "type": "string",
-            "description": "Phone Number. Must contain only numbers and/or a '+'",
+            "description": "Phone Number. Must contain only numbers",
             "format": "tel"
           },
           "email": {
             "type": "string",
             "format": "email",
             "nullable": true
+          },
+          "signedUp": {
+            "type": "boolean",
+            "description": "Whether or not the Account was registered by a Client\r\n\r\nIf not, this value is false,\r\nthus Client didn't insert a password and this account is not supposed to be logged in"
           },
           "currentPassword": {
             "type": "string",

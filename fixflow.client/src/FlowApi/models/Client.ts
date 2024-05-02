@@ -23,5 +23,12 @@ export type Client = {
     fullName?: string | null;
     cpf?: string | null;
     additionalNote?: string | null;
+    /**
+     * Whether or not the Account was registered by a Client
+     *
+     * If not, this value is false,
+     * thus Client didn't insert a password and this account is not supposed to be logged in
+     */
+    signedUp?: boolean;
 };
 

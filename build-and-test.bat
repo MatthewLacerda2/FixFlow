@@ -7,9 +7,7 @@ echo "React build"
 
 cd ..\fixflow.client\src
 
-npm install
 openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
-npm install openapi-typescript-codegen -g
 npm run build
 npm run test
 
