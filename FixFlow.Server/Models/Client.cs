@@ -11,6 +11,8 @@ public class Client : IdentityUser
 
     public string additionalNote { get; set; }
 
+    public bool signedUp { get; set; }
+
     public Client()
     {
         CreatedDate = DateTime.Now;
@@ -21,7 +23,7 @@ public class Client : IdentityUser
         additionalNote = string.Empty;
     }
 
-    public Client(string fullname, string cpf, string _additionalNote, string _phoneNumber, string _email)
+    public Client(string fullname, string cpf, string _additionalNote, string _phoneNumber, string _email, bool _signedup)
     {
         CreatedDate = DateTime.Now;
         LastLogin = DateTime.Now;
@@ -32,5 +34,7 @@ public class Client : IdentityUser
 
         PhoneNumber = _phoneNumber;
         Email = _email;
+
+        signedUp = _signedup;
     }
 }

@@ -38,13 +38,16 @@ public class ClientRegister
 
     public string currentPassword { get; set; } = string.Empty;
 
+    [Required]
+    public bool signedUp { get; set; }
+
     /// <summary>
     /// New Password. Only used when registering the user or changing the password
     /// For Logging in, use FlowLoginRequest instead
     /// </summary>
     public string newPassword { get; set; } = string.Empty;
 
-    public ClientRegister(string _Id, string _FullName, string _CPF, string _userName, string _PhoneNumber, string _Email)
+    public ClientRegister(string _Id, string _FullName, string _CPF, string _userName, string _PhoneNumber, string _Email, bool _signedUp)
     {
         Id = _Id;
         FullName = _FullName;
@@ -52,6 +55,7 @@ public class ClientRegister
         UserName = _userName;
         PhoneNumber = _PhoneNumber;
         Email = _Email;
+        signedUp = signedUp;
     }
 
     public void SetPasswords(string _currentPassword, string _newPassword)
@@ -62,11 +66,11 @@ public class ClientRegister
 
     public static explicit operator Client(ClientRegister clientDTO)
     {
-        return new Client(clientDTO.FullName, clientDTO.CPF, clientDTO.additionalNote, clientDTO.PhoneNumber!, clientDTO.Email!);
+        return new Client(clientDTO.FullName, clientDTO.CPF, clientDTO.additionalNote, clientDTO.PhoneNumber!, clientDTO.Email!, clientDTO.signedUp);
     }
 
     public static explicit operator ClientRegister(Client client)
     {
-        return new ClientRegister(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!);
+        return new ClientRegister(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!, client.signedUp);
     }
 }

@@ -57,6 +57,12 @@ public class LoginController : ControllerBase
 
         }
 
+        var isUserClient = _context.Clients.Where(x => x.Email == model.Email).First();
+        if (isUserClient != null && !isUserClient.signedUp)
+        {
+            return BadRequest("This Client is not a registered account");
+        }
+
         var result = await _signInManager.PasswordSignInAsync(model.UserName, model.password, true, false);
 
         if (result.Succeeded)

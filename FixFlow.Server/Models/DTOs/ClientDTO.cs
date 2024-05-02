@@ -36,7 +36,10 @@ public class ClientDTO
     [EmailAddress]
     public string Email { get; set; }
 
-    public ClientDTO(string _Id, string fullname, string cpf, string _userName, string _phoneNumber, string _email)
+    [Required]
+    public bool signedUp { get; set; }
+
+    public ClientDTO(string _Id, string fullname, string cpf, string _userName, string _phoneNumber, string _email, bool _signedUp)
     {
         Id = _Id;
         FullName = fullname;
@@ -44,15 +47,16 @@ public class ClientDTO
         UserName = _userName;
         PhoneNumber = _phoneNumber;
         Email = _email;
+        signedUp = _signedUp;
     }
 
     public static explicit operator Client(ClientDTO clientDTO)
     {
-        return new Client(clientDTO.FullName, clientDTO.PhoneNumber!, clientDTO.additionalNote, clientDTO.CPF, clientDTO.Email!);
+        return new Client(clientDTO.FullName, clientDTO.PhoneNumber!, clientDTO.additionalNote, clientDTO.CPF, clientDTO.Email!, clientDTO.signedUp);
     }
 
     public static explicit operator ClientDTO(Client client)
     {
-        return new ClientDTO(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!);
+        return new ClientDTO(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!, client.signedUp);
     }
 }

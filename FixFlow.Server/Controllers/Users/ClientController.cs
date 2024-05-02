@@ -158,7 +158,7 @@ public class ClientController : ControllerBase
             clientRegister.Email = string.Empty;
         }
 
-        Client client = new Client(clientRegister.FullName, clientRegister.CPF, clientRegister.PhoneNumber, clientRegister.Email, clientRegister.additionalNote);
+        Client client = new Client(clientRegister.FullName, clientRegister.CPF, clientRegister.PhoneNumber, clientRegister.Email, clientRegister.additionalNote, clientRegister.signedUp);
 
         var userCreationResult = await _userManager.CreateAsync(client, clientRegister.newPassword);
 
