@@ -1,7 +1,6 @@
 using Bogus;
 using Bogus.Extensions.Brazil;
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Query.Internal;
 using Server.Models;
 using Server.Models.Appointments;
 namespace Server.Seeder;
@@ -33,7 +32,7 @@ public class FlowSeeder
     const int businesCount = 55;
     const int clientsCount = businesCount * 55;
 
-    int bogusSeed = 777;
+    int bogusSeed;
 
     public FlowSeeder(ModelBuilder builder, int seed)
     {
