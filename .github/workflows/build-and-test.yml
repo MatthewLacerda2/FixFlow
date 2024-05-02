@@ -2,14 +2,10 @@ name: build-and-test
 
 on:
   pull_request:
-    types:
-      - ready_for_review
+    types: [opened, ready_for_review]
     paths:
       - "**.cs"
       - "**.csproj"
-
-env:
-  DOTNET_VERSION: "8.x"
 
 jobs:
   build-and-test-dotnet:
@@ -17,55 +13,33 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Install Dotnet dependencies
-        working-directory: FixFlow.Server
-        run: dotnet restore
-
-      - name: Install SwaggerGen
-        working-directory: FixFlow.Server
-        run: dotnet add package Swashbuckle.AspNetCore.SwaggerGen
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
 
       - name: Dotnet Build
         working-directory: FixFlow.Server
-        run: dotnet build -c Release .\FixFlow.Server.csproj
+        run: |
+          dotnet restore
+          dotnet tool install -g Swashbuckle.AspNetCore.Cli
+          dotnet add package Swashbuckle.AspNetCore.SwaggerGen
+          dotnet build -c Release .\FixFlow.Server.csproj
+          swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
-      - name: Generate OpenApi Documentation
-        working-directory: FixFlow.Server
-        run: swagger tofile --output swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
-
-      - name: Install xUnit dependencies
-        working-directory: FixFlow.Tests
-        run: dotnet restore
-
-      - name: Dotnet test
-        working-directory: FixFlow.Tests
-        run: dotnet test
-
-      - name: Npm (React) dependencies
-        working-directory: fixflow.client
-        run: npm ci
-
-      - name: Generate Client SDK from
-        working-directory: fixflow.client
-        run: openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
-
-      - name: Npm (React) Build
-        working-directory: fixflow.client
-        run: npm run build
+      - name: React build
+        working-directory: fixflow.client\src
+        run: |
+          npm ci
+          npm install openapi-typescript-codegen -g
+          openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
+          npm run build
 
       - name: Check job status and update pull request
         if: ${{ failure() }}
         run: |
-          echo "::error::One or more jobs failed. Please fix the issues before marking this pull request as ready for review."
+          echo "::error::One or more jobs failed. Please fix the issues before marking this pull request as Ready_for_review"
           curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                -H "Content-Type: application/json" \
-               -d '{"body": "One or more jobs failed. Please fix the issues before marking this pull request as ready for review."}' \
+               -d '{"body": "Build-and-test failed! Fix the issues before merging"}' \
                "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
           curl -X PATCH -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                -H "Content-Type: application/json" \

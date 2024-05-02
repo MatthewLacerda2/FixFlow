@@ -2,18 +2,18 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type EmployeeDTO = {
+export type BusinessDTO = {
     id: string;
-    fullName: string;
-    /**
-     * CPF. Must be only precisely 11 numbers
-     */
-    cpf?: string | null;
-    salary?: number;
     /**
      * NickName. Must not contain spaces
      */
-    userName?: string | null;
+    name: string;
+    /**
+     * CPF. Must be precisely XXX.XXX.XXX-XX
+     */
+    cpf?: string | null;
+    cnpj?: string | null;
+    description?: string | null;
     /**
      * Phone Number. Must contain only numbers, and may be preceded by a '+'
      */

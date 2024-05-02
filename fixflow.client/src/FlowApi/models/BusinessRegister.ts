@@ -2,18 +2,18 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type EmployeeRegister = {
+export type BusinessRegister = {
     id: string;
-    fullName: string;
+    /**
+     * NickName. Must not contain spaces
+     */
+    name: string;
     /**
      * CPF. Must be only precisely 11 numbers
      */
     cpf?: string | null;
-    salary?: number;
-    /**
-     * NickName. Must not contain spaces
-     */
-    userName?: string | null;
+    cnpj?: string | null;
+    description?: string | null;
     /**
      * Phone Number. Must contain only numbers and/or a '+'
      */

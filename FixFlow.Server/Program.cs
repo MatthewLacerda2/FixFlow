@@ -12,17 +12,19 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddIdentityCore<Client>()
+var secretKey = builder.Configuration["Jwt:SecretKey"];
+var verifiedIssuerSigningKey = secretKey != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    : throw new InvalidOperationException("JWT secret key is missing in configuration.");
+
+builder.Services.AddIdentity<Client, IdentityRole>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ServerContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddDbContext<ServerContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 23))));
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
-var secretKey = builder.Configuration["Jwt:SecretKey"];
-var verifiedIssuerSigningKey = secretKey != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-    : throw new InvalidOperationException("JWT secret key is missing in configuration.");
+builder.Services.AddDbContext<ServerContext>(options =>
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 23))));
 
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
@@ -85,7 +87,6 @@ var app = builder.Build();
 app.UseCors("AllowAnyOrigin");
 
 app.UseDefaultFiles();
-app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

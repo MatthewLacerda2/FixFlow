@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.Windows.Markup;
+using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
+
 namespace Server.Models.Appointments;
 
 public class AptLog
@@ -11,36 +13,69 @@ public class AptLog
     /// The Id of the Client who took the Appointment
     /// </summary>
     [Required]
+    [ForeignKey(nameof(Models.Client))]
     public string ClientId { get; set; }
 
     /// <summary>
-    /// The Id of the Schedule that precedes the Log, if any
+    /// Navigation Property of the Client
     /// </summary>
-    public string ScheduleId { get; set; } = string.Empty;
+    [JsonIgnore]
+    public Client Client { get; set; }
 
     /// <summary>
-    /// The DateTime when the Log was created
+    /// The Id of the Business who owns this Contact
     /// </summary>
-    public DateTime DateTime { get; set; } = DateTime.Now;
+    [Required]
+    [ForeignKey(nameof(Business))]
+    public string businessId { get; set; }
 
-    public float Price { get; set; }
+    /// <summary>
+    /// Navigation Property of the Business
+    /// </summary>
+    [JsonIgnore]
+    public Business business { get; set; }
+
+    /// <summary>
+    /// The Id of the Schedule that precedes this Log, if any
+    /// </summary>
+    [ForeignKey(nameof(AptSchedule))]
+    public string? scheduleId { get; set; }
+
+    /// <summary>
+    /// Navigation Property of the Schedule
+    /// </summary>
+    [JsonIgnore]
+    public AptSchedule? schedule { get; set; }
+
+    /// <summary>
+    /// The DateTime when the Log was registered
+    /// </summary>
+    public DateTime dateTime { get; set; } = DateTime.Now;
+
+    public float price { get; set; }
 
     /// <summary>
     /// Special information about the Appointment, if applicable
     /// </summary>
     /// <value></value>
-    public string Observation { get; set; } = string.Empty;
+    public string observation { get; set; } = string.Empty;
 
     public AptLog()
     {
-        Id = string.Empty;
+        Id = Guid.NewGuid().ToString();
         ClientId = string.Empty;
+        Client = null!;
+        businessId = string.Empty;
+        business = null!;
     }
 
     public AptLog(string _clientId, float _price)
     {
-        Id = new Guid().ToString();
+        Id = Guid.NewGuid().ToString();
         ClientId = _clientId;
-        Price = _price;
+        Client = null!;
+        price = _price;
+        businessId = string.Empty;
+        business = null!;
     }
 }

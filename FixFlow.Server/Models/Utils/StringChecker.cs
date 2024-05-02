@@ -36,11 +36,9 @@ public static class StringChecker
     public static bool isCPFvalid(string entry)
     {
         bool containsSpace = entry.Contains(" ") == false;
-        bool hasLength = entry.Length == 11;
+        bool hasLength = entry.Length == 14;
         bool noLetters = uppercaseRegex.IsMatch(entry) == false && lowercaseRegex.IsMatch(entry) == false;
-        bool hasNumbers = numberRegex.IsMatch(entry);
-        bool noSpecialCharRegex = specialCharRegex.IsMatch(entry) == false;
 
-        return containsSpace && hasLength && noLetters && hasNumbers && noSpecialCharRegex;
+        return containsSpace && hasLength && noLetters;
     }
 }

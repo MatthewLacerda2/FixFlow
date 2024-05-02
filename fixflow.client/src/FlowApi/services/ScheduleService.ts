@@ -53,8 +53,8 @@ export class ScheduleService {
      * @param clientId Filter by a specific Client
      * @param minPrice Minimum Price of the Appointments
      * @param maxPrice Maximum Price of the Appointments
-     * @param minDateTime The nearest Reminder set up
-     * @param maxDateTime The furthest Reminder set up
+     * @param minDateTime The nearest Contact set up
+     * @param maxDateTime The furthest Contact set up
      * @param sort Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending
      * @param offset Offsets the result by a given amount
      * @param limit Limits the result by a given amount
@@ -84,9 +84,6 @@ export class ScheduleService {
                 'offset': offset,
                 'limit': limit,
             },
-            errors: {
-                400: `Bad Request`,
-            },
         });
     }
     /**
@@ -105,7 +102,7 @@ export class ScheduleService {
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `The given (ClientId || ReminderId) does not exist`,
+                400: `The given (ClientId || ContactId) does not exist`,
             },
         });
     }

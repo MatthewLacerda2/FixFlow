@@ -19,11 +19,13 @@ public class ClientController : ControllerBase
 
     private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    public ClientController(ServerContext context, UserManager<Client> userManager)
+    public ClientController(ServerContext context, UserManager<Client> userManager, RoleManager<IdentityRole> roleManager)
     {
         _context = context;
         _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     /// <summary>
@@ -34,7 +36,7 @@ public class ClientController : ControllerBase
     /// <response code="200">The ClientDTO</response>
     /// <response code="404">There was no Client with the given Id</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO>))]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [HttpGet("{Id}")]
     public async Task<IActionResult> ReadClient(string Id)
     {
@@ -42,11 +44,7 @@ public class ClientController : ControllerBase
         var client = await _userManager.FindByIdAsync(Id);
         if (client == null)
         {
-            client = await _context.Clients.FirstOrDefaultAsync(x => x.Id == Id);
-        }
-        if (client == null)
-        {
-            return NotFound();
+            return NotFound("Client does not exist");
         }
 
         return Ok((ClientDTO)client);
@@ -160,14 +158,38 @@ public class ClientController : ControllerBase
             clientRegister.Email = string.Empty;
         }
 
-        Client client = new Client(clientRegister.FullName, clientRegister.CPF, clientRegister.PhoneNumber, clientRegister.Email, clientRegister.additionalNote);
+        Client client = new Client(clientRegister);
 
-        var result = await _userManager.CreateAsync(client, clientRegister.newPassword);
+        IdentityResult userCreationResult = new IdentityResult();
 
-        if (!result.Succeeded)
+        if (client.signedUp)
+        {
+            userCreationResult = await _userManager.CreateAsync(client, clientRegister.newPassword);
+        }
+        else
+        {
+            userCreationResult = await _userManager.CreateAsync(client);
+        }
+
+        if (!userCreationResult.Succeeded)
         {
             return StatusCode(500, "Internal Server Error: Register Client Unsuccessful");
         }
+
+        var roleExist = await _roleManager.RoleExistsAsync(Common.Client_Role);
+        if (!roleExist)
+        {
+            await _roleManager.CreateAsync(new IdentityRole(Common.Client_Role));
+        }
+
+        var userRoleAddResult = await _userManager.AddToRoleAsync(client, Common.Client_Role);
+
+        if (!userRoleAddResult.Succeeded)
+        {
+            return StatusCode(500, "Internal Server Error: Add Client Role Unsuccessful");
+        }
+
+        _context.SaveChanges();
 
         return CreatedAtAction(nameof(CreateClient), (ClientDTO)client);
     }
@@ -187,10 +209,6 @@ public class ClientController : ControllerBase
         var existingClient = await _userManager.FindByIdAsync(upClient.Id);
         if (existingClient == null)
         {
-            existingClient = await _context.Clients.FirstOrDefaultAsync(x => x.Id == upClient.Id);
-        }
-        if (existingClient == null)
-        {
             return BadRequest("Client does not Exist!");
         }
 
@@ -203,7 +221,7 @@ public class ClientController : ControllerBase
             }
             else
             {
-                await _userManager.SetUserNameAsync(existingClient, upClient.UserName);
+                existingClient.CPF = upClient.CPF;
             }
         }
 
@@ -233,12 +251,7 @@ public class ClientController : ControllerBase
             }
         }
 
-        existingClient = (Client)upClient;
-
-        if (!string.IsNullOrWhiteSpace(upClient.currentPassword) && !string.IsNullOrWhiteSpace(upClient.newPassword))
-        {
-            await _userManager.ChangePasswordAsync(existingClient, upClient.currentPassword, upClient.newPassword);
-        }
+        existingClient.additionalNote = upClient.additionalNote;
 
         await _context.SaveChangesAsync();
 

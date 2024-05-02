@@ -16,7 +16,7 @@ public class LogValidator : AbstractValidator<FlowLoginRequest>
 
         RuleFor(x => x.newPassword).Custom((newPassword, context) =>
         {
-            if (StringChecker.IsPasswordStrong(newPassword))
+            if (!string.IsNullOrEmpty(newPassword) && StringChecker.IsPasswordStrong(newPassword))
             {
                 context.AddFailure("Password must contain an upper case, lower case, number and special character");
             }

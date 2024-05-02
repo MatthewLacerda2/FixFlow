@@ -2,74 +2,74 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AptReminder } from '../models/AptReminder';
+import type { AptContact } from '../models/AptContact';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class ReminderService {
+export class ContactService {
     /**
-     * Get the Reminder with the given Id
-     * @param id The Reminder's Id
-     * @returns AptReminder The AppointmentReminder with the given Id
+     * Get the Contact with the given Id
+     * @param id The Contact's Id
+     * @returns AptContact The AppointmentContact with the given Id
      * @throws ApiError
      */
-    public static getApiV1Reminders(
+    public static getApiV1Contacts(
         id: string,
-    ): CancelablePromise<AptReminder> {
+    ): CancelablePromise<AptContact> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/reminders/{Id}',
+            url: '/api/v1/contacts/{Id}',
             path: {
                 'Id': id,
             },
             errors: {
-                404: `There was no Appointment Reminder with the given Id`,
+                404: `There was no Appointment Contact with the given Id`,
             },
         });
     }
     /**
-     * Deletes the Appointment Reminder with the given Id
-     * @param id The Id of the AptReminder to be deleted
+     * Deletes the Appointment Contact with the given Id
+     * @param id The Id of the AptContact to be deleted
      * @returns void
      * @throws ApiError
      */
-    public static deleteApiV1Reminders(
+    public static deleteApiV1Contacts(
         id: string,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/api/v1/reminders/{Id}',
+            url: '/api/v1/contacts/{Id}',
             path: {
                 'Id': id,
             },
             errors: {
-                400: `There was no Reminder with the given Id`,
+                400: `There was no Contact with the given Id`,
             },
         });
     }
     /**
-     * Gets a number of Appointment Reminders, with optional filters
+     * Gets a number of Appointment Contacts, with optional filters
      * Does not return Not Found, but an Array of size 0 instead
      * @param clientId Filter by a specific Client
-     * @param minDateTime The nearest Reminder set up
-     * @param maxDateTime The furthest Reminder set up
+     * @param minDateTime The nearest Contact set up
+     * @param maxDateTime The furthest Contact set up
      * @param sort Orders the result by Client, or DateTime. Add suffix 'desc' to order descending
      * @param offset Offsets the result by a given amount
      * @param limit Limits the result by a given amount
-     * @returns AptReminder Returns an array of AppointmentReminder
+     * @returns AptContact Returns an array of AppointmentContact
      * @throws ApiError
      */
-    public static getApiV1Reminders1(
+    public static getApiV1Contacts1(
         clientId?: string,
         minDateTime?: string,
         maxDateTime?: string,
         sort?: string,
         offset?: number,
         limit?: number,
-    ): CancelablePromise<Array<Array<AptReminder>>> {
+    ): CancelablePromise<Array<Array<AptContact>>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v1/reminders',
+            url: '/api/v1/contacts',
             query: {
                 'ClientId': clientId,
                 'minDateTime': minDateTime,
@@ -78,24 +78,21 @@ export class ReminderService {
                 'offset': offset,
                 'limit': limit,
             },
-            errors: {
-                400: `Bad Request`,
-            },
         });
     }
     /**
-     * Create an Appointment Reminder
+     * Create an Appointment Contact
      * @param requestBody
-     * @returns any The created Appointment Reminder
-     * @returns AptReminder Created
+     * @returns any The created Appointment Contact
+     * @returns AptContact Created
      * @throws ApiError
      */
-    public static postApiV1Reminders(
-        requestBody?: AptReminder,
-    ): CancelablePromise<any | AptReminder> {
+    public static postApiV1Contacts(
+        requestBody?: AptContact,
+    ): CancelablePromise<any | AptContact> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/v1/reminders',
+            url: '/api/v1/contacts',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -104,21 +101,21 @@ export class ReminderService {
         });
     }
     /**
-     * Update the Appointment Reminder with the given Id
+     * Update the Appointment Contact with the given Id
      * @param requestBody
-     * @returns AptReminder The updated Appointment Reminder
+     * @returns AptContact The updated Appointment Contact
      * @throws ApiError
      */
-    public static putApiV1Reminders(
-        requestBody?: AptReminder,
-    ): CancelablePromise<AptReminder> {
+    public static putApiV1Contacts(
+        requestBody?: AptContact,
+    ): CancelablePromise<AptContact> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/v1/reminders',
+            url: '/api/v1/contacts',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
-                400: `There was no AptReminder with the given Id`,
+                400: `There was no AptContact with the given Id`,
             },
         });
     }

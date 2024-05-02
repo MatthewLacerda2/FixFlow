@@ -7,19 +7,21 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { AptContact } from './models/AptContact';
 export type { AptLog } from './models/AptLog';
-export type { AptReminder } from './models/AptReminder';
 export type { AptSchedule } from './models/AptSchedule';
+export type { Business } from './models/Business';
+export type { BusinessDTO } from './models/BusinessDTO';
+export type { BusinessRegister } from './models/BusinessRegister';
+export type { Client } from './models/Client';
 export type { ClientDTO } from './models/ClientDTO';
 export type { ClientRegister } from './models/ClientRegister';
-export type { EmployeeDTO } from './models/EmployeeDTO';
-export type { EmployeeRegister } from './models/EmployeeRegister';
 export type { FlowLoginRequest } from './models/FlowLoginRequest';
 export type { ProblemDetails } from './models/ProblemDetails';
 
+export { BusinessService } from './services/BusinessService';
 export { ClientService } from './services/ClientService';
-export { EmployeeService } from './services/EmployeeService';
+export { ContactService } from './services/ContactService';
 export { LogService } from './services/LogService';
 export { LoginService } from './services/LoginService';
-export { ReminderService } from './services/ReminderService';
 export { ScheduleService } from './services/ScheduleService';
