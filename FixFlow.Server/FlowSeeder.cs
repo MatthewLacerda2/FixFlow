@@ -135,7 +135,7 @@ public class FlowSeeder
         .RuleFor(e => e.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 
         .RuleFor(e => e.CNPJ, f => f.Company.Cnpj())
-        .RuleFor(e => e.description, f => f.Random.Bool(0.1f) ? f.Random.Words() : string.Empty)
+        .RuleFor(e => e.description, f => f.Commerce.Department())
 
         .RuleFor(e => e.UserName, f => f.Internet.UserName())
         .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
