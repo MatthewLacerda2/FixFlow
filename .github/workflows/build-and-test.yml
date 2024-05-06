@@ -1,6 +1,7 @@
 name: build-and-test
 
 on:
+  workflow_dispatch: #"Manual build-and-test"
   pull_request:
     types: [ready_for_review]
     paths:
