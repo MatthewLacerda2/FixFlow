@@ -123,6 +123,7 @@ public class LoginController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    //[Authorize]
     [HttpPatch]
     public async Task<IActionResult> PasswordChange([FromBody] FlowLoginRequest userRegister)
     {
@@ -137,12 +138,69 @@ public class LoginController : ControllerBase
 
         if (!result.Succeeded)
         {
-            return BadRequest("Password Change Unsuccessfull. " + result.Errors);
+            return BadRequest("Password Changed Unsuccessfull. " + result.Errors);
         }
 
         await _context.SaveChangesAsync();
 
         return Ok("Password change successfully");
+    }
+
+    /// <summary>
+    /// Sends an email with the link for resetting the password
+    /// </summary>
+    /// <returns>NoContentResult</returns>
+    /// <response code="404">Email not found</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [HttpPost("reset/request")]
+    public async Task<ActionResult> PasswordReset([FromBody] string email)
+    {
+
+        IdentityUser user = _userManager.FindByEmailAsync(email).Result!;
+        if (user == null)
+        {
+            return BadRequest("Email not found");
+        }
+
+        var PasswordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        Console.WriteLine("Send email with PasswordResetToken");
+        Console.WriteLine("Call task to expire link in 15 minutes");
+
+        return NoContent();
+
+    }
+
+    /// <summary>
+    /// Changes password for the User who wanted to reset it
+    /// User must have the link sent in the 'Password Reset' email
+    /// </summary>
+    /// <returns>string</returns>
+    /// <response code="200">Password change successfull</response>
+    /// <response code="401">Password change unsucessfull</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [HttpPatch("reset/link")]
+    public async Task<IActionResult> PasswordReset([FromBody] FlowLoginRequest userRegister)
+    {
+
+        IdentityUser user = _userManager.FindByEmailAsync(userRegister.Email).Result!;
+        if (user == null)
+        {
+            return BadRequest("Email not found");
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, token, userRegister.newPassword);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest("Password Change Unsuccessfull. " + result.Errors);
+        }
+
+        await _context.SaveChangesAsync();
+
+        return Ok("Password changed successfully");
     }
 
     /// <summary>

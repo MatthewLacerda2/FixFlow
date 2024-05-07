@@ -5,20 +5,20 @@ using Server.Models;
 using Server.Models.Appointments;
 namespace Server.Seeder;
 
+/// <summary>
+/// 
+/// Let me make something very clear:
+/// This is NOT meant to precisely simulate real-world behavior. It's more to test API, DB and Performance
+/// 
+/// The data generated DOES make sense, just the behavior that isn't ground-truth
+/// What we want is to generate a BUNCH of data
+/// 
+/// This generator is here to help test everything before launch, which is indeed required
+/// 
+/// </summary>
+
 public class FlowSeeder
 {
-
-    /// <summary>
-    /// 
-    /// Let me make something very clear:
-    /// This is NOT meant to precisely simulate real-world behavior. It's more to test API, DB and Performance
-    /// 
-    /// The data generated DOES make sense, just the behavior that isn't ground-truth
-    /// What we want is to generate a BUNCH of data
-    /// 
-    /// This generator is here to help test everything before launch, which is indeed required
-    /// 
-    /// </summary>
 
     readonly static DateTime Jan2nd2023 = new DateTime(2023, 1, 2, 8, 0, 0);
 
