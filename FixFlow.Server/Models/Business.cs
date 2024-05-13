@@ -8,7 +8,6 @@ public class Business : IdentityUser
     public DateTime CreatedDate { get; set; }
     public DateTime LastLogin { get; set; }
 
-
     /// <summary>
     /// The Name of the Business or Business owner
     /// </summary>
@@ -16,7 +15,7 @@ public class Business : IdentityUser
 
     public string CPF { get; set; }
 
-    public string CNPJ { get; set; }
+    public string? CNPJ { get; set; }
 
     public string description { get; set; }
 
@@ -27,7 +26,6 @@ public class Business : IdentityUser
 
         Name = string.Empty;
         CPF = string.Empty;
-        CNPJ = string.Empty;
         description = string.Empty;
     }
 
