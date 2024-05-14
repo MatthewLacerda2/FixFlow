@@ -25,15 +25,13 @@ export type ClientRegister = {
     /**
      * Whether or not the Account was registered by a Client
      *
-     * If not, this value is false,
-     * thus Client didn't insert a password and this account is not supposed to be logged in
+     * If false, the Client didn't insert a password and this account is not supposed to be logged in
      */
     signedUp: boolean;
-    currentPassword?: string | null;
+    password?: string | null;
     /**
-     * New Password. Only used when registering the user or changing the password
-     * For Logging in, use FlowLoginRequest instead
+     * Must be identical to 'password'
      */
-    newPassword?: string | null;
+    confirmPassword?: string | null;
 };
 

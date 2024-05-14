@@ -584,60 +584,26 @@
         ],
         "summary": "Gets a number of Appointment Contacts, with optional filters",
         "description": "Does not return Not Found, but an Array of size 0 instead",
-        "parameters": [
-          {
-            "name": "ClientId",
-            "in": "query",
-            "description": "Filter by a specific Client",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "minDateTime",
-            "in": "query",
-            "description": "The nearest Contact set up",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "maxDateTime",
-            "in": "query",
-            "description": "The furthest Contact set up",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Orders the result by Client, or DateTime. Add suffix 'desc' to order descending",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "description": "Offsets the result by a given amount",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Limits the result by a given amount",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+        "requestBody": {
+          "description": "The Filter Properties of the Query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AptContactFilter"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AptContactFilter"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AptContactFilter"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Returns an array of AppointmentContact",
@@ -835,78 +801,26 @@
         ],
         "summary": "Gets a number of Appointment Logs, with optional filters",
         "description": "Does not return Not Found, but an Array of size 0 instead",
-        "parameters": [
-          {
-            "name": "ClientId",
-            "in": "query",
-            "description": "Filter by a specific Client",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "minPrice",
-            "in": "query",
-            "description": "Minimum Price of the Appointments",
-            "schema": {
-              "type": "number",
-              "format": "float"
-            }
-          },
-          {
-            "name": "maxPrice",
-            "in": "query",
-            "description": "Maximum Price of the Appointments",
-            "schema": {
-              "type": "number",
-              "format": "float"
-            }
-          },
-          {
-            "name": "minDateTime",
-            "in": "query",
-            "description": "The oldest DateTime the Appointment took place",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "maxDateTime",
-            "in": "query",
-            "description": "The most recent DateTime the Appointment took placet",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "description": "Offsets the result by a given amount",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Limits the result by a given amount",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+        "requestBody": {
+          "description": "The Filter Properties of the Query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AptLogFilter"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AptLogFilter"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AptLogFilter"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Returns an array of AppointmentLog",
@@ -1279,80 +1193,26 @@
         ],
         "summary": "Gets a number of Appointment Schedules, with optional filters",
         "description": "Does not return Not Found, but an Array of size 0 instead",
-        "parameters": [
-          {
-            "name": "ClientId",
-            "in": "query",
-            "description": "Filter by a specific Client",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "minPrice",
-            "in": "query",
-            "description": "Minimum Price of the Appointments",
-            "schema": {
-              "type": "number",
-              "format": "float"
-            }
-          },
-          {
-            "name": "maxPrice",
-            "in": "query",
-            "description": "Maximum Price of the Appointments",
-            "schema": {
-              "type": "number",
-              "format": "float"
-            }
-          },
-          {
-            "name": "minDateTime",
-            "in": "query",
-            "description": "The nearest Contact set up",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "maxDateTime",
-            "in": "query",
-            "description": "The furthest Contact set up",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "description": "Offsets the result by a given amount",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Limits the result by a given amount",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
+        "requestBody": {
+          "description": "The Filter Properties of the Query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AptScheduleFilter"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AptScheduleFilter"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AptScheduleFilter"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Returns an array of AppointmentSchedule",
@@ -1518,6 +1378,10 @@
         },
         "additionalProperties": false
       },
+      "AptContactFilter": {
+        "type": "object",
+        "additionalProperties": false
+      },
       "AptLog": {
         "required": [
           "businessId",
@@ -1571,6 +1435,10 @@
         },
         "additionalProperties": false
       },
+      "AptLogFilter": {
+        "type": "object",
+        "additionalProperties": false
+      },
       "AptSchedule": {
         "required": [
           "businessId",
@@ -1614,13 +1482,18 @@
           },
           "price": {
             "type": "number",
-            "format": "float"
+            "format": "float",
+            "nullable": true
           },
           "observation": {
             "type": "string",
             "nullable": true
           }
         },
+        "additionalProperties": false
+      },
+      "AptScheduleFilter": {
+        "type": "object",
         "additionalProperties": false
       },
       "Business": {
@@ -1796,10 +1669,10 @@
             "format": "email",
             "nullable": true
           },
-          "newPassword": {
+          "confirmPassword": {
             "minLength": 7,
             "type": "string",
-            "description": "New Password. Only used when registering the user or changing the password\r\nFor Logging in, use FlowLoginRequest instead",
+            "description": "Must be identical to 'password'",
             "nullable": true
           }
         },
@@ -1937,7 +1810,7 @@
           },
           "signedUp": {
             "type": "boolean",
-            "description": "Whether or not the Account was registered by a Client\r\n\r\nIf not, this value is false,\r\nthus Client didn't insert a password and this account is not supposed to be logged in"
+            "description": "Whether or not the Account was registered by a Client\r\n\r\nIf false, the Client didn't insert a password and this account is not supposed to be logged in"
           }
         },
         "additionalProperties": false
@@ -1987,15 +1860,15 @@
           },
           "signedUp": {
             "type": "boolean",
-            "description": "Whether or not the Account was registered by a Client\r\n\r\nIf not, this value is false,\r\nthus Client didn't insert a password and this account is not supposed to be logged in"
+            "description": "Whether or not the Account was registered by a Client\r\n\r\nIf false, the Client didn't insert a password and this account is not supposed to be logged in"
           },
-          "currentPassword": {
+          "password": {
             "type": "string",
             "nullable": true
           },
-          "newPassword": {
+          "confirmPassword": {
             "type": "string",
-            "description": "New Password. Only used when registering the user or changing the password\r\nFor Logging in, use FlowLoginRequest instead",
+            "description": "Must be identical to 'password'",
             "nullable": true
           }
         },
