@@ -1,5 +1,5 @@
 import "../../../Styles/SideBar.css";
-import { FLOW_ROUTES } from "../../Utils/FlowRoutes";
+import { FLOW_ROUTES } from "../../../Utils/FlowRoutes";
 import SidebarLink from "../SidebarLink/SidebarLink";
 
 const BusinessSidebar: React.FC = () => {

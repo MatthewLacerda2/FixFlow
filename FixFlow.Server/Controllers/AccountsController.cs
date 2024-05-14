@@ -75,8 +75,8 @@ public class LoginController : ControllerBase
             var token = GenerateToken(user!, roles.ToArray());
 
             await _context.SaveChangesAsync();
-
-            return Ok(new { token });
+            Console.WriteLine(token);
+            return Ok(token);
         }
 
         return Unauthorized("Error: ");

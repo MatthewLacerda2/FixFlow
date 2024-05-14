@@ -1,18 +1,19 @@
 .card {
-    min-width: 300px;
-    max-width: 600px;
-    min-height: 200px;
+    min-width: 320px;
+    max-width: 500px;
+    min-height: 600px;
     background-color: white;
-    border-radius: 13px;
-    padding: 24px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin: 50px;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.133);
+    margin: 20px;
 }
 
 .title {
     color: #333333;
     font-size: 27px;
     margin-bottom: 13px;
+    margin-top: 8px;
 }
 
 .line {

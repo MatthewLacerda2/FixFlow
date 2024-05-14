@@ -15,11 +15,11 @@
 
 .bar-item {
     background-color: white;
-    border: 2px solid blue;
+    border: 1px solid #aaaaaa;
+    border-radius: 5px;
     color: blue;
     padding: 10px;
     transition: background-color 0.25s, color 0.3s;
-    width: 95%;
     text-align: left;
     display: block;
     margin-bottom: 13px;
@@ -27,9 +27,9 @@
 }
 
 .bar-item:hover {
-    background-color: blue;
+    background-color: #0077ff;
     color: white;
-    border: 2px solid white;
+    border: -2px solid white;
 }
 
 .line {

@@ -1,0 +1,31 @@
+.expandable-container {
+    border: 1px solid #e1e1e1;
+    text-align: "left";
+}
+
+.expandable-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.expandable-header h2 {
+    margin: 0;
+    margin-left: 10px;
+}
+
+.arrow {
+    font-size: 20px;
+}
+
+.expandable-content {
+    border-top: 1px solid #bbb;
+    margin-left: "10px" 
+}
+
+.expandable-content p {
+    color: #333;
+    font-size: 17px;
+}  
