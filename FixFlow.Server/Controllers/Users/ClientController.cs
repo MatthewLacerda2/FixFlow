@@ -64,7 +64,7 @@ public class ClientController : ControllerBase
     /// <response code="200">Returns an array of ClientDTO</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO[]>))]
     [HttpGet]
-    public async Task<IActionResult> ReadClients(string? fullname, int? offset, int? limit, string? sort)
+    public async Task<IActionResult> ReadClients(string? fullname, uint? offset, uint? limit, string? sort)
     {
 
         var clientsQuery = _context.Clients.AsQueryable();
@@ -164,7 +164,7 @@ public class ClientController : ControllerBase
 
         if (client.signedUp)
         {
-            userCreationResult = await _userManager.CreateAsync(client, clientRegister.newPassword);
+            userCreationResult = await _userManager.CreateAsync(client, clientRegister.confirmPassword);
         }
         else
         {

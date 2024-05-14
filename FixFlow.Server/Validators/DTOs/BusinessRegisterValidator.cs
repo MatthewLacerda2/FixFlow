@@ -26,7 +26,7 @@ public class BusinessRegisterValidator : AbstractValidator<BusinessRegister>
             }
         });
 
-        RuleFor(x => x.currentPassword).Custom((currentPassword, context) =>
+        RuleFor(x => x.password).Custom((currentPassword, context) =>
         {
             if (StringChecker.IsPasswordStrong(currentPassword) == false)
             {
@@ -34,12 +34,6 @@ public class BusinessRegisterValidator : AbstractValidator<BusinessRegister>
             }
         });
 
-        RuleFor(x => x.newPassword).Custom((newPassword, context) =>
-        {
-            if (newPassword != null && StringChecker.IsPasswordStrong(newPassword) == false)
-            {
-                context.AddFailure("Password must contain an upper case, lower case, number and special character");
-            }
-        });
+        RuleFor(x => x.confirmPassword).Equal(x => x.password).WithErrorCode("ConfirmPassword must be identical to Password");
     }
 }

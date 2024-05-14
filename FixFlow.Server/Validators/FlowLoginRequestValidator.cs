@@ -21,5 +21,7 @@ public class LogValidator : AbstractValidator<FlowLoginRequest>
                 context.AddFailure("Password must contain an upper case, lower case, number and special character");
             }
         });
+
+        RuleFor(x => x.newPassword).NotEqual(x => x.password).WithErrorCode("New password can not be the same as old one");
     }
 }

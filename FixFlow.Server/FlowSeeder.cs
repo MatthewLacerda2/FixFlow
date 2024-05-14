@@ -121,7 +121,7 @@ public class FlowSeeder
 
     Business[] GenerateBusinesses(int amount)
     {
-        var business_faker = new Faker<Business>()
+        var business_faker = new Faker<Business>("pt-BR")
         .UseSeed(bogusSeed)
         .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
@@ -159,7 +159,7 @@ public class FlowSeeder
 
     Client[] GenerateClients(int amount)
     {
-        var clients_faker = new Faker<Client>()
+        var clients_faker = new Faker<Client>("pt-BR")
         .UseSeed(bogusSeed)
         .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
@@ -199,7 +199,7 @@ public class FlowSeeder
     Faker<AptSchedule> ScheduleFaker()
     {
 
-        var schedules_faker = new Faker<AptSchedule>()
+        var schedules_faker = new Faker<AptSchedule>("pt-BR")
         .UseSeed(bogusSeed)
         .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023)
@@ -215,7 +215,7 @@ public class FlowSeeder
 
     Faker<AptLog> LogFaker()
     {
-        var logs_faker = new Faker<AptLog>()
+        var logs_faker = new Faker<AptLog>("pt-BR")
         .UseSeed(bogusSeed)
         .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023)
@@ -229,7 +229,7 @@ public class FlowSeeder
 
     Faker<AptContact> ContactFaker()
     {
-        var contact_faker = new Faker<AptContact>()
+        var contact_faker = new Faker<AptContact>("pt-BR")
         .UseSeed(bogusSeed)
         .StrictMode(false)
         .UseDateTimeReference(Jan2nd2023)
