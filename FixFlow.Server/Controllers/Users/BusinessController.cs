@@ -65,7 +65,7 @@ public class BusinessController : ControllerBase
     /// <response code="200">Returns an array ofBusinessDTO</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BusinessDTO[]>))]
     [HttpGet]
-    public async Task<IActionResult> ReadBusiness(string? username, int? offset, int? limit, string? sort)
+    public async Task<IActionResult> ReadBusiness(string? username, uint? offset, uint? limit, string? sort)
     {
 
         var businessQuery = _context.Business.AsQueryable();

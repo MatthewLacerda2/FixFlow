@@ -4,6 +4,7 @@ using Server.Models;
 using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
+using Server.Models.Filters;
 
 namespace Server.Controllers;
 
@@ -57,58 +58,42 @@ public class ContactController : ControllerBase
     /// <remarks>
     /// Does not return Not Found, but an Array of size 0 instead
     /// </remarks>
-    /// <param name="ClientId">Filter by a specific Client</param>
-    /// <param name="minDateTime">The nearest Contact set up</param>
-    /// <param name="maxDateTime">The furthest Contact set up</param>/// 
-    /// <param name="sort">Orders the result by Client, or DateTime. Add suffix 'desc' to order descending</param>
-    /// <param name="offset">Offsets the result by a given amount</param>
-    /// <param name="limit">Limits the result by a given amount</param>
+    /// <param name="filter">The Filter Properties of the Query</param>
     /// <returns>AptContact[]</returns>
     /// <response code="200">Returns an array of AppointmentContact</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptContact[]>))]
     [HttpGet]
-    public IActionResult ReadContact(string? ClientId, DateTime? minDateTime, DateTime? maxDateTime,
-                                    string? sort, int? offset, int? limit)
+    public IActionResult ReadContact([FromBody] AptContactFilter filter)
     {
 
         var ContactsQuery = _context.Contacts.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(ClientId))
+        if (!string.IsNullOrWhiteSpace(filter.ClientId))
         {
-            ContactsQuery = ContactsQuery.Where(x => x.ClientId == ClientId);
+            ContactsQuery = ContactsQuery.Where(x => x.ClientId == filter.ClientId);
         }
 
-        if (minDateTime.HasValue)
-        {
-            ContactsQuery = ContactsQuery.Where(x => x.dateTime >= minDateTime);
-        }
+        ContactsQuery = ContactsQuery.Where(x => x.dateTime >= filter.minDateTime);
+        ContactsQuery = ContactsQuery.Where(x => x.dateTime <= filter.maxDateTime);
 
-        if (maxDateTime.HasValue)
+        switch (filter.sort)
         {
-            ContactsQuery = ContactsQuery.Where(x => x.dateTime <= maxDateTime);
-        }
-
-        if (!string.IsNullOrWhiteSpace(sort))
-        {
-            sort = sort.ToLower();
-            if (sort.Contains("client"))
-            {
-                ContactsQuery = ContactsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
-            }
-            else
-            {
+            case ContactSort.date:
                 ContactsQuery = ContactsQuery.OrderBy(s => s.dateTime).ThenByDescending(s => s.ClientId).ThenBy(s => s.Id);
-            }
+                break;
+            case ContactSort.ClientId:
+                ContactsQuery = ContactsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+                break;
         }
 
-        if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
+        if (filter.descending)
         {
             ContactsQuery.Reverse();
         }
 
         var resultArray = ContactsQuery
-            .Skip(offset ?? 0)
-            .Take(limit ?? 10)
+            .Skip(filter.offset)
+            .Take(filter.limit)
             .ToArray();
 
         return Ok(resultArray);

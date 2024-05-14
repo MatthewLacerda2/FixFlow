@@ -1,6 +1,6 @@
 namespace Server.Models.Filters;
 
-public struct AptLogFilter
+public struct AptScheduleFilter
 {
     public string ClientId;
     public float minPrice;
@@ -8,13 +8,13 @@ public struct AptLogFilter
     public DateTime minDateTime;
     public DateTime maxDateTime;
 
-    public LogSort sort;
+    public ScheduleSort sort;
     public bool descending;
     public int offset;
     public int limit;
 }
 
-public enum LogSort
+public enum ScheduleSort
 {
     ClientId, price, date
 }

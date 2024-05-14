@@ -64,7 +64,7 @@ public class ClientController : ControllerBase
     /// <response code="200">Returns an array of ClientDTO</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO[]>))]
     [HttpGet]
-    public async Task<IActionResult> ReadClients(string? fullname, int? offset, int? limit, string? sort)
+    public async Task<IActionResult> ReadClients(string? fullname, uint? offset, uint? limit, string? sort)
     {
 
         var clientsQuery = _context.Clients.AsQueryable();

@@ -1,20 +1,18 @@
 namespace Server.Models.Filters;
 
-public struct AptLogFilter
+public struct AptContactFilter
 {
     public string ClientId;
-    public float minPrice;
-    public float maxPrice;
     public DateTime minDateTime;
     public DateTime maxDateTime;
 
-    public LogSort sort;
+    public ContactSort sort;
     public bool descending;
     public int offset;
     public int limit;
 }
 
-public enum LogSort
+public enum ContactSort
 {
-    ClientId, price, date
+    ClientId, date
 }
