@@ -132,7 +132,7 @@ public class BusinessController : ControllerBase
 
         Business Business = new Business(businessDto);
 
-        var userCreationResult = await _userManager.CreateAsync(Business, businessDto.newPassword);
+        var userCreationResult = await _userManager.CreateAsync(Business, businessDto.confirmPassword);
 
         if (!userCreationResult.Succeeded)
         {
@@ -227,9 +227,9 @@ public class BusinessController : ControllerBase
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(upBusiness.currentPassword) && !string.IsNullOrWhiteSpace(upBusiness.newPassword))
+        if (!string.IsNullOrWhiteSpace(upBusiness.password) && !string.IsNullOrWhiteSpace(upBusiness.confirmPassword))
         {
-            await _userManager.ChangePasswordAsync(existingBusiness, upBusiness.currentPassword, upBusiness.newPassword);
+            await _userManager.ChangePasswordAsync(existingBusiness, upBusiness.password, upBusiness.confirmPassword);
         }
 
         existingBusiness.Name = upBusiness.Name;

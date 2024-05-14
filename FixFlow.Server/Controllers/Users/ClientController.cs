@@ -164,7 +164,7 @@ public class ClientController : ControllerBase
 
         if (client.signedUp)
         {
-            userCreationResult = await _userManager.CreateAsync(client, clientRegister.newPassword);
+            userCreationResult = await _userManager.CreateAsync(client, clientRegister.confirmPassword);
         }
         else
         {

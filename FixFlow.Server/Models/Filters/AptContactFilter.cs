@@ -2,7 +2,7 @@ namespace Server.Models.Filters;
 
 public struct AptContactFilter
 {
-    public string ClientId;
+    public string? ClientId;
     public DateTime minDateTime;
     public DateTime maxDateTime;
 

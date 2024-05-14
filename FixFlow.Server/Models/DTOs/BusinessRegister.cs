@@ -19,7 +19,7 @@ public class BusinessRegister
     [Length(14, 14)]
     public string CPF { get; set; }
 
-    public string CNPJ { get; set; }
+    public string? CNPJ { get; set; }
 
     public string description { get; set; }
 
@@ -34,14 +34,13 @@ public class BusinessRegister
     public string Email { get; set; }
 
     [MinLength(7)]
-    public string currentPassword = string.Empty;
+    public string password = string.Empty;
 
     /// <summary>
-    /// New Password. Only used when registering the user or changing the password
-    /// For Logging in, use FlowLoginRequest instead
+    /// Must be identical to 'password'
     /// </summary>
     [MinLength(7)]
-    public string newPassword { get; set; } = string.Empty;
+    public string confirmPassword { get; set; } = string.Empty;
 
     public BusinessRegister(string id, string name, string cpf, string cnpj, string _userName, string phonenumber, string email, string _description)
     {
@@ -54,11 +53,5 @@ public class BusinessRegister
         PhoneNumber = phonenumber;
         Email = email;
         description = _description;
-    }
-
-    public void SetPasswords(string _currentPassword, string _newPassword)
-    {
-        currentPassword = _currentPassword;
-        newPassword = _newPassword;
     }
 }

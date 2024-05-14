@@ -2,7 +2,7 @@ namespace Server.Models.Filters;
 
 public struct AptLogFilter
 {
-    public string ClientId;
+    public string? ClientId;
     public float minPrice;
     public float maxPrice;
     public DateTime minDateTime;
