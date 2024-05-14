@@ -14,7 +14,7 @@ public class ClientDTO
     /// CPF. Must be only precisely 11 numbers
     /// </summary>
     [Length(14, 14)]
-    public string CPF { get; set; }
+    public string? CPF { get; set; }
 
     /// <summary>
     /// Special information about the Client, if applicable
@@ -39,8 +39,7 @@ public class ClientDTO
     /// <summary>
     /// Whether or not the Account was registered by a Client
     /// 
-    /// If not, this value is false,
-    /// thus Client didn't insert a password and this account is not supposed to be logged in
+    /// If false, the Client didn't insert a password and this account is not supposed to be logged in
     /// </summary>
     [Required]
     public bool signedUp { get; set; }
@@ -58,6 +57,6 @@ public class ClientDTO
 
     public static explicit operator ClientDTO(Client client)
     {
-        return new ClientDTO(client.Id, client.FullName, client.CPF, client.UserName!, client.PhoneNumber!, client.Email!, client.signedUp);
+        return new ClientDTO(client.Id, client.FullName, client.CPF!, client.UserName!, client.PhoneNumber!, client.Email!, client.signedUp);
     }
 }

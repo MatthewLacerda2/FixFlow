@@ -14,7 +14,7 @@ public class ClientRegister
     /// CPF. Must be only precisely 11 numbers
     /// </summary>
     [Length(14, 14)]
-    public string CPF { get; set; }
+    public string? CPF { get; set; }
 
     /// <summary>
     /// Special information about the Client, if applicable
@@ -39,19 +39,17 @@ public class ClientRegister
     /// <summary>
     /// Whether or not the Account was registered by a Client
     /// 
-    /// If not, this value is false,
-    /// thus Client didn't insert a password and this account is not supposed to be logged in
+    /// If false, the Client didn't insert a password and this account is not supposed to be logged in
     /// </summary>
     [Required]
     public bool signedUp { get; set; }
 
-    public string currentPassword { get; set; } = string.Empty;
+    public string password { get; set; } = string.Empty;
 
     /// <summary>
-    /// New Password. Only used when registering the user or changing the password
-    /// For Logging in, use FlowLoginRequest instead
+    /// Must be identical to 'password'
     /// </summary>
-    public string newPassword { get; set; } = string.Empty;
+    public string confirmPassword { get; set; } = string.Empty;
 
     public ClientRegister(string _Id, string _FullName, string _CPF, string _userName, string _PhoneNumber, string _Email, bool _signedUp)
     {
@@ -62,11 +60,5 @@ public class ClientRegister
         PhoneNumber = _PhoneNumber;
         Email = _Email;
         signedUp = signedUp;
-    }
-
-    public void SetPasswords(string _currentPassword, string _newPassword)
-    {
-        currentPassword = _currentPassword;
-        newPassword = _newPassword;
     }
 }

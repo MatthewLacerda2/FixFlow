@@ -167,6 +167,8 @@ public class FlowSeeder
 
     Client[] GenerateClients(int amount)
     {
+        var clients_faker = new Faker<Client>("pt-BR")
+        .UseSeed(bogusSeed)
         var clients_faker = new Faker<Client>()
         .UseSeed(bogusSeed + 1)
         .StrictMode(true)
