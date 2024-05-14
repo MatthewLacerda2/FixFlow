@@ -3,9 +3,9 @@ import Header from "./Components/Header/Header";
 import MainPage from "./MainPage";
 import NotFoundPage from "./NotFoundPage";
 import SettingsPage from "./Pages/SettingsPage/SettingsPage";
-import EmployeePage from "./Pages/EmployeePage/EmployeePage";
+import BusinessPage from "./Pages/BusinessPage/BusinessPage";
 import ClientPage from "./Pages/ClientPage/ClientPage";
-import EmployeeSidebar from "./Components/Sidebar/EmployeeSidebar/EmployeeSidebar";
+import BusinessSidebar from "./Components/Sidebar/BusinessSidebar/BusinessSidebar";
 
 function App() {
   return (
@@ -14,15 +14,15 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="*" element={<NotFoundPage />} />
-        <Route path="/sh">
-          <Route index element={<EmployeePage />} />
+        <Route path="/e">
+          <Route index element={<BusinessPage />} />
           <Route path="Settings" element={<SettingsPage />} />
-          <Route path="*" element={<EmployeeSidebar />} />
+          <Route path="*" element={<BusinessSidebar />} />
         </Route>
         <Route path="/in">
           <Route index element={<ClientPage />} />
           <Route path="Settings" element={<SettingsPage />} />
-          <Route path="*" element={<EmployeeSidebar />} />
+          <Route path="*" element={<BusinessSidebar />} />
         </Route>
       </Routes>
     </div>
