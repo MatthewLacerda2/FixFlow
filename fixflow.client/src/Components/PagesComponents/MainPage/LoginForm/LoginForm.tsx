@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FlowLoginRequest, LoginService } from "../../../../FlowApi";
+import { FlowLoginRequest } from "../../../../FlowApi";
 
 export const LoginForm: React.FC = () => {
   const [loginData, setLoginData] = useState<FlowLoginRequest>({
@@ -20,7 +20,7 @@ export const LoginForm: React.FC = () => {
   };
 
   const handleLogin = () => {
-    let result = LoginService.postApiV1Login(loginData);
+    console.log("login");
   };
 
   return (
