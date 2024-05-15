@@ -12,6 +12,7 @@ cd ..\fixflow.client\src
 
 npm install -g npm
 npm install -g react
+npx npm-check-updates -u
 npm install
 openapi -i ..\..\FixFlow.Server\swagger.json -o FlowApi -c axios
 npm run build
