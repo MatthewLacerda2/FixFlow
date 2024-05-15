@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AptSchedule } from '../models/AptSchedule';
+import type { AptScheduleFilter } from '../models/AptScheduleFilter';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -50,40 +51,18 @@ export class ScheduleService {
     /**
      * Gets a number of Appointment Schedules, with optional filters
      * Does not return Not Found, but an Array of size 0 instead
-     * @param clientId Filter by a specific Client
-     * @param minPrice Minimum Price of the Appointments
-     * @param maxPrice Maximum Price of the Appointments
-     * @param minDateTime The nearest Contact set up
-     * @param maxDateTime The furthest Contact set up
-     * @param sort Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending
-     * @param offset Offsets the result by a given amount
-     * @param limit Limits the result by a given amount
+     * @param requestBody The Filter Properties of the Query
      * @returns AptSchedule Returns an array of AppointmentSchedule
      * @throws ApiError
      */
     public static getApiV1Schedules1(
-        clientId?: string,
-        minPrice?: number,
-        maxPrice?: number,
-        minDateTime?: string,
-        maxDateTime?: string,
-        sort?: string,
-        offset?: number,
-        limit: number = 10,
+        requestBody?: AptScheduleFilter,
     ): CancelablePromise<Array<Array<AptSchedule>>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/schedules',
-            query: {
-                'ClientId': clientId,
-                'minPrice': minPrice,
-                'maxPrice': maxPrice,
-                'minDateTime': minDateTime,
-                'maxDateTime': maxDateTime,
-                'sort': sort,
-                'offset': offset,
-                'limit': limit,
-            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
     /**
