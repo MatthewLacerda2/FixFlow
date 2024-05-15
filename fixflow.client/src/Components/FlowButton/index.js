@@ -1,1 +1,1 @@
-export {default} from './FlowButton'
+export {default} from './Button.tsx';

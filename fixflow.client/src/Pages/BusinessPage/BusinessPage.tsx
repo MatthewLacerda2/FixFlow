@@ -20,6 +20,7 @@ const BusinessPage: React.FC = () => {
     price: null,
     observation: null,
   };
+
   const schedules: AptSchedule[] = [
     defaultSchedule,
     defaultSchedule,
@@ -32,13 +33,18 @@ const BusinessPage: React.FC = () => {
   };
   // / ////////////////////////////////////
 
+  function CreateSchedule(): void {
+    console.log("create schedule");
+  }
+
   return (
     <div
       className="user-page"
       style={{ flexGrow: "1", display: "flex", flexDirection: "column" }}>
       <BusinessSidebar />
-      <div style={{ marginBottom: "20px" }}>
-        <FlowButton></FlowButton>
+      <div style={{ alignItems: "center" }}>
+        <FlowButton text="Agendar Atendimento" onClick={CreateSchedule} />
+        <FlowButton text="Registrar Atendimento" onClick={CreateSchedule} />
       </div>
       <div className="cards-container">
         <Card title="Contatos">
