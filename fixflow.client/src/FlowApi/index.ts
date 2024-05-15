@@ -8,8 +8,11 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { AptContact } from './models/AptContact';
+export type { AptContactFilter } from './models/AptContactFilter';
 export type { AptLog } from './models/AptLog';
+export type { AptLogFilter } from './models/AptLogFilter';
 export type { AptSchedule } from './models/AptSchedule';
+export type { AptScheduleFilter } from './models/AptScheduleFilter';
 export type { Business } from './models/Business';
 export type { BusinessDTO } from './models/BusinessDTO';
 export type { BusinessRegister } from './models/BusinessRegister';

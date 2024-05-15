@@ -20,9 +20,8 @@ export type BusinessRegister = {
     phoneNumber: string;
     email?: string | null;
     /**
-     * New Password. Only used when registering the user or changing the password
-     * For Logging in, use FlowLoginRequest instead
+     * Must be identical to 'password'
      */
-    newPassword?: string | null;
+    confirmPassword?: string | null;
 };
 

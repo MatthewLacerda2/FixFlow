@@ -26,7 +26,7 @@ export type AptSchedule = {
      * The scheduled DateTime of the Appointment
      */
     dateTime?: string;
-    price?: number;
+    price?: number | null;
     observation?: string | null;
 };
 
