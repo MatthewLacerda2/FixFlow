@@ -1,6 +1,7 @@
 .sidebar {
     height: 100%;
-    width: 210px;
+    width: 190px;
+    flex-shrink: 0;
     position: fixed;
     top: 55px;
     left: 0;
@@ -11,6 +12,7 @@
     flex-direction: column;
     justify-content: flex-start;
     border-right: 2px solid blue;
+    z-index: 9;
 }
 
 .bar-item {
@@ -43,4 +45,6 @@
 .user-page {
     display: flex;
     align-items: flex-start;
+    height: 100%;
+    margin-left: 220px;
 }

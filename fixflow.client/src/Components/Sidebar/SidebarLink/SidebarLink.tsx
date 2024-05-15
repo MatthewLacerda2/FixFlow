@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../../../Styles/SideBar.css";
 
 type SidebarLinkProps = {
   route: string;

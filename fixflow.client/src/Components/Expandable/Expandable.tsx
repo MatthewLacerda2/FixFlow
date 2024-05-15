@@ -6,14 +6,11 @@ interface ExpandableProps {
   content: string[];
 }
 
-const Expandable: React.FC<ExpandableProps> = ({
-  title: headline,
-  content,
-}) => {
+const Expandable: React.FC<ExpandableProps> = ({ title, content }) => {
   return (
     <div className="expandable-container">
       <div className="expandable-header">
-        <h2>{headline}</h2>
+        <h2>{title}</h2>
       </div>
       <div className="expandable-content">
         {content.map((item) => (

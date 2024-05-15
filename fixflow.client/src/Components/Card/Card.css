@@ -26,6 +26,8 @@
     display: flex;
     flex-direction: column;
     padding: auto;
+    flex-grow: 1;
+    padding-left: 20px;
 }
 
 .item {
@@ -33,8 +35,8 @@
 }
 
 .cards-container {
-    display: flex;
     gap: 20px;
+    display: flex;
 }
   
 .expandables-container {
