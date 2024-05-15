@@ -84,15 +84,11 @@ public class LoginController : ControllerBase
 
     private string GenerateToken(IdentityUser user, string[] roles)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF32.GetBytes(_configuration["Jwt:SecretKey"]!);
-
         var UserDTOJson = JsonConvert.SerializeObject(user);
 
         var claims = new List<Claim>{
             new Claim(ClaimTypes.Name, user.UserName!),
             new Claim(ClaimTypes.Email, user.Email!),
-            new Claim(ClaimTypes.Role, user.Email!),
             new Claim("UserDTO",UserDTOJson)
         };
 
@@ -101,6 +97,7 @@ public class LoginController : ControllerBase
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
 
+        var key = Encoding.UTF32.GetBytes(_configuration["Jwt:SecretKey"]!);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
@@ -108,6 +105,7 @@ public class LoginController : ControllerBase
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
+        var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
         return tokenHandler.WriteToken(token);
