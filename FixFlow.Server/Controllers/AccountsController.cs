@@ -48,7 +48,7 @@ public class LoginController : ControllerBase
 
             if (userExists == null)
             {
-                return BadRequest("There is no user with that Email");
+                return Unauthorized("Wrong UserName/Email or Password");
             }
             else
             {
@@ -56,7 +56,7 @@ public class LoginController : ControllerBase
 
                 if (!hasPassword)
                 {
-                    return BadRequest("User is not registered");
+                    return Unauthorized("Wrong UserName/Email or Password");
                 }
 
                 model.UserName = userExists.UserName!;
@@ -79,7 +79,7 @@ public class LoginController : ControllerBase
             return Ok(token);
         }
 
-        return Unauthorized("Error: ");
+        return Unauthorized("Wrong UserName/Email or Password");
     }
 
     private string GenerateToken(IdentityUser user, string[] roles)
