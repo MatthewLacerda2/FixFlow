@@ -6,6 +6,8 @@ public class FlowLoginRequest
 {
 
     public string UserName { get; set; }
+
+    [EmailAddress]
     public string Email { get; set; } = string.Empty;
 
     [Required]

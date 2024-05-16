@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Server.Models;
+using Server.Models.PasswordReset;
 
 namespace Server.Controllers;
 
@@ -152,7 +153,7 @@ public class LoginController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpPost("reset/request")]
-    public async Task<ActionResult> PasswordReset([FromBody] string email)
+    public async Task<ActionResult> PasswordResetEmail([FromBody] string email)
     {
 
         IdentityUser user = _userManager.FindByEmailAsync(email).Result!;
@@ -163,15 +164,20 @@ public class LoginController : ControllerBase
 
         var PasswordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
+        PasswordReset passwordReset = new PasswordReset(email, PasswordResetToken, DateTime.Now);
+
+        await _context.Resets.AddAsync(passwordReset);
+
         Console.WriteLine("Send email with PasswordResetToken");
         Console.WriteLine("Call task to expire link in 15 minutes");
 
-        return NoContent();
+        return Ok("Password Reset Email sent");
 
     }
 
     /// <summary>
     /// Changes password for the User who wanted to reset it
+    /// 
     /// User must have the link sent in the 'Password Reset' email
     /// </summary>
     /// <returns>string</returns>
@@ -180,16 +186,23 @@ public class LoginController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPatch("reset/link")]
-    public async Task<IActionResult> PasswordReset([FromBody] FlowLoginRequest userRegister)
+    public async Task<IActionResult> PasswordReset([FromBody] PasswordResetRequest passwordReset)
     {
 
-        IdentityUser user = _userManager.FindByEmailAsync(userRegister.Email).Result!;
+        IdentityUser user = _userManager.FindByEmailAsync(passwordReset.Email).Result!;
         if (user == null)
         {
             return BadRequest("Email not found");
         }
 
-        var result = await _userManager.ResetPasswordAsync(user, token, userRegister.newPassword);
+        PasswordReset pr = _context.Resets.Find(passwordReset.token)!;
+
+        if (pr == null || pr.dateTime < DateTime.Now.AddMinutes(-15))
+        {
+            return BadRequest("Password Change Unsuccessfull. ");
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, passwordReset.token, passwordReset.password);
 
         if (!result.Succeeded)
         {

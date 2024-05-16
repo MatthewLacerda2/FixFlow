@@ -1,10 +1,10 @@
 using FluentValidation;
-using Server.Models;
+using Server.Models.PasswordReset;
 using Server.Models.Utils;
 
-public class FlowLoginRequestValidator : AbstractValidator<FlowLoginRequest>
+public class PasswordResetRequestValidator : AbstractValidator<PasswordResetRequest>
 {
-    public FlowLoginRequestValidator()
+    public PasswordResetRequestValidator()
     {
         RuleFor(x => x.password).Custom((password, context) =>
         {
@@ -22,6 +22,6 @@ public class FlowLoginRequestValidator : AbstractValidator<FlowLoginRequest>
             }
         });
 
-        RuleFor(x => x.newPassword).NotEqual(x => x.password).WithErrorCode("New password can not be the same as old one");
+        RuleFor(x => x.newPassword).NotEqual(x => x.password).WithErrorCode("Password and Confirmation password must be identical");
     }
 }
