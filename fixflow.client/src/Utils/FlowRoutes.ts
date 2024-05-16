@@ -1,4 +1,6 @@
 export const FLOW_ROUTES = {
+  root: "/",
+  none: "*",
   business: {
     root: "/e",
     agendamentos: "/agendamentos",

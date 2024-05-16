@@ -5,7 +5,6 @@ import NotFoundPage from "./NotFoundPage";
 import SettingsPage from "./Pages/SettingsPage/SettingsPage";
 import BusinessPage from "./Pages/BusinessPage/BusinessPage";
 import ClientPage from "./Pages/ClientPage/ClientPage";
-import BusinessSidebar from "./Components/Sidebar/BusinessSidebar/BusinessSidebar";
 
 function App() {
   return (
@@ -13,16 +12,24 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<MainPage />} />
+
         <Route path="*" element={<NotFoundPage />} />
+
         <Route path="/e">
           <Route index element={<BusinessPage />} />
-          <Route path="Settings" element={<SettingsPage />} />
-          <Route path="*" element={<BusinessSidebar />} />
+
+          <Route path="agendamentos" element={<SettingsPage />} />
+          <Route path="atendimentos" element={<SettingsPage />} />
+          <Route path="contatos" element={<SettingsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
+
         <Route path="/in">
           <Route index element={<ClientPage />} />
-          <Route path="Settings" element={<SettingsPage />} />
-          <Route path="*" element={<BusinessSidebar />} />
+
+          <Route path="agendamentos" element={<SettingsPage />} />
+          <Route path="atendimentos" element={<SettingsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
     </div>
