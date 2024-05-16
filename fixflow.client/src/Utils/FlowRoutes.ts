@@ -6,6 +6,7 @@ export const FLOW_ROUTES = {
     agendamentos: "/agendamentos",
     atendimentos: "/atendimentos",
     contatos: "/contatos",
+    infograficos: "/infograficos",
     settings: "/settings",
   },
   clients: {

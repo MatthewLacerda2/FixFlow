@@ -18,6 +18,10 @@ const BusinessSidebar: React.FC = () => {
         text="Contatos"
       />
       <SidebarLink
+        route={"/e" + FLOW_ROUTES.business.infograficos}
+        text="Infográficos"
+      />
+      <SidebarLink
         route={"/e" + FLOW_ROUTES.business.settings}
         text="Settings"
       />

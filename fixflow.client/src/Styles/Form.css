@@ -1,10 +1,5 @@
-.form-container {
-    width: 300px;
-    margin: 0 auto;
-}
-  
 .form-group {
-    margin-bottom: 20px;
+    margin: 20px;
 }
 
 .label {
@@ -16,10 +11,12 @@
 }
   
 .input-field {
-    width: calc(100% - 130px);
+    width: 240px;
+    height: 37px;
+    margin: 12px;
     padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
     box-sizing: border-box;
     background-color: #fff;
     color: #333;
@@ -31,6 +28,6 @@
 
 .input-field:focus,
 .input-field:hover {
-    border-color: #007bff;
+    border-color: #bbb;
     outline: none;
 }

@@ -1,10 +1,46 @@
 import BusinessSidebar from "../../../Components/Sidebar/BusinessSidebar/BusinessSidebar";
+import "../../../Styles/Form.css";
 
 const SchedulesPage: React.FC = () => {
   return (
-    <div>
+    <div className="user-page">
       <BusinessSidebar />
-      <p>Schedules page</p>
+      <div className="form-group">
+        <input
+          className="input-field "
+          type="text"
+          placeholder="Nome do Cliente"
+        ></input>
+        <input
+          className="input-field"
+          type="text"
+          placeholder="Observação"
+        ></input>
+        <input
+          className="input-field"
+          style={{ width: "150px" }}
+          type="date"
+        ></input>
+        {/*min date*/}
+        <input
+          className="input-field"
+          style={{ width: "150px" }}
+          type="date"
+        ></input>
+        {/*max date*/}
+        <input
+          className="input-field"
+          style={{ width: "120px" }}
+          type="number"
+          placeholder="Preço mínimo"
+        ></input>
+        <input
+          className="input-field"
+          style={{ width: "120px" }}
+          type="number"
+          placeholder="Preço maximo"
+        ></input>
+      </div>
     </div>
   );
 };

@@ -16,12 +16,9 @@ const BusinessPage: React.FC = () => {
   }
 
   return (
-    <div
-      className="user-page"
-      style={{ flexGrow: "1", display: "flex", flexDirection: "column" }}
-    >
+    <div className="user-page" style={{ flexDirection: "column" }}>
       <BusinessSidebar />
-      <div style={{ alignItems: "center" }}>
+      <div>
         <FlowButton text="Agendar Atendimento" onClick={CreateSchedule} />
         <FlowButton text="Registrar Atendimento" onClick={CreateSchedule} />
       </div>
