@@ -5,6 +5,9 @@ import NotFoundPage from "./NotFoundPage";
 import SettingsPage from "./Pages/SettingsPage/SettingsPage";
 import BusinessPage from "./Pages/BusinessPage/BusinessPage";
 import ClientPage from "./Pages/ClientPage/ClientPage";
+import SchedulesPage from "./Pages/BusinessPage/SchedulesPage/SchedulesPage";
+import LogsPage from "./Pages/BusinessPage/LogsPage/LogsPage";
+import ContactsPage from "./Pages/BusinessPage/ContactsPage/ContactsPage";
 
 function App() {
   return (
@@ -18,17 +21,14 @@ function App() {
         <Route path="/e">
           <Route index element={<BusinessPage />} />
 
-          <Route path="agendamentos" element={<SettingsPage />} />
-          <Route path="atendimentos" element={<SettingsPage />} />
-          <Route path="contatos" element={<SettingsPage />} />
+          <Route path="agendamentos" element={<SchedulesPage />} />
+          <Route path="atendimentos" element={<LogsPage />} />
+          <Route path="contatos" element={<ContactsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
         <Route path="/in">
           <Route index element={<ClientPage />} />
-
-          <Route path="agendamentos" element={<SettingsPage />} />
-          <Route path="atendimentos" element={<SettingsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>

@@ -6,15 +6,21 @@ const BusinessSidebar: React.FC = () => {
   return (
     <div className="sidebar">
       <SidebarLink
-        route={FLOW_ROUTES.business.agendamentos}
+        route={"/e" + FLOW_ROUTES.business.agendamentos}
         text="Agendamentos"
       />
       <SidebarLink
-        route={FLOW_ROUTES.business.atendimentos}
+        route={"/e" + FLOW_ROUTES.business.atendimentos}
         text="Atendimentos"
       />
-      <SidebarLink route={FLOW_ROUTES.business.contatos} text="Contatos" />
-      <SidebarLink route={FLOW_ROUTES.business.settings} text="Settings" />
+      <SidebarLink
+        route={"/e" + FLOW_ROUTES.business.contatos}
+        text="Contatos"
+      />
+      <SidebarLink
+        route={"/e" + FLOW_ROUTES.business.settings}
+        text="Settings"
+      />
     </div>
   );
 };
