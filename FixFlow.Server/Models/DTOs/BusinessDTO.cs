@@ -19,7 +19,7 @@ public class BusinessDTO
     [Length(14, 14)]
     public string CPF { get; set; }
 
-    public string CNPJ { get; set; }
+    public string? CNPJ { get; set; }
 
     public string description { get; set; }
 
@@ -48,6 +48,6 @@ public class BusinessDTO
 
     public static explicit operator BusinessDTO(Business business)
     {
-        return new BusinessDTO(business.Id, business.Name, business.CPF, business.CNPJ, business.UserName!, business.PhoneNumber!, business.Email!, business.description);
+        return new BusinessDTO(business.Id, business.Name, business.CPF, business.CNPJ!, business.UserName!, business.PhoneNumber!, business.Email!, business.description);
     }
 }

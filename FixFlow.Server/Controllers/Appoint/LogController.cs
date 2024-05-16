@@ -4,6 +4,7 @@ using Server.Models;
 using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
+using Server.Models.Filters;
 
 namespace Server.Controllers;
 
@@ -57,74 +58,48 @@ public class LogController : ControllerBase
     /// <remarks>
     /// Does not return Not Found, but an Array of size 0 instead
     /// </remarks>
-    /// <param name="ClientId">Filter by a specific Client</param>
-    /// <param name="minPrice">Minimum Price of the Appointments</param>
-    /// <param name="maxPrice">Maximum Price of the Appointments</param>/// 
-    /// <param name="minDateTime">The oldest DateTime the Appointment took place</param>
-    /// <param name="maxDateTime">The most recent DateTime the Appointment took placet</param>/// 
-    /// <param name="sort">Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending</param>
-    /// <param name="offset">Offsets the result by a given amount</param>
-    /// <param name="limit">Limits the result by a given amount</param>
+    /// <param name="filter">The Filter Properties of the Query</param>
     /// <returns>AptLog[]</returns>
     /// <response code="200">Returns an array of AppointmentLog</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
     [HttpGet]
-    public IActionResult ReadLogs(string? ClientId, float? minPrice, float? maxPrice,
-                                    DateTime? minDateTime, DateTime? maxDateTime,
-                                    string? sort, int? offset, int? limit)
+    public IActionResult ReadLogs([FromBody] AptLogFilter filter)
     {
 
         var logsQuery = _context.Logs.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(ClientId))
+        if (!string.IsNullOrWhiteSpace(filter.ClientId))
         {
-            logsQuery = logsQuery.Where(x => x.ClientId == ClientId);
+            logsQuery = logsQuery.Where(x => x.ClientId == filter.ClientId);
         }
 
-        if (minPrice.HasValue)
+        logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
+        logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
+
+        logsQuery = logsQuery.Where(x => x.dateTime >= filter.minDateTime);
+        logsQuery = logsQuery.Where(x => x.dateTime <= filter.maxDateTime);
+
+        switch (filter.sort)
         {
-            logsQuery = logsQuery.Where(x => x.price >= minPrice);
-        }
-        if (maxPrice.HasValue)
-        {
-            logsQuery = logsQuery.Where(x => x.price <= maxPrice);
+            case LogSort.ClientId:
+                logsQuery = logsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
+                break;
+            case LogSort.date:
+                logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.price).ThenBy(s => s.Id);
+                break;
+            case LogSort.price:
+                logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                break;
         }
 
-        if (minDateTime.HasValue)
+        if (filter.descending)
         {
-            logsQuery = logsQuery.Where(x => x.dateTime >= minDateTime);
-        }
-
-        if (maxDateTime.HasValue)
-        {
-            logsQuery = logsQuery.Where(x => x.dateTime <= maxDateTime);
-        }
-
-        if (!string.IsNullOrWhiteSpace(sort))
-        {
-            sort = sort.ToLower();
-            if (sort.Contains("client"))
-            {
-                logsQuery = logsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
-            }
-            else if (sort.Contains("price"))
-            {
-                logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
-            }
-            else if (sort.Contains("date"))
-            {
-                logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
-            }
-        }
-
-        if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
-        {
-            logsQuery.Reverse();
+            logsQuery.Order();
         }
 
         var resultsArray = logsQuery
-            .Skip(offset ?? 0)
-            .Take(limit ?? 10)
+            .Skip(filter.offset)
+            .Take(filter.limit)
             .ToArray();
 
         return Ok(resultsArray);

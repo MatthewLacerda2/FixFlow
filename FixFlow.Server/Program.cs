@@ -48,14 +48,17 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddRateLimiter(_ => _
-    .AddFixedWindowLimiter(policyName: "fixed", options =>
+builder.Services.AddRateLimiter(rate =>
+{
+    rate.AddFixedWindowLimiter(policyName: "fixed", options =>
     {
-        options.PermitLimit = 10;
+        options.PermitLimit = 20;
         options.Window = TimeSpan.FromSeconds(5);
         options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        options.QueueLimit = 10;
-    }));
+        options.QueueLimit = 0;
+    })
+    .RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
 
 builder.Services.AddCors(options =>
 {

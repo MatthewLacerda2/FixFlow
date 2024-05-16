@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AptLog } from '../models/AptLog';
+import type { AptLogFilter } from '../models/AptLogFilter';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -50,40 +51,18 @@ export class LogService {
     /**
      * Gets a number of Appointment Logs, with optional filters
      * Does not return Not Found, but an Array of size 0 instead
-     * @param clientId Filter by a specific Client
-     * @param minPrice Minimum Price of the Appointments
-     * @param maxPrice Maximum Price of the Appointments
-     * @param minDateTime The oldest DateTime the Appointment took place
-     * @param maxDateTime The most recent DateTime the Appointment took placet
-     * @param sort Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending
-     * @param offset Offsets the result by a given amount
-     * @param limit Limits the result by a given amount
+     * @param requestBody The Filter Properties of the Query
      * @returns AptLog Returns an array of AppointmentLog
      * @throws ApiError
      */
     public static getApiV1Logs1(
-        clientId?: string,
-        minPrice?: number,
-        maxPrice?: number,
-        minDateTime?: string,
-        maxDateTime?: string,
-        sort?: string,
-        offset?: number,
-        limit?: number,
+        requestBody?: AptLogFilter,
     ): CancelablePromise<Array<Array<AptLog>>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/logs',
-            query: {
-                'ClientId': clientId,
-                'minPrice': minPrice,
-                'maxPrice': maxPrice,
-                'minDateTime': minDateTime,
-                'maxDateTime': maxDateTime,
-                'sort': sort,
-                'offset': offset,
-                'limit': limit,
-            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
     /**

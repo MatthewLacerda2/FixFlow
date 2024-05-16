@@ -4,6 +4,7 @@ using Server.Models;
 using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
+using Server.Models.Filters;
 
 namespace Server.Controllers;
 
@@ -56,75 +57,48 @@ public class ScheduleController : ControllerBase
     /// <remarks>
     /// Does not return Not Found, but an Array of size 0 instead
     /// </remarks>
-    /// <param name="ClientId">Filter by a specific Client</param>
-    /// <param name="minPrice">Minimum Price of the Appointments</param>
-    /// <param name="maxPrice">Maximum Price of the Appointments</param>/// 
-    /// <param name="minDateTime">The nearest Contact set up</param>
-    /// <param name="maxDateTime">The furthest Contact set up</param>/// 
-    /// <param name="sort">Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending</param>
-    /// <param name="offset">Offsets the result by a given amount</param>
-    /// <param name="limit">Limits the result by a given amount</param>
+    /// <param name="filter">The Filter Properties of the Query</param>
     /// <returns>AptSchedule[]</returns>
     /// <response code="200">Returns an array of AppointmentSchedule</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptSchedule[]>))]
     [HttpGet]
-    public IActionResult ReadSchedules(string? ClientId, float? minPrice, float? maxPrice,
-                                        DateTime? minDateTime, DateTime? maxDateTime,
-                                        string? sort, int? offset = 0, int? limit = 10)
+    public IActionResult ReadSchedules([FromBody] AptScheduleFilter filter)
     {
         var schedulesQuery = _context.Schedules.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(ClientId))
+        if (!string.IsNullOrWhiteSpace(filter.ClientId))
         {
-            schedulesQuery = schedulesQuery.Where(x => x.ClientId == ClientId);
+            schedulesQuery = schedulesQuery.Where(x => x.ClientId == filter.ClientId);
         }
 
-        if (minPrice.HasValue)
-        {
-            schedulesQuery = schedulesQuery.Where(x => x.price >= minPrice);
-        }
+        schedulesQuery = schedulesQuery.Where(x => x.price >= filter.minPrice);
+        schedulesQuery = schedulesQuery.Where(x => x.price <= filter.maxPrice);
 
-        if (maxPrice.HasValue)
-        {
-            schedulesQuery = schedulesQuery.Where(x => x.price <= maxPrice);
-        }
+        schedulesQuery = schedulesQuery.Where(x => x.dateTime >= filter.minDateTime);
+        schedulesQuery = schedulesQuery.Where(x => x.dateTime <= filter.maxDateTime);
 
-        if (minDateTime.HasValue)
+        switch (filter.sort)
         {
-            schedulesQuery = schedulesQuery.Where(x => x.dateTime >= minDateTime);
-        }
-
-        if (maxDateTime.HasValue)
-        {
-            schedulesQuery = schedulesQuery.Where(x => x.dateTime <= maxDateTime);
-        }
-
-
-        if (!string.IsNullOrWhiteSpace(sort))
-        {
-            sort = sort.ToLower();
-            if (sort.Contains("client"))
-            {
-                schedulesQuery = schedulesQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
-            }
-            else if (sort.Contains("price"))
-            {
+            case ScheduleSort.ClientId:
+                schedulesQuery = schedulesQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+                break;
+            case ScheduleSort.date:
+                schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.price).ThenBy(s => s.Id);
+                break;
+            case ScheduleSort.price:
                 schedulesQuery = schedulesQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
-            }
-            else if (sort.Contains("date"))
-            {
-                schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
-            }
+                break;
         }
 
-        if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc"))
+
+        if (filter.descending)
         {
             schedulesQuery.Reverse();
         }
 
         var resultsArray = schedulesQuery
-            .Skip(offset ?? 0)
-            .Take(limit ?? 10)
+            .Skip(filter.offset)
+            .Take(filter.limit)
             .ToArray();
 
         return Ok(resultsArray);

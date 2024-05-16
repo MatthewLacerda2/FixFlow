@@ -48,7 +48,7 @@ public class LoginController : ControllerBase
 
             if (userExists == null)
             {
-                return BadRequest("There is no user with that Email");
+                return Unauthorized("Wrong UserName/Email or Password");
             }
             else
             {
@@ -56,7 +56,7 @@ public class LoginController : ControllerBase
 
                 if (!hasPassword)
                 {
-                    return BadRequest("User is not registered");
+                    return Unauthorized("Wrong UserName/Email or Password");
                 }
 
                 model.UserName = userExists.UserName!;
@@ -75,24 +75,20 @@ public class LoginController : ControllerBase
             var token = GenerateToken(user!, roles.ToArray());
 
             await _context.SaveChangesAsync();
-
-            return Ok(new { token });
+            Console.WriteLine(token);
+            return Ok(token);
         }
 
-        return Unauthorized("Error: ");
+        return Unauthorized("Wrong UserName/Email or Password");
     }
 
     private string GenerateToken(IdentityUser user, string[] roles)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF32.GetBytes(_configuration["Jwt:SecretKey"]!);
-
         var UserDTOJson = JsonConvert.SerializeObject(user);
 
         var claims = new List<Claim>{
             new Claim(ClaimTypes.Name, user.UserName!),
             new Claim(ClaimTypes.Email, user.Email!),
-            new Claim(ClaimTypes.Role, user.Email!),
             new Claim("UserDTO",UserDTOJson)
         };
 
@@ -101,6 +97,7 @@ public class LoginController : ControllerBase
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
 
+        var key = Encoding.UTF32.GetBytes(_configuration["Jwt:SecretKey"]!);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
@@ -108,6 +105,7 @@ public class LoginController : ControllerBase
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
+        var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
         return tokenHandler.WriteToken(token);
@@ -131,7 +129,7 @@ public class LoginController : ControllerBase
         IdentityUser user = _userManager.FindByEmailAsync(userRegister.Email).Result!;
         if (user == null)
         {
-            return BadRequest("There is no User with this email");
+            return BadRequest("Password Change Unsuccessfull.");
         }
 
         var result = await _userManager.ChangePasswordAsync(user, userRegister.password, userRegister.newPassword);
