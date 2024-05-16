@@ -17,4 +17,7 @@ export const FLOW_ROUTES = {
     settings: "/settings",
     preferences: "/preferences",
   },
+  agendamento: {
+    id: "/*",
+  },
 };

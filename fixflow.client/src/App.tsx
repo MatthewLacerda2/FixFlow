@@ -2,14 +2,15 @@ import { Route, Routes } from "react-router-dom";
 import Header from "./Components/Header/Header";
 import MainPage from "./MainPage";
 import NotFoundPage from "./NotFoundPage";
-import SettingsPage from "./Pages/SettingsPage/SettingsPage";
-import BusinessPage from "./Pages/BusinessPage/BusinessPage";
 import ClientPage from "./Pages/ClientPage/ClientPage";
+import BusinessPage from "./Pages/BusinessPage/BusinessPage";
 import SchedulesPage from "./Pages/BusinessPage/SchedulesPage/SchedulesPage";
 import LogsPage from "./Pages/BusinessPage/LogsPage/LogsPage";
 import ContactsPage from "./Pages/BusinessPage/ContactsPage/ContactsPage";
 import InfographicsPage from "./Pages/BusinessPage/InfograficosPage/InfograficosPage";
+import SettingsPage from "./Pages/SettingsPage/SettingsPage";
 import PreferencesPage from "./Pages/BusinessPage/PreferencesPage/PreferencesPage";
+import SchedulePage from "./Pages/Apts/SchedulePage/SchedulePage";
 
 function App() {
   return (
@@ -35,6 +36,16 @@ function App() {
           <Route index element={<ClientPage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="preferences" element={<PreferencesPage />} />
+        </Route>
+
+        <Route path="/apt">
+          <Route index element={<ClientPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="preferences" element={<PreferencesPage />} />
+        </Route>
+
+        <Route path={"/agendamento"}>
+          <Route path="/*" element={<SchedulePage />} />
         </Route>
       </Routes>
     </div>
