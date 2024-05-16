@@ -23,7 +23,6 @@ function App() {
 
         <Route path="/e">
           <Route index element={<BusinessPage />} />
-
           <Route path="agendamentos" element={<SchedulesPage />} />
           <Route path="atendimentos" element={<LogsPage />} />
           <Route path="contatos" element={<ContactsPage />} />
@@ -38,14 +37,9 @@ function App() {
           <Route path="preferences" element={<PreferencesPage />} />
         </Route>
 
-        <Route path="/apt">
-          <Route index element={<ClientPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="preferences" element={<PreferencesPage />} />
-        </Route>
-
-        <Route path={"/agendamento"}>
-          <Route path="/*" element={<SchedulePage />} />
+        <Route path="/agendamento">
+          <Route index element={<NotFoundPage />} />
+          <Route path="*" element={<SchedulePage />} />
         </Route>
       </Routes>
     </div>
