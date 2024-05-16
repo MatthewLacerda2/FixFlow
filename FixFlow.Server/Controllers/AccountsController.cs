@@ -48,7 +48,7 @@ public class LoginController : ControllerBase
 
             if (userExists == null)
             {
-                return BadRequest("There is no user with that Email");
+                return Unauthorized("Wrong UserName/Email or Password");
             }
             else
             {
@@ -56,7 +56,7 @@ public class LoginController : ControllerBase
 
                 if (!hasPassword)
                 {
-                    return BadRequest("User is not registered");
+                    return Unauthorized("Wrong UserName/Email or Password");
                 }
 
                 model.UserName = userExists.UserName!;
@@ -75,11 +75,11 @@ public class LoginController : ControllerBase
             var token = GenerateToken(user!, roles.ToArray());
 
             await _context.SaveChangesAsync();
-
-            return Ok(new { token });
+            Console.WriteLine(token);
+            return Ok(token);
         }
 
-        return Unauthorized("Error: ");
+        return Unauthorized("Wrong UserName/Email or Password");
     }
 
     private string GenerateToken(IdentityUser user, string[] roles)
@@ -128,7 +128,7 @@ public class LoginController : ControllerBase
         IdentityUser user = _userManager.FindByEmailAsync(userRegister.Email).Result!;
         if (user == null)
         {
-            return BadRequest("There is no User with this email");
+            return BadRequest("Password Change Unsuccessfull.");
         }
 
         var result = await _userManager.ChangePasswordAsync(user, userRegister.password, userRegister.newPassword);

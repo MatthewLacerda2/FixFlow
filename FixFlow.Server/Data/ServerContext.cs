@@ -2,6 +2,7 @@ using Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Server.Models.Appointments;
+using Server.Seeder;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext
@@ -26,7 +27,7 @@ public class ServerContext : IdentityDbContext
         builder.Entity<Client>().ToTable("Clients");
         builder.Entity<Business>().ToTable("Business");
 
-        //FlowSeeder flowSeeder = new FlowSeeder(builder, 777);
+        FlowSeeder flowSeeder = new FlowSeeder(builder, 617);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
