@@ -23,7 +23,11 @@ const BusinessSidebar: React.FC = () => {
       />
       <SidebarLink
         route={"/e" + FLOW_ROUTES.business.settings}
-        text="Settings"
+        text="Configurações"
+      />
+      <SidebarLink
+        route={"/e" + FLOW_ROUTES.business.settings}
+        text="Preferências"
       />
     </div>
   );

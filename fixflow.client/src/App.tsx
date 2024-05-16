@@ -13,9 +13,9 @@ function App() {
   return (
     <div>
       <Header />
+
       <Routes>
         <Route path="/" element={<MainPage />} />
-
         <Route path="*" element={<NotFoundPage />} />
 
         <Route path="/e">
@@ -25,11 +25,13 @@ function App() {
           <Route path="atendimentos" element={<LogsPage />} />
           <Route path="contatos" element={<ContactsPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="preferences" element={<SettingsPage />} />
         </Route>
 
         <Route path="/in">
           <Route index element={<ClientPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="preferences" element={<SettingsPage />} />
         </Route>
       </Routes>
     </div>

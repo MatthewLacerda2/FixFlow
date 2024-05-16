@@ -1,7 +1,21 @@
+import SchedulesTable from "../../../Components/PagesComponents/MainPage/BusinessPage/SchedulesPage/SchedulesTable/SchedulesTable";
 import BusinessSidebar from "../../../Components/Sidebar/BusinessSidebar/BusinessSidebar";
+import { AptSchedule } from "../../../FlowApi";
 import "../../../Styles/Form.css";
 
 const SchedulesPage: React.FC = () => {
+  const schedules: AptSchedule[] = [
+    {
+      id: "1",
+      clientId: "c1",
+      client: { id: "c1", fullName: "John Doe" },
+      businessId: "b1",
+      dateTime: "2024-05-16T10:00:00Z",
+      price: 100,
+      observation: "Initial consultation",
+    },
+  ];
+
   return (
     <div className="user-page">
       <BusinessSidebar />
@@ -41,6 +55,7 @@ const SchedulesPage: React.FC = () => {
           placeholder="Preço maximo"
         ></input>
       </div>
+      <SchedulesTable schedules={schedules} />
     </div>
   );
 };

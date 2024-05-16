@@ -8,11 +8,13 @@ export const FLOW_ROUTES = {
     contatos: "/contatos",
     infograficos: "/infograficos",
     settings: "/settings",
+    preferences: "/preferences",
   },
   clients: {
     root: "/in",
     agendamentos: "/agendamentos",
     atendimentos: "/atendimentos",
     settings: "/settings",
+    preferences: "/preferences",
   },
 };
