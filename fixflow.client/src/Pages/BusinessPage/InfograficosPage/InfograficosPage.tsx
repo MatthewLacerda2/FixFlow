@@ -1,7 +1,7 @@
 import React from "react";
 import BusinessSidebar from "../../../Components/Sidebar/BusinessSidebar/BusinessSidebar";
 
-const InfograficosPage: React.FC = () => {
+const InfographicsPage: React.FC = () => {
   return (
     <div>
       <BusinessSidebar />
@@ -10,4 +10,4 @@ const InfograficosPage: React.FC = () => {
   );
 };
 
-export default InfograficosPage;
+export default InfographicsPage;

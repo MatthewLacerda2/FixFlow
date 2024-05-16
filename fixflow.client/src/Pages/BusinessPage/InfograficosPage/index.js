@@ -1,1 +1,1 @@
-export { default } from './InfograficosPage';
+export { default } from './InfographicsPage';
