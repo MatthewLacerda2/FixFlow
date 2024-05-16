@@ -128,7 +128,7 @@ public class LoginController : ControllerBase
         IdentityUser user = _userManager.FindByEmailAsync(userRegister.Email).Result!;
         if (user == null)
         {
-            return BadRequest("There is no User with this email");
+            return BadRequest("Password Change Unsuccessfull.");
         }
 
         var result = await _userManager.ChangePasswordAsync(user, userRegister.password, userRegister.newPassword);
