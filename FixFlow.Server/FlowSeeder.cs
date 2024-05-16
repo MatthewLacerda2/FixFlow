@@ -29,8 +29,8 @@ public class FlowSeeder
     public AptSchedule[] aptSchedules { get; set; } = [];
     public AptLog[] aptLogs { get; set; } = [];
 
-    const int businesCount = 55;
-    const int clientsCount = businesCount * 55;
+    const int businesCount = 50;
+    const int clientsCount = businesCount * 50;
 
     int bogusSeed;
 
@@ -39,6 +39,7 @@ public class FlowSeeder
         bogusSeed = seed;
 
         businesses = GenerateBusinesses(businesCount);
+
         clients = GenerateClients(clientsCount);
 
         GenerateApts();
@@ -92,8 +93,8 @@ public class FlowSeeder
             {
 
                 schs2add[i].dateTime = schs2add[i].dateTime.AddMonths(myMonthSpan * i);
-                schs2add[i].contactId = conts2add[i - 1].Id;
 
+                schs2add[i].Id = Guid.NewGuid().ToString();
                 logs2add[i].scheduleId = schs2add[i].Id;
                 logs2add[i].dateTime = schs2add[i].dateTime.AddHours(1);
 
@@ -102,9 +103,14 @@ public class FlowSeeder
 
             }
 
+            for (int i = 1; i < num; i++)
+            {
+                schs2add[i].contactId = conts2add[i - 1].Id;
+            }
+
             conts2add[0].aptLogId = "";
-            schs2add[0].contactId = null;
-            logs2add[0].scheduleId = null;
+            schs2add[0].contactId = "";
+            logs2add[0].scheduleId = "";
 
             Array.Copy(schs2add, 0, aptSchedules, index, num);
             Array.Copy(logs2add, 0, aptLogs, index, num);
@@ -116,7 +122,9 @@ public class FlowSeeder
 
         //I did it this way to be more readable
 
-        aptContacts = aptContacts.Where(c => c.aptLogId != "").ToArray();
+        aptContacts = aptContacts.Where(c => c.aptLogId != "" || c.aptLogId != null).ToArray();
+        aptSchedules = aptSchedules.Where(c => c.contactId != "" || c.contactId != null).ToArray();
+        aptLogs = aptLogs.Where(c => c.scheduleId != "" || c.scheduleId != null).ToArray();
     }
 
     Business[] GenerateBusinesses(int amount)
@@ -164,7 +172,7 @@ public class FlowSeeder
         .StrictMode(true)
         .UseDateTimeReference(Jan2nd2023)
 
-        .RuleFor(e => e.Id, f => Guid.NewGuid().ToString())
+        .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
         .RuleFor(c => c.FullName, f => f.Name.FullName())
         .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan2nd2023, Jan2nd2023.AddDays(1)))
         .RuleFor(e => e.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
@@ -176,11 +184,11 @@ public class FlowSeeder
         .RuleFor(e => e.UserName, f => f.Internet.UserName())
         .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
 
+        .RuleFor(c => c.Email, (f, c) => c.signedUp || f.Random.Bool(0.85f) ? f.Internet.Email(c.FullName.ToLower()) : string.Empty)
         .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
         .RuleFor(e => e.EmailConfirmed, false)
 
         .RuleFor(c => c.CPF, (f, c) => c.signedUp || f.Random.Bool(0.45f) ? f.Person.Cpf() : string.Empty)
-        .RuleFor(c => c.Email, (f, c) => c.signedUp || f.Random.Bool(0.85f) ? f.Internet.Email(c.FullName.ToLower()) : string.Empty)
 
         .RuleFor(e => e.PasswordHash, (f, c) => c.signedUp ? f.Random.Guid().ToString().Replace("-", "/") : string.Empty)
         .RuleFor(e => e.AccessFailedCount, 0)

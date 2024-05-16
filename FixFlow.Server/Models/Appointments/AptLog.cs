@@ -58,7 +58,7 @@ public class AptLog
     /// Special information about the Appointment, if applicable
     /// </summary>
     /// <value></value>
-    public string observation { get; set; } = string.Empty;
+    public string? observation { get; set; }
 
     public AptLog()
     {

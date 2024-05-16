@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AptContact } from '../models/AptContact';
+import type { AptContactFilter } from '../models/AptContactFilter';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -50,34 +51,18 @@ export class ContactService {
     /**
      * Gets a number of Appointment Contacts, with optional filters
      * Does not return Not Found, but an Array of size 0 instead
-     * @param clientId Filter by a specific Client
-     * @param minDateTime The nearest Contact set up
-     * @param maxDateTime The furthest Contact set up
-     * @param sort Orders the result by Client, or DateTime. Add suffix 'desc' to order descending
-     * @param offset Offsets the result by a given amount
-     * @param limit Limits the result by a given amount
+     * @param requestBody The Filter Properties of the Query
      * @returns AptContact Returns an array of AppointmentContact
      * @throws ApiError
      */
     public static getApiV1Contacts1(
-        clientId?: string,
-        minDateTime?: string,
-        maxDateTime?: string,
-        sort?: string,
-        offset?: number,
-        limit?: number,
+        requestBody?: AptContactFilter,
     ): CancelablePromise<Array<Array<AptContact>>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/contacts',
-            query: {
-                'ClientId': clientId,
-                'minDateTime': minDateTime,
-                'maxDateTime': maxDateTime,
-                'sort': sort,
-                'offset': offset,
-                'limit': limit,
-            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
     /**
