@@ -1,19 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AptSchedule } from "../../../FlowApi";
+import { AptSchedule, ScheduleService } from "../../../FlowApi";
 import Card from "../../../Components/Card/Card";
 
 const SchedulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [schedule, setSchedule] = useState<AptSchedule | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const schedule: AptSchedule = {
-    id: id as string,
-    clientId: "c1",
-    businessId: "b1",
-    dateTime: "2024-05-16 T10:00:00 Z",
-    price: undefined,
-    observation: "Initial consultation",
-  };
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        if (id) {
+          const result = await ScheduleService.getApiV1Schedules(id);
+          setSchedule(result);
+        }
+      } catch (error) {
+        setError("There was an error fetching the schedule.");
+      }
+    };
+
+    fetchSchedule();
+  }, [id]);
+
+  if (error) {
+    <h1 style={{ fontSize: "32px" }}>{error}</h1>;
+  }
+
+  if (!schedule) {
+    return <h1 style={{ fontSize: "32px" }}>Schedule does not exist</h1>;
+  }
 
   return (
     <div style={{ fontSize: "20px" }}>
@@ -28,7 +44,7 @@ const SchedulePage: React.FC = () => {
           <b>Hora e Data:</b> {schedule.dateTime}
         </p>
         <p>
-          <b>Preço:</b> {schedule.price || "N/A"}
+          <b>Preço:</b> {schedule.price !== null ? `$${schedule.price}` : "N/A"}
         </p>
         <p>
           <b>Observação:</b> {schedule.observation || "N/A"}
