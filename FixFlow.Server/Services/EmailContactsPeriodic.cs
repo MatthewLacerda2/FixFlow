@@ -1,7 +1,8 @@
+namespace Server.Services;
+
 /// <summary>
 /// Service for 'Contacting' Clients via email
 /// </summary>
-
 public class EmailContactsPeriodic : BackgroundService
 {
 

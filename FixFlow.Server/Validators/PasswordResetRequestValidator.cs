@@ -2,6 +2,8 @@ using FluentValidation;
 using Server.Models.PasswordReset;
 using Server.Models.Utils;
 
+namespace Server.Validators;
+
 public class PasswordResetRequestValidator : AbstractValidator<PasswordResetRequest>
 {
     public PasswordResetRequestValidator()

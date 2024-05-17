@@ -1,7 +1,8 @@
+namespace Server.Services;
+
 /// <summary>
 /// Service used to send the Email with the link for resetting the Password
 /// </summary>
-
 public class EmailResetPassword : BackgroundService
 {
 

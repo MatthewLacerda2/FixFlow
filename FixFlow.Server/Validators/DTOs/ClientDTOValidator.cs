@@ -2,6 +2,8 @@ using FluentValidation;
 using Server.Models.DTO;
 using Server.Models.Utils;
 
+namespace Server.Validators.DTOs;
+
 public class ClientDTOValidator : AbstractValidator<ClientDTO>
 {
     public ClientDTOValidator()

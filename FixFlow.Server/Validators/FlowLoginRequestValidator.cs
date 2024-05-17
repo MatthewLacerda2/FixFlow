@@ -2,6 +2,8 @@ using FluentValidation;
 using Server.Models;
 using Server.Models.Utils;
 
+namespace Server.Validators;
+
 public class FlowLoginRequestValidator : AbstractValidator<FlowLoginRequest>
 {
     public FlowLoginRequestValidator()

@@ -22,6 +22,8 @@ public class LoginController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly ServerContext _context;
 
+    public static readonly int ResetTokenExpirationInMinutes = 15;
+
     public LoginController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IConfiguration configuration, ServerContext context)
     {
         _signInManager = signInManager;
@@ -162,6 +164,12 @@ public class LoginController : ControllerBase
             return BadRequest("Email not found");
         }
 
+        var hasEmail = _context.Resets.Where(r => r.Email == email).First();
+        if (hasEmail != null && hasEmail.dateTime >= DateTime.Now.AddMinutes(-ResetTokenExpirationInMinutes))
+        {
+            return BadRequest("Cannot send Email at this time");
+        }
+
         var PasswordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         PasswordReset passwordReset = new PasswordReset(email, PasswordResetToken, DateTime.Now);
@@ -197,7 +205,7 @@ public class LoginController : ControllerBase
 
         PasswordReset pr = _context.Resets.Find(passwordReset.token)!;
 
-        if (pr == null || pr.dateTime < DateTime.Now.AddMinutes(-15))
+        if (pr == null || pr.dateTime < DateTime.Now.AddMinutes(-ResetTokenExpirationInMinutes))
         {
             return BadRequest("Password Change Unsuccessfull. ");
         }

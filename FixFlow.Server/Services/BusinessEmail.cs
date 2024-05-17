@@ -1,7 +1,8 @@
+namespace Server.Services;
+
 /// <summary>
 /// Service for Businesses to send unique Emails
 /// </summary>
-
 public class BusinessEmail : BackgroundService
 {
 
