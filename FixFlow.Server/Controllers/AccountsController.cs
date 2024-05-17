@@ -9,27 +9,31 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Server.Models;
 using Server.Models.PasswordReset;
+using Server.Services;
 
 namespace Server.Controllers;
 
 [ApiController]
-[Route("api/v1/login")]
-public class LoginController : ControllerBase
+[Route("api/v1/accounts")]
+public class AccountsController : ControllerBase
 {
 
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly ServerContext _context;
+    private readonly EmailResetPasswordService _emailResetPasswordService;
 
-    public static readonly int ResetTokenExpirationInMinutes = 15;
+    public static readonly int ResetEmailTokenExpirationInMinutes = 15;
 
-    public LoginController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IConfiguration configuration, ServerContext context)
+    public AccountsController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
+                                IConfiguration configuration, ServerContext context, EmailResetPasswordService emailResetPasswordService)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _configuration = configuration;
         _context = context;
+        _emailResetPasswordService = emailResetPasswordService;
     }
 
     /// <summary>
@@ -165,19 +169,16 @@ public class LoginController : ControllerBase
         }
 
         var hasEmail = _context.Resets.Where(r => r.Email == email).First();
-        if (hasEmail != null && hasEmail.dateTime >= DateTime.Now.AddMinutes(-ResetTokenExpirationInMinutes))
+        if (hasEmail != null && hasEmail.dateTime >= DateTime.Now.AddMinutes(-ResetEmailTokenExpirationInMinutes))
         {
             return BadRequest("Cannot send Email at this time");
         }
 
         var PasswordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-
         PasswordReset passwordReset = new PasswordReset(email, PasswordResetToken, DateTime.Now);
-
         await _context.Resets.AddAsync(passwordReset);
 
-        Console.WriteLine("Send email with PasswordResetToken");
-        Console.WriteLine("Call task to expire link in 15 minutes");
+        await _emailResetPasswordService.SendResetPasswordEmailAsync(passwordReset);
 
         return Ok("Password Reset Email sent");
 
@@ -205,7 +206,7 @@ public class LoginController : ControllerBase
 
         PasswordReset pr = _context.Resets.Find(passwordReset.token)!;
 
-        if (pr == null || pr.dateTime < DateTime.Now.AddMinutes(-ResetTokenExpirationInMinutes))
+        if (pr == null || pr.dateTime < DateTime.Now.AddMinutes(-ResetEmailTokenExpirationInMinutes))
         {
             return BadRequest("Password Change Unsuccessfull. ");
         }

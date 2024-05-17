@@ -44,7 +44,12 @@ public class EmailContactsPeriodic : BackgroundService
 
         foreach (var contact in contacts)
         {
-            var mailMessage = new MailMessage(EmailAddress, contact.Client.Email!, "Reminder", "Your message here");
+            if (contact.Client.Email == null)
+            {
+                continue;
+            }
+
+            var mailMessage = new MailMessage(EmailAddress, contact.Client.Email, "Reminder", "Your message here");
             await _smtpClient.SendMailAsync(mailMessage);
         }
     }
