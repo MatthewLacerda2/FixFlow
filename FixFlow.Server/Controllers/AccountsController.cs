@@ -158,7 +158,7 @@ public class AccountsController : ControllerBase
     /// <response code="404">Email not found</response>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpPost("reset/request")]
+    [HttpPost("reset/email")]
     public async Task<ActionResult> PasswordResetEmail([FromBody] string email)
     {
 
@@ -186,7 +186,6 @@ public class AccountsController : ControllerBase
 
     /// <summary>
     /// Changes password for the User who wanted to reset it
-    /// 
     /// User must have the link sent in the 'Password Reset' email
     /// </summary>
     /// <returns>string</returns>
@@ -194,8 +193,8 @@ public class AccountsController : ControllerBase
     /// <response code="401">Password change unsucessfull</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpPatch("reset/link")]
-    public async Task<IActionResult> PasswordReset([FromBody] PasswordResetRequest passwordReset)
+    [HttpPatch("reset/request")]
+    public async Task<IActionResult> PasswordResetRequest([FromBody] PasswordResetRequest passwordReset)
     {
 
         IdentityUser user = _userManager.FindByEmailAsync(passwordReset.Email).Result!;
@@ -221,6 +220,29 @@ public class AccountsController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok("Password changed successfully");
+    }
+
+    /// <summary>
+    /// Returns the Email belonging to that token for Password Change
+    /// Used when the User tries to access a 'Password Reset' link
+    /// </summary>
+    /// <param name="token">The Token for the Password Reset Request</param>
+    /// <returns>The data model needed when trying to Reset the Password
+    /// We only need the Email, but we send the whole 'PasswordResetRequest' model for convenience at the Front-End
+    /// </returns>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PasswordResetRequest))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [HttpPatch("reset/link")]
+    public async Task<IActionResult> PasswordResetLinkValidation(string token)
+    {
+        var validated = await _context.Resets.FindAsync(token);
+
+        if (validated == null)
+        {
+            return BadRequest("Invalid!");
+        }
+
+        return Ok(validated);
     }
 
     /// <summary>

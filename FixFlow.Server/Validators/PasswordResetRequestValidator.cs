@@ -16,7 +16,7 @@ public class PasswordResetRequestValidator : AbstractValidator<PasswordResetRequ
             }
         });
 
-        RuleFor(x => x.newPassword).Custom((newPassword, context) =>
+        RuleFor(x => x.confirmPassword).Custom((newPassword, context) =>
         {
             if (!string.IsNullOrEmpty(newPassword) && StringChecker.IsPasswordStrong(newPassword))
             {
@@ -24,6 +24,6 @@ public class PasswordResetRequestValidator : AbstractValidator<PasswordResetRequ
             }
         });
 
-        RuleFor(x => x.newPassword).NotEqual(x => x.password).WithErrorCode("Password and Confirmation password must be identical");
+        RuleFor(x => x.confirmPassword).NotEqual(x => x.password).WithErrorCode("Password and Confirmation password must be identical");
     }
 }
