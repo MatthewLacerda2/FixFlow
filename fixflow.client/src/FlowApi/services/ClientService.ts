@@ -92,7 +92,7 @@ export class ClientService {
             mediaType: 'application/json',
             errors: {
                 400: `The Client's (PhoneNumber || CPF || Email) does not exist`,
-                500: `Server Error`,
+                500: `Internal Server Error`,
             },
         });
     }
