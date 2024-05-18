@@ -9,7 +9,7 @@ namespace Server.Services;
 /// <summary>
 /// Service used to send the Email with the link for resetting the Password
 /// </summary>
-public class EmailResetPasswordService : BackgroundService
+public class MailResetPassword : BackgroundService
 {
     private readonly SmtpClient _smtpClient;
     private readonly ServerContext _context;
@@ -17,7 +17,7 @@ public class EmailResetPasswordService : BackgroundService
     const string EmailAddress = "my_email_address@hotmail.com";
     const string EmailPassword = "mystrongpassword1234";
 
-    public EmailResetPasswordService(ServerContext context)
+    public MailResetPassword(ServerContext context)
     {
         _context = context;
 

@@ -22,12 +22,12 @@ public class AccountsController : ControllerBase
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly ServerContext _context;
-    private readonly EmailResetPasswordService _emailResetPasswordService;
+    private readonly MailResetPassword _emailResetPasswordService;
 
     public static readonly int ResetEmailTokenExpirationInMinutes = 15;
 
     public AccountsController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
-                                IConfiguration configuration, ServerContext context, EmailResetPasswordService emailResetPasswordService)
+                                IConfiguration configuration, ServerContext context, MailResetPassword emailResetPasswordService)
     {
         _signInManager = signInManager;
         _userManager = userManager;

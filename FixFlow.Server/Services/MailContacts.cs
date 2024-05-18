@@ -7,7 +7,7 @@ namespace Server.Services;
 /// <summary>
 /// Service for 'Contacting' Clients via email
 /// </summary>
-public class EmailContactsPeriodic : BackgroundService
+public class MailContacts : BackgroundService
 {
     private readonly SmtpClient _smtpClient;
     private readonly ServerContext _context;
@@ -15,7 +15,7 @@ public class EmailContactsPeriodic : BackgroundService
     const string EmailAddress = "my_email_address@hotmail.com";
     const string EmailPassword = "mystrongpassword1234";
 
-    public EmailContactsPeriodic(ServerContext context)
+    public MailContacts(ServerContext context)
     {
         _context = context;
 
