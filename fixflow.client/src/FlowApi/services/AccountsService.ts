@@ -50,18 +50,19 @@ export class AccountsService {
     /**
      * Sends an email with the link for resetting the password
      * @param requestBody
-     * @returns any OK
+     * @returns string OK
      * @throws ApiError
      */
     public static postApiV1AccountsResetEmail(
         requestBody?: string,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<string> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/accounts/reset/email',
             body: requestBody,
             mediaType: 'application/json',
             errors: {
+                400: `Bad Request`,
                 404: `Email not found`,
             },
         });
@@ -91,12 +92,12 @@ export class AccountsService {
      * Returns the Email belonging to that token for Password Change
      * Used when the User tries to access a 'Password Reset' link
      * @param token The Token for the Password Reset Request
-     * @returns PasswordResetRequest OK
+     * @returns string OK
      * @throws ApiError
      */
     public static patchApiV1AccountsResetLink(
         token?: string,
-    ): CancelablePromise<PasswordResetRequest> {
+    ): CancelablePromise<string> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/v1/accounts/reset/link',

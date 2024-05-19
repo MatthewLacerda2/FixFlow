@@ -1,54 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React from "react";
 import Card from "../../../Components/Card/Card";
+import FlowButton from "../../../Components/FlowButton/FlowButton";
 
 const ResetLinkPage: React.FC = () => {
-  const { token } = useParams<{ token: string }>();
-  const [error, setError] = useState<string | null>(null);
-  const [PR, setPR] = useState<string | null>(null);
+  //we get the token from useParams()
+  //we get the PasswordResetRequest from AccountsService.patchApiV1AccountsResetLink(token);
 
-  const sendPRrequest = (pr: string) => {
-    console.log("Request sent!");
-    console.log("Aí checa se deu sucesso, se sim manda o cliente fazer login");
-    console.log("Se nao, diz que deu erro e fala qual");
-  };
+  //if the PRR comes back null, we write the message we got (since we got a badrequest() anyway), and DONT render the <Card>
 
-  useEffect(() => {
-    const fetchSchedule = async () => {
-      try {
-        if (token) {
-          //Route goes here
-          console.error("route implementation goes here");
-          setPR(result);
-        }
-      } catch (error) {
-        setError("There was an error fetching the request");
-      }
-    };
+  //if comes back valid:
+  //we write the email and let the user write the password and confirm password
+  //when the person hits the 'Send' button, we send it to AccountsService.patchApiV1AccountsPasswordResetRequest(PR)
 
-    fetchSchedule();
-  }, [token]);
+  //if we get a 200 result, than we write a simple "Senha resetada, tente fazer login agora" and DONT render the <Card>
+  //otherwise, we write the error message we got, underneath the 'Send' button
 
-  if (error) {
-    <h1 style={{ fontSize: "32px" }}>{error}</h1>;
-  }
-
-  if (!PR.Email) {
-    return <h1 style={{ fontSize: "32px" }}>This link is invalid</h1>;
+  function send(): void {
+    console.log("Sent");
   }
 
   return (
     <div style={{ fontSize: "20px" }}>
-      <Card title="Agendamento">
+      <Card title="Reset sua senha">
         <p>
-          <b>Email:</b> {PR.Email}
+          <b>Email:</b> email
         </p>
         <p>
-          <b>New Password:</b> {PR.password}
+          <b>New Password:</b> password
         </p>
         <p>
-          <b>Confirm password:</b> {PR.confirmPassword}
+          <b>Confirm password:</b> confirmPassword
         </p>
+        <FlowButton text="Send" onClick={send} />
       </Card>
     </div>
   );

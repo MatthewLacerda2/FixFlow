@@ -4,7 +4,7 @@
 /* eslint-disable */
 export type PasswordResetRequest = {
     email?: string | null;
-    token?: string | null;
+    token: string;
     password: string;
     confirmPassword: string;
 };
