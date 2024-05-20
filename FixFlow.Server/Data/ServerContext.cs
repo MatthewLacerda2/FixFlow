@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Server.Models.Appointments;
 using Server.Seeder;
+using Server.Models.PasswordReset;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext
@@ -15,6 +16,8 @@ public class ServerContext : IdentityDbContext
     public DbSet<AptContact> Contacts { get; set; } = default!;
     public DbSet<AptSchedule> Schedules { get; set; } = default!;
 
+    public DbSet<PasswordReset> Resets { get; set; } = default!;
+
     public ServerContext(DbContextOptions<ServerContext> options)
         : base(options)
     {
@@ -24,10 +27,7 @@ public class ServerContext : IdentityDbContext
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<Client>().ToTable("Clients");
-        builder.Entity<Business>().ToTable("Business");
-
-        FlowSeeder flowSeeder = new FlowSeeder(builder, 617);
+        //FlowSeeder flowSeeder = new FlowSeeder(builder, 617);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
