@@ -1,7 +1,7 @@
 using FluentValidation;
 using Server.Models.Appointments;
 
-namespace Server.Validators;
+namespace Server.Validators.Appointments;
 
 public class ContactValidator : AbstractValidator<AptContact>
 {

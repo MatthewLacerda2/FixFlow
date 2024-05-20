@@ -8,25 +8,32 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Server.Models;
+using Server.Models.PasswordReset;
+using Server.Services;
 
 namespace Server.Controllers;
 
 [ApiController]
-[Route("api/v1/login")]
-public class LoginController : ControllerBase
+[Route("api/v1/accounts")]
+public class AccountsController : ControllerBase
 {
 
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly ServerContext _context;
+    private readonly MailResetPassword _emailResetPasswordService;
 
-    public LoginController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IConfiguration configuration, ServerContext context)
+    public static readonly int ResetEmailTokenExpirationInMinutes = 15;
+
+    public AccountsController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
+                                IConfiguration configuration, ServerContext context, MailResetPassword emailResetPasswordService)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _configuration = configuration;
         _context = context;
+        _emailResetPasswordService = emailResetPasswordService;
     }
 
     /// <summary>
@@ -120,7 +127,7 @@ public class LoginController : ControllerBase
     /// <response code="401">Password change unsucessfull</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    //[Authorize]
     [HttpPatch]
     public async Task<IActionResult> PasswordChange([FromBody] FlowLoginRequest userRegister)
     {
@@ -135,12 +142,108 @@ public class LoginController : ControllerBase
 
         if (!result.Succeeded)
         {
-            return BadRequest("Password Change Unsuccessfull. " + result.Errors);
+            return BadRequest("Password Changed Unsuccessfull. " + result.Errors);
         }
 
         await _context.SaveChangesAsync();
 
         return Ok("Password change successfully");
+    }
+
+    /// <summary>
+    /// Sends an email with the link for resetting the password
+    /// </summary>
+    /// <returns>NoContentResult</returns>
+    /// <response code="404">Email not found</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [HttpPost("reset/email")]
+    public async Task<ActionResult> PasswordResetEmail([FromBody] string email)
+    {
+
+        IdentityUser user = _userManager.FindByEmailAsync(email).Result!;
+        if (user == null)
+        {
+            return BadRequest("Email not found");
+        }
+
+        var hasEmail = _context.Resets.Where(r => r.Email == email).First();
+        if (hasEmail != null && hasEmail.dateTime >= DateTime.Now.AddMinutes(-ResetEmailTokenExpirationInMinutes))
+        {
+            return BadRequest("Cannot send Email at this time");
+        }
+
+        var PasswordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+        PasswordReset passwordReset = new PasswordReset(email, PasswordResetToken, DateTime.Now);
+        await _context.Resets.AddAsync(passwordReset);
+
+        await _emailResetPasswordService.SendResetPasswordEmailAsync(passwordReset);
+
+        return Ok("Password Reset Email sent");
+
+    }
+
+    /// <summary>
+    /// Changes password for the User who wanted to reset it
+    /// User must have the link sent in the 'Password Reset' email
+    /// </summary>
+    /// <returns>string</returns>
+    /// <response code="200">Password change successfull</response>
+    /// <response code="401">Password change unsucessfull</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [HttpPatch("reset/request")]
+    public async Task<IActionResult> PasswordResetRequest([FromBody] PasswordResetRequest passwordReset)
+    {
+
+        IdentityUser user = _userManager.FindByEmailAsync(passwordReset.Email).Result!;
+        if (user == null)
+        {
+            return BadRequest("Email not found");
+        }
+
+        PasswordReset pr = _context.Resets.Find(passwordReset.token)!;
+
+        if (pr == null || pr.dateTime < DateTime.Now.AddMinutes(-ResetEmailTokenExpirationInMinutes))
+        {
+            return BadRequest("Password Change Unsuccessfull. ");
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, passwordReset.token, passwordReset.password);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest("Password Change Unsuccessfull. " + result.Errors);
+        }
+
+        await _context.SaveChangesAsync();
+
+        return Ok("Password changed successfully");
+    }
+
+    /// <summary>
+    /// Returns the PasswordReset belonging to that token
+    /// Used when the User tries to access a 'Password Reset' link
+    /// </summary>
+    /// <param name="token">The Token for the Password Reset Request</param>
+    /// <returns>The data model needed when trying to Reset the Password
+    /// We only need the Email, but we send the whole 'PasswordResetRequest' model for convenience at the Front-End
+    /// </returns>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PasswordResetRequest))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [HttpPatch("reset/link")]
+    public async Task<IActionResult> PasswordResetLinkValidation(string token)
+    {
+        var validated = await _context.Resets.FindAsync(token);
+
+        if (validated == null)
+        {
+            return BadRequest("Invalid!");
+        }
+
+        PasswordResetRequest PR = new PasswordResetRequest(validated.Email, validated.token);
+
+        return Ok(PR);
     }
 
     /// <summary>

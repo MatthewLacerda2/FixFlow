@@ -20,4 +20,9 @@ export const FLOW_ROUTES = {
   agendamento: {
     id: "/*",
   },
+  reset: {
+    root: "/reset",
+    request: "/request",
+    reset: "/*",
+  },
 };
