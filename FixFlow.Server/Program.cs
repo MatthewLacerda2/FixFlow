@@ -49,8 +49,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//builder.Services.AddHostedService<MailContacts>();
-//builder.Services.AddHostedService<MailResetPassword>();
+builder.Services.AddTransient<MailContacts>();
+builder.Services.AddTransient<MailResetPassword>();
 
 builder.Services.AddRateLimiter(rate =>
 {
