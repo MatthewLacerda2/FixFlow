@@ -89,15 +89,15 @@ export class AccountsService {
         });
     }
     /**
-     * Returns the Email belonging to that token for Password Change
+     * Returns the PasswordReset belonging to that token
      * Used when the User tries to access a 'Password Reset' link
      * @param token The Token for the Password Reset Request
-     * @returns string OK
+     * @returns PasswordResetRequest OK
      * @throws ApiError
      */
     public static patchApiV1AccountsResetLink(
         token?: string,
-    ): CancelablePromise<string> {
+    ): CancelablePromise<PasswordResetRequest> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/v1/accounts/reset/link',

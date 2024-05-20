@@ -196,7 +196,7 @@ public class AccountsController : ControllerBase
     public async Task<IActionResult> PasswordResetRequest([FromBody] PasswordResetRequest passwordReset)
     {
 
-        IdentityUser user = await _userManager.FindByEmailAsync(passwordReset.Email);
+        IdentityUser user = _userManager.FindByEmailAsync(passwordReset.Email).Result!;
         if (user == null)
         {
             return BadRequest("Email not found");

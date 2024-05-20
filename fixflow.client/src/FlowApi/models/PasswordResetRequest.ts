@@ -3,8 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PasswordResetRequest = {
-  email: string;
-  token: string;
-  password: string;
-  confirmPassword: string;
+    email: string;
+    token: string;
+    password: string;
+    confirmPassword: string;
 };
+

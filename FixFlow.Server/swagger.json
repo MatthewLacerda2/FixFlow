@@ -2091,15 +2091,16 @@
       "PasswordResetRequest": {
         "required": [
           "confirmPassword",
+          "email",
           "password",
           "token"
         ],
         "type": "object",
         "properties": {
           "email": {
+            "minLength": 1,
             "type": "string",
-            "format": "email",
-            "nullable": true
+            "format": "email"
           },
           "token": {
             "minLength": 1,

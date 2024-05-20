@@ -6,13 +6,13 @@ import { AccountsService, PasswordResetRequest } from "../../../FlowApi";
 
 const ResetLinkPage: React.FC = () => {
   const { token } = useParams<{ token: string }>();
-  const [email, setEmail] = useState<string | null>(null);
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  if (token === undefined) {
+  if (token === undefined || token === "") {
     return <div>Null Token</div>;
   }
 
@@ -46,7 +46,6 @@ const ResetLinkPage: React.FC = () => {
         setSuccessMessage(
           "Password reset successfully. Please try logging in now."
         );
-        setEmail(null); // Stop rendering the Card
       })
       .catch(() => {
         setErrorMessage("Failed to reset password. Please try again.");
