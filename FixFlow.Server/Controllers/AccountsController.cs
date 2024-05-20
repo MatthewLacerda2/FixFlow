@@ -8,25 +8,32 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Server.Models;
+using Server.Models.PasswordReset;
+using Server.Services;
 
 namespace Server.Controllers;
 
 [ApiController]
-[Route("api/v1/login")]
-public class LoginController : ControllerBase
+[Route("api/v1/accounts")]
+public class AccountsController : ControllerBase
 {
 
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly ServerContext _context;
+    private readonly MailResetPassword _emailResetPasswordService;
 
-    public LoginController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IConfiguration configuration, ServerContext context)
+    public static readonly int ResetEmailTokenExpirationInMinutes = 15;
+
+    public AccountsController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
+                                IConfiguration configuration, ServerContext context, MailResetPassword emailResetPasswordService)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _configuration = configuration;
         _context = context;
+        _emailResetPasswordService = emailResetPasswordService;
     }
 
     /// <summary>
@@ -120,7 +127,6 @@ public class LoginController : ControllerBase
     /// <response code="401">Password change unsucessfull</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     //[Authorize]
     [HttpPatch]
     public async Task<IActionResult> PasswordChange([FromBody] FlowLoginRequest userRegister)
@@ -149,10 +155,10 @@ public class LoginController : ControllerBase
     /// </summary>
     /// <returns>NoContentResult</returns>
     /// <response code="404">Email not found</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpPost("reset/request")]
-    public async Task<ActionResult> PasswordReset([FromBody] string email)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [HttpPost("reset/email")]
+    public async Task<ActionResult> PasswordResetEmail([FromBody] string email)
     {
 
         IdentityUser user = _userManager.FindByEmailAsync(email).Result!;
@@ -161,12 +167,19 @@ public class LoginController : ControllerBase
             return BadRequest("Email not found");
         }
 
+        var hasEmail = _context.Resets.Where(r => r.Email == email).First();
+        if (hasEmail != null && hasEmail.dateTime >= DateTime.Now.AddMinutes(-ResetEmailTokenExpirationInMinutes))
+        {
+            return BadRequest("Cannot send Email at this time");
+        }
+
         var PasswordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+        PasswordReset passwordReset = new PasswordReset(email, PasswordResetToken, DateTime.Now);
+        await _context.Resets.AddAsync(passwordReset);
 
-        Console.WriteLine("Send email with PasswordResetToken");
-        Console.WriteLine("Call task to expire link in 15 minutes");
+        await _emailResetPasswordService.SendResetPasswordEmailAsync(passwordReset);
 
-        return NoContent();
+        return Ok("Password Reset Email sent");
 
     }
 
@@ -179,17 +192,24 @@ public class LoginController : ControllerBase
     /// <response code="401">Password change unsucessfull</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpPatch("reset/link")]
-    public async Task<IActionResult> PasswordReset([FromBody] FlowLoginRequest userRegister)
+    [HttpPatch("reset/request")]
+    public async Task<IActionResult> PasswordResetRequest([FromBody] PasswordResetRequest passwordReset)
     {
 
-        IdentityUser user = _userManager.FindByEmailAsync(userRegister.Email).Result!;
+        IdentityUser user = _userManager.FindByEmailAsync(passwordReset.Email).Result!;
         if (user == null)
         {
             return BadRequest("Email not found");
         }
 
-        var result = await _userManager.ResetPasswordAsync(user, token, userRegister.newPassword);
+        PasswordReset pr = _context.Resets.Find(passwordReset.token)!;
+
+        if (pr == null || pr.dateTime < DateTime.Now.AddMinutes(-ResetEmailTokenExpirationInMinutes))
+        {
+            return BadRequest("Password Change Unsuccessfull. ");
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, passwordReset.token, passwordReset.password);
 
         if (!result.Succeeded)
         {
@@ -199,6 +219,31 @@ public class LoginController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok("Password changed successfully");
+    }
+
+    /// <summary>
+    /// Returns the PasswordReset belonging to that token
+    /// Used when the User tries to access a 'Password Reset' link
+    /// </summary>
+    /// <param name="token">The Token for the Password Reset Request</param>
+    /// <returns>The data model needed when trying to Reset the Password
+    /// We only need the Email, but we send the whole 'PasswordResetRequest' model for convenience at the Front-End
+    /// </returns>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PasswordResetRequest))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+    [HttpPatch("reset/link")]
+    public async Task<IActionResult> PasswordResetLinkValidation(string token)
+    {
+        var validated = await _context.Resets.FindAsync(token);
+
+        if (validated == null)
+        {
+            return BadRequest("Invalid!");
+        }
+
+        PasswordResetRequest PR = new PasswordResetRequest(validated.Email, validated.token);
+
+        return Ok(PR);
     }
 
     /// <summary>

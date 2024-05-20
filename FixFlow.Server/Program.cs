@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.RateLimiting;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
+using Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,9 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = verifiedIssuerSigningKey
     };
 });
+
+//builder.Services.AddHostedService<MailContacts>();
+//builder.Services.AddHostedService<MailResetPassword>();
 
 builder.Services.AddRateLimiter(rate =>
 {

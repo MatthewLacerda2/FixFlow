@@ -11,6 +11,8 @@ import InfographicsPage from "./Pages/BusinessPage/InfograficosPage/Infograficos
 import SettingsPage from "./Pages/SettingsPage/SettingsPage";
 import PreferencesPage from "./Pages/BusinessPage/PreferencesPage/PreferencesPage";
 import SchedulePage from "./Pages/Apts/SchedulePage/SchedulePage";
+import ResetLinkPage from "./Pages/PasswordReset/ResetLinkPage/ResetLinkPage";
+import ResetRequestPage from "./Pages/PasswordReset/ResetRequestPage/ResetRequestPage";
 
 function App() {
   return (
@@ -40,6 +42,12 @@ function App() {
         <Route path="/agendamento">
           <Route index element={<NotFoundPage />} />
           <Route path="*" element={<SchedulePage />} />
+        </Route>
+
+        <Route path="/reset">
+          <Route index element={<NotFoundPage />} />
+          <Route path="request" element={<ResetRequestPage />} />
+          <Route path="*" element={<ResetLinkPage />} />
         </Route>
       </Routes>
     </div>
