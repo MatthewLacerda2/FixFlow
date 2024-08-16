@@ -1,12 +1,18 @@
+using Microsoft.Data.Sqlite;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Moq;
-using Server.Controllers;
 using Server.Models.Appointments;
+using Server.Models.Filters;
+using Server.Controllers;
 using Server.Models;
 using Server.Data;
-using Microsoft.Data.Sqlite;
+using Moq;
+using Bogus;
+using Server.Seeder;
+using Bogus.DataSets;
+using Microsoft.AspNetCore.Identity.Data;
 
 public class ContactControllerTests
 {
@@ -28,15 +34,10 @@ public class ContactControllerTests
             .UseSqlite(connection)
             .Options;
 
-        // Mock UserManager dependencies
         var userStoreMock = new Mock<IUserStore<Client>>();
         _userManagerMock = new Mock<UserManager<Client>>(userStoreMock.Object, null!, null!, null!, null!, null!, null!, null!, null!);
 
-
-        // Initialize DbContext with the configured options
         _context = new ServerContext(_dbContextOptions);
-
-        // Open SQLite connection and ensure database is created
         _context.Database.OpenConnection();
         _context.Database.EnsureCreated();
 
@@ -53,7 +54,7 @@ public class ContactControllerTests
         var contact = new AptContact(client.Id, business.Id, prevApt.Id);
 
         _context.Clients.Add(client);
-        _context.Business.Add(business);        
+        _context.Business.Add(business);
         _context.Logs.Add(prevApt);
         _context.Contacts.Add(contact);
         _context.SaveChanges();
@@ -63,7 +64,7 @@ public class ContactControllerTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(200, result!.StatusCode);
+        Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
         var returnedContact = Assert.IsType<AptContact>(result.Value);
         Assert.Equal(contact.Id, returnedContact.Id);
     }
@@ -80,7 +81,68 @@ public class ContactControllerTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(404, result!.StatusCode);
+        Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
         Assert.Equal("Contact does not exist", result.Value);
+    }
+
+    [Fact]
+    public void ReadContact_ReturnsEmptyArray_WhenNoContactsMatchFilter()
+    {
+        // Arrange
+        var filter = new AptContactFilter(null!,null!,null!,DateOnly.MinValue,DateOnly.MaxValue);
+
+        // Act
+        var result = _controller.ReadContact(filter) as OkObjectResult;
+
+        // Assert
+        Assert.NotNull(result);
+        var contacts = Assert.IsType<AptContact[]>(result!.Value);
+        Assert.Empty(contacts);
+    }
+
+    [Fact]
+    public void ReadContact_FiltersContacts()
+    {
+        // Arrange
+        var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
+        var business = new Business("business","60742928330","5550123","98999344788","business@gmail.com","");
+        var aptLog = new AptLog(client.Id, business.Id, 30);
+
+        var otherClient = new Client("cicrano", "987654321", null!, "9898263255", "cicrano@gmail.com", true);
+        var otherBusiness = new Business("otherbusiness","60742928000","4560123","98993265849","otherbusiness@gmail.com","");
+        var otherAptLog = new AptLog(client.Id, business.Id, 30);
+
+        _context.Clients.AddRange([client, otherClient]);
+        _context.Business.AddRange([business,otherBusiness]);
+        _context.Logs.AddRange([aptLog, otherAptLog]);
+
+        var filter = new AptContactFilter(client.Id, business.Id, aptLog.Id, new DateOnly(2023,1,1), new DateOnly(2025, 3, 1))
+        {
+            descending = true,
+            offset = 1,
+            limit = 3
+        };
+
+        //We need at least 10 contacts, for we will filter 5 of them out
+        //and then the first and last
+        Faker<AptContact> fakerContacts = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49);
+        var mockContacts = fakerContacts.Generate(10);
+
+        mockContacts[0].ClientId = otherClient.Id;
+        mockContacts[1].businessId = otherBusiness.Id;
+        mockContacts[2].aptLogId = otherAptLog.Id;
+        mockContacts[3].dateTime = DateTime.MinValue;
+        mockContacts[4].dateTime = DateTime.MaxValue;
+
+        _context.Contacts.AddRange(mockContacts);
+        _context.SaveChanges();
+
+        // Act
+        var result = _controller.ReadContact(filter) as OkObjectResult;
+
+        // Assert
+        var contacts = Assert.IsType<AptContact[]>(result!.Value);
+        Assert.Equal(3, contacts.Length);
+        Assert.True(contacts[0].dateTime < contacts[2].dateTime);
     }
 }

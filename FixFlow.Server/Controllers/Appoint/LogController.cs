@@ -68,26 +68,31 @@ public class LogController : ControllerBase
 
         var logsQuery = _context.Logs.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filter.ClientId))
+        if (!string.IsNullOrWhiteSpace(filter.businessId))
         {
-            logsQuery = logsQuery.Where(x => x.ClientId == filter.ClientId);
+            logsQuery = logsQuery.Where(x => x.ClientId == filter.businessId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.businessId))
+        {
+            logsQuery = logsQuery.Where(x => x.businessId == filter.businessId);
         }
 
         logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
         logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
-
-        logsQuery = logsQuery.Where(x => x.dateTime >= filter.minDateTime);
-        logsQuery = logsQuery.Where(x => x.dateTime <= filter.maxDateTime);
+        
+        logsQuery = logsQuery.Where(x => x.dateTime >= new DateTime(filter.minDateTime, new TimeOnly(0)));
+        logsQuery = logsQuery.Where(x => x.dateTime <= new DateTime(filter.maxDateTime, new TimeOnly(0)));
 
         switch (filter.sort)
         {
             case LogSort.ClientId:
                 logsQuery = logsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
                 break;
-            case LogSort.date:
+            case LogSort.Date:
                 logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.price).ThenBy(s => s.Id);
                 break;
-            case LogSort.price:
+            case LogSort.Price:
                 logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
                 break;
         }

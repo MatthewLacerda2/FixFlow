@@ -60,9 +60,9 @@ public class FlowSeeder
 
         foreach (Client cl in clients)
         {
-            Faker<AptContact> fakerContacts = ContactFaker(cl.Id, businesses[indexBusiness % indexBusiness].Id, "fakeLogId", bogusSeed);
-            Faker<AptSchedule> fakerSchedules = ScheduleFaker(cl.Id, businesses[indexBusiness % indexBusiness].Id, null, bogusSeed);
-            Faker<AptLog> fakerLogs = LogFaker(cl.Id, businesses[indexBusiness % indexBusiness].Id, null, bogusSeed);            
+            Faker<AptContact> fakerContacts = GetContactFaker(cl.Id, businesses[indexBusiness % indexBusiness].Id, "fakeLogId", bogusSeed);
+            Faker<AptSchedule> fakerSchedules = GetScheduleFaker(cl.Id, businesses[indexBusiness % indexBusiness].Id, null, bogusSeed);
+            Faker<AptLog> fakerLogs = GetLogFaker(cl.Id, businesses[indexBusiness % indexBusiness].Id, null, bogusSeed);            
 
             AptContact[] bogusContacts = fakerContacts.Generate(numAptsPerClient).ToArray();
             AptSchedule[] bogusSchedules = fakerSchedules.Generate(numAptsPerClient).ToArray();
@@ -149,39 +149,39 @@ public class FlowSeeder
         .StrictMode(true)
         .UseDateTimeReference(Jan1st2024)
 
-        .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
+        .RuleFor(c => c.Id, f => f.Random.Guid().ToString())
         .RuleFor(c => c.FullName, f => f.Name.FullName())
-        .RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan1st2024, Jan1st2024.AddDays(90)))
-        .RuleFor(e => e.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
+        .RuleFor(c => c.CreatedDate, f => f.Date.Between(Jan1st2024, Jan1st2024.AddDays(90)))
+        .RuleFor(c => c.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
         .RuleFor(c => c.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 
         .RuleFor(c => c.additionalNote, f => f.Random.Bool(0.1f) ? f.Random.Words() : null)
         .RuleFor(c => c.signedUp, f => f.Random.Bool(0.4f))
 
-        .RuleFor(e => e.UserName, f => f.Internet.UserName())
-        .RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
+        .RuleFor(c => c.UserName, f => f.Internet.UserName())
+        .RuleFor(c => c.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
 
         .RuleFor(c => c.Email, (f, c) => c.signedUp || f.Random.Bool(0.85f) ? f.Internet.Email(c.FullName.ToLower()) : null)
-        .RuleFor(e => e.NormalizedEmail, (f, e) => e.Email!.ToUpper())
-        .RuleFor(e => e.EmailConfirmed, false)
+        .RuleFor(c => c.NormalizedEmail, (f, c) => c.Email!.ToUpper())
+        .RuleFor(c => c.EmailConfirmed, false)
 
         .RuleFor(c => c.CPF, (f, c) => c.signedUp || f.Random.Bool(0.45f) ? f.Person.Cpf() : null)
 
-        .RuleFor(e => e.PasswordHash, (f, c) => c.signedUp ? f.Random.Guid().ToString().Replace("-", "/") : null)
-        .RuleFor(e => e.AccessFailedCount, 0)
-        .RuleFor(e => e.SecurityStamp, "")
-        .RuleFor(e => e.ConcurrencyStamp, "")
-        .RuleFor(e => e.PhoneNumberConfirmed, false)
-        .RuleFor(e => e.TwoFactorEnabled, false)
-        .RuleFor(e => e.LockoutEnabled, false)
-        .RuleFor(e => e.LockoutEnd, DateTimeOffset.MinValue);
+        .RuleFor(c => c.PasswordHash, (f, c) => c.signedUp ? f.Random.Guid().ToString().Replace("-", "/") : null)
+        .RuleFor(c => c.AccessFailedCount, 0)
+        .RuleFor(c => c.SecurityStamp, "")
+        .RuleFor(c => c.ConcurrencyStamp, "")
+        .RuleFor(c => c.PhoneNumberConfirmed, false)
+        .RuleFor(c => c.TwoFactorEnabled, false)
+        .RuleFor(c => c.LockoutEnabled, false)
+        .RuleFor(c => c.LockoutEnd, DateTimeOffset.MinValue);
 
         var clients = faker_clients.Generate(amount).ToArray();
 
         return clients;
     }
 
-    public static Faker<AptSchedule> ScheduleFaker(string clientId, string businessId, string? contactId, int seed)
+    public static Faker<AptSchedule> GetScheduleFaker(string clientId, string businessId, string? contactId, int seed)
     {
 
         var schedules_faker = new Faker<AptSchedule>()
@@ -189,38 +189,50 @@ public class FlowSeeder
         .StrictMode(false)
         .UseDateTimeReference(Jan1st2024)
 
-        .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
+        .RuleFor(s=>s.ClientId, clientId)
+        .RuleFor(s=>s.businessId, businessId)
+        .RuleFor(s=>s.contactId, contactId)
+
+        .RuleFor(s => s.Id, f => f.Random.Guid().ToString())
         .RuleFor(s => s.price, f => f.Random.Int(30, 100))
-        .RuleFor(x => x.dateTime, f => f.Date.Between(Jan1st2024, Jan1st2024.AddDays(5)))
-        .RuleFor(a => a.price, f => f.Random.Bool(0.7f) ? f.Random.Int(10,250) : null)
-        .RuleFor(a => a.observation, f => f.Random.Bool(0.07f) ? f.Random.Words() : null);
+        .RuleFor(s => s.dateTime, f => f.Date.Between(Jan1st2024, Jan1st2024.AddDays(5)))
+        .RuleFor(s => s.price, f => f.Random.Bool(0.7f) ? f.Random.Int(10,250) : null)
+        .RuleFor(s => s.observation, f => f.Random.Bool(0.07f) ? f.Random.Words() : null);
 
         return schedules_faker;
     }
 
-    public static Faker<AptLog> LogFaker(string clientId, string businessId, string? scheduleId, int seed)
+    public static Faker<AptLog> GetLogFaker(string clientId, string businessId, string? scheduleId, int seed)
     {
         var faker_logs = new Faker<AptLog>()
         .UseSeed(seed)
         .StrictMode(false)
         .UseDateTimeReference(Jan1st2024)
 
-        .RuleFor(e => e.Id, f => f.Random.Guid().ToString())
+        .RuleFor(x=>x.ClientId, clientId)
+        .RuleFor(x=>x.businessId, businessId)
+        .RuleFor(x=>x.scheduleId, scheduleId)
+
+        .RuleFor(x => x.Id, f => f.Random.Guid().ToString())
         .RuleFor(x => x.dateTime, f => f.Date.Between(Jan1st2024, Jan1st2024.AddDays(5)))
-        .RuleFor(s => s.price, f => f.Random.Int(30, 300))
-        .RuleFor(a => a.observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : null);
+        .RuleFor(x => x.price, f => f.Random.Int(30, 300))
+        .RuleFor(x => x.observation, f => f.Random.Bool(0.1f) ? f.Random.Words() : null);
 
         return faker_logs;
     }
 
-    public static Faker<AptContact> ContactFaker(string clientId, string businessId, string aptLogId, int seed)
+    public static Faker<AptContact> GetContactFaker(string clientId, string businessId, string aptLogId, int seed)
     {
         var faker_contact = new Faker<AptContact>()
         .UseSeed(seed)
         .StrictMode(false)
         .UseDateTimeReference(Jan1st2024)
 
-        .RuleFor(e => e.Id, f => f.Random.Guid().ToString());
+        .RuleFor(c=>c.ClientId, clientId)
+        .RuleFor(c=>c.businessId, businessId)
+        .RuleFor(c=>c.aptLogId, aptLogId)
+
+        .RuleFor(c => c.Id, f => f.Random.Guid().ToString());
 
         return faker_contact;
     }

@@ -68,17 +68,27 @@ public class ContactController : ControllerBase
 
         var ContactsQuery = _context.Contacts.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filter.ClientId))
+        if (!string.IsNullOrWhiteSpace(filter.clientId))
         {
-            ContactsQuery = ContactsQuery.Where(x => x.ClientId == filter.ClientId);
+            ContactsQuery = ContactsQuery.Where(x => x.ClientId == filter.clientId);
         }
 
-        ContactsQuery = ContactsQuery.Where(x => x.dateTime >= filter.minDateTime);
-        ContactsQuery = ContactsQuery.Where(x => x.dateTime <= filter.maxDateTime);
+        if (!string.IsNullOrWhiteSpace(filter.businessId))
+        {
+            ContactsQuery = ContactsQuery.Where(x => x.businessId == filter.businessId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.aptLogId))
+        {
+            ContactsQuery = ContactsQuery.Where(x => x.aptLogId == filter.aptLogId);
+        }
+
+        ContactsQuery = ContactsQuery.Where(x => x.dateTime >= new DateTime(filter.minDateTime, new TimeOnly(0)));
+        ContactsQuery = ContactsQuery.Where(x => x.dateTime <= new DateTime(filter.maxDateTime, new TimeOnly(0)));
 
         switch (filter.sort)
         {
-            case ContactSort.date:
+            case ContactSort.Date:
                 ContactsQuery = ContactsQuery.OrderBy(s => s.dateTime).ThenByDescending(s => s.ClientId).ThenBy(s => s.Id);
                 break;
             case ContactSort.ClientId:

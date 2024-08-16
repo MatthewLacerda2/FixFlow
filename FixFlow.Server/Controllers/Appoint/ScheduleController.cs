@@ -66,26 +66,31 @@ public class ScheduleController : ControllerBase
     {
         var schedulesQuery = _context.Schedules.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filter.ClientId))
+        if (!string.IsNullOrWhiteSpace(filter.clientId))
         {
-            schedulesQuery = schedulesQuery.Where(x => x.ClientId == filter.ClientId);
+            schedulesQuery = schedulesQuery.Where(x => x.ClientId == filter.clientId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.businessId))
+        {
+            schedulesQuery = schedulesQuery.Where(x => x.businessId == filter.businessId);
         }
 
         schedulesQuery = schedulesQuery.Where(x => x.price >= filter.minPrice);
         schedulesQuery = schedulesQuery.Where(x => x.price <= filter.maxPrice);
-
-        schedulesQuery = schedulesQuery.Where(x => x.dateTime >= filter.minDateTime);
-        schedulesQuery = schedulesQuery.Where(x => x.dateTime <= filter.maxDateTime);
+        
+        schedulesQuery = schedulesQuery.Where(x => x.dateTime >= new DateTime(filter.minDateTime, new TimeOnly(0)));
+        schedulesQuery = schedulesQuery.Where(x => x.dateTime <= new DateTime(filter.maxDateTime, new TimeOnly(0)));
 
         switch (filter.sort)
         {
             case ScheduleSort.ClientId:
                 schedulesQuery = schedulesQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
                 break;
-            case ScheduleSort.date:
+            case ScheduleSort.Date:
                 schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.price).ThenBy(s => s.Id);
                 break;
-            case ScheduleSort.price:
+            case ScheduleSort.Price:
                 schedulesQuery = schedulesQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
                 break;
         }

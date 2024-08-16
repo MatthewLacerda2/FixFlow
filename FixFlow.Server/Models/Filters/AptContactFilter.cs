@@ -2,17 +2,27 @@ namespace Server.Models.Filters;
 
 public struct AptContactFilter
 {
-    public string? ClientId;
-    public DateTime minDateTime;
-    public DateTime maxDateTime;
+    public string? clientId;
+    public string? businessId;
+    public string? aptLogId;
+    public DateOnly minDateTime;
+    public DateOnly maxDateTime;
 
-    public ContactSort sort;
-    public bool descending;
-    public int offset;
-    public int limit;
+    public ContactSort sort = ContactSort.Date;
+    public bool descending = false;
+    public int offset = 0;
+    public int limit = 10;
+
+    public AptContactFilter(string? _clientId, string? _businessId, string? _aptLogId, DateOnly _minDate, DateOnly _maxDate) {
+        clientId = _clientId;
+        businessId = _businessId;
+        aptLogId = _aptLogId;
+        minDateTime = _minDate;
+        maxDateTime = _maxDate;
+    }
 }
 
 public enum ContactSort
 {
-    ClientId, date
+    ClientId, BusinessId, logId, Date
 }

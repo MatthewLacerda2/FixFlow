@@ -2,19 +2,29 @@ namespace Server.Models.Filters;
 
 public struct AptLogFilter
 {
-    public string? ClientId;
+    public string? clientId;
+    public string? businessId;
+    public bool hasSchedule;
+    
     public float minPrice;
     public float maxPrice;
-    public DateTime minDateTime;
-    public DateTime maxDateTime;
+    public DateOnly minDateTime;
+    public DateOnly maxDateTime;
 
-    public LogSort sort;
-    public bool descending;
-    public int offset;
-    public int limit;
+    public LogSort sort = LogSort.Date;
+    public bool descending = false;
+    public int offset = 0;
+    public int limit = 10;
+
+    public AptLogFilter(string _clientId, string _businessId, DateOnly _minDate, DateOnly _maxDate){
+        clientId = _clientId;
+        businessId = _businessId;
+        minDateTime = _minDate;
+        maxDateTime = _maxDate;
+    }
 }
 
 public enum LogSort
 {
-    ClientId, price, date
+    ClientId, BusinessId, Price, Date
 }
