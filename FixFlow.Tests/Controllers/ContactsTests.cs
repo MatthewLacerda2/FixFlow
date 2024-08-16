@@ -112,9 +112,7 @@ public class ContactControllerTests
         var otherBusiness = new Business("otherbusiness","60742928000","4560123","98993265849","otherbusiness@gmail.com","");
         var otherAptLog = new AptLog(client.Id, business.Id, 30);
 
-        _context.Clients.AddRange([client, otherClient]);
-        _context.Business.AddRange([business,otherBusiness]);
-        _context.Logs.AddRange([aptLog, otherAptLog]);
+        _context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
 
         var filter = new AptContactFilter(client.Id, business.Id, aptLog.Id, new DateOnly(2023,1,1), new DateOnly(2025, 3, 1))
         {
@@ -123,16 +121,18 @@ public class ContactControllerTests
             limit = 3
         };
 
-        //We need at least 10 contacts, for we will filter 5 of them out
-        //and then the first and last
-        Faker<AptContact> fakerContacts = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49);
-        var mockContacts = fakerContacts.Generate(10);
-
-        mockContacts[0].ClientId = otherClient.Id;
-        mockContacts[1].businessId = otherBusiness.Id;
-        mockContacts[2].aptLogId = otherAptLog.Id;
-        mockContacts[3].dateTime = DateTime.MinValue;
-        mockContacts[4].dateTime = DateTime.MaxValue;
+        //We need at least 10 contacts, with 5 filtered out and then apply offset/limit
+        var mockContacts = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49)
+            .Generate(10)
+            .Select((c, i) =>
+            {
+                if (i == 0) c.ClientId = otherClient.Id;
+                if (i == 1) c.businessId = otherBusiness.Id;
+                if (i == 2) c.aptLogId = otherAptLog.Id;
+                if (i == 3) c.dateTime = DateTime.MinValue;
+                if (i == 4) c.dateTime = DateTime.MaxValue;
+                return c;
+            }).ToArray();
 
         _context.Contacts.AddRange(mockContacts);
         _context.SaveChanges();
