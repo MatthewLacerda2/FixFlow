@@ -121,7 +121,7 @@ public class ContactController : ControllerBase
     public async Task<IActionResult> CreateContact([FromBody] AptContact newContact)
     {
 
-        var existingClient = _userManager.FindByIdAsync(newContact.ClientId);
+        var existingClient = await _userManager.FindByIdAsync(newContact.ClientId);
         if (existingClient == null)
         {
             return BadRequest("Client does not exist");
