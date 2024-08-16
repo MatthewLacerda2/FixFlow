@@ -65,14 +65,14 @@ public class AptContact
         business = null!;
     }
 
-    public AptContact(string _clientId, string _prevAppoint)
+    public AptContact(string _clientId, string _businessId, string _prevAppoint)
     {
         Id = Guid.NewGuid().ToString();
         ClientId = _clientId;
-        Client = null!;
-        aptLog = null!;
+        businessId = _businessId;
         aptLogId = _prevAppoint;
-        businessId = string.Empty;
+        Client = null!;
         business = null!;
+        aptLog = null!;
     }
 }

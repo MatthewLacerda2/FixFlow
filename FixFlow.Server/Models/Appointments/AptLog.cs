@@ -69,13 +69,13 @@ public class AptLog
         business = null!;
     }
 
-    public AptLog(string _clientId, float _price)
+    public AptLog(string _clientId, string _businessId, float _price)
     {
         Id = Guid.NewGuid().ToString();
         ClientId = _clientId;
+        businessId = _businessId;
         Client = null!;
-        price = _price;
-        businessId = string.Empty;
         business = null!;
+        price = _price;
     }
 }

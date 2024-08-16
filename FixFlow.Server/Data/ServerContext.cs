@@ -2,13 +2,11 @@ using Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Server.Models.Appointments;
-using Server.Seeder;
 using Server.Models.PasswordReset;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext
 {
-
     public DbSet<Client> Clients { get; set; } = default!;
     public DbSet<Business> Business { get; set; } = default!;
 
@@ -32,6 +30,10 @@ public class ServerContext : IdentityDbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        if (optionsBuilder.IsConfigured)
+        {
+            return;
+        }
         base.OnConfiguring(optionsBuilder);
 
         optionsBuilder.UseMySql(
