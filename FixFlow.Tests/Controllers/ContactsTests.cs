@@ -193,4 +193,42 @@ public class ContactControllerTests {
 		Assert.NotNull(result);
 		Assert.Equal("Log does not exist", result!.Value);
 	}
+
+	[Fact]
+	public async Task UpdateContact_ReturnsBadRequest_WhenContactNotFound() {
+
+		// Arrange
+		var nonExistingContact = new AptContact();
+		// Act
+		var result = await _controller.UpdateContact(nonExistingContact) as BadRequestObjectResult;
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal("Contact does not exist", result!.Value);
+	}
+
+	[Fact]
+	public async Task UpdateContact_ReturnsOk_WhenContactIsUpdated() {
+		
+		// Arrange
+		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
+		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
+		var aptLog = new AptLog(client.Id, business.Id, 30);
+
+		var existingContact = new AptContact(client.Id, business.Id, aptLog.Id);
+
+		_context.AddRange(client, business, aptLog, existingContact);
+		_context.SaveChanges();
+
+		existingContact.dateTime = new DateTime(2024, 12, 12);
+
+		// Act
+		var result = await _controller.UpdateContact(existingContact) as OkObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.IsType<AptContact>(result!.Value);
+		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+		Assert.Equal(existingContact.Id, ((AptContact)result.Value!).Id);
+		Assert.Equal(existingContact.dateTime, ((AptContact)result.Value!).dateTime);
+	}
 }
