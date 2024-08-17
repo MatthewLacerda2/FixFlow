@@ -17,13 +17,13 @@ namespace Server.Controllers;
 [ApiController]
 [Route(Common.api_route + "contacts")]
 [Produces("application/json")]
-public class ContactController : ControllerBase
+public class AptContactController : ControllerBase
 {
 	
     private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
 
-    public ContactController(ServerContext context, UserManager<Client> userManager)
+    public AptContactController(ServerContext context, UserManager<Client> userManager)
     {
         _context = context;
         _userManager = userManager;

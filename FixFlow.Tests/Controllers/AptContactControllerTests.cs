@@ -13,14 +13,14 @@ using Server.Seeder;
 
 namespace FixFlow.Tests.Controllers;
 
-public class ContactControllerTests {
+public class AptContactControllerTests {
 
 	private readonly DbContextOptions<ServerContext> _dbContextOptions;
 	private readonly Mock<UserManager<Client>> _userManagerMock;
 	private readonly ServerContext _context;
-	private readonly ContactController _controller;
+	private readonly AptContactController _controller;
 
-	public ContactControllerTests() {
+	public AptContactControllerTests() {
 
 		var connectionStringBuilder = new SqliteConnectionStringBuilder {
 			DataSource = ":memory:"
@@ -39,7 +39,7 @@ public class ContactControllerTests {
 		_context.Database.OpenConnection();
 		_context.Database.EnsureCreated();
 
-		_controller = new ContactController(_context, _userManagerMock.Object);
+		_controller = new AptContactController(_context, _userManagerMock.Object);
 	}
 
 	[Fact]
@@ -72,7 +72,7 @@ public class ContactControllerTests {
 
 		// Arrange
 		var contactId = "2";
-		var controller = new ContactController(_context, _userManagerMock.Object);
+		var controller = new AptContactController(_context, _userManagerMock.Object);
 
 		// Act
 		var result = await controller.ReadContact(contactId) as NotFoundObjectResult;

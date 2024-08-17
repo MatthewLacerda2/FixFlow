@@ -6,14 +6,14 @@ using Server.Models.Appointments;
 
 namespace Server.Validators.Appointments;
 
-public class ContactValidator : AbstractValidator<AptContact>
-{
+public class ContactValidator : AbstractValidator<AptContact> {
+
     private readonly ServerContext _context;
     private readonly UserManager<Client> _clientUserManager;
     private readonly UserManager<Business> _businessUserManager;
 
-    public ContactValidator(ServerContext context, UserManager<Client> clientUserManager, UserManager<Business> businessUserManager)
-    {
+    public ContactValidator(ServerContext context, UserManager<Client> clientUserManager, UserManager<Business> businessUserManager) {
+
         _context = context;
         _clientUserManager = clientUserManager;
         _businessUserManager = businessUserManager;
@@ -34,18 +34,15 @@ public class ContactValidator : AbstractValidator<AptContact>
             .Must(AptLogExists).WithMessage("AptLog does not exist");
     }
 
-    private async Task<bool> ClientExists(string clientId, CancellationToken cancellationToken)
-    {
+    private async Task<bool> ClientExists(string clientId, CancellationToken cancellationToken) {
         return await _clientUserManager.FindByIdAsync(clientId) != null;
     }
 
-    private async Task<bool> BusinessExists(string businessId, CancellationToken cancellationToken)
-    {
+    private async Task<bool> BusinessExists(string businessId, CancellationToken cancellationToken) {
         return await _businessUserManager.FindByIdAsync(businessId) != null;
     }
 
-    private bool AptLogExists(string aptLogId)
-    {
+    private bool AptLogExists(string aptLogId) {
         return _context.Logs.Find(aptLogId) != null;
     }
 }

@@ -17,13 +17,13 @@ namespace Server.Controllers;
 [ApiController]
 [Route(Common.api_route + "logs")]
 [Produces("application/json")]
-public class LogController : ControllerBase
+public class AptLogController : ControllerBase
 {
 
     private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
 
-    public LogController(ServerContext context, UserManager<Client> userManager)
+    public AptLogController(ServerContext context, UserManager<Client> userManager)
     {
         _context = context;
         _userManager = userManager;
