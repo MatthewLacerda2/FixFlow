@@ -1,7 +1,7 @@
 namespace Server.Models.Filters;
-
-public struct AptContactFilter
-{
+//TODO: It's validator
+public struct AptContactFilter {
+    
     public string? clientId;
     public string? businessId;
     public DateOnly minDateTime;
@@ -12,7 +12,7 @@ public struct AptContactFilter
     public int offset = 0;
     public int limit = 10;
 
-    public AptContactFilter(string? _clientId, string? _businessId, string? _aptLogId, DateOnly _minDate, DateOnly _maxDate) {
+    public AptContactFilter(string? _clientId, string? _businessId, DateOnly _minDate, DateOnly _maxDate) {
         clientId = _clientId;
         businessId = _businessId;
         minDateTime = _minDate;

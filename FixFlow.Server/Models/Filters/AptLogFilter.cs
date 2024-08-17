@@ -1,7 +1,7 @@
 namespace Server.Models.Filters;
+//TODO: It's validator
+public struct AptLogFilter {
 
-public struct AptLogFilter
-{
     public string? clientId;
     public string? businessId;
     //TODO: Add 'hasSchedule' and 'hasContact'. Those are important to calculate customer retention

@@ -1,7 +1,7 @@
 namespace Server.Models.Filters;
+//TODO: It's validator
+public struct AptScheduleFilter {
 
-public struct AptScheduleFilter
-{
     public string? clientId;
     public string? businessId;
     public bool hasContact;

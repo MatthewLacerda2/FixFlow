@@ -15,7 +15,6 @@ namespace FixFlow.Tests.Controllers;
 
 public class AptContactControllerTests {
 
-	private readonly DbContextOptions<ServerContext> _dbContextOptions;
 	private readonly Mock<UserManager<Client>> _userManagerMock;
 	private readonly ServerContext _context;
 	private readonly AptContactController _controller;
@@ -27,8 +26,7 @@ public class AptContactControllerTests {
 		};
 		var connection = new SqliteConnection(connectionStringBuilder.ToString());
 
-		// Configure DbContext to use SQLite in-memory database
-		_dbContextOptions = new DbContextOptionsBuilder<ServerContext>()
+		DbContextOptions<ServerContext> _dbContextOptions = new DbContextOptionsBuilder<ServerContext>()
 			.UseSqlite(connection)
 			.Options;
 
@@ -81,9 +79,32 @@ public class AptContactControllerTests {
 
 	[Fact]
 	public void ReadContacts_ReturnsEmptyArray_WhenNoContactsMatchFilter() {
-
 		// Arrange
-		var filter = new AptContactFilter(null!, null!, null!, DateOnly.MinValue, DateOnly.MaxValue);
+		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
+		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
+		var aptLog = new AptLog(client.Id, business.Id, 30);
+
+		var otherClient = new Client("cicrano", "987654321", null!, "9898263255", "cicrano@gmail.com", true);
+		var otherBusiness = new Business("otherbusiness", "60742928000", "4560123", "98993265849", "otherbusiness@gmail.com", "");
+		var otherAptLog = new AptLog(client.Id, business.Id, 30);
+
+		_context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
+
+		var filter = new AptContactFilter(client.Id, business.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1));
+
+		//We need at least 10 contacts, with 5 filtered out and then apply offset/limit
+		var mockContacts = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49)
+			.Generate(4)
+			.Select((c, i) => {
+				if (i == 0) c.clientId = otherClient.Id;
+				if (i == 1) c.businessId = otherBusiness.Id;
+				if (i == 2) c.dateTime = DateTime.MinValue;
+				if (i == 3) c.dateTime = DateTime.MaxValue;
+				return c;
+			}).ToArray();
+
+		_context.Contacts.AddRange(mockContacts);
+		_context.SaveChanges();
 
 		// Act
 		var result = _controller.ReadContacts(filter) as OkObjectResult;
@@ -97,7 +118,6 @@ public class AptContactControllerTests {
 
 	[Fact]
 	public void ReadContacts_FiltersContacts() {
-
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -109,7 +129,7 @@ public class AptContactControllerTests {
 
 		_context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
 
-		var filter = new AptContactFilter(client.Id, business.Id, aptLog.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
+		var filter = new AptContactFilter(client.Id, business.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
 			sort = ContactSort.Date,
 			descending = true,
 			offset = 1,

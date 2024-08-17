@@ -15,8 +15,6 @@ namespace FixFlow.Tests.Controllers;
 
 public class AptLogControllerTests {
 
-	private readonly DbContextOptions<ServerContext> _dbContextOptions;
-	private readonly Mock<UserManager<Client>> _userManagerMock;
 	private readonly ServerContext _context;
 	private readonly AptLogController _controller;
 
@@ -27,13 +25,13 @@ public class AptLogControllerTests {
 		};
 		var connection = new SqliteConnection(connectionStringBuilder.ToString());
 
-		// Configure DbContext to use SQLite in-memory database
-		_dbContextOptions = new DbContextOptionsBuilder<ServerContext>()
+		DbContextOptions<ServerContext> _dbContextOptions = new DbContextOptionsBuilder<ServerContext>()
 			.UseSqlite(connection)
 			.Options;
 
 		var userStoreMock = new Mock<IUserStore<Client>>();
-		_userManagerMock = new Mock<UserManager<Client>>(userStoreMock.Object, null!, null!, null!, null!, null!, null!, null!, null!);
+
+		Mock<UserManager<Client>> _userManagerMock = new Mock<UserManager<Client>>(userStoreMock.Object, null!, null!, null!, null!, null!, null!, null!, null!);
 
 		_context = new ServerContext(_dbContextOptions);
 		_context.Database.OpenConnection();
@@ -75,9 +73,39 @@ public class AptLogControllerTests {
 	[Fact]
 	public void ReadLogs_ReturnsEmptyArray_WhenNoLogsMatchFilter() {
 		// Arrange
-		var filter = new AptLogFilter(null!, null!, 0f, 100f, DateOnly.MinValue, DateOnly.MaxValue);
+		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
+		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
+
+		var otherClient = new Client("cicrano", "987654321", null!, "9898263255", "cicrano@gmail.com", true);
+		var otherBusiness = new Business("otherbusiness", "60742928000", "4560123", "98993265849", "otherbusiness@gmail.com", "");
+
+		_context.AddRange(client, business, otherClient, otherBusiness);
+		_context.SaveChanges();
+
+		var filter = new AptLogFilter(client.Id, business.Id, 10f, 100f, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1));
+
+		//We need at least 11 logs, with 6 filtered out and then apply offset/limit
+		var mockLogs = FlowSeeder.GetLogFaker(client.Id, business.Id, null!, 49)
+			.Generate(6)
+			.Select((c, i) => {
+
+				c.price = 30f;
+
+				if (i == 0) c.clientId = otherClient.Id;
+				if (i == 1) c.businessId = otherBusiness.Id;
+				if (i == 2) c.dateTime = DateTime.MinValue;
+				if (i == 3) c.dateTime = DateTime.MaxValue;
+				if (i == 4) c.price = 0;
+				if (i == 5) c.price = 300;
+				return c;
+			}).ToArray();
+
+		_context.Logs.AddRange(mockLogs);
+		_context.SaveChanges();
+
 		// Act
 		var result = _controller.ReadLogs(filter) as OkObjectResult;
+
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
