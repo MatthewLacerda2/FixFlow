@@ -19,7 +19,7 @@ namespace Server.Controllers;
 [Produces("application/json")]
 public class ContactController : ControllerBase
 {
-
+	
     private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
 
