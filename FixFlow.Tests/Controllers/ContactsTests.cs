@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-
 using Moq;
-
 using Server.Controllers;
 using Server.Data;
 using Server.Models;
@@ -15,17 +13,16 @@ using Server.Seeder;
 
 namespace FixFlow.Tests.Controllers;
 
-public class ContactControllerTests
-{
+public class ContactControllerTests {
+
 	private readonly DbContextOptions<ServerContext> _dbContextOptions;
 	private readonly Mock<UserManager<Client>> _userManagerMock;
 	private readonly ServerContext _context;
 	private readonly ContactController _controller;
 
-	public ContactControllerTests()
-	{
-		var connectionStringBuilder = new SqliteConnectionStringBuilder
-		{
+	public ContactControllerTests() {
+
+		var connectionStringBuilder = new SqliteConnectionStringBuilder {
 			DataSource = ":memory:"
 		};
 		var connection = new SqliteConnection(connectionStringBuilder.ToString());
@@ -46,8 +43,8 @@ public class ContactControllerTests
 	}
 
 	[Fact]
-	public async Task ReadContact_ReturnsContact_WhenContactExists()
-	{
+	public async Task ReadContact_ReturnsContact_WhenContactExists() {
+
 		// Arrange
 		var client = new Client("fulano", "123456789", "", "88263255", "fulano@hotmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -71,8 +68,8 @@ public class ContactControllerTests
 	}
 
 	[Fact]
-	public async Task ReadContact_ReturnsNotFound_WhenContactDoesNotExist()
-	{
+	public async Task ReadContact_ReturnsNotFound_WhenContactDoesNotExist() {
+
 		// Arrange
 		var contactId = "2";
 		var controller = new ContactController(_context, _userManagerMock.Object);
@@ -87,8 +84,8 @@ public class ContactControllerTests
 	}
 
 	[Fact]
-	public void ReadContact_ReturnsEmptyArray_WhenNoContactsMatchFilter()
-	{
+	public void ReadContact_ReturnsEmptyArray_WhenNoContactsMatchFilter() {
+
 		// Arrange
 		var filter = new AptContactFilter(null!, null!, null!, DateOnly.MinValue, DateOnly.MaxValue);
 
@@ -103,8 +100,8 @@ public class ContactControllerTests
 	}
 
 	[Fact]
-	public void ReadContact_FiltersContacts()
-	{
+	public void ReadContact_FiltersContacts() {
+
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -116,8 +113,7 @@ public class ContactControllerTests
 
 		_context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
 
-		var filter = new AptContactFilter(client.Id, business.Id, aptLog.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1))
-		{
+		var filter = new AptContactFilter(client.Id, business.Id, aptLog.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
 			descending = true,
 			offset = 1,
 			limit = 3
@@ -126,8 +122,7 @@ public class ContactControllerTests
 		//We need at least 10 contacts, with 5 filtered out and then apply offset/limit
 		var mockContacts = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49)
 			.Generate(10)
-			.Select((c, i) =>
-			{
+			.Select((c, i) => {
 				if (i == 0) c.ClientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.aptLogId = otherAptLog.Id;
@@ -151,8 +146,8 @@ public class ContactControllerTests
 	}
 
 	[Fact]
-	public async Task CreateContact_ReturnsCreated_WhenValid()
-	{
+	public async Task CreateContact_ReturnsCreated_WhenValid() {
+
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -176,8 +171,8 @@ public class ContactControllerTests
 	}
 
 	[Fact]
-	public async Task CreateContact_ReturnsBadRequest_WhenLogNotFound()
-	{
+	public async Task CreateContact_ReturnsBadRequest_WhenLogNotFound() {
+
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
