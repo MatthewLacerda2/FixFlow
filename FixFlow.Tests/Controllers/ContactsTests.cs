@@ -97,6 +97,7 @@ public class ContactControllerTests
 
 		// Assert
 		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
 		var contacts = Assert.IsType<AptContact[]>(result!.Value);
 		Assert.Empty(contacts);
 	}
@@ -142,6 +143,8 @@ public class ContactControllerTests
 		var result = _controller.ReadContact(filter) as OkObjectResult;
 
 		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
 		var contacts = Assert.IsType<AptContact[]>(result!.Value);
 		Assert.Equal(3, contacts.Length);
 		Assert.True(contacts[0].dateTime < contacts[2].dateTime);
@@ -168,6 +171,7 @@ public class ContactControllerTests
 		// Assert
 		Assert.NotNull(result);
 		var createdContact = Assert.IsType<AptContact>(result!.Value);
+		Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
 		Assert.Equal(newContact.ClientId, createdContact.ClientId);
 	}
 
