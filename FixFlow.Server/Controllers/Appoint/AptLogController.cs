@@ -122,12 +122,6 @@ public class AptLogController : ControllerBase
     public async Task<IActionResult> CreateLog([FromBody] AptLog newAppointment)
     {
 
-        var existingClient = _userManager.FindByIdAsync(newAppointment.ClientId);
-        if (existingClient == null)
-        {
-            return BadRequest("Client does not exist");
-        }
-
         if (!string.IsNullOrWhiteSpace(newAppointment.scheduleId))
         {
             var existingSchedule = _context.Schedules.Find(newAppointment.scheduleId);

@@ -64,7 +64,7 @@ public class AptContactController : ControllerBase
     /// <response code="200">Returns an array of AppointmentContact</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptContact[]>))]
     [HttpGet]
-    public IActionResult ReadContact([FromBody] AptContactFilter filter)
+    public IActionResult ReadContacts([FromBody] AptContactFilter filter)
     {
 
         var ContactsQuery = _context.Contacts.AsQueryable();

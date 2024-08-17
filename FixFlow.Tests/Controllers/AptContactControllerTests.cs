@@ -90,7 +90,7 @@ public class AptContactControllerTests {
 		var filter = new AptContactFilter(null!, null!, null!, DateOnly.MinValue, DateOnly.MaxValue);
 
 		// Act
-		var result = _controller.ReadContact(filter) as OkObjectResult;
+		var result = _controller.ReadContacts(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
@@ -135,7 +135,7 @@ public class AptContactControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadContact(filter) as OkObjectResult;
+		var result = _controller.ReadContacts(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
