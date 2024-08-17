@@ -4,7 +4,8 @@ public struct AptLogFilter
 {
     public string? clientId;
     public string? businessId;
-    public string? scheduleId;
+
+    //TODO: Add 'hasSchedule' and 'hasContact'. Those are important to calculate customer retention
     
     public float minPrice;
     public float maxPrice;

@@ -89,11 +89,14 @@ public class AptLogController : ControllerBase
             case LogSort.ClientId:
                 logsQuery = logsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
                 break;
+            case LogSort.BusinessId:
+                logsQuery = logsQuery.OrderBy(s => s.businessId).ThenByDescending(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+                break;
             case LogSort.Date:
-                logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.price).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
                 break;
             case LogSort.Price:
-                logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
                 break;
         }
 

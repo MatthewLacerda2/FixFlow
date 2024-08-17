@@ -4,7 +4,6 @@ public struct AptContactFilter
 {
     public string? clientId;
     public string? businessId;
-    public string? aptLogId;
     public DateOnly minDateTime;
     public DateOnly maxDateTime;
 
@@ -16,7 +15,6 @@ public struct AptContactFilter
     public AptContactFilter(string? _clientId, string? _businessId, string? _aptLogId, DateOnly _minDate, DateOnly _maxDate) {
         clientId = _clientId;
         businessId = _businessId;
-        aptLogId = _aptLogId;
         minDateTime = _minDate;
         maxDateTime = _maxDate;
     }
@@ -24,5 +22,5 @@ public struct AptContactFilter
 
 public enum ContactSort
 {
-    ClientId, BusinessId, logId, Date
+    ClientId, BusinessId, Date
 }

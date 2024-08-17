@@ -79,22 +79,21 @@ public class AptContactController : ControllerBase
             ContactsQuery = ContactsQuery.Where(x => x.businessId == filter.businessId);
         }
 
-        if (!string.IsNullOrWhiteSpace(filter.aptLogId))
-        {
-            ContactsQuery = ContactsQuery.Where(x => x.aptLogId == filter.aptLogId);
-        }
-
         ContactsQuery = ContactsQuery.Where(x => x.dateTime >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
         ContactsQuery = ContactsQuery.Where(x => x.dateTime <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
 
         switch (filter.sort)
         {
+            case ContactSort.ClientId:
+                ContactsQuery = ContactsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.businessId).ThenBy(s => s.Id);
+                break;
+            case ContactSort.BusinessId:
+                ContactsQuery = ContactsQuery.OrderBy(s => s.businessId).ThenByDescending(s => s.clientId).ThenBy(s => s.Id);
+                break;
             case ContactSort.Date:
                 ContactsQuery = ContactsQuery.OrderBy(s => s.dateTime).ThenByDescending(s => s.clientId).ThenBy(s => s.Id);
                 break;
-            case ContactSort.ClientId:
-                ContactsQuery = ContactsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
-                break;
+            
         }
 
         if (filter.descending)
