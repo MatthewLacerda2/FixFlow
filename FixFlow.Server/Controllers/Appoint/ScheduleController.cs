@@ -68,7 +68,7 @@ public class ScheduleController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(filter.clientId))
         {
-            schedulesQuery = schedulesQuery.Where(x => x.ClientId == filter.clientId);
+            schedulesQuery = schedulesQuery.Where(x => x.clientId == filter.clientId);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.businessId))
@@ -85,13 +85,13 @@ public class ScheduleController : ControllerBase
         switch (filter.sort)
         {
             case ScheduleSort.ClientId:
-                schedulesQuery = schedulesQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
                 break;
             case ScheduleSort.Date:
-                schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.price).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.price).ThenBy(s => s.Id);
                 break;
             case ScheduleSort.Price:
-                schedulesQuery = schedulesQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.Id);
                 break;
         }
 
@@ -121,7 +121,7 @@ public class ScheduleController : ControllerBase
     public async Task<IActionResult> CreateSchedule([FromBody] AptSchedule newAppointment)
     {
 
-        var existingClient = _userManager.FindByIdAsync(newAppointment.ClientId);
+        var existingClient = _userManager.FindByIdAsync(newAppointment.clientId);
         if (existingClient == null)
         {
             return BadRequest("Client does not exist");

@@ -189,7 +189,7 @@ public class FlowSeeder
         .StrictMode(false)
         .UseDateTimeReference(Jan1st2024)
 
-        .RuleFor(s=>s.ClientId, clientId)
+        .RuleFor(s=>s.clientId, clientId)
         .RuleFor(s=>s.businessId, businessId)
         .RuleFor(s=>s.contactId, contactId)
 
@@ -209,7 +209,7 @@ public class FlowSeeder
         .StrictMode(false)
         .UseDateTimeReference(Jan1st2024)
 
-        .RuleFor(x=>x.ClientId, clientId)
+        .RuleFor(x=>x.clientId, clientId)
         .RuleFor(x=>x.businessId, businessId)
         .RuleFor(x=>x.scheduleId, scheduleId)
 
@@ -228,7 +228,7 @@ public class FlowSeeder
         .StrictMode(false)
         .UseDateTimeReference(Jan1st2024)
 
-        .RuleFor(c=>c.ClientId, clientId)
+        .RuleFor(c=>c.clientId, clientId)
         .RuleFor(c=>c.businessId, businessId)
         .RuleFor(c=>c.aptLogId, aptLogId)
 

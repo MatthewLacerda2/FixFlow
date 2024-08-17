@@ -18,7 +18,7 @@ public class AptLogControllerTests {
 	private readonly DbContextOptions<ServerContext> _dbContextOptions;
 	private readonly Mock<UserManager<Client>> _userManagerMock;
 	private readonly ServerContext _context;
-	private readonly AptContactController _controller;
+	private readonly AptLogController _controller;
 
 	public AptLogControllerTests() {
 
@@ -39,69 +39,55 @@ public class AptLogControllerTests {
 		_context.Database.OpenConnection();
 		_context.Database.EnsureCreated();
 
-		_controller = new AptContactController(_context, _userManagerMock.Object);
+		_controller = new AptLogController(_context, _userManagerMock.Object);
 	}
 
 	[Fact]
-	public async Task ReadContact_ReturnsContact_WhenContactExists() {
-
+	public async Task ReadLog_ReturnsLog_WhenLogExists() {
 		// Arrange
 		var client = new Client("fulano", "123456789", "", "88263255", "fulano@hotmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var prevApt = new AptLog(client.Id, business.Id, 30);
-		var contact = new AptContact(client.Id, business.Id, prevApt.Id);
+		var log = new AptLog(client.Id, business.Id, 30);
 
-		_context.Clients.Add(client);
-		_context.Business.Add(business);
-		_context.Logs.Add(prevApt);
-		_context.Contacts.Add(contact);
+		_context.AddRange(client, business, log);
 		_context.SaveChanges();
 
 		// Act
-		var result = await _controller.ReadContact(contact.Id) as OkObjectResult;
+		var result = await _controller.ReadLog(log.Id) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
-		var returnedContact = Assert.IsType<AptContact>(result.Value);
-		Assert.Equal(contact.Id, returnedContact.Id);
+		var returnedLog = Assert.IsType<AptLog>(result.Value);
+		Assert.Equal(log.Id, returnedLog.Id);
 	}
 
 	[Fact]
-	public async Task ReadContact_ReturnsNotFound_WhenContactDoesNotExist() {
-
-		// Arrange
-		var contactId = "2";
-		var controller = new AptContactController(_context, _userManagerMock.Object);
-
+	public async Task ReadLog_ReturnsNotFound_WhenLogDoesNotExist() {
 		// Act
-		var result = await controller.ReadContact(contactId) as NotFoundObjectResult;
-
+		var result = await _controller.ReadLog("nonExistingId") as NotFoundObjectResult;
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
-		Assert.Equal("Contact does not exist", result.Value);
+		Assert.Equal("Log does not exist", result.Value);
 	}
 
 	[Fact]
-	public void ReadContact_ReturnsEmptyArray_WhenNoContactsMatchFilter() {
-
+	public void ReadLogs_ReturnsEmptyArray_WhenNoLogsMatchFilter() {
 		// Arrange
-		var filter = new AptContactFilter(null!, null!, null!, DateOnly.MinValue, DateOnly.MaxValue);
-
+		var filter = new AptLogFilter(null!, null!, DateOnly.MinValue, DateOnly.MaxValue);
 		// Act
-		var result = _controller.ReadContact(filter) as OkObjectResult;
-
+		var result = _controller.ReadLogs(filter) as OkObjectResult;
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
-		var contacts = Assert.IsType<AptContact[]>(result!.Value);
-		Assert.Empty(contacts);
+		var logs = Assert.IsType<AptLog[]>(result!.Value);
+		Assert.Empty(logs);
 	}
 
 	[Fact]
-	public void ReadContact_FiltersContacts() {
-
+	public void ReadLogs_FiltersLogs() {
+		//TODO: FINISH THIS
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -113,41 +99,152 @@ public class AptLogControllerTests {
 
 		_context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
 
-		var filter = new AptContactFilter(client.Id, business.Id, aptLog.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
+		var filter = new AptLogFilter(client.Id, business.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
 			descending = true,
 			offset = 1,
 			limit = 3
 		};
 
-		//We need at least 10 contacts, with 5 filtered out and then apply offset/limit
-		var mockContacts = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49)
+		//We need at least 10 logss, with 5 filtered out and then apply offset/limit
+		var mockLogs = FlowSeeder.GetLogFaker(client.Id, business.Id, aptLog.Id, 49)
 			.Generate(10)
 			.Select((c, i) => {
-				if (i == 0) c.ClientId = otherClient.Id;
+				if (i == 0) c.clientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
-				if (i == 2) c.aptLogId = otherAptLog.Id;
+				if (i == 2) c.scheduleId = otherAptLog.Id;
 				if (i == 3) c.dateTime = DateTime.MinValue;
 				if (i == 4) c.dateTime = DateTime.MaxValue;
 				return c;
 			}).ToArray();
 
-		_context.Contacts.AddRange(mockContacts);
+		_context.Logs.AddRange(mockLogs);
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadContact(filter) as OkObjectResult;
+		var result = _controller.ReadLogs(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
-		var contacts = Assert.IsType<AptContact[]>(result!.Value);
-		Assert.Equal(3, contacts.Length);
-		Assert.True(contacts[0].dateTime < contacts[2].dateTime);
+		var logs = Assert.IsType<AptLog[]>(result!.Value);
+		Assert.Equal(3, logs.Length);
+		Assert.True(logs[0].dateTime < logs[2].dateTime);
 	}
 
 	[Fact]
-	public async Task CreateContact_ReturnsCreated_WhenValid() {
+	public async Task CreateLog_ReturnsCreated_WhenScheduleIsNull() {
+		// Arrange
+		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
+		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
+		var newLog = new AptLog(client.Id, business.Id, 30);
 
+		_context.AddRange(client, business);
+		_context.SaveChanges();
+
+		// Act
+		var result = await _controller.CreateLog(newLog) as CreatedAtActionResult;
+
+		// Assert
+		Assert.NotNull(result);
+		var createdLog = Assert.IsType<AptLog>(result!.Value);
+		Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
+		Assert.Equal(newLog.Id, createdLog.Id);
+	}
+
+	[Fact]
+	public async Task CreateLog_ReturnsCreated_WhenScheduleDoesNotExist() {
+		// Arrange
+		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
+		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
+
+		_context.AddRange(client, business);
+		_context.SaveChanges();
+
+		var newLog = new AptLog(client.Id, business.Id, 30);
+		newLog.scheduleId = "nonExistingId";
+
+		// Act
+		var result = await _controller.CreateLog(newLog) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
+		Assert.Equal("Schedule does not exist", result!.Value);
+	}
+
+	[Fact]
+	public async Task CreateLog_ReturnsCreated_WhenScheduleExists() {
+		// Arrange
+		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
+		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
+
+		_context.AddRange(client, business, schedule);
+		_context.SaveChanges();
+
+		var newLog = new AptLog(client.Id, business.Id, 30);
+		newLog.scheduleId = schedule.Id;
+
+		// Act
+		var result = await _controller.CreateLog(newLog) as CreatedAtActionResult;
+
+		// Assert
+		Assert.NotNull(result);
+		var createdLog = Assert.IsType<AptLog>(result!.Value);
+		Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
+		Assert.Equal(newLog.Id, createdLog.Id);
+	}
+
+	[Fact]
+	public async Task UpdateLog_ReturnsBadRequest_WhenLogNotFound() {
+		// Arrange
+		var nonExistingLog = new AptLog();
+		// Act
+		var result = await _controller.UpdateLog(nonExistingLog) as BadRequestObjectResult;
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
+		Assert.Equal("Log does not exist", result!.Value);
+	}
+
+	[Fact]
+	public async Task UpdateLog_ReturnsOk_WhenLogIsUpdated() {
+		// Arrange
+		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
+		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
+		var existingSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
+		var aptLog = new AptLog(client.Id, business.Id, 30);
+		aptLog.dateTime = new DateTime(2024, 1, 1);
+		aptLog.scheduleId = existingSchedule.Id;
+
+		_context.AddRange(client, business, existingSchedule, aptLog);
+		_context.SaveChanges();
+
+		aptLog.dateTime = new DateTime(2024, 12, 12);
+
+		// Act
+		var result = await _controller.UpdateLog(aptLog) as OkObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.IsType<AptLog>(result!.Value);
+		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+		Assert.Equal(aptLog.Id, ((AptLog)result.Value!).Id);
+		Assert.Equal(aptLog.dateTime, ((AptLog)result.Value!).dateTime);
+	}
+
+	[Fact]
+	public async Task DeleteLog_ReturnsBadRequest_WhenLogNotFound() {
+		// Act
+		var result = await _controller.DeleteLog("nonExistingId") as BadRequestObjectResult;
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
+		Assert.Equal("Log does not exist", result!.Value);
+	}
+
+	[Fact]
+	public async Task DeleteLog_ReturnsNoContent_WhenLogExists() {
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -156,113 +253,14 @@ public class AptLogControllerTests {
 		_context.AddRange(client, business, aptLog);
 		_context.SaveChanges();
 
-		var newContact = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49).Generate(1).First();
-
-		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.ClientId)).ReturnsAsync(client);
-
 		// Act
-		var result = await _controller.CreateContact(newContact) as CreatedAtActionResult;
+		var result = await _controller.DeleteLog(aptLog.Id) as NoContentResult;
 
 		// Assert
+		var logInDb = _context.Logs.Find(aptLog.Id);
 		Assert.NotNull(result);
-		var createdContact = Assert.IsType<AptContact>(result!.Value);
-		Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
-		Assert.Equal(newContact.ClientId, createdContact.ClientId);
-	}
-
-	[Fact]
-	public async Task CreateContact_ReturnsBadRequest_WhenLogNotFound() {
-
-		// Arrange
-		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
-		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-
-		_context.AddRange(client, business);
-		_context.SaveChanges();
-
-		var newContact = FlowSeeder.GetContactFaker(client.Id, business.Id, "nonExistentLogId", 49)
-			.Generate(1)
-			.First();
-
-		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.ClientId)).ReturnsAsync(client);
-
-		// Act
-		var result = await _controller.CreateContact(newContact) as BadRequestObjectResult;
-
-		// Assert
-		Assert.NotNull(result);
-		Assert.Equal("Log does not exist", result!.Value);
-	}
-
-	[Fact]
-	public async Task UpdateContact_ReturnsBadRequest_WhenContactNotFound() {
-
-		// Arrange
-		var nonExistingContact = new AptContact();
-		// Act
-		var result = await _controller.UpdateContact(nonExistingContact) as BadRequestObjectResult;
-		// Assert
-		Assert.NotNull(result);
-		Assert.Equal("Contact does not exist", result!.Value);
-	}
-
-	[Fact]
-	public async Task UpdateContact_ReturnsOk_WhenContactIsUpdated() {
-
-		// Arrange
-		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
-		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var aptLog = new AptLog(client.Id, business.Id, 30);
-
-		var existingContact = new AptContact(client.Id, business.Id, aptLog.Id);
-
-		_context.AddRange(client, business, aptLog, existingContact);
-		_context.SaveChanges();
-
-		existingContact.dateTime = new DateTime(2024, 12, 12);
-
-		// Act
-		var result = await _controller.UpdateContact(existingContact) as OkObjectResult;
-
-		// Assert
-		Assert.NotNull(result);
-		Assert.IsType<AptContact>(result!.Value);
-		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
-		Assert.Equal(existingContact.Id, ((AptContact)result.Value!).Id);
-		Assert.Equal(existingContact.dateTime, ((AptContact)result.Value!).dateTime);
-	}
-
-	[Fact]
-	public async Task DeleteContact_ReturnsBadRequest_WhenContactNotFound() {
-		// Arrange
-		var nonExistingId = "nonExistingId";
-		// Act
-		var result = await _controller.DeleteContact(nonExistingId) as BadRequestObjectResult;
-		// Assert
-		Assert.NotNull(result);
-		Assert.Equal("Contact does not exist", result!.Value);
-	}
-
-	[Fact]
-	public async Task DeleteContact_ReturnsOk_WhenContactIsUpdated() {
-
-		// Arrange
-		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
-		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var aptLog = new AptLog(client.Id, business.Id, 30);
-
-		var existingContact = new AptContact(client.Id, business.Id, aptLog.Id);
-
-		_context.AddRange(client, business, aptLog, existingContact);
-		_context.SaveChanges();
-
-		// Act
-		var result = await _controller.DeleteContact(existingContact.Id) as NoContentResult;
-
-		// Assert
-		var contactInDb = _context.Contacts.Find(existingContact.Id);
-		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status204NoContent, result!.StatusCode);
 		Assert.IsType<NoContentResult>(result);
-		Assert.Null(contactInDb);
+		Assert.Null(logInDb);
 	}
 }

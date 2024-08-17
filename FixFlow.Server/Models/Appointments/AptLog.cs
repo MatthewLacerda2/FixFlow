@@ -14,7 +14,7 @@ public class AptLog
     /// </summary>
     [Required]
     [ForeignKey(nameof(Models.Client))]
-    public string ClientId { get; set; }
+    public string clientId { get; set; }
 
     /// <summary>
     /// Navigation Property of the Client
@@ -26,14 +26,14 @@ public class AptLog
     /// The Id of the Business who owns this Contact
     /// </summary>
     [Required]
-    [ForeignKey(nameof(Business))]
+    [ForeignKey(nameof(Models.Business))]
     public string businessId { get; set; }
 
     /// <summary>
     /// Navigation Property of the Business
     /// </summary>
     [JsonIgnore]
-    public Business business { get; set; }
+    public Business Business { get; set; }
 
     /// <summary>
     /// The Id of the Schedule that precedes this Log, if any
@@ -45,7 +45,7 @@ public class AptLog
     /// Navigation Property of the Schedule
     /// </summary>
     [JsonIgnore]
-    public AptSchedule? schedule { get; set; }
+    public AptSchedule? Schedule { get; set; }
 
     /// <summary>
     /// The DateTime when the Log was registered
@@ -63,19 +63,19 @@ public class AptLog
     public AptLog()
     {
         Id = Guid.NewGuid().ToString();
-        ClientId = string.Empty;
+        clientId = string.Empty;
         Client = null!;
         businessId = string.Empty;
-        business = null!;
+        Business = null!;
     }
 
     public AptLog(string _clientId, string _businessId, float _price)
     {
         Id = Guid.NewGuid().ToString();
-        ClientId = _clientId;
+        clientId = _clientId;
         businessId = _businessId;
         Client = null!;
-        business = null!;
+        Business = null!;
         price = _price;
     }
 }

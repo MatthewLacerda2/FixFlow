@@ -30,7 +30,7 @@ public class LogValidator : AbstractValidator<AptLog> {
                         .LessThanOrEqualTo(DateTime.Now)
                         .WithErrorCode("Date hasn't even passed yet");
 
-                RuleFor(x => x.ClientId)
+                RuleFor(x => x.clientId)
                 .NotEmpty().WithMessage("ClientId is required")
                 .MustAsync(ClientExists).WithMessage("Client does not exist");
 

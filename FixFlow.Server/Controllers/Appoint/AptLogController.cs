@@ -70,7 +70,7 @@ public class AptLogController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(filter.businessId))
         {
-            logsQuery = logsQuery.Where(x => x.ClientId == filter.businessId);
+            logsQuery = logsQuery.Where(x => x.clientId == filter.businessId);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.businessId))
@@ -87,13 +87,13 @@ public class AptLogController : ControllerBase
         switch (filter.sort)
         {
             case LogSort.ClientId:
-                logsQuery = logsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
                 break;
             case LogSort.Date:
-                logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.price).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.price).ThenBy(s => s.Id);
                 break;
             case LogSort.Price:
-                logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.Id);
                 break;
         }
 
@@ -119,12 +119,12 @@ public class AptLogController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPost]
-    public async Task<IActionResult> CreateLog([FromBody] AptLog newAppointment)
+    public async Task<IActionResult> CreateLog([FromBody] AptLog newLog)
     {
 
-        if (!string.IsNullOrWhiteSpace(newAppointment.scheduleId))
+        if (!string.IsNullOrWhiteSpace(newLog.scheduleId))
         {
-            var existingSchedule = _context.Schedules.Find(newAppointment.scheduleId);
+            var existingSchedule = _context.Schedules.Find(newLog.scheduleId);
 
             if (existingSchedule == null)
             {
@@ -132,10 +132,10 @@ public class AptLogController : ControllerBase
             }
         }
 
-        _context.Logs.Add(newAppointment);
+        _context.Logs.Add(newLog);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(CreateLog), newAppointment);
+        return CreatedAtAction(nameof(CreateLog), newLog);
     }
 
     /// <summary>
@@ -147,19 +147,29 @@ public class AptLogController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPut]
-    public async Task<IActionResult> UpdateLog([FromBody] AptLog upAppointment)
+    public async Task<IActionResult> UpdateLog([FromBody] AptLog upLog)
     {
 
-        var existingLog = _context.Logs.Find(upAppointment.Id);
+        var existingLog = _context.Logs.Find(upLog.Id);
         if (existingLog == null)
         {
             return BadRequest("Log does not exist");
         }
 
-        _context.Logs.Update(upAppointment);
+        if (!string.IsNullOrWhiteSpace(upLog.scheduleId))
+        {
+            var existingSchedule = _context.Schedules.Find(upLog.scheduleId);
+
+            if (existingSchedule == null)
+            {
+                return BadRequest("Schedule does not exist");
+            }
+        }
+
+        _context.Logs.Update(upLog);
         await _context.SaveChangesAsync();
 
-        return Ok(upAppointment);
+        return Ok(upLog);
     }
 
     /// <summary>
@@ -178,7 +188,7 @@ public class AptLogController : ControllerBase
         var logToDelete = _context.Logs.Find(Id);
         if (logToDelete == null)
         {
-            return BadRequest("Log Appointment does not exist");
+            return BadRequest("Log does not exist");
         }
 
         _context.Logs.Remove(logToDelete);

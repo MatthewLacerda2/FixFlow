@@ -71,7 +71,7 @@ public class AptContactController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(filter.clientId))
         {
-            ContactsQuery = ContactsQuery.Where(x => x.ClientId == filter.clientId);
+            ContactsQuery = ContactsQuery.Where(x => x.clientId == filter.clientId);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.businessId))
@@ -90,10 +90,10 @@ public class AptContactController : ControllerBase
         switch (filter.sort)
         {
             case ContactSort.Date:
-                ContactsQuery = ContactsQuery.OrderBy(s => s.dateTime).ThenByDescending(s => s.ClientId).ThenBy(s => s.Id);
+                ContactsQuery = ContactsQuery.OrderBy(s => s.dateTime).ThenByDescending(s => s.clientId).ThenBy(s => s.Id);
                 break;
             case ContactSort.ClientId:
-                ContactsQuery = ContactsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+                ContactsQuery = ContactsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
                 break;
         }
 
@@ -143,19 +143,19 @@ public class AptContactController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptContact))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPut]
-    public async Task<IActionResult> UpdateContact([FromBody] AptContact upAppointment)
+    public async Task<IActionResult> UpdateContact([FromBody] AptContact upLog)
     {
 
-        var existingContact = _context.Contacts.Find(upAppointment.Id);
+        var existingContact = _context.Contacts.Find(upLog.Id);
         if (existingContact == null)
         {
             return BadRequest("Contact does not exist");
         }
 
-        _context.Contacts.Update(upAppointment);
+        _context.Contacts.Update(upLog);
         await _context.SaveChangesAsync();
 
-        return Ok(upAppointment);
+        return Ok(upLog);
     }
 
     /// <summary>

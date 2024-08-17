@@ -70,12 +70,8 @@ public class AptContactControllerTests {
 	[Fact]
 	public async Task ReadContact_ReturnsNotFound_WhenContactDoesNotExist() {
 
-		// Arrange
-		var contactId = "2";
-		var controller = new AptContactController(_context, _userManagerMock.Object);
-
 		// Act
-		var result = await controller.ReadContact(contactId) as NotFoundObjectResult;
+		var result = await _controller.ReadContact("nonExistingId") as NotFoundObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
@@ -84,7 +80,7 @@ public class AptContactControllerTests {
 	}
 
 	[Fact]
-	public void ReadContact_ReturnsEmptyArray_WhenNoContactsMatchFilter() {
+	public void ReadContacts_ReturnsEmptyArray_WhenNoContactsMatchFilter() {
 
 		// Arrange
 		var filter = new AptContactFilter(null!, null!, null!, DateOnly.MinValue, DateOnly.MaxValue);
@@ -100,7 +96,7 @@ public class AptContactControllerTests {
 	}
 
 	[Fact]
-	public void ReadContact_FiltersContacts() {
+	public void ReadContacts_FiltersContacts() {
 
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
@@ -123,7 +119,7 @@ public class AptContactControllerTests {
 		var mockContacts = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49)
 			.Generate(10)
 			.Select((c, i) => {
-				if (i == 0) c.ClientId = otherClient.Id;
+				if (i == 0) c.clientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.aptLogId = otherAptLog.Id;
 				if (i == 3) c.dateTime = DateTime.MinValue;
@@ -158,7 +154,7 @@ public class AptContactControllerTests {
 
 		var newContact = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49).Generate(1).First();
 
-		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.ClientId)).ReturnsAsync(client);
+		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.clientId)).ReturnsAsync(client);
 
 		// Act
 		var result = await _controller.CreateContact(newContact) as CreatedAtActionResult;
@@ -167,7 +163,7 @@ public class AptContactControllerTests {
 		Assert.NotNull(result);
 		var createdContact = Assert.IsType<AptContact>(result!.Value);
 		Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
-		Assert.Equal(newContact.ClientId, createdContact.ClientId);
+		Assert.Equal(newContact.clientId, createdContact.clientId);
 	}
 
 	[Fact]
@@ -184,13 +180,14 @@ public class AptContactControllerTests {
 			.Generate(1)
 			.First();
 
-		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.ClientId)).ReturnsAsync(client);
+		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.clientId)).ReturnsAsync(client);
 
 		// Act
 		var result = await _controller.CreateContact(newContact) as BadRequestObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
 		Assert.Equal("Log does not exist", result!.Value);
 	}
 
@@ -203,6 +200,7 @@ public class AptContactControllerTests {
 		var result = await _controller.UpdateContact(nonExistingContact) as BadRequestObjectResult;
 		// Assert
 		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
 		Assert.Equal("Contact does not exist", result!.Value);
 	}
 
@@ -234,17 +232,16 @@ public class AptContactControllerTests {
 
 	[Fact]
 	public async Task DeleteContact_ReturnsBadRequest_WhenContactNotFound() {
-		// Arrange
-		var nonExistingId = "nonExistingId";
 		// Act
-		var result = await _controller.DeleteContact(nonExistingId) as BadRequestObjectResult;
+		var result = await _controller.DeleteContact("nonExistingId") as BadRequestObjectResult;
 		// Assert
 		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
 		Assert.Equal("Contact does not exist", result!.Value);
 	}
 
 	[Fact]
-	public async Task DeleteContact_ReturnsOk_WhenContactIsUpdated() {
+	public async Task DeleteContact_ReturnsNoContent_WhenContactExists() {
 
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
@@ -262,6 +259,7 @@ public class AptContactControllerTests {
 		// Assert
 		var contactInDb = _context.Contacts.Find(existingContact.Id);
 		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status204NoContent, result!.StatusCode);
 		Assert.IsType<NoContentResult>(result);
 		Assert.Null(contactInDb);
 	}
