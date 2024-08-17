@@ -110,6 +110,7 @@ public class AptContactControllerTests {
 		_context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
 
 		var filter = new AptContactFilter(client.Id, business.Id, aptLog.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
+			sort = ContactSort.Date,
 			descending = true,
 			offset = 1,
 			limit = 3

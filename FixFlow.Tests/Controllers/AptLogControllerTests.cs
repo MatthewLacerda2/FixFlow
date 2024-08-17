@@ -87,33 +87,32 @@ public class AptLogControllerTests {
 
 	[Fact]
 	public void ReadLogs_FiltersLogs() {
-		//TODO: FINISH THIS
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var aptLog = new AptLog(client.Id, business.Id, 30);
 
 		var otherClient = new Client("cicrano", "987654321", null!, "9898263255", "cicrano@gmail.com", true);
 		var otherBusiness = new Business("otherbusiness", "60742928000", "4560123", "98993265849", "otherbusiness@gmail.com", "");
-		var otherAptLog = new AptLog(client.Id, business.Id, 30);
 
-		_context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
+		_context.AddRange(client, business, otherClient, otherBusiness);
+		_context.SaveChanges();
 
 		var filter = new AptLogFilter(client.Id, business.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
-			descending = true,
+			sort = LogSort.Date,
+			descending = false,
 			offset = 1,
 			limit = 3
 		};
 
-		//We need at least 10 logss, with 5 filtered out and then apply offset/limit
-		var mockLogs = FlowSeeder.GetLogFaker(client.Id, business.Id, aptLog.Id, 49)
-			.Generate(10)
+		//We need at least 9 logs, with 4 filtered out and then apply offset/limit
+		var mockLogs = FlowSeeder.GetLogFaker(client.Id, business.Id, null!, 49)
+			.Generate(9)
 			.Select((c, i) => {
+
 				if (i == 0) c.clientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
-				if (i == 2) c.scheduleId = otherAptLog.Id;
-				if (i == 3) c.dateTime = DateTime.MinValue;
-				if (i == 4) c.dateTime = DateTime.MaxValue;
+				if (i == 2) c.dateTime = DateTime.MinValue;
+				if (i == 3) c.dateTime = DateTime.MaxValue;
 				return c;
 			}).ToArray();
 

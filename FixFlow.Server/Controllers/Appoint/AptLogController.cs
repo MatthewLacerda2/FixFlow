@@ -68,9 +68,9 @@ public class AptLogController : ControllerBase
 
         var logsQuery = _context.Logs.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filter.businessId))
+        if (!string.IsNullOrWhiteSpace(filter.clientId))
         {
-            logsQuery = logsQuery.Where(x => x.clientId == filter.businessId);
+            logsQuery = logsQuery.Where(x => x.clientId == filter.clientId);
         }
 
         if (!string.IsNullOrWhiteSpace(filter.businessId))
@@ -81,8 +81,8 @@ public class AptLogController : ControllerBase
         logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
         logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
         
-        logsQuery = logsQuery.Where(x => x.dateTime >= new DateTime(filter.minDateTime, new TimeOnly(0)));
-        logsQuery = logsQuery.Where(x => x.dateTime <= new DateTime(filter.maxDateTime, new TimeOnly(0)));
+        logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
+        logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
 
         switch (filter.sort)
         {

@@ -4,7 +4,7 @@ public struct AptLogFilter
 {
     public string? clientId;
     public string? businessId;
-    public bool hasSchedule;
+    public string? scheduleId;
     
     public float minPrice;
     public float maxPrice;

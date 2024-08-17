@@ -84,8 +84,8 @@ public class AptContactController : ControllerBase
             ContactsQuery = ContactsQuery.Where(x => x.aptLogId == filter.aptLogId);
         }
 
-        ContactsQuery = ContactsQuery.Where(x => x.dateTime >= new DateTime(filter.minDateTime, new TimeOnly(0)));
-        ContactsQuery = ContactsQuery.Where(x => x.dateTime <= new DateTime(filter.maxDateTime, new TimeOnly(0)));
+        ContactsQuery = ContactsQuery.Where(x => x.dateTime >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
+        ContactsQuery = ContactsQuery.Where(x => x.dateTime <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
 
         switch (filter.sort)
         {
