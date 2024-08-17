@@ -160,6 +160,8 @@ public class ContactControllerTests
 
 		var newContact = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49).Generate(1).First();
 
+		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.ClientId)).ReturnsAsync(client);
+
 		// Act
 		var result = await _controller.CreateContact(newContact) as CreatedAtActionResult;
 
@@ -202,6 +204,8 @@ public class ContactControllerTests
 		var newContact = FlowSeeder.GetContactFaker(client.Id, "nonExistentBusinessId", "validLogId", 49)
 			.Generate(1)
 			.First();
+
+		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.ClientId)).ReturnsAsync(client);
 
 		// Act
 		var result = await _controller.CreateContact(newContact) as BadRequestObjectResult;
