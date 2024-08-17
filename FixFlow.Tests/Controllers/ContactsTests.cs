@@ -172,50 +172,6 @@ public class ContactControllerTests
 	}
 
 	[Fact]
-	public async Task CreateContact_ReturnsBadRequest_WhenClientNotFound()
-	{
-		// Arrange
-		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
-		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var aptLog = new AptLog(client.Id, business.Id, 30);
-
-		_context.AddRange(client, business, aptLog);
-		_context.SaveChanges();
-
-		var newContact = FlowSeeder.GetContactFaker("nonExistingClient", business.Id, aptLog.Id, 49).Generate(1).First();
-
-		// Act
-		var result = await _controller.CreateContact(newContact) as BadRequestObjectResult;
-
-		// Assert
-		Assert.NotNull(result);
-		Assert.Equal("Client does not exist", result!.Value);
-	}
-
-	[Fact]
-	public async Task CreateContact_ReturnsBadRequest_WhenBusinessNotFound()
-	{
-		// Arrange
-		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
-
-		_context.Clients.Add(client);
-		_context.SaveChanges();
-
-		var newContact = FlowSeeder.GetContactFaker(client.Id, "nonExistentBusinessId", "validLogId", 49)
-			.Generate(1)
-			.First();
-
-		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.ClientId)).ReturnsAsync(client);
-
-		// Act
-		var result = await _controller.CreateContact(newContact) as BadRequestObjectResult;
-
-		// Assert
-		Assert.NotNull(result);
-		Assert.Equal("Business does not exist", result!.Value);
-	}
-
-	[Fact]
 	public async Task CreateContact_ReturnsBadRequest_WhenLogNotFound()
 	{
 		// Arrange

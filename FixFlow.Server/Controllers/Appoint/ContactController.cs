@@ -44,6 +44,7 @@ public class ContactController : ControllerBase
 
         var contact = await _context.Contacts.FindAsync(Id);
 
+        //Is it even possible, since the Validation Middleware validates the Id?
         if (contact == null)
         {
             return NotFound("Contact does not exist");
@@ -121,24 +122,11 @@ public class ContactController : ControllerBase
     public async Task<IActionResult> CreateContact([FromBody] AptContact newContact)
     {
 
-        var existingClient = await _userManager.FindByIdAsync(newContact.ClientId);
-        if (existingClient == null)
-        {
-            return BadRequest("Client does not exist");
-        }
-
-        var existingBusiness = _context.Business.Find(newContact.businessId);
-        if (existingBusiness == null)
-        {
-            return BadRequest("Business does not exist");
-        }
-
         var existingLog = _context.Logs.Find(newContact.aptLogId);
         if (existingLog == null)
         {
             return BadRequest("Log does not exist");
         }
-
 
         _context.Contacts.Add(newContact);
         await _context.SaveChangesAsync();
