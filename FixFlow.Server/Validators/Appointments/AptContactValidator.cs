@@ -6,13 +6,13 @@ using Server.Models.Appointments;
 
 namespace Server.Validators.Appointments;
 
-public class ContactValidator : AbstractValidator<AptContact> {
+public class AptContactValidator : AbstractValidator<AptContact> {
 
     private readonly ServerContext _context;
     private readonly UserManager<Client> _clientUserManager;
     private readonly UserManager<Business> _businessUserManager;
 
-    public ContactValidator(ServerContext context, UserManager<Client> clientUserManager, UserManager<Business> businessUserManager) {
+    public AptContactValidator(ServerContext context, UserManager<Client> clientUserManager, UserManager<Business> businessUserManager) {
 
         _context = context;
         _clientUserManager = clientUserManager;

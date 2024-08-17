@@ -17,13 +17,13 @@ namespace Server.Controllers;
 [ApiController]
 [Route(Common.api_route + "schedules")]
 [Produces("application/json")]
-public class ScheduleController : ControllerBase
+public class AptScheduleController : ControllerBase
 {
 
     private readonly ServerContext _context;
     private readonly UserManager<Client> _userManager;
 
-    public ScheduleController(ServerContext context, UserManager<Client> userManager)
+    public AptScheduleController(ServerContext context, UserManager<Client> userManager)
     {
         _context = context;
         _userManager = userManager;

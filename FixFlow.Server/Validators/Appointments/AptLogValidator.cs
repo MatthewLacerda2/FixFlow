@@ -6,13 +6,13 @@ using Server.Models.Appointments;
 
 namespace Server.Validators.Appointments;
 
-public class LogValidator : AbstractValidator<AptLog> {
+public class AptLogValidator : AbstractValidator<AptLog> {
 
         private readonly ServerContext _context;
         private readonly UserManager<Client> _clientUserManager;
         private readonly UserManager<Business> _businessUserManager;
 
-        public LogValidator(ServerContext context, UserManager<Client> clientUserManager, UserManager<Business> businessUserManager) {
+        public AptLogValidator(ServerContext context, UserManager<Client> clientUserManager, UserManager<Business> businessUserManager) {
 
                 _context = context;
                 _clientUserManager = clientUserManager;
