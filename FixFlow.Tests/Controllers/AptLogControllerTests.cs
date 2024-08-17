@@ -75,7 +75,7 @@ public class AptLogControllerTests {
 	[Fact]
 	public void ReadLogs_ReturnsEmptyArray_WhenNoLogsMatchFilter() {
 		// Arrange
-		var filter = new AptLogFilter(null!, null!, DateOnly.MinValue, DateOnly.MaxValue);
+		var filter = new AptLogFilter(null!, null!, 0f, 100f, DateOnly.MinValue, DateOnly.MaxValue);
 		// Act
 		var result = _controller.ReadLogs(filter) as OkObjectResult;
 		// Assert
@@ -97,22 +97,26 @@ public class AptLogControllerTests {
 		_context.AddRange(client, business, otherClient, otherBusiness);
 		_context.SaveChanges();
 
-		var filter = new AptLogFilter(client.Id, business.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
+		var filter = new AptLogFilter(client.Id, business.Id, 10f, 100f, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
 			sort = LogSort.Date,
 			descending = false,
 			offset = 1,
 			limit = 3
 		};
 
-		//We need at least 9 logs, with 4 filtered out and then apply offset/limit
+		//We need at least 11 logs, with 6 filtered out and then apply offset/limit
 		var mockLogs = FlowSeeder.GetLogFaker(client.Id, business.Id, null!, 49)
-			.Generate(9)
+			.Generate(12)
 			.Select((c, i) => {
+
+				c.price = 30f;
 
 				if (i == 0) c.clientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.dateTime = DateTime.MinValue;
 				if (i == 3) c.dateTime = DateTime.MaxValue;
+				if (i == 4) c.price = 0;
+				if (i == 5) c.price = 300;
 				return c;
 			}).ToArray();
 
@@ -127,7 +131,7 @@ public class AptLogControllerTests {
 		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
 		var logs = Assert.IsType<AptLog[]>(result!.Value);
 		Assert.Equal(3, logs.Length);
-		Assert.True(logs[0].dateTime < logs[2].dateTime);
+		Assert.True(logs[0].dateTime > logs[2].dateTime);
 	}
 
 	[Fact]
