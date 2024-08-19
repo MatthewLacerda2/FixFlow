@@ -1,5 +1,5 @@
 namespace Server.Models.Filters;
-//TODO: It's validator
+
 public struct AptContactFilter {
     
     public string? clientId;

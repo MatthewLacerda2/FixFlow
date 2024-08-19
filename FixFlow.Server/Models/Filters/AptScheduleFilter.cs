@@ -1,10 +1,10 @@
 namespace Server.Models.Filters;
-//TODO: It's validator
+
 public struct AptScheduleFilter {
 
     public string? clientId;
     public string? businessId;
-    public bool hasContact;
+    public bool? hasContact;
 
     public float minPrice;
     public float maxPrice;

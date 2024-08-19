@@ -76,6 +76,10 @@ public class AptScheduleController : ControllerBase
             schedulesQuery = schedulesQuery.Where(x => x.businessId == filter.businessId);
         }
 
+        if(filter.hasContact.HasValue){
+            schedulesQuery = schedulesQuery.Where(x=>x.contactId != null == filter.hasContact.Value);
+        }
+
         schedulesQuery = schedulesQuery.Where(x => x.price >= filter.minPrice);
         schedulesQuery = schedulesQuery.Where(x => x.price <= filter.maxPrice);
         

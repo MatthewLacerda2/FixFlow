@@ -78,6 +78,10 @@ public class AptLogController : ControllerBase
             logsQuery = logsQuery.Where(x => x.businessId == filter.businessId);
         }
 
+        if(filter.hasSchedule.HasValue){
+            logsQuery = logsQuery.Where(x=>x.scheduleId != null == filter.hasSchedule.Value);
+        }
+
         logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
         logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
         

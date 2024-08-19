@@ -17,6 +17,7 @@ public class AptLogControllerTests {
 
 	private readonly ServerContext _context;
 	private readonly AptLogController _controller;
+	//TODO: Use UserManager<> for Clients and Businesses
 
 	public AptLogControllerTests() {
 

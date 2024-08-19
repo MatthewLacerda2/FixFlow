@@ -1,10 +1,12 @@
 namespace Server.Models.Filters;
-//TODO: It's validator
+
 public struct AptLogFilter {
 
     public string? clientId;
     public string? businessId;
-    //TODO: Add 'hasSchedule' and 'hasContact'. Those are important to calculate customer retention
+    public bool? hasSchedule;
+    //TODO: implementar hasContact;
+
     public float minPrice;
     public float maxPrice;
     public DateOnly minDateTime;

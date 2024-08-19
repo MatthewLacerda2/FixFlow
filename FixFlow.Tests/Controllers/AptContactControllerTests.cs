@@ -15,6 +15,7 @@ namespace FixFlow.Tests.Controllers;
 
 public class AptContactControllerTests {
 
+	//TODO: Actually use UserManager<> for Clients and Businesses
 	private readonly Mock<UserManager<Client>> _userManagerMock;
 	private readonly ServerContext _context;
 	private readonly AptContactController _controller;
