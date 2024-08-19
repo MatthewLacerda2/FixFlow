@@ -39,7 +39,7 @@ public class AptContactControllerTests {
 		_context.Database.OpenConnection();
 		_context.Database.EnsureCreated();
 
-		_controller = new AptContactController(_context, _userManagerMock.Object);
+		_controller = new AptContactController(_context);
 	}
 
 	[Fact]

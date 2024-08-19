@@ -20,23 +20,25 @@ public class AptLogValidator : AbstractValidator<AptLog> {
 
                 RuleFor(x => x.price)
                         .GreaterThanOrEqualTo(0)
-                        .WithErrorCode("Price must be greater than 0");
+                        .WithErrorCode("Price must be greater than or equal to 0");
 
                 RuleFor(x => x.dateTime)
                         .GreaterThanOrEqualTo(new DateTime(2023, 1, 1))
                         .WithErrorCode("Date must be from 2023 and forward");
-
                 RuleFor(x => x.dateTime)                
                         .LessThanOrEqualTo(DateTime.Now)
                         .WithErrorCode("Date hasn't even passed yet");
 
+                RuleFor(x => x.scheduleId)
+                        .Must(AptScheduleExists).When(s => !string.IsNullOrEmpty(s.scheduleId)).WithMessage("Schedule does not exist");
+
                 RuleFor(x => x.clientId)
-                .NotEmpty().WithMessage("ClientId is required")
-                .MustAsync(ClientExists).WithMessage("Client does not exist");
+                        .NotEmpty().WithMessage("ClientId is required")
+                        .MustAsync(ClientExists).WithMessage("Client does not exist");
 
                 RuleFor(x => x.businessId)
-                .NotEmpty().WithMessage("BusinessId is required")
-                .MustAsync(BusinessExists).WithMessage("Business does not exist");
+                        .NotEmpty().WithMessage("BusinessId is required")
+                        .MustAsync(BusinessExists).WithMessage("Business does not exist");
         }
 
         private async Task<bool> ClientExists(string clientId, CancellationToken cancellationToken) {
@@ -45,5 +47,9 @@ public class AptLogValidator : AbstractValidator<AptLog> {
 
         private async Task<bool> BusinessExists(string businessId, CancellationToken cancellationToken) {
                 return await _businessUserManager.FindByIdAsync(businessId) != null;
+        }
+
+        private bool AptScheduleExists(string? scheduleId) {
+                return scheduleId == null || _context.Schedules.Find(scheduleId) != null;
         }
 }

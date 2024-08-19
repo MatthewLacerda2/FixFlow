@@ -22,12 +22,10 @@ public class AptContactController : ControllerBase
 {
 	
     private readonly ServerContext _context;
-    private readonly UserManager<Client> _userManager;
 
-    public AptContactController(ServerContext context, UserManager<Client> userManager)
+    public AptContactController(ServerContext context)
     {
         _context = context;
-        _userManager = userManager;
     }
 
     /// <summary>
@@ -45,7 +43,6 @@ public class AptContactController : ControllerBase
 
         var contact = await _context.Contacts.FindAsync(Id);
 
-        //Is it even possible, since the Validation Middleware validates the Id?
         if (contact == null)
         {
             return NotFound(NotExistErrors.AptContact);
@@ -121,7 +118,7 @@ public class AptContactController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateContact([FromBody] AptContact newContact)
     {
-
+        //TODO: do we need just the aptLog? Or can we create a Contact without a Log?
         var existingLog = _context.Logs.Find(newContact.aptLogId);
         if (existingLog == null)
         {

@@ -22,12 +22,10 @@ public class AptLogController : ControllerBase
 {
 
     private readonly ServerContext _context;
-    private readonly UserManager<Client> _userManager;
 
-    public AptLogController(ServerContext context, UserManager<Client> userManager)
+    public AptLogController(ServerContext context)
     {
         _context = context;
-        _userManager = userManager;
     }
 
     /// <summary>

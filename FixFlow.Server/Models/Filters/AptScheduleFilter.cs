@@ -6,8 +6,6 @@ public struct AptScheduleFilter {
     public string? businessId;
     public bool? hasContact;
 
-    public float minPrice;
-    public float maxPrice;
     public DateOnly minDateTime;
     public DateOnly maxDateTime;
 
@@ -26,5 +24,5 @@ public struct AptScheduleFilter {
 
 public enum ScheduleSort
 {
-    ClientId, BusinessId, Price, Date
+    ClientId, BusinessId, Date
 }

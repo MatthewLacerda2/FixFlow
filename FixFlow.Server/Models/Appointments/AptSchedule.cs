@@ -52,7 +52,6 @@ public class AptSchedule
     /// </summary>
     public DateTime dateTime { get; set; }
 
-    public float? price { get; set; }
     public string? observation { get; set; }
 
     public AptSchedule()

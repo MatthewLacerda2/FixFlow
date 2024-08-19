@@ -39,7 +39,7 @@ public class AptLogControllerTests {
 		_context.Database.OpenConnection();
 		_context.Database.EnsureCreated();
 
-		_controller = new AptLogController(_context, _userManagerMock.Object);
+		_controller = new AptLogController(_context);
 	}
 
 	[Fact]

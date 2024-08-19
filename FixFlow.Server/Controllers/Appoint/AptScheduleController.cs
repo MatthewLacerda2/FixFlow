@@ -22,12 +22,10 @@ public class AptScheduleController : ControllerBase
 {
 
     private readonly ServerContext _context;
-    private readonly UserManager<Client> _userManager;
 
-    public AptScheduleController(ServerContext context, UserManager<Client> userManager)
+    public AptScheduleController(ServerContext context)
     {
         _context = context;
-        _userManager = userManager;
     }
 
     /// <summary>
@@ -80,9 +78,6 @@ public class AptScheduleController : ControllerBase
         if(filter.hasContact.HasValue){
             schedulesQuery = schedulesQuery.Where(x=>x.contactId != null == filter.hasContact.Value);
         }
-
-        schedulesQuery = schedulesQuery.Where(x => x.price >= filter.minPrice);
-        schedulesQuery = schedulesQuery.Where(x => x.price <= filter.maxPrice);
         
         schedulesQuery = schedulesQuery.Where(x => x.dateTime >= new DateTime(filter.minDateTime, new TimeOnly(0)));
         schedulesQuery = schedulesQuery.Where(x => x.dateTime <= new DateTime(filter.maxDateTime, new TimeOnly(0)));
@@ -90,16 +85,15 @@ public class AptScheduleController : ControllerBase
         switch (filter.sort)
         {
             case ScheduleSort.ClientId:
-                schedulesQuery = schedulesQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s=>s.businessId).ThenBy(s => s.Id);
+                break;
+            case ScheduleSort.BusinessId:
+                schedulesQuery = schedulesQuery.OrderBy(s => s.businessId).ThenByDescending(s => s.dateTime).ThenBy(s=>s.clientId).ThenBy(s => s.Id);
                 break;
             case ScheduleSort.Date:
-                schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.price).ThenBy(s => s.Id);
-                break;
-            case ScheduleSort.Price:
-                schedulesQuery = schedulesQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s=>s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
                 break;
         }
-
 
         if (filter.descending)
         {
@@ -125,19 +119,6 @@ public class AptScheduleController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateSchedule([FromBody] AptSchedule newAppointment)
     {
-
-        var existingClient = _userManager.FindByIdAsync(newAppointment.clientId);
-        if (existingClient == null)
-        {
-            return BadRequest(NotExistErrors.Client);
-        }
-
-        var existingBusiness = _context.Business.Find(newAppointment.businessId);
-        if (existingBusiness == null)
-        {
-            return BadRequest(NotExistErrors.Business);
-        }
-
         if (!string.IsNullOrWhiteSpace(newAppointment.contactId))
         {
             var existingContact = _context.Contacts.Find(newAppointment.contactId);
