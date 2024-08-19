@@ -5,7 +5,7 @@ using Server.Models.Utils;
 
 namespace Server.Validators;
 
-public class PasswordResetRequestValidator : AbstractValidator<PasswordResetRequest>
+public class PasswordResetRequestValidator : AbstractValidator<PasswordReset>
 {
     public PasswordResetRequestValidator()
     {

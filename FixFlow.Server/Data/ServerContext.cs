@@ -14,7 +14,7 @@ public class ServerContext : IdentityDbContext
     public DbSet<AptContact> Contacts { get; set; } = default!;
     public DbSet<AptSchedule> Schedules { get; set; } = default!;
 
-    public DbSet<PasswordReset> Resets { get; set; } = default!;
+    public DbSet<PasswordResetRequest> Resets { get; set; } = default!;
 
     public ServerContext(DbContextOptions<ServerContext> options)
         : base(options)

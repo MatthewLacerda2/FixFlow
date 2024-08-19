@@ -14,9 +14,6 @@ public class FlowLoginRequest
     [MinLength(7)]
     public string password { get; set; }
 
-    [MinLength(7)]
-    public string newPassword { get; set; } = string.Empty;
-
     public FlowLoginRequest(string _username, string _password)
     {
         UserName = _username;
@@ -28,7 +25,6 @@ public class FlowLoginRequest
         UserName = _username;
         Email = _email;
         password = _password;
-        newPassword = _newPassword;
     }
 
 }

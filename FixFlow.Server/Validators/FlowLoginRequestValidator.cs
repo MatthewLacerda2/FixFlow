@@ -20,19 +20,5 @@ public class FlowLoginRequestValidator : AbstractValidator<FlowLoginRequest>
                 context.AddFailure(ValidatorErrors.BadPassword);
             }
         });
-
-        RuleFor(x => x.newPassword).Custom((newPassword, context) =>
-        {
-            if(newPassword.Length < 8){
-                context.AddFailure(ValidatorErrors.ShortPassword);
-            }
-
-            if (!string.IsNullOrEmpty(newPassword) && StringChecker.IsPasswordStrong(newPassword))
-            {
-                context.AddFailure(ValidatorErrors.BadPassword);
-            }
-        });
-
-        RuleFor(x => x.newPassword).NotEqual(x => x.password).WithErrorCode(ValidatorErrors.NewPasswordSameAsOldOne);
     }
 }
