@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models.DTO;
 
-public class BusinessRegister
-{
+public class BusinessRegister {
+
     [Required]
     public string Id { get; set; }
 
@@ -11,6 +11,7 @@ public class BusinessRegister
     /// NickName. Must not contain spaces
     /// </summary>
     [Required]
+    [MinLength(2)]
     public string Name { get; set; }
 
     /// <summary>
@@ -18,9 +19,10 @@ public class BusinessRegister
     /// </summary>
     [Length(14, 14)]
     public string CPF { get; set; }
-
+    //TODO: tem que ao menos CPF *OU* CNPJ
     public string? CNPJ { get; set; }
 
+    [MinLength(5)]
     public string description { get; set; }
 
     /// <summary>
@@ -42,8 +44,7 @@ public class BusinessRegister
     [MinLength(7)]
     public string confirmPassword { get; set; } = string.Empty;
 
-    public BusinessRegister(string id, string name, string cpf, string cnpj, string _userName, string phonenumber, string email, string _description)
-    {
+    public BusinessRegister(string id, string name, string cpf, string cnpj, string _userName, string phonenumber, string email, string _description) {
         Id = id;
         Name = name;
         CPF = cpf;
