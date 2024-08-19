@@ -5,6 +5,7 @@ using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
 using Server.Models.Filters;
+using Server.Models.Erros;
 
 namespace Server.Controllers;
 
@@ -46,7 +47,7 @@ public class AptLogController : ControllerBase
 
         if (log == null)
         {
-            return NotFound("Log does not exist");
+            return NotFound(NotExistErrors.AptLog);
         }
 
         return Ok(log);
@@ -135,7 +136,7 @@ public class AptLogController : ControllerBase
 
             if (existingSchedule == null)
             {
-                return BadRequest("Schedule does not exist");
+                return BadRequest(NotExistErrors.AptSchedule);
             }
         }
 
@@ -160,7 +161,7 @@ public class AptLogController : ControllerBase
         var existingLog = _context.Logs.Find(upLog.Id);
         if (existingLog == null)
         {
-            return BadRequest("Log does not exist");
+            return BadRequest(NotExistErrors.AptLog);
         }
 
         if (!string.IsNullOrWhiteSpace(upLog.scheduleId))
@@ -169,7 +170,7 @@ public class AptLogController : ControllerBase
 
             if (existingSchedule == null)
             {
-                return BadRequest("Schedule does not exist");
+                return BadRequest(NotExistErrors.AptSchedule);
             }
         }
 
@@ -195,7 +196,7 @@ public class AptLogController : ControllerBase
         var logToDelete = _context.Logs.Find(Id);
         if (logToDelete == null)
         {
-            return BadRequest("Log does not exist");
+            return BadRequest(NotExistErrors.AptLog);
         }
 
         _context.Logs.Remove(logToDelete);

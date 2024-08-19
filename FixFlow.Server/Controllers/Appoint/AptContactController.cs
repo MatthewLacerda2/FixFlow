@@ -5,6 +5,7 @@ using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
 using Server.Models.Filters;
+using Server.Models.Erros;
 
 namespace Server.Controllers;
 
@@ -47,7 +48,7 @@ public class AptContactController : ControllerBase
         //Is it even possible, since the Validation Middleware validates the Id?
         if (contact == null)
         {
-            return NotFound("Contact does not exist");
+            return NotFound(NotExistErrors.AptContact);
         }
 
         return Ok(contact);
@@ -124,7 +125,7 @@ public class AptContactController : ControllerBase
         var existingLog = _context.Logs.Find(newContact.aptLogId);
         if (existingLog == null)
         {
-            return BadRequest("Log does not exist");
+            return BadRequest(NotExistErrors.AptLog);
         }
 
         _context.Contacts.Add(newContact);
@@ -148,7 +149,7 @@ public class AptContactController : ControllerBase
         var existingContact = _context.Contacts.Find(upLog.Id);
         if (existingContact == null)
         {
-            return BadRequest("Contact does not exist");
+            return BadRequest(NotExistErrors.AptContact);
         }
 
         _context.Contacts.Update(upLog);
@@ -173,7 +174,7 @@ public class AptContactController : ControllerBase
         var ContactToDelete = _context.Contacts.Find(Id);
         if (ContactToDelete == null)
         {
-            return BadRequest("Contact does not exist");
+            return BadRequest(NotExistErrors.AptContact);
         }
 
         _context.Contacts.Remove(ContactToDelete);

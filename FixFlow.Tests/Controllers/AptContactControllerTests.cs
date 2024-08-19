@@ -8,6 +8,7 @@ using Server.Controllers;
 using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
+using Server.Models.Erros;
 using Server.Models.Filters;
 using Server.Seeder;
 
@@ -75,7 +76,7 @@ public class AptContactControllerTests {
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
-		Assert.Equal("Contact does not exist", result.Value);
+		Assert.Equal(NotExistErrors.AptContact, result.Value);
 	}
 
 	[Fact]
@@ -210,7 +211,7 @@ public class AptContactControllerTests {
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
-		Assert.Equal("Log does not exist", result!.Value);
+		Assert.Equal(NotExistErrors.AptLog, result!.Value);
 	}
 
 	[Fact]
@@ -223,7 +224,7 @@ public class AptContactControllerTests {
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
-		Assert.Equal("Contact does not exist", result!.Value);
+		Assert.Equal(NotExistErrors.AptContact, result!.Value);
 	}
 
 	[Fact]
@@ -259,7 +260,7 @@ public class AptContactControllerTests {
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
-		Assert.Equal("Contact does not exist", result!.Value);
+		Assert.Equal(NotExistErrors.AptContact, result!.Value);
 	}
 
 	[Fact]

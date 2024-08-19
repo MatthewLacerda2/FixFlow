@@ -8,6 +8,7 @@ using Server.Controllers;
 using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
+using Server.Models.Erros;
 using Server.Models.Filters;
 using Server.Seeder;
 
@@ -68,7 +69,7 @@ public class AptLogControllerTests {
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
-		Assert.Equal("Log does not exist", result.Value);
+		Assert.Equal(NotExistErrors.AptLog, result.Value);
 	}
 
 	[Fact]
@@ -201,7 +202,7 @@ public class AptLogControllerTests {
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
-		Assert.Equal("Schedule does not exist", result!.Value);
+		Assert.Equal(NotExistErrors.AptSchedule, result!.Value);
 	}
 
 	[Fact]
@@ -236,7 +237,7 @@ public class AptLogControllerTests {
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
-		Assert.Equal("Log does not exist", result!.Value);
+		Assert.Equal(NotExistErrors.AptLog, result!.Value);
 	}
 
 	[Fact]
@@ -272,7 +273,7 @@ public class AptLogControllerTests {
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
-		Assert.Equal("Log does not exist", result!.Value);
+		Assert.Equal(NotExistErrors.AptLog, result!.Value);
 	}
 
 	[Fact]

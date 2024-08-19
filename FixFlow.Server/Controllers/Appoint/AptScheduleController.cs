@@ -5,6 +5,7 @@ using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
 using Server.Models.Filters;
+using Server.Models.Erros;
 
 namespace Server.Controllers;
 
@@ -45,7 +46,7 @@ public class AptScheduleController : ControllerBase
 
         if (schedule == null)
         {
-            return NotFound("Schedule does not exist");
+            return NotFound(NotExistErrors.AptSchedule);
         }
 
         return Ok(schedule);
@@ -128,13 +129,13 @@ public class AptScheduleController : ControllerBase
         var existingClient = _userManager.FindByIdAsync(newAppointment.clientId);
         if (existingClient == null)
         {
-            return BadRequest("Client does not exist");
+            return BadRequest(NotExistErrors.Client);
         }
 
         var existingBusiness = _context.Business.Find(newAppointment.businessId);
         if (existingBusiness == null)
         {
-            return BadRequest("Business does not exist");
+            return BadRequest(NotExistErrors.Business);
         }
 
         if (!string.IsNullOrWhiteSpace(newAppointment.contactId))
@@ -143,7 +144,7 @@ public class AptScheduleController : ControllerBase
 
             if (existingContact == null)
             {
-                return BadRequest("Contact reminder does not exist");
+                return BadRequest(NotExistErrors.AptContact);
             }
         }
 
@@ -168,7 +169,7 @@ public class AptScheduleController : ControllerBase
         var existingAppointment = _context.Schedules.Find(upAppointment.Id);
         if (existingAppointment == null)
         {
-            return BadRequest("Schedule does not exist");
+            return BadRequest(NotExistErrors.AptSchedule);
         }
 
         _context.Schedules.Update(upAppointment);
@@ -192,7 +193,7 @@ public class AptScheduleController : ControllerBase
         var scheduleToDelete = _context.Schedules.Find(Id);
         if (scheduleToDelete == null)
         {
-            return BadRequest("Schedule Appointment does not exist");
+            return BadRequest(NotExistErrors.AptSchedule);
         }
 
         _context.Schedules.Remove(scheduleToDelete);
