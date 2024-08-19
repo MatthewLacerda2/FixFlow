@@ -10,6 +10,8 @@ using System.Threading.RateLimiting;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Server.Services;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +78,12 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllersWithViews();
+
+Serilog.Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext().
+    WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions {
+        AutoCreateSqlDatabase = true, TableName = "Serilogs"
+    }).CreateLogger();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
