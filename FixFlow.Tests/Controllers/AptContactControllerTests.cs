@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using Server.Controllers;
 using Server.Data;
 using Server.Models;
@@ -16,8 +14,6 @@ namespace FixFlow.Tests.Controllers;
 
 public class AptContactControllerTests {
 
-	//TODO: Actually use UserManager<> for Clients and Businesses
-	private readonly Mock<UserManager<Client>> _userManagerMock;
 	private readonly ServerContext _context;
 	private readonly AptContactController _controller;
 
@@ -31,9 +27,6 @@ public class AptContactControllerTests {
 		DbContextOptions<ServerContext> _dbContextOptions = new DbContextOptionsBuilder<ServerContext>()
 			.UseSqlite(connection)
 			.Options;
-
-		var userStoreMock = new Mock<IUserStore<Client>>();
-		_userManagerMock = new Mock<UserManager<Client>>(userStoreMock.Object, null!, null!, null!, null!, null!, null!, null!, null!);
 
 		_context = new ServerContext(_dbContextOptions);
 		_context.Database.OpenConnection();
@@ -51,10 +44,7 @@ public class AptContactControllerTests {
 		var prevApt = new AptLog(client.Id, business.Id, 30);
 		var contact = new AptContact(client.Id, business.Id, prevApt.Id);
 
-		_context.Clients.Add(client);
-		_context.Business.Add(business);
-		_context.Logs.Add(prevApt);
-		_context.Contacts.Add(contact);
+		_context.AddRange(client, business, prevApt, contact);
 		_context.SaveChanges();
 
 		// Act
@@ -90,8 +80,6 @@ public class AptContactControllerTests {
 		var otherBusiness = new Business("otherbusiness", "60742928000", "4560123", "98993265849", "otherbusiness@gmail.com", "");
 		var otherAptLog = new AptLog(client.Id, business.Id, 30);
 
-		_context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
-
 		var filter = new AptContactFilter(client.Id, business.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1));
 
 		//We need at least 10 contacts, with 5 filtered out and then apply offset/limit
@@ -105,7 +93,8 @@ public class AptContactControllerTests {
 				return c;
 			}).ToArray();
 
-		_context.Contacts.AddRange(mockContacts);
+		_context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
+		_context.AddRange(mockContacts);
 		_context.SaveChanges();
 
 		// Act
@@ -129,8 +118,6 @@ public class AptContactControllerTests {
 		var otherBusiness = new Business("otherbusiness", "60742928000", "4560123", "98993265849", "otherbusiness@gmail.com", "");
 		var otherAptLog = new AptLog(client.Id, business.Id, 30);
 
-		_context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
-
 		var filter = new AptContactFilter(client.Id, business.Id, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
 			sort = ContactSort.Date,
 			descending = true,
@@ -150,7 +137,8 @@ public class AptContactControllerTests {
 				return c;
 			}).ToArray();
 
-		_context.Contacts.AddRange(mockContacts);
+		_context.AddRange(client, otherClient, business, otherBusiness, aptLog, otherAptLog);
+		_context.AddRange(mockContacts);
 		_context.SaveChanges();
 
 		// Act
@@ -177,8 +165,6 @@ public class AptContactControllerTests {
 
 		var newContact = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49).Generate(1).First();
 
-		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.clientId)).ReturnsAsync(client);
-
 		// Act
 		var result = await _controller.CreateContact(newContact) as CreatedAtActionResult;
 
@@ -202,8 +188,6 @@ public class AptContactControllerTests {
 		var newContact = FlowSeeder.GetContactFaker(client.Id, business.Id, "nonExistentLogId", 49)
 			.Generate(1)
 			.First();
-
-		_userManagerMock.Setup(um => um.FindByIdAsync(newContact.clientId)).ReturnsAsync(client);
 
 		// Act
 		var result = await _controller.CreateContact(newContact) as BadRequestObjectResult;

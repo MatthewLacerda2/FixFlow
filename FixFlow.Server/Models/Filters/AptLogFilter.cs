@@ -17,9 +17,10 @@ public struct AptLogFilter {
     public int offset = 0;
     public int limit = 10;
 
-    public AptLogFilter(string _clientId, string _businessId, float _minPrice, float _maxPrice, DateOnly _minDate, DateOnly _maxDate){
+    public AptLogFilter(string _clientId, string _businessId, bool? _hasSchedule, float _minPrice, float _maxPrice, DateOnly _minDate, DateOnly _maxDate){
         clientId = _clientId;
         businessId = _businessId;
+        hasSchedule = _hasSchedule;
         minPrice = _minPrice;
         maxPrice = _maxPrice;
         minDateTime = _minDate;

@@ -14,9 +14,10 @@ public struct AptScheduleFilter {
     public int offset = 0;
     public int limit = 10;
 
-    public AptScheduleFilter(string? _clientId, string? _businessId, DateOnly _minDate, DateOnly _maxDate){
+    public AptScheduleFilter(string? _clientId, string? _businessId, bool? _hasContact, DateOnly _minDate, DateOnly _maxDate){
         clientId = _clientId;
         businessId = _businessId;
+        hasContact = _hasContact;
         minDateTime = _minDate;
         maxDateTime = _maxDate;
     }

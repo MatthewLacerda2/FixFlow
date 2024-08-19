@@ -12,12 +12,12 @@ using Server.Seeder;
 
 namespace FixFlow.Tests.Controllers;
 
-public class AptLogControllerTests {
+public class AptScheduleControllerTests {
 
 	private readonly ServerContext _context;
-	private readonly AptLogController _controller;
+	private readonly AptScheduleController _controller;
 
-	public AptLogControllerTests() {
+	public AptScheduleControllerTests() {
 
 		var connectionStringBuilder = new SqliteConnectionStringBuilder {
 			DataSource = ":memory:"
@@ -32,41 +32,41 @@ public class AptLogControllerTests {
 		_context.Database.OpenConnection();
 		_context.Database.EnsureCreated();
 
-		_controller = new AptLogController(_context);
+		_controller = new AptScheduleController(_context);
 	}
 
 	[Fact]
-	public async Task ReadLog_ReturnsLog_WhenLogExists() {
+	public async Task ReadSchedule_ReturnsOk_WhenScheduleExists() {
 		// Arrange
 		var client = new Client("fulano", "123456789", "", "88263255", "fulano@hotmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var log = new AptLog(client.Id, business.Id, 30);
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
 
-		_context.AddRange(client, business, log);
+		_context.AddRange(client, business, schedule);
 		_context.SaveChanges();
 
 		// Act
-		var result = await _controller.ReadLog(log.Id) as OkObjectResult;
+		var result = await _controller.ReadSchedule(schedule.Id) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
-		var returnedLog = Assert.IsType<AptLog>(result.Value);
-		Assert.Equal(log.Id, returnedLog.Id);
+		var returnedSchedule = Assert.IsType<AptSchedule>(result.Value);
+		Assert.Equal(schedule.Id, returnedSchedule.Id);
 	}
 
 	[Fact]
-	public async Task ReadLog_ReturnsNotFound_WhenLogDoesNotExist() {
+	public async Task ReadSchedule_ReturnsNotFound_WhenScheduleDoesNotExist() {
 		// Act
-		var result = await _controller.ReadLog("nonExistingId") as NotFoundObjectResult;
+		var result = await _controller.ReadSchedule("nonExistingId") as NotFoundObjectResult;
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
-		Assert.Equal(NotExistErrors.AptLog, result.Value);
+		Assert.Equal(NotExistErrors.AptSchedule, result.Value);
 	}
 
 	[Fact]
-	public void ReadLogs_ReturnsEmptyArray_WhenNoLogsMatchFilter() {
+	public void ReadSchedules_ReturnsEmptyArray_WhenNoLogsMatchFilter() {
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -74,40 +74,38 @@ public class AptLogControllerTests {
 		var otherClient = new Client("cicrano", "987654321", null!, "9898263255", "cicrano@gmail.com", true);
 		var otherBusiness = new Business("otherbusiness", "60742928000", "4560123", "98993265849", "otherbusiness@gmail.com", "");
 
-		var filter = new AptLogFilter(client.Id, business.Id, false, 10f, 100f, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1));
+		var filter = new AptScheduleFilter(client.Id, business.Id, false, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1));
+		filter.offset = 1;
+		filter.limit = 3;
 
-		//We need at least 11 logs, with 6 filtered out and then apply offset/limit
-		var mockLogs = FlowSeeder.GetLogFaker(client.Id, business.Id, null!, 49)
-			.Generate(6)
+		//We need at least 5 logs, with 4 filtered out and then apply offset
+		var mockSchedules = FlowSeeder.GetScheduleFaker(client.Id, business.Id, null!, 49)
+			.Generate(5)
 			.Select((c, i) => {
-
-				c.price = 30f;
 
 				if (i == 0) c.clientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.dateTime = DateTime.MinValue;
 				if (i == 3) c.dateTime = DateTime.MaxValue;
-				if (i == 4) c.price = 0;
-				if (i == 5) c.price = 300;
 				return c;
 			}).ToArray();
 
 		_context.AddRange(client, business, otherClient, otherBusiness);
-		_context.AddRange(mockLogs);
+		_context.AddRange(mockSchedules);
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadLogs(filter) as OkObjectResult;
+		var result = _controller.ReadSchedules(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
-		var logs = Assert.IsType<AptLog[]>(result!.Value);
-		Assert.Empty(logs);
+		var schedules = Assert.IsType<AptSchedule[]>(result!.Value);
+		Assert.Empty(schedules);
 	}
 
 	[Fact]
-	public void ReadLogs_FiltersLogs() {
+	public void ReadSchedules_ReturnsArray_WhenSchedulesMatchFilter() {
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -115,66 +113,62 @@ public class AptLogControllerTests {
 		var otherClient = new Client("cicrano", "987654321", null!, "9898263255", "cicrano@gmail.com", true);
 		var otherBusiness = new Business("otherbusiness", "60742928000", "4560123", "98993265849", "otherbusiness@gmail.com", "");
 
-		var filter = new AptLogFilter(client.Id, business.Id, false, 10f, 100f, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1)) {
-			sort = LogSort.Date,
-			descending = false,
-			offset = 1,
-			limit = 3
-		};
+		var filter = new AptScheduleFilter(client.Id, business.Id, false, new DateOnly(2023, 1, 1), new DateOnly(2025, 3, 1));
+		filter.offset = 1;
+		filter.limit = 3;
 
 		//We need at least 11 logs, with 6 filtered out and then apply offset/limit
-		var mockLogs = FlowSeeder.GetLogFaker(client.Id, business.Id, null!, 49)
-			.Generate(12)
+		var mockSchedules = FlowSeeder.GetScheduleFaker(client.Id, business.Id, null!, 49)
+			.Generate(9)
 			.Select((c, i) => {
-
-				c.price = 30f;
 
 				if (i == 0) c.clientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.dateTime = DateTime.MinValue;
 				if (i == 3) c.dateTime = DateTime.MaxValue;
-				if (i == 4) c.price = 0;
-				if (i == 5) c.price = 300;
 				return c;
 			}).ToArray();
 
 		_context.AddRange(client, business, otherClient, otherBusiness);
-		_context.AddRange(mockLogs);
+		_context.AddRange(mockSchedules);
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadLogs(filter) as OkObjectResult;
+		var result = _controller.ReadSchedules(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
-		var logs = Assert.IsType<AptLog[]>(result!.Value);
-		Assert.Equal(3, logs.Length);
-		Assert.True(logs[0].dateTime > logs[2].dateTime);
+		var schedules = Assert.IsType<AptSchedule[]>(result!.Value);
+		Assert.Equal(3, schedules.Length);
+		Assert.True(schedules[0].dateTime > schedules[2].dateTime);
 	}
 
 	[Fact]
-	public async Task CreateLog_ReturnsCreated_WhenScheduleIsNull() {
+	public async Task CreateSchedule_ReturnsCreated_WhenContactExist() {
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var newLog = new AptLog(client.Id, business.Id, 30);
+		var log = new AptLog(client.Id, business.Id, 30);
+		var contact = new AptContact(client.Id, business.Id, log.Id);
+		var newSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
+		newSchedule.contactId = contact.Id;
 
-		_context.AddRange(client, business);
+		_context.AddRange(client, business, log, contact);
 		_context.SaveChanges();
 
 		// Act
-		var result = await _controller.CreateLog(newLog) as CreatedAtActionResult;
+		var result = await _controller.CreateSchedule(newSchedule) as CreatedAtActionResult;
 
 		// Assert
 		Assert.NotNull(result);
-		var createdLog = Assert.IsType<AptLog>(result!.Value);
+		var createdSchedule = Assert.IsType<AptSchedule>(result!.Value);
 		Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
-		Assert.Equal(newLog.Id, createdLog.Id);
+		Assert.Equal(newSchedule.Id, createdSchedule.Id);
 	}
 
 	[Fact]
-	public async Task CreateLog_ReturnsCreated_WhenScheduleDoesNotExist() {
+	public async Task CreateSchedule_ReturnsBadRequest_WhenContactDoesNotExist() {
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -182,12 +176,62 @@ public class AptLogControllerTests {
 		_context.AddRange(client, business);
 		_context.SaveChanges();
 
-		var newLog = new AptLog(client.Id, business.Id, 30);
-		newLog.scheduleId = "nonExistingId";
+		var newSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
+		newSchedule.contactId = "nonExistingId";
 
 		// Act
-		var result = await _controller.CreateLog(newLog) as BadRequestObjectResult;
+		var result = await _controller.CreateSchedule(newSchedule) as BadRequestObjectResult;
 
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
+		Assert.Equal(NotExistErrors.AptContact, result!.Value);
+	}
+
+	[Fact]
+	public async Task UpdateSchedule_ReturnsBadRequest_WhenScheduleDoesNotExists() {
+		// Arrange
+		var nonExistingSchedule = new AptSchedule();
+		// Act
+		var result = await _controller.UpdateSchedule(nonExistingSchedule) as BadRequestObjectResult;
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
+		Assert.Equal(NotExistErrors.AptSchedule, result!.Value);
+	}
+
+	//TODO: UpdateSchedule_ReturnsBadRequest_WhenContactDoesNotExist
+
+	[Fact]
+	public async Task UpdateSchedule_ReturnsOk_WhenContactExists() {
+		// Arrange
+		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
+		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
+		var aptLog = new AptLog(client.Id, business.Id, 30);
+		var contact = new AptContact(client.Id, business.Id, aptLog.Id);
+		var existingSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
+
+		_context.AddRange(client, business, aptLog, contact, existingSchedule);
+		_context.SaveChanges();
+
+		existingSchedule.dateTime = new DateTime(2024, 12, 12);
+		existingSchedule.contactId = contact.Id;
+
+		// Act
+		var result = await _controller.UpdateSchedule(existingSchedule) as OkObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		var value = Assert.IsType<AptSchedule>(result!.Value);
+		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+		Assert.Equal(existingSchedule.Id, value!.Id);
+		Assert.Equal(existingSchedule.dateTime, value.dateTime);
+	}
+
+	[Fact]
+	public async Task DeleteSchedule_ReturnsBadRequest_WhenScheduleNotFound() {
+		// Act
+		var result = await _controller.DeleteSchedule("nonExistingId") as BadRequestObjectResult;
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
@@ -195,94 +239,23 @@ public class AptLogControllerTests {
 	}
 
 	[Fact]
-	public async Task CreateLog_ReturnsCreated_WhenScheduleExists() {
+	public async Task DeleteSchedule_ReturnsNoContent_WhenScheduleExists() {
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
+		var aptSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
 
-		_context.AddRange(client, business, schedule);
-		_context.SaveChanges();
-
-		var newLog = new AptLog(client.Id, business.Id, 30);
-		newLog.scheduleId = schedule.Id;
-
-		// Act
-		var result = await _controller.CreateLog(newLog) as CreatedAtActionResult;
-
-		// Assert
-		Assert.NotNull(result);
-		var createdLog = Assert.IsType<AptLog>(result!.Value);
-		Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
-		Assert.Equal(newLog.Id, createdLog.Id);
-	}
-
-	[Fact]
-	public async Task UpdateLog_ReturnsBadRequest_WhenLogNotFound() {
-		// Arrange
-		var nonExistingLog = new AptLog();
-		// Act
-		var result = await _controller.UpdateLog(nonExistingLog) as BadRequestObjectResult;
-		// Assert
-		Assert.NotNull(result);
-		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
-		Assert.Equal(NotExistErrors.AptLog, result!.Value);
-	}
-
-	[Fact]
-	public async Task UpdateLog_ReturnsOk_WhenLogIsUpdated() {
-		// Arrange
-		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
-		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var existingSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
-		var aptLog = new AptLog(client.Id, business.Id, 30);
-		aptLog.dateTime = new DateTime(2024, 1, 1);
-		aptLog.scheduleId = existingSchedule.Id;
-
-		_context.AddRange(client, business, existingSchedule, aptLog);
-		_context.SaveChanges();
-
-		aptLog.dateTime = new DateTime(2024, 12, 12);
-
-		// Act
-		var result = await _controller.UpdateLog(aptLog) as OkObjectResult;
-
-		// Assert
-		Assert.NotNull(result);
-		Assert.IsType<AptLog>(result!.Value);
-		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
-		Assert.Equal(aptLog.Id, ((AptLog)result.Value!).Id);
-		Assert.Equal(aptLog.dateTime, ((AptLog)result.Value!).dateTime);
-	}
-
-	[Fact]
-	public async Task DeleteLog_ReturnsBadRequest_WhenLogNotFound() {
-		// Act
-		var result = await _controller.DeleteLog("nonExistingId") as BadRequestObjectResult;
-		// Assert
-		Assert.NotNull(result);
-		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
-		Assert.Equal(NotExistErrors.AptLog, result!.Value);
-	}
-
-	[Fact]
-	public async Task DeleteLog_ReturnsNoContent_WhenLogExists() {
-		// Arrange
-		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
-		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var aptLog = new AptLog(client.Id, business.Id, 30);
-
-		_context.AddRange(client, business, aptLog);
+		_context.AddRange(client, business, aptSchedule);
 		_context.SaveChanges();
 
 		// Act
-		var result = await _controller.DeleteLog(aptLog.Id) as NoContentResult;
+		var result = await _controller.DeleteSchedule(aptSchedule.Id) as NoContentResult;
 
 		// Assert
-		var logInDb = _context.Logs.Find(aptLog.Id);
+		var scheduleInDb = _context.Schedules.Find(aptSchedule.Id);
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status204NoContent, result!.StatusCode);
 		Assert.IsType<NoContentResult>(result);
-		Assert.Null(logInDb);
+		Assert.Null(scheduleInDb);
 	}
 }

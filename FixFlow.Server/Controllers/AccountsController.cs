@@ -82,7 +82,6 @@ public class AccountsController : ControllerBase
             var token = GenerateToken(user!, roles.ToArray());
 
             await _context.SaveChangesAsync();
-            Console.WriteLine(token);
             return Ok(token);
         }
 

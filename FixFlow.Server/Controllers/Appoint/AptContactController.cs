@@ -118,7 +118,6 @@ public class AptContactController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateContact([FromBody] AptContact newContact)
     {
-        //TODO: do we need just the aptLog? Or can we create a Contact without a Log?
         var existingLog = _context.Logs.Find(newContact.aptLogId);
         if (existingLog == null)
         {
