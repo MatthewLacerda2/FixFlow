@@ -14,6 +14,10 @@ public static class StringChecker
     public static bool IsPasswordStrong(string password)
     {
 
+        if(password.Length < 8){
+            return false;
+        }
+
         bool hasUppercase = uppercaseRegex.IsMatch(password);
         bool hasLowercase = lowercaseRegex.IsMatch(password);
         bool hasDigit = numberRegex.IsMatch(password);
@@ -25,7 +29,7 @@ public static class StringChecker
     public static bool IsFullNameValid(string entry)
     {
         bool containsSpace = entry.Contains(" ");
-        bool hasLength = entry.Length > 5;
+        bool hasLength = entry.Length >= 5;
         bool lettersAndSpacesOnly = uppercaseRegex.IsMatch(entry) || lowercaseRegex.IsMatch(entry);
         bool noNumbers = numberRegex.IsMatch(entry) == false;
         bool noSpecialCharRegex = specialCharRegex.IsMatch(entry) == false;

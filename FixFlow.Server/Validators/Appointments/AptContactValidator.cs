@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
+using Server.Models.Erros;
 
 namespace Server.Validators.Appointments;
 
@@ -18,20 +19,20 @@ public class AptContactValidator : AbstractValidator<AptContact> {
         _clientUserManager = clientUserManager;
         _businessUserManager = businessUserManager;
 
-        RuleFor(x => x.dateTime).GreaterThanOrEqualTo(new DateTime(2023, 1, 1)).WithErrorCode("Date must be from 2023 and forward");
-        RuleFor(x => x.dateTime).GreaterThan(DateTime.Now).WithErrorCode("Date has to be in the future");
+        RuleFor(x => x.dateTime).GreaterThanOrEqualTo(new DateTime(2023, 1, 1)).WithErrorCode(ValidatorErrors.DateMustBe2023orForward);
+        RuleFor(x => x.dateTime).GreaterThan(DateTime.Now).WithErrorCode(ValidatorErrors.DateHasntPassedYet);
 
         RuleFor(x => x.clientId)
-            .NotEmpty().WithMessage("ClientId is required")
-            .MustAsync(ClientExists).WithMessage("Client does not exist");
+            .NotEmpty().WithMessage(ValidatorErrors.ClientIdRequired)
+            .MustAsync(ClientExists).WithMessage(NotExistErrors.Client);
 
         RuleFor(x => x.businessId)
-            .NotEmpty().WithMessage("BusinessId is required")
-            .MustAsync(BusinessExists).WithMessage("Business does not exist");
+            .NotEmpty().WithMessage(ValidatorErrors.BusinessIdRequired)
+            .MustAsync(BusinessExists).WithMessage(NotExistErrors.Business);
 
         RuleFor(x => x.aptLogId)
-            .NotEmpty().WithMessage("AptLogId is required")
-            .Must(AptLogExists).WithMessage("AptLog does not exist");
+            .NotEmpty().WithMessage(ValidatorErrors.AptLogRequired)
+            .Must(AptLogExists).WithMessage(NotExistErrors.AptLog);
     }
 
     private async Task<bool> ClientExists(string clientId, CancellationToken cancellationToken) {

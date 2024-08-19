@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
+using Server.Models.Erros;
 
 namespace Server.Validators.Appointments;
 
@@ -20,25 +21,25 @@ public class AptLogValidator : AbstractValidator<AptLog> {
 
                 RuleFor(x => x.price)
                         .GreaterThanOrEqualTo(0)
-                        .WithErrorCode("Price must be greater than or equal to 0");
+                        .WithErrorCode(ValidatorErrors.PriceMustBeNaturalNumber);
 
                 RuleFor(x => x.dateTime)
                         .GreaterThanOrEqualTo(new DateTime(2023, 1, 1))
-                        .WithErrorCode("Date must be from 2023 and forward");
+                        .WithErrorCode(ValidatorErrors.DateMustBe2023orForward);
                 RuleFor(x => x.dateTime)                
                         .LessThanOrEqualTo(DateTime.Now)
-                        .WithErrorCode("Date hasn't even passed yet");
+                        .WithErrorCode(ValidatorErrors.DateHasntPassedYet);
 
                 RuleFor(x => x.scheduleId)
-                        .Must(AptScheduleExists).When(s => !string.IsNullOrEmpty(s.scheduleId)).WithMessage("Schedule does not exist");
+                        .Must(AptScheduleExists).When(s => !string.IsNullOrEmpty(s.scheduleId)).WithMessage(NotExistErrors.AptSchedule);
 
                 RuleFor(x => x.clientId)
-                        .NotEmpty().WithMessage("ClientId is required")
-                        .MustAsync(ClientExists).WithMessage("Client does not exist");
+                        .NotEmpty().WithMessage(ValidatorErrors.ClientIdRequired)
+                        .MustAsync(ClientExists).WithMessage(NotExistErrors.Client);
 
                 RuleFor(x => x.businessId)
-                        .NotEmpty().WithMessage("BusinessId is required")
-                        .MustAsync(BusinessExists).WithMessage("Business does not exist");
+                        .NotEmpty().WithMessage(ValidatorErrors.BusinessIdRequired)
+                        .MustAsync(BusinessExists).WithMessage(ValidatorErrors.BusinessIdRequired);
         }
 
         private async Task<bool> ClientExists(string clientId, CancellationToken cancellationToken) {

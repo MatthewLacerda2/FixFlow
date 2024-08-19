@@ -118,7 +118,7 @@ public class ClientController : ControllerBase
             var existingPhone = _context.Clients.Where(c => c.PhoneNumber == clientRegister.PhoneNumber);
             if (existingPhone != null)
             {
-                return BadRequest(AlreadyRegisteredError.PhoneNumber);
+                return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
             }
 
         }
@@ -133,7 +133,7 @@ public class ClientController : ControllerBase
             var existingCPF = _context.Clients.Where(c => c.CPF == clientRegister.CPF);
             if (existingCPF != null)
             {
-                return BadRequest(AlreadyRegisteredError.CPF);
+                return BadRequest(AlreadyRegisteredErrors.CPF);
             }
 
         }
@@ -151,7 +151,7 @@ public class ClientController : ControllerBase
             }
             if (existingEmail != null)
             {
-                return BadRequest(AlreadyRegisteredError.Email);
+                return BadRequest(AlreadyRegisteredErrors.Email);
             }
         }
         else
@@ -218,7 +218,7 @@ public class ClientController : ControllerBase
             var existingCPF = _context.Clients.Where(x => x.CPF == upClient.CPF);
             if (existingCPF.Any())
             {
-                return BadRequest(AlreadyRegisteredError.CPF);
+                return BadRequest(AlreadyRegisteredErrors.CPF);
             }
             else
             {
@@ -231,7 +231,7 @@ public class ClientController : ControllerBase
             var existingUsername = _context.Clients.Where(x => x.UserName == upClient.UserName);
             if (existingUsername.Any())
             {
-                return BadRequest(AlreadyRegisteredError.UserName);
+                return BadRequest(AlreadyRegisteredErrors.UserName);
             }
             else
             {
@@ -244,7 +244,7 @@ public class ClientController : ControllerBase
             var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upClient.PhoneNumber);
             if (existingPhonenumber.Any())
             {
-                return BadRequest(AlreadyRegisteredError.PhoneNumber);
+                return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
             }
             else
             {

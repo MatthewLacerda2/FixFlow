@@ -116,19 +116,19 @@ public class BusinessController : ControllerBase
         var existingEmail = await _userManager.FindByEmailAsync(businessDto.Email);
         if (existingEmail != null)
         {
-            return BadRequest(AlreadyRegisteredError.Email);
+            return BadRequest(AlreadyRegisteredErrors.Email);
         }
 
         var existingCPF = _context.Business.Where(c => c.CPF == businessDto.CPF);
         if (existingCPF.Any())
         {
-            return BadRequest(AlreadyRegisteredError.CPF);
+            return BadRequest(AlreadyRegisteredErrors.CPF);
         }
 
         var existingPhone = _context.Business.Where(c => c.PhoneNumber == businessDto.PhoneNumber);
         if (existingPhone.Any())
         {
-            return BadRequest(AlreadyRegisteredError.PhoneNumber);
+            return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
         }
 
         Business Business = new Business(businessDto);
@@ -181,7 +181,7 @@ public class BusinessController : ControllerBase
             var existingCPF = _context.Business.Where(x => x.CPF == upBusiness.CPF);
             if (existingCPF.Any())
             {
-                return BadRequest(AlreadyRegisteredError.CPF);
+                return BadRequest(AlreadyRegisteredErrors.CPF);
             }
             else
             {
@@ -194,7 +194,7 @@ public class BusinessController : ControllerBase
             var existingCNPJ = _context.Business.Where(x => x.CNPJ == upBusiness.CNPJ);
             if (existingCNPJ.Any())
             {
-                return BadRequest(AlreadyRegisteredError.CNPJ);
+                return BadRequest(AlreadyRegisteredErrors.CNPJ);
             }
             else
             {
@@ -207,7 +207,7 @@ public class BusinessController : ControllerBase
             var existingUsername = _context.Business.Where(x => x.UserName == upBusiness.Name);
             if (existingUsername.Any())
             {
-                return BadRequest(AlreadyRegisteredError.UserName);
+                return BadRequest(AlreadyRegisteredErrors.UserName);
             }
             else
             {
@@ -220,7 +220,7 @@ public class BusinessController : ControllerBase
             var existingPhonenumber = _context.Business.Where(x => x.PhoneNumber == upBusiness.PhoneNumber);
             if (existingPhonenumber.Any())
             {
-                return BadRequest(AlreadyRegisteredError.PhoneNumber);
+                return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
             }
             else
             {

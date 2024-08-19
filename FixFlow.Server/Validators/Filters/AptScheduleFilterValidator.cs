@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Server.Models;
+using Server.Models.Erros;
 using Server.Models.Filters;
 
 namespace Server.Validators.Filters;
@@ -16,14 +17,14 @@ public class AptScheduleFilterValidator : AbstractValidator<AptScheduleFilter> {
         _businessUserManager = businessUserManager;
 
         RuleFor(x => x.clientId)
-            .MustAsync(ClientExists!).When(x => x.clientId != null).WithMessage("Client does not exist.");
+            .MustAsync(ClientExists!).When(x => x.clientId != null).WithMessage(NotExistErrors.Client);
 
         RuleFor(x => x.businessId)
-            .MustAsync(BusinessExists!).When(x => x.businessId != null).WithMessage("Business does not exist.");
+            .MustAsync(BusinessExists!).When(x => x.businessId != null).WithMessage(NotExistErrors.Business);
 
-        RuleFor(x => x.minDateTime).GreaterThanOrEqualTo(new DateOnly(2023, 1, 1)).WithErrorCode("Date must be from 2023 and forward.");
-        RuleFor(x => x.minDateTime).GreaterThanOrEqualTo(x=>x.maxDateTime).WithErrorCode("MinDate must be older than MaxDate.");
-        RuleFor(x => x.maxDateTime).GreaterThan(DateOnly.FromDateTime(DateTime.Now)).WithErrorCode("Date has to be in the future.");
+        RuleFor(x => x.minDateTime).GreaterThanOrEqualTo(new DateOnly(2023, 1, 1)).WithErrorCode(ValidatorErrors.DateMustBe2023orForward);
+        RuleFor(x => x.minDateTime).GreaterThanOrEqualTo(x=>x.maxDateTime).WithErrorCode(ValidatorErrors.MinDateMustBeOlder);
+        RuleFor(x => x.maxDateTime).GreaterThan(DateOnly.FromDateTime(DateTime.Now)).WithErrorCode(ValidatorErrors.DateHasntPassedYet);
     }
 
     private async Task<bool> ClientExists(string clientId, CancellationToken cancellationToken) {

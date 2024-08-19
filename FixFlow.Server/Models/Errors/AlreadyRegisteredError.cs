@@ -1,6 +1,6 @@
 namespace Server.Models.Erros;
 
-public struct AlreadyRegisteredError {
+public struct AlreadyRegisteredErrors {
 
     private const string alreadyRegistered = " already registered!";
 

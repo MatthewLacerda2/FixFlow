@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
+using Server.Models.Erros;
 
 namespace Server.Validators.Appointments;
 
@@ -18,19 +20,19 @@ public class AptScheduleValidator : AbstractValidator<AptSchedule> {
         _clientUserManager = clientUserManager;
         _businessUserManager = businessUserManager;
 
-        RuleFor(x => x.dateTime).GreaterThanOrEqualTo(new DateTime(2023, 1, 1)).WithErrorCode("Date must be from 2023 and forward");
-        RuleFor(x => x.dateTime).LessThanOrEqualTo(DateTime.Now).WithErrorCode("Date hasn't even passed yet");
+        RuleFor(x => x.dateTime).GreaterThanOrEqualTo(new DateTime(2023, 1, 1)).WithErrorCode(ValidatorErrors.DateMustBe2023orForward);
+        RuleFor(x => x.dateTime).LessThanOrEqualTo(DateTime.Now).WithErrorCode(ValidatorErrors.DateHasntPassedYet);
 
         RuleFor(x => x.clientId)
-            .NotEmpty().WithMessage("ClientId is required")
-            .MustAsync(ClientExists).WithMessage("Client does not exist");
+            .NotEmpty().WithMessage(ValidatorErrors.ClientIdRequired)
+            .MustAsync(ClientExists).WithMessage(NotExistErrors.Client);
 
         RuleFor(x => x.businessId)
-            .NotEmpty().WithMessage("BusinessId is required")
-            .MustAsync(BusinessExists).WithMessage("Business does not exist");
+            .NotEmpty().WithMessage(ValidatorErrors.BusinessIdRequired)
+            .MustAsync(BusinessExists).WithMessage(NotExistErrors.Business);
 
         RuleFor(x=>x.contactId)
-            .Must(ContactExists).When(s=>s.contactId!=null).WithErrorCode("Contact does not exist");
+            .Must(ContactExists).When(s=>s.contactId!=null).WithErrorCode(NotExistErrors.AptContact);
     }
 
     private async Task<bool> ClientExists(string clientId, CancellationToken cancellationToken) {
