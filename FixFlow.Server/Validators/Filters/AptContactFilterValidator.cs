@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Server.Models;
 using Server.Models.Filters;
 
-namespace Server.Validators.Appointments;
+namespace Server.Validators.Filters;
 
 public class AptContactFilterValidator : AbstractValidator<AptContactFilter> {
 

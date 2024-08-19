@@ -11,7 +11,7 @@ public class ClientDTO
     public string FullName { get; set; }
 
     /// <summary>
-    /// CPF. Must be only precisely 11 numbers
+    /// CPF. Must be on format XXX.XXX.XXX-XX
     /// </summary>
     [Length(14, 14)]
     public string? CPF { get; set; }

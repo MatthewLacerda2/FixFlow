@@ -15,11 +15,15 @@ public class BusinessRegister {
     public string Name { get; set; }
 
     /// <summary>
-    /// CPF. Must be only precisely 11 numbers
+    /// CPF. Must be on format XXX.XXX.XXX-XX
     /// </summary>
     [Length(14, 14)]
     public string CPF { get; set; }
     //TODO: tem que ao menos CPF *OU* CNPJ
+
+    /// <summary>
+    /// CNPJ. Must be on format XX.XXX.XXX/XXXX-XX
+    /// </summary>
     public string? CNPJ { get; set; }
 
     [MinLength(5)]

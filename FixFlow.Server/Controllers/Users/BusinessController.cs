@@ -152,7 +152,7 @@ public class BusinessController : ControllerBase
             return StatusCode(500, "Internal Server Error: Add Business Role Unsuccessful");
         }
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(CreateBusiness), (BusinessDTO)Business);
     }

@@ -189,7 +189,7 @@ public class ClientController : ControllerBase
             return StatusCode(500, "Internal Server Error: Add Client Role Unsuccessful");
         }
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(CreateClient), (ClientDTO)client);
     }
