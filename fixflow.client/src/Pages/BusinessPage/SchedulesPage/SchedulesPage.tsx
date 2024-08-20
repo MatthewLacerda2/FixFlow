@@ -11,7 +11,6 @@ const SchedulesPage: React.FC = () => {
       client: { id: "c1", fullName: "John Doe" },
       businessId: "b1",
       dateTime: "2024-05-16T10:00:00Z",
-      price: 100,
       observation: "Initial consultation",
     },
   ];
@@ -29,17 +28,6 @@ const SchedulesPage: React.FC = () => {
           className="input-field"
           type="text"
           placeholder="Observação"
-        ></input>
-        <input
-          className="input-field"
-          style={{ width: "150px" }}
-          type="date"
-        ></input>
-        {/*min date*/}
-        <input
-          className="input-field"
-          style={{ width: "150px" }}
-          type="date"
         ></input>
         {/*max date*/}
         <input

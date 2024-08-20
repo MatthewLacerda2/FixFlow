@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Card from "../../../Components/Card/Card";
 import FlowButton from "../../../Components/FlowButton/FlowButton";
-import { AccountsService, PasswordResetRequest } from "../../../FlowApi";
+import { AccountsService, PasswordReset } from "../../../FlowApi";
 
 const ResetLinkPage: React.FC = () => {
   const { token } = useParams<{ token: string }>();
@@ -34,7 +34,7 @@ const ResetLinkPage: React.FC = () => {
       return;
     }
 
-    const passwordResetRequest: PasswordResetRequest = {
+    const passwordResetRequest: PasswordReset = {
       email,
       token,
       password,
@@ -70,6 +70,7 @@ const ResetLinkPage: React.FC = () => {
           <p>
             <b>New Password:</b>
             <input
+              placeholder="Password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -78,6 +79,7 @@ const ResetLinkPage: React.FC = () => {
           <p>
             <b>Confirm password:</b>
             <input
+              placeholder="Confirm Password"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}

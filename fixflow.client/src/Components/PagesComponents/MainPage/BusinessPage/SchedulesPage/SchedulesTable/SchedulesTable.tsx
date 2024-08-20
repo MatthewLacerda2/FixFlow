@@ -50,7 +50,6 @@ const SchedulesTable: React.FC<ScheduleTableProps> = ({ schedules }) => {
           <tr key={schedule.id}>
             <td>{schedule.client?.fullName || "N/A"}</td>
             <td>{schedule.dateTime || "N/A"}</td>
-            <td>{schedule.price != null ? `$${schedule.price}` : "N/A"}</td>
             <td>{schedule.observation || "N/A"}</td>
           </tr>
         ))}
