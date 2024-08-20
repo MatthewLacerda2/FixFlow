@@ -5,6 +5,7 @@ using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
 using Server.Models.Filters;
+using Server.Models.Erros;
 
 namespace Server.Controllers;
 
@@ -17,16 +18,14 @@ namespace Server.Controllers;
 [ApiController]
 [Route(Common.api_route + "logs")]
 [Produces("application/json")]
-public class LogController : ControllerBase
+public class AptLogController : ControllerBase
 {
 
     private readonly ServerContext _context;
-    private readonly UserManager<Client> _userManager;
 
-    public LogController(ServerContext context, UserManager<Client> userManager)
+    public AptLogController(ServerContext context)
     {
         _context = context;
-        _userManager = userManager;
     }
 
     /// <summary>
@@ -46,7 +45,7 @@ public class LogController : ControllerBase
 
         if (log == null)
         {
-            return NotFound("Log does not exist");
+            return NotFound(NotExistErrors.AptLog);
         }
 
         return Ok(log);
@@ -68,27 +67,39 @@ public class LogController : ControllerBase
 
         var logsQuery = _context.Logs.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filter.ClientId))
+        if (!string.IsNullOrWhiteSpace(filter.clientId))
         {
-            logsQuery = logsQuery.Where(x => x.ClientId == filter.ClientId);
+            logsQuery = logsQuery.Where(x => x.clientId == filter.clientId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.businessId))
+        {
+            logsQuery = logsQuery.Where(x => x.businessId == filter.businessId);
+        }
+
+        if(filter.hasSchedule.HasValue){
+            logsQuery = logsQuery.Where(x=>x.scheduleId != null == filter.hasSchedule.Value);
         }
 
         logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
         logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
-
-        logsQuery = logsQuery.Where(x => x.dateTime >= filter.minDateTime);
-        logsQuery = logsQuery.Where(x => x.dateTime <= filter.maxDateTime);
+        
+        logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
+        logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
 
         switch (filter.sort)
         {
             case LogSort.ClientId:
-                logsQuery = logsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
+                logsQuery = logsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
                 break;
-            case LogSort.date:
-                logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.price).ThenBy(s => s.Id);
+            case LogSort.BusinessId:
+                logsQuery = logsQuery.OrderBy(s => s.businessId).ThenBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
                 break;
-            case LogSort.price:
-                logsQuery = logsQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+            case LogSort.Date:
+                logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
+                break;
+            case LogSort.Price:
+                logsQuery = logsQuery.OrderByDescending(s => s.price).ThenBy(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
                 break;
         }
 
@@ -114,29 +125,23 @@ public class LogController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPost]
-    public async Task<IActionResult> CreateLog([FromBody] AptLog newAppointment)
+    public async Task<IActionResult> CreateLog([FromBody] AptLog newLog)
     {
 
-        var existingClient = _userManager.FindByIdAsync(newAppointment.ClientId);
-        if (existingClient == null)
+        if (!string.IsNullOrWhiteSpace(newLog.scheduleId))
         {
-            return BadRequest("Client does not exist");
-        }
-
-        if (!string.IsNullOrWhiteSpace(newAppointment.scheduleId))
-        {
-            var existingSchedule = _context.Schedules.Find(newAppointment.scheduleId);
+            var existingSchedule = _context.Schedules.Find(newLog.scheduleId);
 
             if (existingSchedule == null)
             {
-                return BadRequest("Schedule does not exist");
+                return BadRequest(NotExistErrors.AptSchedule);
             }
         }
 
-        _context.Logs.Add(newAppointment);
+        _context.Logs.Add(newLog);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(CreateLog), newAppointment);
+        return CreatedAtAction(nameof(CreateLog), newLog);
     }
 
     /// <summary>
@@ -148,19 +153,29 @@ public class LogController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPut]
-    public async Task<IActionResult> UpdateLog([FromBody] AptLog upAppointment)
+    public async Task<IActionResult> UpdateLog([FromBody] AptLog upLog)
     {
 
-        var existingLog = _context.Logs.Find(upAppointment.Id);
+        var existingLog = _context.Logs.Find(upLog.Id);
         if (existingLog == null)
         {
-            return BadRequest("Log does not exist");
+            return BadRequest(NotExistErrors.AptLog);
         }
 
-        _context.Logs.Update(upAppointment);
+        if (!string.IsNullOrWhiteSpace(upLog.scheduleId))
+        {
+            var existingSchedule = _context.Schedules.Find(upLog.scheduleId);
+
+            if (existingSchedule == null)
+            {
+                return BadRequest(NotExistErrors.AptSchedule);
+            }
+        }
+
+        _context.Logs.Update(upLog);
         await _context.SaveChangesAsync();
 
-        return Ok(upAppointment);
+        return Ok(upLog);
     }
 
     /// <summary>
@@ -179,7 +194,7 @@ public class LogController : ControllerBase
         var logToDelete = _context.Logs.Find(Id);
         if (logToDelete == null)
         {
-            return BadRequest("Log Appointment does not exist");
+            return BadRequest(NotExistErrors.AptLog);
         }
 
         _context.Logs.Remove(logToDelete);

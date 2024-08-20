@@ -5,6 +5,7 @@ using Server.Data;
 using Server.Models;
 using Server.Models.DTO;
 using Server.Models.Utils;
+using Server.Models.Erros;
 
 namespace Server.Controllers;
 
@@ -45,7 +46,7 @@ public class BusinessController : ControllerBase
 
         if (business == null)
         {
-            return NotFound("Business does not exist");
+            return NotFound(NotExistErrors.Business);
         }
 
         return Ok((BusinessDTO)business);
@@ -115,19 +116,19 @@ public class BusinessController : ControllerBase
         var existingEmail = await _userManager.FindByEmailAsync(businessDto.Email);
         if (existingEmail != null)
         {
-            return BadRequest("Email already registered!");
+            return BadRequest(AlreadyRegisteredErrors.Email);
         }
 
         var existingCPF = _context.Business.Where(c => c.CPF == businessDto.CPF);
         if (existingCPF.Any())
         {
-            return BadRequest("CPF already registered!");
+            return BadRequest(AlreadyRegisteredErrors.CPF);
         }
 
         var existingPhone = _context.Business.Where(c => c.PhoneNumber == businessDto.PhoneNumber);
         if (existingPhone.Any())
         {
-            return BadRequest("PhoneNumber already registered!");
+            return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
         }
 
         Business Business = new Business(businessDto);
@@ -152,7 +153,7 @@ public class BusinessController : ControllerBase
             return StatusCode(500, "Internal Server Error: Add Business Role Unsuccessful");
         }
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(CreateBusiness), (BusinessDTO)Business);
     }
@@ -172,7 +173,7 @@ public class BusinessController : ControllerBase
         var existingBusiness = await _userManager.FindByIdAsync(upBusiness.Id);
         if (existingBusiness == null)
         {
-            return BadRequest("Business does not Exist!");
+            return BadRequest(NotExistErrors.Business);
         }
 
         if (existingBusiness.CPF != upBusiness.CPF)
@@ -180,7 +181,7 @@ public class BusinessController : ControllerBase
             var existingCPF = _context.Business.Where(x => x.CPF == upBusiness.CPF);
             if (existingCPF.Any())
             {
-                return BadRequest("CPF taken");
+                return BadRequest(AlreadyRegisteredErrors.CPF);
             }
             else
             {
@@ -193,7 +194,7 @@ public class BusinessController : ControllerBase
             var existingCNPJ = _context.Business.Where(x => x.CNPJ == upBusiness.CNPJ);
             if (existingCNPJ.Any())
             {
-                return BadRequest("CNPJ taken");
+                return BadRequest(AlreadyRegisteredErrors.CNPJ);
             }
             else
             {
@@ -206,7 +207,7 @@ public class BusinessController : ControllerBase
             var existingUsername = _context.Business.Where(x => x.UserName == upBusiness.Name);
             if (existingUsername.Any())
             {
-                return BadRequest("Username already exists");
+                return BadRequest(AlreadyRegisteredErrors.UserName);
             }
             else
             {
@@ -219,7 +220,7 @@ public class BusinessController : ControllerBase
             var existingPhonenumber = _context.Business.Where(x => x.PhoneNumber == upBusiness.PhoneNumber);
             if (existingPhonenumber.Any())
             {
-                return BadRequest("PhoneNumber taken");
+                return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
             }
             else
             {
@@ -255,7 +256,7 @@ public class BusinessController : ControllerBase
         var business = await _userManager.FindByIdAsync(Id);
         if (business == null)
         {
-            return BadRequest("Business does not Exist!");
+            return BadRequest(NotExistErrors.Business);
         }
 
         await _userManager.DeleteAsync(business);

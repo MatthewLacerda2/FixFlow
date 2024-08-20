@@ -6,6 +6,5 @@ export type FlowLoginRequest = {
     userName?: string | null;
     email?: string | null;
     password: string;
-    newPassword?: string | null;
 };
 

@@ -2,15 +2,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models.PasswordReset;
 
-public class PasswordResetRequest
+public class PasswordReset
 {
+
+    [Required]
+    public string token { get; set; }
 
     [EmailAddress]
     [Required]
     public string Email { get; set; } = string.Empty;
-
-    [Required]
-    public string token { get; set; }
 
     [MinLength(7)]
     [Required]
@@ -20,7 +20,7 @@ public class PasswordResetRequest
     [Required]
     public string confirmPassword { get; set; } = string.Empty;
 
-    public PasswordResetRequest(string _email, string _token)
+    public PasswordReset(string _email, string _token)
     {
         Email = _email;
         token = _token;

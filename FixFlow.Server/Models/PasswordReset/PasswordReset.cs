@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models.PasswordReset;
 
-public class PasswordReset
+public class PasswordResetRequest
 {
 
     [Key]
@@ -13,14 +13,14 @@ public class PasswordReset
 
     public DateTime dateTime { get; set; }
 
-    public PasswordReset()
+    public PasswordResetRequest()
     {
         Email = string.Empty;
         token = string.Empty;
         dateTime = DateTime.Now;
     }
 
-    public PasswordReset(string _email, string _token, DateTime datetime)
+    public PasswordResetRequest(string _email, string _token, DateTime datetime)
     {
         Email = _email;
         token = _token;

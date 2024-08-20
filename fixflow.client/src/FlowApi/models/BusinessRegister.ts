@@ -9,9 +9,12 @@ export type BusinessRegister = {
      */
     name: string;
     /**
-     * CPF. Must be only precisely 11 numbers
+     * CPF. Must be on format XXX.XXX.XXX-XX
      */
     cpf?: string | null;
+    /**
+     * CNPJ. Must be on format XX.XXX.XXX/XXXX-XX
+     */
     cnpj?: string | null;
     description?: string | null;
     /**

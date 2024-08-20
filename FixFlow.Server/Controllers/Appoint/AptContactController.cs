@@ -5,6 +5,7 @@ using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
 using Server.Models.Filters;
+using Server.Models.Erros;
 
 namespace Server.Controllers;
 
@@ -17,16 +18,14 @@ namespace Server.Controllers;
 [ApiController]
 [Route(Common.api_route + "contacts")]
 [Produces("application/json")]
-public class ContactController : ControllerBase
+public class AptContactController : ControllerBase
 {
-
+	
     private readonly ServerContext _context;
-    private readonly UserManager<Client> _userManager;
 
-    public ContactController(ServerContext context, UserManager<Client> userManager)
+    public AptContactController(ServerContext context)
     {
         _context = context;
-        _userManager = userManager;
     }
 
     /// <summary>
@@ -46,7 +45,7 @@ public class ContactController : ControllerBase
 
         if (contact == null)
         {
-            return NotFound("Contact does not exist");
+            return NotFound(NotExistErrors.AptContact);
         }
 
         return Ok(contact);
@@ -63,27 +62,36 @@ public class ContactController : ControllerBase
     /// <response code="200">Returns an array of AppointmentContact</response>
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptContact[]>))]
     [HttpGet]
-    public IActionResult ReadContact([FromBody] AptContactFilter filter)
+    public IActionResult ReadContacts([FromBody] AptContactFilter filter)
     {
 
         var ContactsQuery = _context.Contacts.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filter.ClientId))
+        if (!string.IsNullOrWhiteSpace(filter.clientId))
         {
-            ContactsQuery = ContactsQuery.Where(x => x.ClientId == filter.ClientId);
+            ContactsQuery = ContactsQuery.Where(x => x.clientId == filter.clientId);
         }
 
-        ContactsQuery = ContactsQuery.Where(x => x.dateTime >= filter.minDateTime);
-        ContactsQuery = ContactsQuery.Where(x => x.dateTime <= filter.maxDateTime);
+        if (!string.IsNullOrWhiteSpace(filter.businessId))
+        {
+            ContactsQuery = ContactsQuery.Where(x => x.businessId == filter.businessId);
+        }
+
+        ContactsQuery = ContactsQuery.Where(x => x.dateTime >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
+        ContactsQuery = ContactsQuery.Where(x => x.dateTime <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
 
         switch (filter.sort)
         {
-            case ContactSort.date:
-                ContactsQuery = ContactsQuery.OrderBy(s => s.dateTime).ThenByDescending(s => s.ClientId).ThenBy(s => s.Id);
-                break;
             case ContactSort.ClientId:
-                ContactsQuery = ContactsQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+                ContactsQuery = ContactsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.businessId).ThenBy(s => s.Id);
                 break;
+            case ContactSort.BusinessId:
+                ContactsQuery = ContactsQuery.OrderBy(s => s.businessId).ThenByDescending(s => s.clientId).ThenBy(s => s.Id);
+                break;
+            case ContactSort.Date:
+                ContactsQuery = ContactsQuery.OrderBy(s => s.dateTime).ThenByDescending(s => s.clientId).ThenBy(s => s.Id);
+                break;
+            
         }
 
         if (filter.descending)
@@ -110,25 +118,11 @@ public class ContactController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateContact([FromBody] AptContact newContact)
     {
-
-        var existingClient = _userManager.FindByIdAsync(newContact.ClientId);
-        if (existingClient == null)
-        {
-            return BadRequest("Client does not exist");
-        }
-
-        var existingBusiness = _context.Business.Find(newContact.businessId);
-        if (existingBusiness == null)
-        {
-            return BadRequest("Business does not exist");
-        }
-
         var existingLog = _context.Logs.Find(newContact.aptLogId);
         if (existingLog == null)
         {
-            return BadRequest("Log does not exist");
+            return BadRequest(NotExistErrors.AptLog);
         }
-
 
         _context.Contacts.Add(newContact);
         await _context.SaveChangesAsync();
@@ -145,19 +139,19 @@ public class ContactController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptContact))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPut]
-    public async Task<IActionResult> UpdateContact([FromBody] AptContact upAppointment)
+    public async Task<IActionResult> UpdateContact([FromBody] AptContact upLog)
     {
 
-        var existingContact = _context.Contacts.Find(upAppointment.Id);
+        var existingContact = _context.Contacts.Find(upLog.Id);
         if (existingContact == null)
         {
-            return BadRequest("Contact does not exist");
+            return BadRequest(NotExistErrors.AptContact);
         }
 
-        _context.Contacts.Update(upAppointment);
+        _context.Contacts.Update(upLog);
         await _context.SaveChangesAsync();
 
-        return Ok(upAppointment);
+        return Ok(upLog);
     }
 
     /// <summary>
@@ -176,7 +170,7 @@ public class ContactController : ControllerBase
         var ContactToDelete = _context.Contacts.Find(Id);
         if (ContactToDelete == null)
         {
-            return BadRequest("Contact does not exist");
+            return BadRequest(NotExistErrors.AptContact);
         }
 
         _context.Contacts.Remove(ContactToDelete);

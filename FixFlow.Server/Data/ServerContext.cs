@@ -2,13 +2,11 @@ using Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Server.Models.Appointments;
-using Server.Seeder;
 using Server.Models.PasswordReset;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext
 {
-
     public DbSet<Client> Clients { get; set; } = default!;
     public DbSet<Business> Business { get; set; } = default!;
 
@@ -16,7 +14,7 @@ public class ServerContext : IdentityDbContext
     public DbSet<AptContact> Contacts { get; set; } = default!;
     public DbSet<AptSchedule> Schedules { get; set; } = default!;
 
-    public DbSet<PasswordReset> Resets { get; set; } = default!;
+    public DbSet<PasswordResetRequest> Resets { get; set; } = default!;
 
     public ServerContext(DbContextOptions<ServerContext> options)
         : base(options)
@@ -32,6 +30,10 @@ public class ServerContext : IdentityDbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        if (optionsBuilder.IsConfigured)
+        {
+            return;
+        }
         base.OnConfiguring(optionsBuilder);
 
         optionsBuilder.UseMySql(
