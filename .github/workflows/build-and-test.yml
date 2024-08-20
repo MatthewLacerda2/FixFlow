@@ -29,6 +29,12 @@ jobs:
           dotnet add package Swashbuckle.AspNetCore.SwaggerGen
           dotnet build -c Release .\FixFlow.Server.csproj
 
+      - name: Dotnet Test
+        working-directory: FixFlow.Tests
+        run: |
+          dotnet build
+          dotnet test
+
       - name: React build
         working-directory: fixflow.client\src
         run: |

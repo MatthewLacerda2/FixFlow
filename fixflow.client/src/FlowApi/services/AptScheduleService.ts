@@ -7,7 +7,7 @@ import type { AptScheduleFilter } from '../models/AptScheduleFilter';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class ScheduleService {
+export class AptScheduleService {
     /**
      * Get the Schedule with the given Id
      * @param id The Schedule's Id
