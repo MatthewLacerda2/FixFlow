@@ -1,5 +1,6 @@
 using FluentValidation;
 using Server.Models.DTO;
+using Server.Models.Erros;
 using Server.Models.Utils;
 
 namespace Server.Validators.DTOs;
@@ -12,7 +13,7 @@ public class BusinessDTOValidator : AbstractValidator<BusinessDTO>
         {
             if (cpf != null && StringChecker.isCPFvalid(cpf))
             {
-                context.AddFailure("CPF invalid");
+                context.AddFailure(ValidatorErrors.CPFisInvalid);
             }
         });
 
@@ -20,11 +21,11 @@ public class BusinessDTOValidator : AbstractValidator<BusinessDTO>
         {
             if (string.IsNullOrWhiteSpace(userName))
             {
-                context.AddFailure("Username is empty");
+                context.AddFailure(ValidatorErrors.UsernameIsEmpty);
             }
             if (userName.Contains(" "))
             {
-                context.AddFailure("Username can not contain whitespaces");
+                context.AddFailure(ValidatorErrors.UsernameHasWhitespaces);
             }
         });
     }

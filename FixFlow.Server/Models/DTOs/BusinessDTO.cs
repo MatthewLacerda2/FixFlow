@@ -14,17 +14,20 @@ public class BusinessDTO
     public string Name { get; set; }
 
     /// <summary>
-    /// CPF. Must be precisely XXX.XXX.XXX-XX
+    /// CPF. Must be on format XXX.XXX.XXX-XX
     /// </summary>
     [Length(14, 14)]
     public string CPF { get; set; }
 
+    /// <summary>
+    /// CNPJ. Must be on format XX.XXX.XXX/XXXX-XX
+    /// </summary>
     public string? CNPJ { get; set; }
 
     public string description { get; set; }
 
     /// <summary>
-    /// Phone Number. Must contain only numbers, and may be preceded by a '+'
+    /// Phone Number. Must contain only numbers
     /// </summary>
     [Required]
     [Phone]

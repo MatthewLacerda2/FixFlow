@@ -14,7 +14,7 @@ public class AptSchedule
     /// </summary>
     [Required]
     [ForeignKey(nameof(Models.Client))]
-    public string ClientId { get; set; }
+    public string clientId { get; set; }
 
     /// <summary>
     /// Navigation Property of the Client
@@ -26,14 +26,14 @@ public class AptSchedule
     /// The Id of the Business who owns this Contact
     /// </summary>
     [Required]
-    [ForeignKey(nameof(Business))]
+    [ForeignKey(nameof(Models.Business))]
     public string businessId { get; set; }
 
     /// <summary>
     /// Navigation Property of the Business
     /// </summary>
     [JsonIgnore]
-    public Business business { get; set; }
+    public Business Business { get; set; }
 
     /// <summary>
     /// The Id of the Contact that precedes this Schedule, if any
@@ -45,34 +45,33 @@ public class AptSchedule
     /// Navigation Property of the Contact
     /// </summary>
     [JsonIgnore]
-    public AptContact? contact { get; set; }
+    public AptContact? Contact { get; set; }
 
     /// <summary>
     /// The scheduled DateTime of the Appointment
     /// </summary>
     public DateTime dateTime { get; set; }
 
-    public float? price { get; set; }
     public string? observation { get; set; }
 
     public AptSchedule()
     {
         Id = Guid.NewGuid().ToString();
-        ClientId = string.Empty;
+        clientId = string.Empty;
         Client = null!;
-        contact = null!;
+        Contact = null!;
         businessId = string.Empty;
-        business = null!;
+        Business = null!;
     }
 
-    public AptSchedule(string clientId, DateTime _dateTime)
+    public AptSchedule(string _clientId, string _businessId, DateTime _dateTime)
     {
         Id = Guid.NewGuid().ToString();
-        ClientId = clientId;
+        clientId = _clientId;
+        businessId = _businessId;
         Client = null!;
-        contact = null!;
+        Contact = null!;
         dateTime = _dateTime;
-        businessId = string.Empty;
-        business = null!;
+        Business = null!;
     }
 }

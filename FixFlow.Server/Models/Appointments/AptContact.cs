@@ -14,7 +14,7 @@ public class AptContact
     /// </summary>
     [Required]
     [ForeignKey(nameof(Models.Client))]
-    public string ClientId { get; set; }
+    public string clientId { get; set; }
 
     /// <summary>
     /// Navigation Property of the Client
@@ -26,14 +26,14 @@ public class AptContact
     /// The Id of the Business who owns this Contact
     /// </summary>
     [Required]
-    [ForeignKey(nameof(Business))]
+    [ForeignKey(nameof(Models.Business))]
     public string businessId { get; set; }
 
     /// <summary>
     /// Navigation Property of the Business
     /// </summary>
     [JsonIgnore]
-    public Business business { get; set; }
+    public Business Business { get; set; }
 
     /// <summary>
     /// The Id of the Log that precedes this Contact
@@ -57,22 +57,23 @@ public class AptContact
     public AptContact()
     {
         Id = Guid.NewGuid().ToString();
-        ClientId = string.Empty;
+        clientId = string.Empty;
         Client = null!;
         aptLogId = string.Empty;
         aptLog = null!;
         businessId = string.Empty;
-        business = null!;
+        Business = null!;
     }
 
-    public AptContact(string _clientId, string _prevAppoint)
+    public AptContact(string _clientId, string _businessId, string _prevAppoint, DateTime _dateTime)
     {
         Id = Guid.NewGuid().ToString();
-        ClientId = _clientId;
-        Client = null!;
-        aptLog = null!;
+        clientId = _clientId;
+        businessId = _businessId;
         aptLogId = _prevAppoint;
-        businessId = string.Empty;
-        business = null!;
+        Client = null!;
+        Business = null!;
+        aptLog = null!;
+        dateTime = _dateTime;
     }
 }

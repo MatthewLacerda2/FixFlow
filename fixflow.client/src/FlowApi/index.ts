@@ -20,12 +20,12 @@ export type { Client } from './models/Client';
 export type { ClientDTO } from './models/ClientDTO';
 export type { ClientRegister } from './models/ClientRegister';
 export type { FlowLoginRequest } from './models/FlowLoginRequest';
-export type { PasswordResetRequest } from './models/PasswordResetRequest';
+export type { PasswordReset } from './models/PasswordReset';
 export type { ProblemDetails } from './models/ProblemDetails';
 
 export { AccountsService } from './services/AccountsService';
+export { AptContactService } from './services/AptContactService';
+export { AptLogService } from './services/AptLogService';
+export { AptScheduleService } from './services/AptScheduleService';
 export { BusinessService } from './services/BusinessService';
 export { ClientService } from './services/ClientService';
-export { ContactService } from './services/ContactService';
-export { LogService } from './services/LogService';
-export { ScheduleService } from './services/ScheduleService';

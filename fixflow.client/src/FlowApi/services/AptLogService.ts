@@ -7,7 +7,7 @@ import type { AptLogFilter } from '../models/AptLogFilter';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class LogService {
+export class AptLogService {
     /**
      * Get the Log with the given Id
      * @param id The Log's Id

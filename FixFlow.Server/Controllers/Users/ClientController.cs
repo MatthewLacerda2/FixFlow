@@ -5,6 +5,7 @@ using Server.Data;
 using Server.Models;
 using Server.Models.DTO;
 using Server.Models.Utils;
+using Server.Models.Erros;
 
 namespace Server.Controllers;
 
@@ -44,7 +45,7 @@ public class ClientController : ControllerBase
         var client = await _userManager.FindByIdAsync(Id);
         if (client == null)
         {
-            return NotFound("Client does not exist");
+            return NotFound(NotExistErrors.Client);
         }
 
         return Ok((ClientDTO)client);
@@ -117,7 +118,7 @@ public class ClientController : ControllerBase
             var existingPhone = _context.Clients.Where(c => c.PhoneNumber == clientRegister.PhoneNumber);
             if (existingPhone != null)
             {
-                return BadRequest("PhoneNumber already registered!");
+                return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
             }
 
         }
@@ -132,7 +133,7 @@ public class ClientController : ControllerBase
             var existingCPF = _context.Clients.Where(c => c.CPF == clientRegister.CPF);
             if (existingCPF != null)
             {
-                return BadRequest("CPF already registered!");
+                return BadRequest(AlreadyRegisteredErrors.CPF);
             }
 
         }
@@ -150,7 +151,7 @@ public class ClientController : ControllerBase
             }
             if (existingEmail != null)
             {
-                return BadRequest("Email already registered!");
+                return BadRequest(AlreadyRegisteredErrors.Email);
             }
         }
         else
@@ -189,7 +190,7 @@ public class ClientController : ControllerBase
             return StatusCode(500, "Internal Server Error: Add Client Role Unsuccessful");
         }
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(CreateClient), (ClientDTO)client);
     }
@@ -209,7 +210,7 @@ public class ClientController : ControllerBase
         var existingClient = await _userManager.FindByIdAsync(upClient.Id);
         if (existingClient == null)
         {
-            return BadRequest("Client does not Exist!");
+            return BadRequest(NotExistErrors.Client);
         }
 
         if (existingClient.CPF != upClient.CPF)
@@ -217,7 +218,7 @@ public class ClientController : ControllerBase
             var existingCPF = _context.Clients.Where(x => x.CPF == upClient.CPF);
             if (existingCPF.Any())
             {
-                return BadRequest("CPF taken");
+                return BadRequest(AlreadyRegisteredErrors.CPF);
             }
             else
             {
@@ -230,7 +231,7 @@ public class ClientController : ControllerBase
             var existingUsername = _context.Clients.Where(x => x.UserName == upClient.UserName);
             if (existingUsername.Any())
             {
-                return BadRequest("Username already exists");
+                return BadRequest(AlreadyRegisteredErrors.UserName);
             }
             else
             {
@@ -243,7 +244,7 @@ public class ClientController : ControllerBase
             var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upClient.PhoneNumber);
             if (existingPhonenumber.Any())
             {
-                return BadRequest("PhoneNumber taken");
+                return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
             }
             else
             {
@@ -274,7 +275,7 @@ public class ClientController : ControllerBase
         var client = await _userManager.FindByIdAsync(Id);
         if (client == null)
         {
-            return BadRequest("Client does not Exist!");
+            return BadRequest(NotExistErrors.Client);
         }
 
         await _userManager.DeleteAsync(client);

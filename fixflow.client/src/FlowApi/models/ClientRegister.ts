@@ -6,7 +6,7 @@ export type ClientRegister = {
     id: string;
     fullName: string;
     /**
-     * CPF. Must be only precisely 11 numbers
+     * CPF. Must be on format XXX.XXX.XXX-XX
      */
     cpf?: string | null;
     /**
