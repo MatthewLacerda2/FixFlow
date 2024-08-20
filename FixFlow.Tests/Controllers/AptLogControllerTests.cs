@@ -36,7 +36,7 @@ public class AptLogControllerTests {
 	}
 
 	[Fact]
-	public async Task ReadLog_ReturnsLog_WhenLogExists() {
+	public async Task ReadLog_ReturnsOk_WhenLogExists() {
 		// Arrange
 		var client = new Client("fulano", "123456789", "", "88263255", "fulano@hotmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -154,27 +154,7 @@ public class AptLogControllerTests {
 	}
 
 	[Fact]
-	public async Task CreateLog_ReturnsCreated_WhenScheduleIsNull() {
-		// Arrange
-		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
-		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
-		var newLog = new AptLog(client.Id, business.Id, 30);
-
-		_context.AddRange(client, business);
-		_context.SaveChanges();
-
-		// Act
-		var result = await _controller.CreateLog(newLog) as CreatedAtActionResult;
-
-		// Assert
-		Assert.NotNull(result);
-		var createdLog = Assert.IsType<AptLog>(result!.Value);
-		Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
-		Assert.Equal(newLog.Id, createdLog.Id);
-	}
-
-	[Fact]
-	public async Task CreateLog_ReturnsCreated_WhenScheduleDoesNotExist() {
+	public async Task CreateLog_ReturnsBadRequest_WhenScheduleDoesNotExist() {
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -230,7 +210,7 @@ public class AptLogControllerTests {
 	}
 
 	[Fact]
-	public async Task UpdateLog_ReturnsOk_WhenLogIsUpdated() {
+	public async Task UpdateLog_ReturnsBadRequest_WhenScheduleDoesNotExists() {
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -243,6 +223,32 @@ public class AptLogControllerTests {
 		_context.SaveChanges();
 
 		aptLog.dateTime = new DateTime(2024, 12, 12);
+
+		// Act
+		var result = await _controller.UpdateLog(aptLog) as OkObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.IsType<AptLog>(result!.Value);
+		Assert.Equal(StatusCodes.Status200OK, result!.StatusCode);
+		Assert.Equal(aptLog.Id, ((AptLog)result.Value!).Id);
+		Assert.Equal(aptLog.dateTime, ((AptLog)result.Value!).dateTime);
+	}
+
+	[Fact]
+	public async Task UpdateLog_ReturnsOk_WhenScheduleExists() {
+		// Arrange
+		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
+		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
+		var existingSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
+		var aptLog = new AptLog(client.Id, business.Id, 30);
+		aptLog.dateTime = new DateTime(2024, 1, 1);
+
+		_context.AddRange(client, business, existingSchedule, aptLog);
+		_context.SaveChanges();
+
+		aptLog.dateTime = new DateTime(2024, 12, 12);
+		aptLog.scheduleId = existingSchedule.Id;
 
 		// Act
 		var result = await _controller.UpdateLog(aptLog) as OkObjectResult;

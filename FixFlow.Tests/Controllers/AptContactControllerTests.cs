@@ -42,7 +42,7 @@ public class AptContactControllerTests {
 		var client = new Client("fulano", "123456789", "", "88263255", "fulano@hotmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
 		var prevApt = new AptLog(client.Id, business.Id, 30);
-		var contact = new AptContact(client.Id, business.Id, prevApt.Id);
+		var contact = new AptContact(client.Id, business.Id, prevApt.Id, DateTime.Now);
 
 		_context.AddRange(client, business, prevApt, contact);
 		_context.SaveChanges();
@@ -59,10 +59,8 @@ public class AptContactControllerTests {
 
 	[Fact]
 	public async Task ReadContact_ReturnsNotFound_WhenContactDoesNotExist() {
-
 		// Act
 		var result = await _controller.ReadContact("nonExistingId") as NotFoundObjectResult;
-
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status404NotFound, result!.StatusCode);
@@ -154,7 +152,6 @@ public class AptContactControllerTests {
 
 	[Fact]
 	public async Task CreateContact_ReturnsCreated_WhenValid() {
-
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -177,7 +174,6 @@ public class AptContactControllerTests {
 
 	[Fact]
 	public async Task CreateContact_ReturnsBadRequest_WhenLogNotFound() {
-
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -200,7 +196,6 @@ public class AptContactControllerTests {
 
 	[Fact]
 	public async Task UpdateContact_ReturnsBadRequest_WhenContactNotFound() {
-
 		// Arrange
 		var nonExistingContact = new AptContact();
 		// Act
@@ -219,7 +214,7 @@ public class AptContactControllerTests {
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
 		var aptLog = new AptLog(client.Id, business.Id, 30);
 
-		var existingContact = new AptContact(client.Id, business.Id, aptLog.Id);
+		var existingContact = new AptContact(client.Id, business.Id, aptLog.Id, DateTime.Now);
 
 		_context.AddRange(client, business, aptLog, existingContact);
 		_context.SaveChanges();
@@ -249,13 +244,12 @@ public class AptContactControllerTests {
 
 	[Fact]
 	public async Task DeleteContact_ReturnsNoContent_WhenContactExists() {
-
 		// Arrange
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
 		var aptLog = new AptLog(client.Id, business.Id, 30);
 
-		var existingContact = new AptContact(client.Id, business.Id, aptLog.Id);
+		var existingContact = new AptContact(client.Id, business.Id, aptLog.Id, DateTime.Now);
 
 		_context.AddRange(client, business, aptLog, existingContact);
 		_context.SaveChanges();

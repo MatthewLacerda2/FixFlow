@@ -229,6 +229,7 @@ public class FlowSeeder
         .RuleFor(c=>c.clientId, clientId)
         .RuleFor(c=>c.businessId, businessId)
         .RuleFor(c=>c.aptLogId, aptLogId)
+        .RuleFor(c=>c.dateTime, f=>f.Date.Between(DateTime.Now.AddDays(30), DateTime.Now.AddDays(60)))
 
         .RuleFor(c => c.Id, f => f.Random.Guid().ToString());
 

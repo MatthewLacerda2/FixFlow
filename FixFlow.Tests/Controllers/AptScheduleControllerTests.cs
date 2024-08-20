@@ -150,7 +150,7 @@ public class AptScheduleControllerTests {
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
 		var log = new AptLog(client.Id, business.Id, 30);
-		var contact = new AptContact(client.Id, business.Id, log.Id);
+		var contact = new AptContact(client.Id, business.Id, log.Id, DateTime.Now);
 		var newSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
 		newSchedule.contactId = contact.Id;
 
@@ -200,7 +200,25 @@ public class AptScheduleControllerTests {
 		Assert.Equal(NotExistErrors.AptSchedule, result!.Value);
 	}
 
-	//TODO: UpdateSchedule_ReturnsBadRequest_WhenContactDoesNotExist
+	[Fact]
+	public async Task UpdateSchedule_ReturnsBadRequest_WhenContactDoesNotExist() {
+		// Arrange
+		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
+		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
+		var existingSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
+
+		_context.AddRange(client, business, existingSchedule);
+		_context.SaveChanges();
+
+		existingSchedule.contactId = "nonExistingId";
+
+		// Act
+		var result = await _controller.UpdateSchedule(existingSchedule) as BadRequestObjectResult;
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(StatusCodes.Status400BadRequest, result!.StatusCode);
+		Assert.Equal(NotExistErrors.AptContact, result!.Value);
+	}
 
 	[Fact]
 	public async Task UpdateSchedule_ReturnsOk_WhenContactExists() {
@@ -208,7 +226,7 @@ public class AptScheduleControllerTests {
 		var client = new Client("validClient", "123456789", null!, "123456789", "validClient@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
 		var aptLog = new AptLog(client.Id, business.Id, 30);
-		var contact = new AptContact(client.Id, business.Id, aptLog.Id);
+		var contact = new AptContact(client.Id, business.Id, aptLog.Id, DateTime.Now);
 		var existingSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now);
 
 		_context.AddRange(client, business, aptLog, contact, existingSchedule);

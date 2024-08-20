@@ -153,6 +153,14 @@ public class AptScheduleController : ControllerBase
             return BadRequest(NotExistErrors.AptSchedule);
         }
 
+        if(upAppointment.contactId != null){
+            var existingContact = _context.Contacts.Find(upAppointment.contactId);
+
+            if(existingContact==null){
+                return BadRequest(NotExistErrors.AptContact);
+            }
+        }
+
         _context.Schedules.Update(upAppointment);
         await _context.SaveChangesAsync();
 
