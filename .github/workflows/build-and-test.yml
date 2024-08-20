@@ -21,7 +21,6 @@ jobs:
         run: |
           dotnet restore
           dotnet tool install -g Swashbuckle.AspNetCore.Cli
-          dotnet add package Swashbuckle.AspNetCore.SwaggerGen
           dotnet build -c Release .\FixFlow.Server.csproj
 
       - name: Dotnet Test
