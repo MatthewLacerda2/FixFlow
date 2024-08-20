@@ -9,41 +9,46 @@ on:
 
 jobs:
   build-and-test-dotnet:
-    name: build-and-test-dotnet
+    name: Build and Test
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
 
       - name: Dotnet Build
         working-directory: FixFlow.Server
         run: |
           dotnet restore
-          dotnet tool install -g Swashbuckle.AspNetCore.Cli
           dotnet build -c Release .\FixFlow.Server.csproj
 
       - name: Dotnet Test
         working-directory: FixFlow.Tests
         run: |
-          dotnet build
-          dotnet test
+          dotnet test --no-build --verbosity normal
 
-      - name: React build
-        working-directory: fixflow.client\src
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: React - Install and Build
+        working-directory: fixflow.client
         run: |
           npm install --legacy-peer-deps
           npm ci
           npm run build
           npx tsc --noEmit
 
-      - name: Check job status and update pull request
+      - name: Check Job Status and Update Pull Request
         if: ${{ failure() }}
         run: |
-          echo "::error::One or more jobs failed. Please fix the issues before marking this pull request as Ready_for_review"
+          echo "::error::One or more jobs failed. Please fix the issues before marking this pull request as ready for review."
           curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                -H "Content-Type: application/json" \
-               -d '{"body": "Build-and-test failed! Fix the issues before merging"}' \
+               -d '{"body": "Build-and-test failed! Fix the issues before merging."}' \
                "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
           curl -X PATCH -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                -H "Content-Type: application/json" \
