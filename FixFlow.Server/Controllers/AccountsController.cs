@@ -82,7 +82,6 @@ public class AccountsController : ControllerBase
             var token = GenerateToken(user!, roles.ToArray());
 
             await _context.SaveChangesAsync();
-            Console.WriteLine(token);
             return Ok(token);
         }
 
@@ -119,38 +118,6 @@ public class AccountsController : ControllerBase
     }
 
     /// <summary>
-    /// Change password of the User with the given Email
-    /// </summary>
-    /// <returns>string</returns>
-    /// <response code="200">Password change successfull</response>
-    /// <response code="400">Unauthorized</response>
-    /// <response code="401">Password change unsucessfull</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    //[Authorize]
-    [HttpPatch]
-    public async Task<IActionResult> PasswordChange([FromBody] FlowLoginRequest userRegister)
-    {
-
-        IdentityUser user = _userManager.FindByEmailAsync(userRegister.Email).Result!;
-        if (user == null)
-        {
-            return BadRequest("Password Change Unsuccessfull.");
-        }
-
-        var result = await _userManager.ChangePasswordAsync(user, userRegister.password, userRegister.newPassword);
-
-        if (!result.Succeeded)
-        {
-            return BadRequest("Password Changed Unsuccessfull. " + result.Errors);
-        }
-
-        await _context.SaveChangesAsync();
-
-        return Ok("Password change successfully");
-    }
-
-    /// <summary>
     /// Sends an email with the link for resetting the password
     /// </summary>
     /// <returns>NoContentResult</returns>
@@ -174,7 +141,7 @@ public class AccountsController : ControllerBase
         }
 
         var PasswordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-        PasswordReset passwordReset = new PasswordReset(email, PasswordResetToken, DateTime.Now);
+        PasswordResetRequest passwordReset = new PasswordResetRequest(email, PasswordResetToken, DateTime.Now);
         await _context.Resets.AddAsync(passwordReset);
 
         await _emailResetPasswordService.SendResetPasswordEmailAsync(passwordReset);
@@ -193,7 +160,7 @@ public class AccountsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPatch("reset/request")]
-    public async Task<IActionResult> PasswordResetRequest([FromBody] PasswordResetRequest passwordReset)
+    public async Task<IActionResult> PasswordResetRequest([FromBody] PasswordReset passwordReset)
     {
 
         IdentityUser user = _userManager.FindByEmailAsync(passwordReset.Email).Result!;
@@ -202,7 +169,7 @@ public class AccountsController : ControllerBase
             return BadRequest("Email not found");
         }
 
-        PasswordReset pr = _context.Resets.Find(passwordReset.token)!;
+        PasswordResetRequest pr = _context.Resets.Find(passwordReset.token)!;
 
         if (pr == null || pr.dateTime < DateTime.Now.AddMinutes(-ResetEmailTokenExpirationInMinutes))
         {
@@ -229,7 +196,7 @@ public class AccountsController : ControllerBase
     /// <returns>The data model needed when trying to Reset the Password
     /// We only need the Email, but we send the whole 'PasswordResetRequest' model for convenience at the Front-End
     /// </returns>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PasswordResetRequest))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PasswordReset))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
     [HttpPatch("reset/link")]
     public async Task<IActionResult> PasswordResetLinkValidation(string token)
@@ -241,7 +208,7 @@ public class AccountsController : ControllerBase
             return BadRequest("Invalid!");
         }
 
-        PasswordResetRequest PR = new PasswordResetRequest(validated.Email, validated.token);
+        PasswordReset PR = new PasswordReset(validated.Email, validated.token);
 
         return Ok(PR);
     }

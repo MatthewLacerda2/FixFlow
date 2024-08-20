@@ -9,13 +9,16 @@ export type BusinessDTO = {
      */
     name: string;
     /**
-     * CPF. Must be precisely XXX.XXX.XXX-XX
+     * CPF. Must be on format XXX.XXX.XXX-XX
      */
     cpf?: string | null;
+    /**
+     * CNPJ. Must be on format XX.XXX.XXX/XXXX-XX
+     */
     cnpj?: string | null;
     description?: string | null;
     /**
-     * Phone Number. Must contain only numbers, and may be preceded by a '+'
+     * Phone Number. Must contain only numbers
      */
     phoneNumber: string;
     email?: string | null;

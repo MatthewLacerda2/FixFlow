@@ -38,7 +38,7 @@ public class MailResetPassword : BackgroundService
         }
     }
 
-    public async Task SendResetPasswordEmailAsync(PasswordReset pr)
+    public async Task SendResetPasswordEmailAsync(PasswordResetRequest pr)
     {
         await SendResetEmailAsync(pr.Email, pr.token);
 

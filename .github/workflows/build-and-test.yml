@@ -16,11 +16,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
 
-      - name: Npm legacy-peer-deps
-        working-directory: fixflow.client\src
-        run: |
-          npm install --legacy-peer-deps
-
       - name: Dotnet Build
         working-directory: FixFlow.Server
         run: |
@@ -29,9 +24,16 @@ jobs:
           dotnet add package Swashbuckle.AspNetCore.SwaggerGen
           dotnet build -c Release .\FixFlow.Server.csproj
 
+      - name: Dotnet Test
+        working-directory: FixFlow.Tests
+        run: |
+          dotnet build
+          dotnet test
+
       - name: React build
         working-directory: fixflow.client\src
         run: |
+          npm install --legacy-peer-deps
           npm ci
           npm run build
           npx tsc --noEmit

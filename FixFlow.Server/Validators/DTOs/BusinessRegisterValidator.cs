@@ -1,5 +1,6 @@
 using FluentValidation;
 using Server.Models.DTO;
+using Server.Models.Erros;
 using Server.Models.Utils;
 
 namespace Server.Validators.DTOs;
@@ -12,7 +13,7 @@ public class BusinessRegisterValidator : AbstractValidator<BusinessRegister>
         {
             if (cpf != null && StringChecker.isCPFvalid(cpf))
             {
-                context.AddFailure("CPF invalid");
+                context.AddFailure(ValidatorErrors.CPFisInvalid);
             }
         });
 
@@ -20,22 +21,26 @@ public class BusinessRegisterValidator : AbstractValidator<BusinessRegister>
         {
             if (string.IsNullOrWhiteSpace(userName))
             {
-                context.AddFailure("Username is empty");
+                context.AddFailure(ValidatorErrors.UsernameIsEmpty);
             }
             if (userName.Contains(" "))
             {
-                context.AddFailure("Username can not contain whitespaces");
+                context.AddFailure(ValidatorErrors.UsernameHasWhitespaces);
             }
         });
 
         RuleFor(x => x.password).Custom((currentPassword, context) =>
         {
+            if(currentPassword.Length < 8){
+                context.AddFailure(ValidatorErrors.ShortPassword);
+            }
+
             if (StringChecker.IsPasswordStrong(currentPassword) == false)
             {
-                context.AddFailure("Password must contain an upper case, lower case, number and special character");
+                context.AddFailure(ValidatorErrors.BadPassword);
             }
         });
 
-        RuleFor(x => x.confirmPassword).Equal(x => x.password).WithErrorCode("ConfirmPassword must be identical to Password");
+        RuleFor(x => x.confirmPassword).Equal(x => x.password).WithErrorCode(ValidatorErrors.ConfirmPassword);
     }
 }

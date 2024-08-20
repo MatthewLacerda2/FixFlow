@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { FlowLoginRequest } from '../models/FlowLoginRequest';
-import type { PasswordResetRequest } from '../models/PasswordResetRequest';
+import type { PasswordReset } from '../models/PasswordReset';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -24,26 +24,6 @@ export class AccountsService {
             mediaType: 'application/json',
             errors: {
                 401: `Unauthorized login`,
-            },
-        });
-    }
-    /**
-     * Change password of the User with the given Email
-     * @param requestBody
-     * @returns string Password change successfull
-     * @throws ApiError
-     */
-    public static patchApiV1Accounts(
-        requestBody?: FlowLoginRequest,
-    ): CancelablePromise<string> {
-        return __request(OpenAPI, {
-            method: 'PATCH',
-            url: '/api/v1/accounts',
-            body: requestBody,
-            mediaType: 'application/json',
-            errors: {
-                400: `Unauthorized`,
-                401: `Password change unsucessfull`,
             },
         });
     }
@@ -75,7 +55,7 @@ export class AccountsService {
      * @throws ApiError
      */
     public static patchApiV1AccountsResetRequest(
-        requestBody?: PasswordResetRequest,
+        requestBody?: PasswordReset,
     ): CancelablePromise<string> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -92,12 +72,12 @@ export class AccountsService {
      * Returns the PasswordReset belonging to that token
      * Used when the User tries to access a 'Password Reset' link
      * @param token The Token for the Password Reset Request
-     * @returns PasswordResetRequest OK
+     * @returns PasswordReset OK
      * @throws ApiError
      */
     public static patchApiV1AccountsResetLink(
         token?: string,
-    ): CancelablePromise<PasswordResetRequest> {
+    ): CancelablePromise<PasswordReset> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/v1/accounts/reset/link',

@@ -5,6 +5,7 @@ using Server.Models.Utils;
 using Server.Models.Appointments;
 using Server.Data;
 using Server.Models.Filters;
+using Server.Models.Erros;
 
 namespace Server.Controllers;
 
@@ -17,16 +18,14 @@ namespace Server.Controllers;
 [ApiController]
 [Route(Common.api_route + "schedules")]
 [Produces("application/json")]
-public class ScheduleController : ControllerBase
+public class AptScheduleController : ControllerBase
 {
 
     private readonly ServerContext _context;
-    private readonly UserManager<Client> _userManager;
 
-    public ScheduleController(ServerContext context, UserManager<Client> userManager)
+    public AptScheduleController(ServerContext context)
     {
         _context = context;
-        _userManager = userManager;
     }
 
     /// <summary>
@@ -45,7 +44,7 @@ public class ScheduleController : ControllerBase
 
         if (schedule == null)
         {
-            return NotFound("Schedule does not exist");
+            return NotFound(NotExistErrors.AptSchedule);
         }
 
         return Ok(schedule);
@@ -66,30 +65,35 @@ public class ScheduleController : ControllerBase
     {
         var schedulesQuery = _context.Schedules.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filter.ClientId))
+        if (!string.IsNullOrWhiteSpace(filter.clientId))
         {
-            schedulesQuery = schedulesQuery.Where(x => x.ClientId == filter.ClientId);
+            schedulesQuery = schedulesQuery.Where(x => x.clientId == filter.clientId);
         }
 
-        schedulesQuery = schedulesQuery.Where(x => x.price >= filter.minPrice);
-        schedulesQuery = schedulesQuery.Where(x => x.price <= filter.maxPrice);
+        if (!string.IsNullOrWhiteSpace(filter.businessId))
+        {
+            schedulesQuery = schedulesQuery.Where(x => x.businessId == filter.businessId);
+        }
 
-        schedulesQuery = schedulesQuery.Where(x => x.dateTime >= filter.minDateTime);
-        schedulesQuery = schedulesQuery.Where(x => x.dateTime <= filter.maxDateTime);
+        if(filter.hasContact.HasValue){
+            schedulesQuery = schedulesQuery.Where(x=>x.contactId != null == filter.hasContact.Value);
+        }
+        
+        schedulesQuery = schedulesQuery.Where(x => x.dateTime >= new DateTime(filter.minDateTime, new TimeOnly(0)));
+        schedulesQuery = schedulesQuery.Where(x => x.dateTime <= new DateTime(filter.maxDateTime, new TimeOnly(0)));
 
         switch (filter.sort)
         {
             case ScheduleSort.ClientId:
-                schedulesQuery = schedulesQuery.OrderBy(s => s.ClientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+                schedulesQuery = schedulesQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s=>s.businessId).ThenBy(s => s.Id);
                 break;
-            case ScheduleSort.date:
-                schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.price).ThenBy(s => s.Id);
+            case ScheduleSort.BusinessId:
+                schedulesQuery = schedulesQuery.OrderBy(s => s.businessId).ThenByDescending(s => s.dateTime).ThenBy(s=>s.clientId).ThenBy(s => s.Id);
                 break;
-            case ScheduleSort.price:
-                schedulesQuery = schedulesQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.ClientId).ThenBy(s => s.Id);
+            case ScheduleSort.Date:
+                schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s=>s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
                 break;
         }
-
 
         if (filter.descending)
         {
@@ -115,26 +119,13 @@ public class ScheduleController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateSchedule([FromBody] AptSchedule newAppointment)
     {
-
-        var existingClient = _userManager.FindByIdAsync(newAppointment.ClientId);
-        if (existingClient == null)
-        {
-            return BadRequest("Client does not exist");
-        }
-
-        var existingBusiness = _context.Business.Find(newAppointment.businessId);
-        if (existingBusiness == null)
-        {
-            return BadRequest("Business does not exist");
-        }
-
         if (!string.IsNullOrWhiteSpace(newAppointment.contactId))
         {
             var existingContact = _context.Contacts.Find(newAppointment.contactId);
 
             if (existingContact == null)
             {
-                return BadRequest("Contact reminder does not exist");
+                return BadRequest(NotExistErrors.AptContact);
             }
         }
 
@@ -159,7 +150,15 @@ public class ScheduleController : ControllerBase
         var existingAppointment = _context.Schedules.Find(upAppointment.Id);
         if (existingAppointment == null)
         {
-            return BadRequest("Schedule does not exist");
+            return BadRequest(NotExistErrors.AptSchedule);
+        }
+
+        if(upAppointment.contactId != null){
+            var existingContact = _context.Contacts.Find(upAppointment.contactId);
+
+            if(existingContact==null){
+                return BadRequest(NotExistErrors.AptContact);
+            }
         }
 
         _context.Schedules.Update(upAppointment);
@@ -183,7 +182,7 @@ public class ScheduleController : ControllerBase
         var scheduleToDelete = _context.Schedules.Find(Id);
         if (scheduleToDelete == null)
         {
-            return BadRequest("Schedule Appointment does not exist");
+            return BadRequest(NotExistErrors.AptSchedule);
         }
 
         _context.Schedules.Remove(scheduleToDelete);

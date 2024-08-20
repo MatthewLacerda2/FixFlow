@@ -7,7 +7,7 @@ import type { AptContactFilter } from '../models/AptContactFilter';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class ContactService {
+export class AptContactService {
     /**
      * Get the Contact with the given Id
      * @param id The Contact's Id
