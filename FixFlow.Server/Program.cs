@@ -72,12 +72,14 @@ builder.Services.AddCors(options => {
 
 builder.Services.AddControllersWithViews();
 
-Serilog.Log.Logger = new LoggerConfiguration()
+if (!args.Contains("swagger")) {
+	Serilog.Log.Logger = new LoggerConfiguration()
 	.Enrich.FromLogContext().
 	WriteTo.MSSqlServer(connectionString, sinkOptions: new MSSqlServerSinkOptions {
 		AutoCreateSqlDatabase = true,
 		TableName = "Serilogs"
 	}).CreateLogger();
+}
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

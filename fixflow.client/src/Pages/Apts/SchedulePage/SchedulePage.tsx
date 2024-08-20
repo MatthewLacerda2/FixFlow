@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AptSchedule, ScheduleService } from "../../../FlowApi";
 import Card from "../../../Components/Card/Card";
+import { AptSchedule, AptScheduleService } from "../../../FlowApi";
 
 const SchedulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,7 +12,7 @@ const SchedulePage: React.FC = () => {
     const fetchSchedule = async () => {
       try {
         if (id) {
-          const result = await ScheduleService.getApiV1Schedules(id);
+          const result = await AptScheduleService.getApiV1Schedules(id);
           setSchedule(result);
         }
       } catch (error) {
@@ -42,9 +42,6 @@ const SchedulePage: React.FC = () => {
         </p>
         <p>
           <b>Hora e Data:</b> {schedule.dateTime}
-        </p>
-        <p>
-          <b>Preço:</b> {schedule.price !== null ? `$${schedule.price}` : "N/A"}
         </p>
         <p>
           <b>Observação:</b> {schedule.observation || "N/A"}
