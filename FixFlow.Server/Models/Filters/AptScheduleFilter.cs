@@ -2,28 +2,27 @@ namespace Server.Models.Filters;
 
 public struct AptScheduleFilter {
 
-    public string? clientId;
-    public string? businessId;
-    public bool? hasContact;
+	public string? clientId;
+	public string? businessId;
+	public bool? hasContact;
 
-    public DateOnly minDateTime;
-    public DateOnly maxDateTime;
+	public DateOnly minDateTime;
+	public DateOnly maxDateTime;
 
-    public ScheduleSort sort = ScheduleSort.Date;
-    public bool descending = false;
-    public int offset = 0;
-    public int limit = 10;
+	public ScheduleSort sort = ScheduleSort.Date;
+	public bool descending = false;
+	public int offset = 0;
+	public int limit = 10;
 
-    public AptScheduleFilter(string? _clientId, string? _businessId, bool? _hasContact, DateOnly _minDate, DateOnly _maxDate){
-        clientId = _clientId;
-        businessId = _businessId;
-        hasContact = _hasContact;
-        minDateTime = _minDate;
-        maxDateTime = _maxDate;
-    }
+	public AptScheduleFilter(string? _clientId, string? _businessId, bool? _hasContact, DateOnly _minDate, DateOnly _maxDate) {
+		clientId = _clientId;
+		businessId = _businessId;
+		hasContact = _hasContact;
+		minDateTime = _minDate;
+		maxDateTime = _maxDate;
+	}
 }
 
-public enum ScheduleSort
-{
-    ClientId, BusinessId, Date
+public enum ScheduleSort {
+	ClientId, BusinessId, Date
 }

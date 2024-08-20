@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Server.Models;
-using Server.Models.Utils;
-using Server.Models.Appointments;
+using Microsoft.AspNetCore.Mvc;
 using Server.Data;
-using Server.Models.Filters;
+using Server.Models;
+using Server.Models.Appointments;
 using Server.Models.Erros;
+using Server.Models.Filters;
+using Server.Models.Utils;
 
 namespace Server.Controllers;
 
@@ -18,163 +18,148 @@ namespace Server.Controllers;
 [ApiController]
 [Route(Common.api_route + "contacts")]
 [Produces("application/json")]
-public class AptContactController : ControllerBase
-{
-	
-    private readonly ServerContext _context;
+public class AptContactController : ControllerBase {
 
-    public AptContactController(ServerContext context)
-    {
-        _context = context;
-    }
+	private readonly ServerContext _context;
 
-    /// <summary>
-    /// Get the Contact with the given Id
-    /// </summary>
-    /// <returns>AptContact</returns>
-    /// <param name="Id">The Contact's Id</param>
-    /// <response code="200">The AppointmentContact with the given Id</response>
-    /// <response code="404">There was no Appointment Contact with the given Id</response>/// 
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptContact))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-    [HttpGet("{Id}")]
-    public async Task<IActionResult> ReadContact(string Id)
-    {
+	public AptContactController(ServerContext context) {
+		_context = context;
+	}
 
-        var contact = await _context.Contacts.FindAsync(Id);
+	/// <summary>
+	/// Get the Contact with the given Id
+	/// </summary>
+	/// <returns>AptContact</returns>
+	/// <param name="Id">The Contact's Id</param>
+	/// <response code="200">The AppointmentContact with the given Id</response>
+	/// <response code="404">There was no Appointment Contact with the given Id</response>/// 
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptContact))]
+	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+	[HttpGet("{Id}")]
+	public async Task<IActionResult> ReadContact(string Id) {
 
-        if (contact == null)
-        {
-            return NotFound(NotExistErrors.AptContact);
-        }
+		var contact = await _context.Contacts.FindAsync(Id);
 
-        return Ok(contact);
-    }
+		if (contact == null) {
+			return NotFound(NotExistErrors.AptContact);
+		}
 
-    /// <summary>
-    /// Gets a number of Appointment Contacts, with optional filters
-    /// </summary>
-    /// <remarks>
-    /// Does not return Not Found, but an Array of size 0 instead
-    /// </remarks>
-    /// <param name="filter">The Filter Properties of the Query</param>
-    /// <returns>AptContact[]</returns>
-    /// <response code="200">Returns an array of AppointmentContact</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptContact[]>))]
-    [HttpGet]
-    public IActionResult ReadContacts([FromBody] AptContactFilter filter)
-    {
+		return Ok(contact);
+	}
 
-        var ContactsQuery = _context.Contacts.AsQueryable();
+	/// <summary>
+	/// Gets a number of Appointment Contacts, with optional filters
+	/// </summary>
+	/// <remarks>
+	/// Does not return Not Found, but an Array of size 0 instead
+	/// </remarks>
+	/// <param name="filter">The Filter Properties of the Query</param>
+	/// <returns>AptContact[]</returns>
+	/// <response code="200">Returns an array of AppointmentContact</response>
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptContact[]>))]
+	[HttpGet]
+	public IActionResult ReadContacts([FromBody] AptContactFilter filter) {
 
-        if (!string.IsNullOrWhiteSpace(filter.clientId))
-        {
-            ContactsQuery = ContactsQuery.Where(x => x.clientId == filter.clientId);
-        }
+		var ContactsQuery = _context.Contacts.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filter.businessId))
-        {
-            ContactsQuery = ContactsQuery.Where(x => x.businessId == filter.businessId);
-        }
+		if (!string.IsNullOrWhiteSpace(filter.clientId)) {
+			ContactsQuery = ContactsQuery.Where(x => x.clientId == filter.clientId);
+		}
 
-        ContactsQuery = ContactsQuery.Where(x => x.dateTime >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
-        ContactsQuery = ContactsQuery.Where(x => x.dateTime <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
+		if (!string.IsNullOrWhiteSpace(filter.businessId)) {
+			ContactsQuery = ContactsQuery.Where(x => x.businessId == filter.businessId);
+		}
 
-        switch (filter.sort)
-        {
-            case ContactSort.ClientId:
-                ContactsQuery = ContactsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.businessId).ThenBy(s => s.Id);
-                break;
-            case ContactSort.BusinessId:
-                ContactsQuery = ContactsQuery.OrderBy(s => s.businessId).ThenByDescending(s => s.clientId).ThenBy(s => s.Id);
-                break;
-            case ContactSort.Date:
-                ContactsQuery = ContactsQuery.OrderBy(s => s.dateTime).ThenByDescending(s => s.clientId).ThenBy(s => s.Id);
-                break;
-            
-        }
+		ContactsQuery = ContactsQuery.Where(x => x.dateTime >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
+		ContactsQuery = ContactsQuery.Where(x => x.dateTime <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
 
-        if (filter.descending)
-        {
-            ContactsQuery.Reverse();
-        }
+		switch (filter.sort) {
+			case ContactSort.ClientId:
+				ContactsQuery = ContactsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.businessId).ThenBy(s => s.Id);
+				break;
+			case ContactSort.BusinessId:
+				ContactsQuery = ContactsQuery.OrderBy(s => s.businessId).ThenByDescending(s => s.clientId).ThenBy(s => s.Id);
+				break;
+			case ContactSort.Date:
+				ContactsQuery = ContactsQuery.OrderBy(s => s.dateTime).ThenByDescending(s => s.clientId).ThenBy(s => s.Id);
+				break;
 
-        var resultArray = ContactsQuery
-            .Skip(filter.offset)
-            .Take(filter.limit)
-            .ToArray();
+		}
 
-        return Ok(resultArray);
-    }
+		if (filter.descending) {
+			ContactsQuery.Reverse();
+		}
 
-    /// <summary>
-    /// Create an Appointment Contact
-    /// </summary>
-    /// <returns>AptContact</returns>
-    /// <response code="200">The created Appointment Contact</response>
-    /// <response code="400">The given (ClientId || LogId) does not exist</response>
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptContact))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpPost]
-    public async Task<IActionResult> CreateContact([FromBody] AptContact newContact)
-    {
-        var existingLog = _context.Logs.Find(newContact.aptLogId);
-        if (existingLog == null)
-        {
-            return BadRequest(NotExistErrors.AptLog);
-        }
+		var resultArray = ContactsQuery
+			.Skip(filter.offset)
+			.Take(filter.limit)
+			.ToArray();
 
-        _context.Contacts.Add(newContact);
-        await _context.SaveChangesAsync();
+		return Ok(resultArray);
+	}
 
-        return CreatedAtAction(nameof(CreateContact), newContact);
-    }
+	/// <summary>
+	/// Create an Appointment Contact
+	/// </summary>
+	/// <returns>AptContact</returns>
+	/// <response code="200">The created Appointment Contact</response>
+	/// <response code="400">The given (ClientId || LogId) does not exist</response>
+	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptContact))]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+	[HttpPost]
+	public async Task<IActionResult> CreateContact([FromBody] AptContact newContact) {
+		var existingLog = _context.Logs.Find(newContact.aptLogId);
+		if (existingLog == null) {
+			return BadRequest(NotExistErrors.AptLog);
+		}
 
-    /// <summary>
-    /// Update the Appointment Contact with the given Id
-    /// </summary>
-    /// <returns>AptContact</returns>
-    /// <response code="200">The updated Appointment Contact</response>
-    /// <response code="400">There was no AptContact with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptContact))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpPut]
-    public async Task<IActionResult> UpdateContact([FromBody] AptContact upLog)
-    {
+		_context.Contacts.Add(newContact);
+		await _context.SaveChangesAsync();
 
-        var existingContact = _context.Contacts.Find(upLog.Id);
-        if (existingContact == null)
-        {
-            return BadRequest(NotExistErrors.AptContact);
-        }
+		return CreatedAtAction(nameof(CreateContact), newContact);
+	}
 
-        _context.Contacts.Update(upLog);
-        await _context.SaveChangesAsync();
+	/// <summary>
+	/// Update the Appointment Contact with the given Id
+	/// </summary>
+	/// <returns>AptContact</returns>
+	/// <response code="200">The updated Appointment Contact</response>
+	/// <response code="400">There was no AptContact with the given Id</response>
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptContact))]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+	[HttpPut]
+	public async Task<IActionResult> UpdateContact([FromBody] AptContact upLog) {
 
-        return Ok(upLog);
-    }
+		var existingContact = _context.Contacts.Find(upLog.Id);
+		if (existingContact == null) {
+			return BadRequest(NotExistErrors.AptContact);
+		}
 
-    /// <summary>
-    /// Deletes the Appointment Contact with the given Id
-    /// </summary>
-    /// <param name="Id">The Id of the AptContact to be deleted</param>
-    /// <returns>NoContentResult</returns>
-    /// <response code="204">No Content</response>
-    /// <response code="400">There was no Contact with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpDelete("{Id}")]
-    public async Task<IActionResult> DeleteContact(string Id)
-    {
+		_context.Contacts.Update(upLog);
+		await _context.SaveChangesAsync();
 
-        var ContactToDelete = _context.Contacts.Find(Id);
-        if (ContactToDelete == null)
-        {
-            return BadRequest(NotExistErrors.AptContact);
-        }
+		return Ok(upLog);
+	}
 
-        _context.Contacts.Remove(ContactToDelete);
-        await _context.SaveChangesAsync();
-        return NoContent();
-    }
+	/// <summary>
+	/// Deletes the Appointment Contact with the given Id
+	/// </summary>
+	/// <param name="Id">The Id of the AptContact to be deleted</param>
+	/// <returns>NoContentResult</returns>
+	/// <response code="204">No Content</response>
+	/// <response code="400">There was no Contact with the given Id</response>
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+	[HttpDelete("{Id}")]
+	public async Task<IActionResult> DeleteContact(string Id) {
+
+		var ContactToDelete = _context.Contacts.Find(Id);
+		if (ContactToDelete == null) {
+			return BadRequest(NotExistErrors.AptContact);
+		}
+
+		_context.Contacts.Remove(ContactToDelete);
+		await _context.SaveChangesAsync();
+		return NoContent();
+	}
 }
