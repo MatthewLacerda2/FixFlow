@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Server.Models;
-using Server.Models.Utils;
-using Server.Models.Appointments;
+using Microsoft.AspNetCore.Mvc;
 using Server.Data;
-using Server.Models.Filters;
+using Server.Models;
+using Server.Models.Appointments;
 using Server.Models.Erros;
+using Server.Models.Filters;
+using Server.Models.Utils;
 
 namespace Server.Controllers;
 
@@ -18,187 +18,169 @@ namespace Server.Controllers;
 [ApiController]
 [Route(Common.api_route + "logs")]
 [Produces("application/json")]
-public class AptLogController : ControllerBase
-{
+public class AptLogController : ControllerBase {
 
-    private readonly ServerContext _context;
+	private readonly ServerContext _context;
 
-    public AptLogController(ServerContext context)
-    {
-        _context = context;
-    }
+	public AptLogController(ServerContext context) {
+		_context = context;
+	}
 
-    /// <summary>
-    /// Get the Log with the given Id
-    /// </summary>
-    /// <param name="Id">The Log's Id</param>
-    /// <returns>AptLog</returns>
-    /// <response code="200">The Appointment Log</response>
-    /// <response code="404">There was no Appointment Log with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-    [HttpGet("{Id}")]
-    public async Task<IActionResult> ReadLog(string Id)
-    {
+	/// <summary>
+	/// Get the Log with the given Id
+	/// </summary>
+	/// <param name="Id">The Log's Id</param>
+	/// <returns>AptLog</returns>
+	/// <response code="200">The Appointment Log</response>
+	/// <response code="404">There was no Appointment Log with the given Id</response>
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
+	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+	[HttpGet("{Id}")]
+	public async Task<IActionResult> ReadLog(string Id) {
 
-        var log = await _context.Logs.FindAsync(Id);
+		var log = await _context.Logs.FindAsync(Id);
 
-        if (log == null)
-        {
-            return NotFound(NotExistErrors.AptLog);
-        }
+		if (log == null) {
+			return NotFound(NotExistErrors.AptLog);
+		}
 
-        return Ok(log);
-    }
+		return Ok(log);
+	}
 
-    /// <summary>
-    /// Gets a number of Appointment Logs, with optional filters
-    /// </summary>
-    /// <remarks>
-    /// Does not return Not Found, but an Array of size 0 instead
-    /// </remarks>
-    /// <param name="filter">The Filter Properties of the Query</param>
-    /// <returns>AptLog[]</returns>
-    /// <response code="200">Returns an array of AppointmentLog</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
-    [HttpGet]
-    public IActionResult ReadLogs([FromBody] AptLogFilter filter)
-    {
+	/// <summary>
+	/// Gets a number of Appointment Logs, with optional filters
+	/// </summary>
+	/// <remarks>
+	/// Does not return Not Found, but an Array of size 0 instead
+	/// </remarks>
+	/// <param name="filter">The Filter Properties of the Query</param>
+	/// <returns>AptLog[]</returns>
+	/// <response code="200">Returns an array of AppointmentLog</response>
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
+	[HttpGet]
+	public IActionResult ReadLogs([FromBody] AptLogFilter filter) {
 
-        var logsQuery = _context.Logs.AsQueryable();
+		var logsQuery = _context.Logs.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filter.clientId))
-        {
-            logsQuery = logsQuery.Where(x => x.clientId == filter.clientId);
-        }
+		if (!string.IsNullOrWhiteSpace(filter.clientId)) {
+			logsQuery = logsQuery.Where(x => x.clientId == filter.clientId);
+		}
 
-        if (!string.IsNullOrWhiteSpace(filter.businessId))
-        {
-            logsQuery = logsQuery.Where(x => x.businessId == filter.businessId);
-        }
+		if (!string.IsNullOrWhiteSpace(filter.businessId)) {
+			logsQuery = logsQuery.Where(x => x.businessId == filter.businessId);
+		}
 
-        if(filter.hasSchedule.HasValue){
-            logsQuery = logsQuery.Where(x=>x.scheduleId != null == filter.hasSchedule.Value);
-        }
+		if (filter.hasSchedule.HasValue) {
+			logsQuery = logsQuery.Where(x => x.scheduleId != null == filter.hasSchedule.Value);
+		}
 
-        logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
-        logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
-        
-        logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
-        logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
+		logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
+		logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
 
-        switch (filter.sort)
-        {
-            case LogSort.ClientId:
-                logsQuery = logsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
-                break;
-            case LogSort.BusinessId:
-                logsQuery = logsQuery.OrderBy(s => s.businessId).ThenBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
-                break;
-            case LogSort.Date:
-                logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
-                break;
-            case LogSort.Price:
-                logsQuery = logsQuery.OrderByDescending(s => s.price).ThenBy(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
-                break;
-        }
+		logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
+		logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
 
-        if (filter.descending)
-        {
-            logsQuery.Order();
-        }
+		switch (filter.sort) {
+			case LogSort.ClientId:
+				logsQuery = logsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
+				break;
+			case LogSort.BusinessId:
+				logsQuery = logsQuery.OrderBy(s => s.businessId).ThenBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+				break;
+			case LogSort.Date:
+				logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
+				break;
+			case LogSort.Price:
+				logsQuery = logsQuery.OrderByDescending(s => s.price).ThenBy(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
+				break;
+		}
 
-        var resultsArray = logsQuery
-            .Skip(filter.offset)
-            .Take(filter.limit)
-            .ToArray();
+		if (filter.descending) {
+			logsQuery.Order();
+		}
 
-        return Ok(resultsArray);
-    }
+		var resultsArray = logsQuery
+			.Skip(filter.offset)
+			.Take(filter.limit)
+			.ToArray();
 
-    /// <summary>
-    /// Create an Appointment Log
-    /// </summary>
-    /// <returns>AptLog</returns>
-    /// <response code="200">The created Appointment Log</response>
-    /// <response code="400">The given (ClientId || ScheduleId) does not exist</response>
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptLog))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpPost]
-    public async Task<IActionResult> CreateLog([FromBody] AptLog newLog)
-    {
+		return Ok(resultsArray);
+	}
 
-        if (!string.IsNullOrWhiteSpace(newLog.scheduleId))
-        {
-            var existingSchedule = _context.Schedules.Find(newLog.scheduleId);
+	/// <summary>
+	/// Create an Appointment Log
+	/// </summary>
+	/// <returns>AptLog</returns>
+	/// <response code="200">The created Appointment Log</response>
+	/// <response code="400">The given (ClientId || ScheduleId) does not exist</response>
+	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptLog))]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+	[HttpPost]
+	public async Task<IActionResult> CreateLog([FromBody] AptLog newLog) {
 
-            if (existingSchedule == null)
-            {
-                return BadRequest(NotExistErrors.AptSchedule);
-            }
-        }
+		if (!string.IsNullOrWhiteSpace(newLog.scheduleId)) {
+			var existingSchedule = _context.Schedules.Find(newLog.scheduleId);
 
-        _context.Logs.Add(newLog);
-        await _context.SaveChangesAsync();
+			if (existingSchedule == null) {
+				return BadRequest(NotExistErrors.AptSchedule);
+			}
+		}
 
-        return CreatedAtAction(nameof(CreateLog), newLog);
-    }
+		_context.Logs.Add(newLog);
+		await _context.SaveChangesAsync();
 
-    /// <summary>
-    /// Update the Appointment Log with the given Id
-    /// </summary>
-    /// <returns>AptLog</returns>
-    /// <response code="200">The updated Appointment Log</response>
-    /// <response code="400">There was no AptLog with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpPut]
-    public async Task<IActionResult> UpdateLog([FromBody] AptLog upLog)
-    {
+		return CreatedAtAction(nameof(CreateLog), newLog);
+	}
 
-        var existingLog = _context.Logs.Find(upLog.Id);
-        if (existingLog == null)
-        {
-            return BadRequest(NotExistErrors.AptLog);
-        }
+	/// <summary>
+	/// Update the Appointment Log with the given Id
+	/// </summary>
+	/// <returns>AptLog</returns>
+	/// <response code="200">The updated Appointment Log</response>
+	/// <response code="400">There was no AptLog with the given Id</response>
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+	[HttpPut]
+	public async Task<IActionResult> UpdateLog([FromBody] AptLog upLog) {
 
-        if (!string.IsNullOrWhiteSpace(upLog.scheduleId))
-        {
-            var existingSchedule = _context.Schedules.Find(upLog.scheduleId);
+		var existingLog = _context.Logs.Find(upLog.Id);
+		if (existingLog == null) {
+			return BadRequest(NotExistErrors.AptLog);
+		}
 
-            if (existingSchedule == null)
-            {
-                return BadRequest(NotExistErrors.AptSchedule);
-            }
-        }
+		if (!string.IsNullOrWhiteSpace(upLog.scheduleId)) {
+			var existingSchedule = _context.Schedules.Find(upLog.scheduleId);
 
-        _context.Logs.Update(upLog);
-        await _context.SaveChangesAsync();
+			if (existingSchedule == null) {
+				return BadRequest(NotExistErrors.AptSchedule);
+			}
+		}
 
-        return Ok(upLog);
-    }
+		_context.Logs.Update(upLog);
+		await _context.SaveChangesAsync();
 
-    /// <summary>
-    /// Deletes the Appointment Log with the given Id
-    /// </summary>
-    /// <param name="Id">The Id of the AptLog to be deleted</param>
-    /// <returns>NoContentResult</returns>
-    /// <response code="204">No Content</response>
-    /// <response code="400">There was no Log with the given Id</response>
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    [HttpDelete("{Id}")]
-    public async Task<IActionResult> DeleteLog(string Id)
-    {
+		return Ok(upLog);
+	}
 
-        var logToDelete = _context.Logs.Find(Id);
-        if (logToDelete == null)
-        {
-            return BadRequest(NotExistErrors.AptLog);
-        }
+	/// <summary>
+	/// Deletes the Appointment Log with the given Id
+	/// </summary>
+	/// <param name="Id">The Id of the AptLog to be deleted</param>
+	/// <returns>NoContentResult</returns>
+	/// <response code="204">No Content</response>
+	/// <response code="400">There was no Log with the given Id</response>
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+	[HttpDelete("{Id}")]
+	public async Task<IActionResult> DeleteLog(string Id) {
 
-        _context.Logs.Remove(logToDelete);
-        await _context.SaveChangesAsync();
-        return NoContent();
-    }
+		var logToDelete = _context.Logs.Find(Id);
+		if (logToDelete == null) {
+			return BadRequest(NotExistErrors.AptLog);
+		}
+
+		_context.Logs.Remove(logToDelete);
+		await _context.SaveChangesAsync();
+		return NoContent();
+	}
 }
