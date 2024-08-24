@@ -6,46 +6,49 @@
 *.sln.docstates
 
 # Common files to ignore across all projects
+.idea/
 mongo-data
 mysql-data
 .vs
 .vscode/
 node_modules/
 *.log
-*.user
-*.suo
 *.cache
 bin/
 obj/
 *.dll
 *.exe
 *.pdb
-*.userprefs
 Thumbs.db
 Desktop.ini
-*.DS_Store
+.DS_Store
 
+# Editor specific files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
+.ntvs*
+.njsproj
 *.sw?
 
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-dist
-dist-ssr
-*.local
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
 
-# React Frontend specific rules
+# React specific rules
 /frontend/build/
 /frontend/node_modules/
 
@@ -54,27 +57,7 @@ dist-ssr
 /FixFlow.Server/bin/
 /FixFlow.Server/obj/
 /FixFlow.Server/swagger.json
-
-# .NET Core
-project.lock.json
-project.fragment.lock.json
 artifacts/
-
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
 
 # xUnit Test project specific rules
 /tests/bin/
@@ -82,3 +65,13 @@ bld/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Flutter/Dart specific rules
+.flutter-plugins
+.flutter-plugins-dependencies
+.dart_tool/
+.packages
+.pub-cache/
+build/
+.android/
+.ios/
