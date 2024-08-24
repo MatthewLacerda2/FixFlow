@@ -44,6 +44,12 @@ jobs:
           npm run build
           npx tsc --noEmit
 
+      - name: Setup Java 11 for Flutter
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "11"
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
