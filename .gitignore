@@ -75,4 +75,4 @@ nunit-*.xml
 build/
 .android/
 .ios/
-/flow_app/lib/flow_api
+.lib/flow_api
