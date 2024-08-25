@@ -95,7 +95,7 @@ public class AptScheduleControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadSchedules(filter) as OkObjectResult;
+		var result = await _controller.ReadSchedules(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
@@ -134,7 +134,7 @@ public class AptScheduleControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadSchedules(filter) as OkObjectResult;
+		var result = await _controller.ReadSchedules(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);

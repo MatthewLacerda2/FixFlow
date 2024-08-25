@@ -96,7 +96,7 @@ public class AptContactControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadContacts(filter) as OkObjectResult;
+		var result = await _controller.ReadContacts(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
@@ -140,7 +140,7 @@ public class AptContactControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadContacts(filter) as OkObjectResult;
+		var result = await _controller.ReadContacts(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);

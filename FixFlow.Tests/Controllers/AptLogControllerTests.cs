@@ -97,7 +97,7 @@ public class AptLogControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadLogs(filter) as OkObjectResult;
+		var result = await _controller.ReadLogs(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
@@ -143,7 +143,7 @@ public class AptLogControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadLogs(filter) as OkObjectResult;
+		var result = await _controller.ReadLogs(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
