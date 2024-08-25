@@ -68,7 +68,7 @@ public class AptContactControllerTests {
 	}
 
 	[Fact]
-	public void ReadContacts_ReturnsEmptyArray_WhenNoContactsMatchFilter() {
+	public async Task ReadContacts_ReturnsEmptyArray_WhenNoContactsMatchFilter() {
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -106,7 +106,7 @@ public class AptContactControllerTests {
 	}
 
 	[Fact]
-	public void ReadContacts_FiltersContacts() {
+	public async Task ReadContacts_FiltersContacts() {
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
