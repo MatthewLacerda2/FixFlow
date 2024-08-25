@@ -66,7 +66,7 @@ public class AptLogControllerTests {
 	}
 
 	[Fact]
-	public void ReadLogs_ReturnsEmptyArray_WhenNoLogsMatchFilter() {
+	public async Task ReadLogs_ReturnsEmptyArray_WhenNoLogsMatchFilter() {
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -97,7 +97,7 @@ public class AptLogControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadLogs(filter) as OkObjectResult;
+		var result = await _controller.ReadLogs(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
@@ -107,7 +107,7 @@ public class AptLogControllerTests {
 	}
 
 	[Fact]
-	public void ReadLogs_FiltersLogs() {
+	public async Task ReadLogs_FiltersLogs() {
 		// Arrange
 		var client = new Client("fulano", "123456789", null!, "88263255", "fulano@gmail.com", true);
 		var business = new Business("business", "60742928330", "5550123", "98999344788", "business@gmail.com", "");
@@ -143,7 +143,7 @@ public class AptLogControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = _controller.ReadLogs(filter) as OkObjectResult;
+		var result = await _controller.ReadLogs(filter) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Server.Data;
@@ -58,7 +59,7 @@ public class AptLogController : ControllerBase {
 	/// <response code="200">Returns an array of AppointmentLog</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
 	[HttpGet]
-	public IActionResult ReadLogs([FromBody] AptLogFilter filter) {
+	public async Task<IActionResult> ReadLogs([FromBody] AptLogFilter filter) {
 
 		var logsQuery = _context.Logs.AsQueryable();
 
@@ -99,10 +100,10 @@ public class AptLogController : ControllerBase {
 			logsQuery.Order();
 		}
 
-		var resultsArray = logsQuery
+		var resultsArray = await logsQuery
 			.Skip(filter.offset)
 			.Take(filter.limit)
-			.ToArray();
+			.ToArrayAsync();
 
 		return Ok(resultsArray);
 	}

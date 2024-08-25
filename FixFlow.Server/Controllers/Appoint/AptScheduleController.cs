@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Server.Data;
@@ -57,7 +58,7 @@ public class AptScheduleController : ControllerBase {
 	/// <response code="200">Returns an array of AppointmentSchedule</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptSchedule[]>))]
 	[HttpGet]
-	public IActionResult ReadSchedules([FromBody] AptScheduleFilter filter) {
+	public async Task<IActionResult> ReadSchedules([FromBody] AptScheduleFilter filter) {
 		var schedulesQuery = _context.Schedules.AsQueryable();
 
 		if (!string.IsNullOrWhiteSpace(filter.clientId)) {
@@ -91,10 +92,10 @@ public class AptScheduleController : ControllerBase {
 			schedulesQuery.Reverse();
 		}
 
-		var resultsArray = schedulesQuery
+		var resultsArray = await schedulesQuery
 			.Skip(filter.offset)
 			.Take(filter.limit)
-			.ToArray();
+			.ToArrayAsync();
 
 		return Ok(resultsArray);
 	}

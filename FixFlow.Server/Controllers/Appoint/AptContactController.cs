@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Server.Data;
@@ -58,7 +59,7 @@ public class AptContactController : ControllerBase {
 	/// <response code="200">Returns an array of AppointmentContact</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptContact[]>))]
 	[HttpGet]
-	public IActionResult ReadContacts([FromBody] AptContactFilter filter) {
+	public async Task<IActionResult> ReadContacts([FromBody] AptContactFilter filter) {
 
 		var ContactsQuery = _context.Contacts.AsQueryable();
 
@@ -90,10 +91,10 @@ public class AptContactController : ControllerBase {
 			ContactsQuery.Reverse();
 		}
 
-		var resultArray = ContactsQuery
+		var resultArray = await ContactsQuery
 			.Skip(filter.offset)
 			.Take(filter.limit)
-			.ToArray();
+			.ToArrayAsync();
 
 		return Ok(resultArray);
 	}
