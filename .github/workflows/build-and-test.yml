@@ -4,8 +4,10 @@ on:
   pull_request:
     types: [opened, ready_for_review]
     paths:
-      - "**.cs"
-      - "**.csproj"
+      - "**/*.cs"
+      - "**/*.csproj"
+      - "fixflow.client/**"
+      - "flow_app/**"
 
 jobs:
   build-and-test-dotnet:
@@ -38,13 +40,29 @@ jobs:
       - name: React - Install and Build
         working-directory: fixflow.client
         run: |
-          npm install --legacy-peer-deps
           npm ci
           npm run build
           npx tsc --noEmit
 
+      - name: Setup Java 11 for Flutter
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "11"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.x"
+
+      - name: Flutter - Install and Build
+        run: |
+          flutter pub get
+          flutter build apk
+        working-directory: ./flow_app
+
       - name: Check Job Status and Update Pull Request
-        if: ${{ failure() }}
+        if: "${{ failure() }}"
         run: |
           echo "::error::One or more jobs failed. Please fix the issues before marking this pull request as ready for review."
           curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \

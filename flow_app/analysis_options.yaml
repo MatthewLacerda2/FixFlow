@@ -1,0 +1,49 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "./lib/flow_api"
+
+linter:
+  rules:
+    # Code Style Rules
+    lines_longer_than_80_chars: false
+    prefer_single_quotes: false
+    avoid_print: true
+    avoid_escaping_inner_quotes: true
+    prefer_final_locals: true
+    sort_constructors_first: true
+    use_full_hex_values_for_flutter_colors: true
+
+    # Naming Conventions
+    type_annotate_public_apis: true
+    always_declare_return_types: true
+    always_specify_types: true
+    avoid_dynamic_calls: true
+    annotate_overrides: true
+
+    # Performance and Efficiency
+    avoid_function_literals_in_foreach_calls: true
+    avoid_redundant_argument_values: true
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_is_not_empty: true
+
+    # Readability and Formatting
+    curly_braces_in_flow_control_structures: true
+    prefer_final_in_for_each: true
+    unnecessary_brace_in_string_interps: true
+    unnecessary_const: true
+    unnecessary_new: true
+    avoid_unnecessary_containers: true
+
+    # Documentation and Comments
+    public_member_api_docs: true
+    slash_for_doc_comments: true
+
+    # Other preferences
+    avoid_classes_with_only_static_members: true
+    prefer_relative_imports: true
+    unnecessary_null_in_if_null_operators: true
