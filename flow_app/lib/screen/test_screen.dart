@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../components/Inputs/cnpj_input_field.dart';
 import '../components/Inputs/email_input_field.dart';
 import '../components/Inputs/name_input_field.dart';
+import '../components/Inputs/password_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
 
 class TestScreen extends StatelessWidget {
@@ -17,6 +18,13 @@ class TestScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            PasswordInputField(
+              placeholder: 'Password',
+              onPasswordChanged: (password) {
+                print('Password is: $password');
+              },
+            ),
+            SizedBox(height: 20),
             NameInputField(
               placeholder: 'Nome da Empresa',
               onNameChanged: (name) {
