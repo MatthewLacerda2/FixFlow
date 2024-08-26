@@ -37,6 +37,8 @@ dependencies:
   introduction_screen: ^3.1.14
   email_validator: ^3.0.0
   flutter_multi_formatter: ^2.13.0
+  font_awesome_flutter: ^10.7.0
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:

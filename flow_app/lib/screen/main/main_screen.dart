@@ -57,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
               icon: Icon(Icons.note_alt_rounded), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
         ],
-        backgroundColor: Colors.grey[400],
+        backgroundColor: Colors.grey[300],
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.white,
         showSelectedLabels: false,

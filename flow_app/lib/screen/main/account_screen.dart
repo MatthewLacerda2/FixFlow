@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 import '../../components/account_option.dart';
+import '../about_screen.dart';
 import '../test_screen.dart';
 
 //TODO: make opção de sair (com confirmação)
@@ -75,9 +76,12 @@ class AccountScreen extends StatelessWidget {
               },
             ),
             AccountOption(
-              title: 'Sobre o App',
+              title: 'Sobre',
               onTap: () {
-                // TODO: Navigate to Sobre o App
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AboutScreen()),
+                );
               },
             ),
           ],
