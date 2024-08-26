@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../components/Inputs/check_input_field.dart';
 import '../components/Inputs/cnpj_input_field.dart';
+import '../components/Inputs/date_input_field.dart';
 import '../components/Inputs/email_input_field.dart';
+import '../components/Inputs/hour_input_field.dart';
 import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/password_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
@@ -18,6 +21,28 @@ class TestScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            CheckInputField(
+              label: 'Agree to Terms',
+              initialValue: false,
+              onChanged: (isChecked) {
+                print('Checkbox is: $isChecked');
+              },
+            ),
+            SizedBox(height: 20),
+            DateInputField(
+              placeholder: 'Select Date',
+              onDateSelected: (date) {
+                print('Selected Date: $date');
+              },
+            ),
+            SizedBox(height: 20),
+            HourInputField(
+              placeholder: 'Select Time',
+              onTimeSelected: (time) {
+                print('Selected Time: $time');
+              },
+            ),
+            SizedBox(height: 20),
             PasswordInputField(
               placeholder: 'Password',
               onPasswordChanged: (password) {

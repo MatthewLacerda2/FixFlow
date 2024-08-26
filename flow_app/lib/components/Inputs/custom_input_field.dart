@@ -22,7 +22,7 @@ class CustomInputField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: placeholder,
         filled: true,
-        fillColor: Colors.grey.shade300, // Grey background
+        fillColor: Colors.grey.shade300,
         border: InputBorder.none,
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.grey.shade600),

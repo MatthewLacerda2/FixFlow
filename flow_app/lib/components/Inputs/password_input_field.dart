@@ -29,7 +29,7 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
       decoration: InputDecoration(
         hintText: widget.placeholder,
         filled: true,
-        fillColor: Colors.grey.shade300, // Grey background
+        fillColor: Colors.grey.shade300,
         border: InputBorder.none,
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.grey.shade600),

@@ -32,8 +32,7 @@ class _CNPJInputFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    if (newValue.text.length > 18) {
-      // CNPJ has a maximum length of 18 characters with formatting
+    if (newValue.text.length > 5) {
       return oldValue;
     }
     final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
