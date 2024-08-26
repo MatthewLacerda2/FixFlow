@@ -3,45 +3,45 @@ import 'package:flutter/services.dart';
 
 import 'custom_input_field.dart';
 
-//TODO: make the cursor jump once we type a section
-class PhoneInputField extends StatelessWidget {
+class CNPJInputField extends StatelessWidget {
   final String placeholder;
-  final Function(String) onPhoneChanged;
+  final Function(String) onCNPJChanged;
 
-  PhoneInputField({
+  CNPJInputField({
     required this.placeholder,
-    required this.onPhoneChanged,
+    required this.onCNPJChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomInputField(
       placeholder: placeholder,
-      onTextChanged: onPhoneChanged,
-      inputType: TextInputType.phone,
+      onTextChanged: onCNPJChanged,
+      inputType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
-        _PhoneInputFormatter(),
+        _CNPJInputFormatter(),
       ],
     );
   }
 }
 
-class _PhoneInputFormatter extends TextInputFormatter {
+class _CNPJInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    if (newValue.text.length > 14) {
+    if (newValue.text.length > 18) {
+      // CNPJ has a maximum length of 18 characters with formatting
       return oldValue;
     }
     final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
     var formatted = '';
     for (var i = 0; i < digits.length; i++) {
-      if (i == 0) formatted += '(';
-      if (i == 2) formatted += ') ';
-      if (i == 7) formatted += '-';
+      if (i == 2 || i == 5) formatted += '.';
+      if (i == 8) formatted += '/';
+      if (i == 12) formatted += '-';
       formatted += digits[i];
     }
     return newValue.copyWith(

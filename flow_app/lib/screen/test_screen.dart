@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../components/Inputs/cnpj_input_field.dart';
 import '../components/Inputs/email_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
 
@@ -26,6 +27,13 @@ class TestScreen extends StatelessWidget {
               placeholder: 'Telefone',
               onPhoneChanged: (phone) {
                 print('Phone Number: $phone');
+              },
+            ),
+            SizedBox(height: 20),
+            CNPJInputField(
+              placeholder: 'CNPJ',
+              onCNPJChanged: (cnpj) {
+                print('CNPJ is: $cnpj');
               },
             ),
           ],
