@@ -9,22 +9,27 @@ class NotificationsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              'Notificações',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Icon(Icons.notifications_active_outlined, size: 28),
+                SizedBox(width: 8),
+                Text(
+                  'Atendimentos',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
             SizedBox(height: 20),
             Expanded(
               child: ListView.separated(
-                itemCount: 10, // Example: 10 notifications
+                itemCount: 10,
                 separatorBuilder: (context, index) => Divider(
                   color: Colors.grey,
                   thickness: 1,
                 ),
                 itemBuilder: (context, index) {
                   return ListTile(
-                    leading: Icon(Icons.error_outline,
-                        color: Colors.grey), // Exclamation mark icon
+                    leading: Icon(Icons.error_outline, color: Colors.grey),
                     title: Text('Something $index'),
                     subtitle: Text('Agendamento para daqui 10 minutos!'),
                     onTap: () {

@@ -63,7 +63,6 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-// Input formatter for Brazilian phone numbers
 class _PhoneInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

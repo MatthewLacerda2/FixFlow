@@ -15,7 +15,7 @@ class LogsScreen extends StatelessWidget {
               children: <Widget>[
                 Row(
                   children: [
-                    Icon(Icons.note_alt, size: 28),
+                    Icon(Icons.note_alt_outlined, size: 28),
                     SizedBox(width: 8),
                     Text(
                       'Atendimentos',

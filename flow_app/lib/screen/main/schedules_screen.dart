@@ -15,7 +15,7 @@ class SchedulesScreen extends StatelessWidget {
               children: <Widget>[
                 Row(
                   children: [
-                    Icon(Icons.timelapse, size: 28),
+                    Icon(Icons.timer_outlined, size: 28),
                     SizedBox(width: 8),
                     Text(
                       'Agendamentos',
@@ -33,9 +33,8 @@ class SchedulesScreen extends StatelessWidget {
                       thickness: 1,
                     ),
                     itemBuilder: (context, index) {
-                      final String descricao = index % 2 == 0
-                          ? 'Descrição do agendamento'
-                          : ''; // Example: alternate items have a description
+                      final String descricao =
+                          index % 2 == 0 ? 'Descrição do agendamento' : '';
                       return ListTile(
                         title: Text('Cliente: Nome do Cliente $index'),
                         subtitle: Column(

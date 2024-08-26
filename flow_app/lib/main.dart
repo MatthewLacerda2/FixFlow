@@ -17,7 +17,6 @@ class FlowApp extends StatelessWidget {
       ),
       home: FutureBuilder(
         // TODO: Check if the user is logged in
-        // Example:
         future: checkIfLoggedIn(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

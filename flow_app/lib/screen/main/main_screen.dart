@@ -53,7 +53,8 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.schedule), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.notifications), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: ''),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.note_alt_rounded), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
         ],
         backgroundColor: Colors.grey[400],

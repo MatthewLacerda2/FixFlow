@@ -10,8 +10,7 @@ class OverviewScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Align items to the left
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
               children: [
@@ -19,7 +18,7 @@ class OverviewScreen extends StatelessWidget {
                   '10',
                   style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(width: 10), // Add space between number and text
+                SizedBox(width: 10),
                 Text(
                   'Agendamentos para hoje',
                   style: TextStyle(fontSize: 16, color: Colors.grey[600]),
@@ -33,7 +32,7 @@ class OverviewScreen extends StatelessWidget {
                   '7',
                   style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(width: 10), // Add space between number and text
+                SizedBox(width: 10),
                 Text(
                   'Atendimentos feitos esta semana',
                   style: TextStyle(fontSize: 16, color: Colors.grey[600]),
