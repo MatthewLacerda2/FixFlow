@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
+import '../../components/Inputs/date_input_field.dart';
+import '../../components/Inputs/hour_input_field.dart';
+
 class LogScreen extends StatefulWidget {
   final String cliente;
   final bool marcouHorario;
@@ -24,8 +27,6 @@ class LogScreen extends StatefulWidget {
 }
 
 class _LogScreenState extends State<LogScreen> {
-  late TextEditingController _horarioController;
-  late TextEditingController _diaController;
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 
@@ -34,20 +35,9 @@ class _LogScreenState extends State<LogScreen> {
   @override
   void initState() {
     super.initState();
-    _horarioController = TextEditingController();
-    _diaController = TextEditingController();
-    _precoController = TextEditingController();
-    _observacaoController = TextEditingController();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _horarioController.text = widget.horario.format(context);
-    _diaController.text =
-        "${widget.dia.day}/${widget.dia.month}/${widget.dia.year}";
-    _precoController.text = widget.preco.toStringAsFixed(2);
-    _observacaoController.text = widget.observacao;
+    _precoController =
+        TextEditingController(text: widget.preco.toStringAsFixed(2));
+    _observacaoController = TextEditingController(text: widget.observacao);
   }
 
   void _toggleEdit() {
@@ -70,9 +60,6 @@ class _LogScreenState extends State<LogScreen> {
   void _cancelChanges() {
     setState(() {
       _isEdited = false;
-      _horarioController.text = widget.horario.format(context);
-      _diaController.text =
-          "${widget.dia.day}/${widget.dia.month}/${widget.dia.year}";
       _precoController.text = widget.preco.toStringAsFixed(2);
       _observacaoController.text = widget.observacao;
     });
@@ -82,45 +69,78 @@ class _LogScreenState extends State<LogScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Log'),
+        title: Text('Atendimento'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              'Cliente: ${widget.cliente}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Cliente: ${widget.cliente}',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                if (widget.marcouHorario)
+                  Row(
+                    children: [
+                      Icon(Icons.check, color: Colors.green),
+                      SizedBox(width: 5),
+                      Text(
+                        'Agendado',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                    ],
+                  ),
+              ],
             ),
-            SizedBox(height: 10),
-            Text(
-              'Marcou horário: ${widget.marcouHorario ? "Sim" : "Não"}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: DateInputField(
+                    placeholder: 'Select Date',
+                    onDateSelected: (date) {
+                      print('Selected Date: $date');
+                      _toggleEdit();
+                    },
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: HourInputField(
+                    placeholder: 'Select Time',
+                    onTimeSelected: (time) {
+                      print('Selected Time: $time');
+                      _toggleEdit();
+                    },
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20),
             TextField(
-              controller: _horarioController,
-              decoration: InputDecoration(labelText: 'Horário'),
-              onChanged: (value) => _toggleEdit(),
-            ),
-            TextField(
-              controller: _diaController,
-              decoration: InputDecoration(labelText: 'Dia'),
-              onChanged: (value) => _toggleEdit(),
-            ),
-            TextField(
               controller: _precoController,
-              decoration: InputDecoration(labelText: 'Preço'),
-              keyboardType: TextInputType.number,
-              onChanged: (value) => _toggleEdit(),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              decoration: InputDecoration(
+                labelText: 'Preço: R\$',
+                suffixText: 'R\$',
+              ),
+              onChanged: (value) {
+                if (double.tryParse(value) != null) {
+                  _toggleEdit();
+                }
+              },
             ),
+            SizedBox(height: 20),
             TextField(
               controller: _observacaoController,
               maxLength: 250,
               decoration: InputDecoration(
                 labelText: 'Observação',
-                helperText: 'Apenas até 250 caracteres',
               ),
               onChanged: (value) => _toggleEdit(),
             ),
