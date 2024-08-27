@@ -70,9 +70,8 @@ class AboutScreen extends StatelessWidget {
               ),
               SizedBox(height: 25),
               Text(
-                'Sou um desenvolvedor Full Stack, criando websites, servidores, apps e até videogames. ' +
-                    "Aprendí que a chave para um software de sucesso está na qualidade do desenvolvimento, " +
-                    "bem como na compreensão do modelo de negócio.",
+                'Sou um desenvolvedor Full Stack, criando websites, aplicativos, servidores, e até videogames. ' +
+                    "Sempre busco novos desafios para entender o modelo de negócio e desenvolver com qualidade",
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[700],
@@ -132,7 +131,7 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 110),
+              SizedBox(height: 90),
               Align(
                 alignment: Alignment.centerLeft,
                 child: ElevatedButton.icon(

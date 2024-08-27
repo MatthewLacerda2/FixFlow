@@ -15,6 +15,20 @@ class OverviewScreen extends StatelessWidget {
             Row(
               children: [
                 Text(
+                  '5',
+                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  'contatos a serem efetuados hoje',
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                ),
+              ],
+            ),
+            SizedBox(height: 40),
+            Row(
+              children: [
+                Text(
                   '10',
                   style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                 ),
