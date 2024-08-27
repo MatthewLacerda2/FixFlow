@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'screen/auth/initial_screen.dart';
 import 'screen/main/main_screen.dart';
@@ -10,6 +11,8 @@ void main() {
 class FlowApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     return MaterialApp(
       title: 'Flow',
       theme: ThemeData(
