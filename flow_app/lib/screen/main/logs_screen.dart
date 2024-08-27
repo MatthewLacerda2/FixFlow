@@ -43,7 +43,7 @@ class LogsScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => LogPage(
+                              builder: (context) => LogScreen(
                                 cliente: 'Fulano $index',
                                 marcouHorario: true,
                                 horario: TimeOfDay(hour: 14, minute: 30),

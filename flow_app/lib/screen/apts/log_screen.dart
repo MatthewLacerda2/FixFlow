@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
-class LogPage extends StatefulWidget {
+class LogScreen extends StatefulWidget {
   final String cliente;
   final bool marcouHorario;
   final TimeOfDay horario;
@@ -9,7 +9,7 @@ class LogPage extends StatefulWidget {
   final double preco;
   final String observacao;
 
-  const LogPage({
+  const LogScreen({
     Key? key,
     required this.cliente,
     required this.marcouHorario,
@@ -20,10 +20,10 @@ class LogPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _LogPageState createState() => _LogPageState();
+  _LogScreenState createState() => _LogScreenState();
 }
 
-class _LogPageState extends State<LogPage> {
+class _LogScreenState extends State<LogScreen> {
   late TextEditingController _horarioController;
   late TextEditingController _diaController;
   late TextEditingController _precoController;
