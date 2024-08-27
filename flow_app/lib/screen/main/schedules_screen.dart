@@ -24,24 +24,23 @@ class SchedulesScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 14),
+                Divider(),
                 Expanded(
                   child: ListView.separated(
-                    itemCount: 10, // Example: 10 schedules
-                    separatorBuilder: (context, index) => Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                    ),
+                    itemCount: 10,
+                    separatorBuilder: (context, index) =>
+                        Divider(color: Colors.grey, thickness: 1, height: 0),
                     itemBuilder: (context, index) {
-                      final String descricao =
-                          index % 2 == 0 ? 'Descrição do agendamento' : '';
+                      final String? descricao =
+                          'Agendamento de numero ' + index.toString();
                       return ListTile(
                         title: Text('Cliente: Nome do Cliente $index'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Hora: 17h45m'),
-                            if (descricao.isNotEmpty) Text(descricao),
+                            if (descricao != null) Text(descricao),
                           ],
                         ),
                         onTap: () {

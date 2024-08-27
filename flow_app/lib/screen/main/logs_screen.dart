@@ -24,13 +24,15 @@ class LogsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 14),
+                Divider(),
                 Expanded(
                   child: ListView.separated(
                     itemCount: 10,
                     separatorBuilder: (context, index) => Divider(
                       color: Colors.grey,
                       thickness: 1,
+                      height: 0,
                     ),
                     itemBuilder: (context, index) {
                       return ListTile(

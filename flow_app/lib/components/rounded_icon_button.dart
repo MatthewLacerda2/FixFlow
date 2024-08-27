@@ -13,8 +13,8 @@ class RoundedIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 18,
-      right: 18,
+      bottom: 16,
+      right: 16,
       child: FloatingActionButton(
         onPressed: onPressed,
         child: Icon(
