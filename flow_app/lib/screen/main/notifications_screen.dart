@@ -21,14 +21,13 @@ class NotificationsScreen extends StatelessWidget {
             ),
             SizedBox(height: 14),
             Divider(),
-            SizedBox(height: 6),
             Expanded(
               child: ListView.separated(
                 itemCount: 10,
                 separatorBuilder: (context, index) => Divider(
                   color: Colors.grey,
                   thickness: 1,
-                  height: 8,
+                  height: 5,
                 ),
                 itemBuilder: (context, index) {
                   return ListTile(

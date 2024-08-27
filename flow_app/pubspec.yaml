@@ -39,6 +39,7 @@ dependencies:
   flutter_multi_formatter: ^2.13.0
   font_awesome_flutter: ^10.7.0
   url_launcher: ^6.3.0
+  snackbar: ^1.0.2
 
 dev_dependencies:
   flutter_test:

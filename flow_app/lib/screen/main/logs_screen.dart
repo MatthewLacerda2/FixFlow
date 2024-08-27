@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/rounded_icon_button.dart';
+import '../apts/log_screen.dart';
 
 class LogsScreen extends StatelessWidget {
   @override
@@ -39,7 +40,19 @@ class LogsScreen extends StatelessWidget {
                         title: Text('Cliente: Nome do Cliente $index'),
                         subtitle: Text('Hora: 17h45m'),
                         onTap: () {
-                          // TODO: Navigate to logView screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LogPage(
+                                cliente: 'Fulano $index',
+                                marcouHorario: true,
+                                horario: TimeOfDay(hour: 14, minute: 30),
+                                dia: DateTime(2024, 8, 27),
+                                preco: 150.00,
+                                observacao: "This is an observation",
+                              ),
+                            ),
+                          );
                         },
                       );
                     },
