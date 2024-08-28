@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
 import '../../components/Inputs/date_picker_rectangle.dart';
+import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 
 class LogScreen extends StatefulWidget {
@@ -114,17 +115,10 @@ class _LogScreenState extends State<LogScreen> {
               ],
             ),
             SizedBox(height: 20),
-            TextField(
+            PriceInputField(
               controller: _precoController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              decoration: InputDecoration(
-                labelText: 'Preço: R\$',
-                suffixText: 'R\$',
-              ),
-              onChanged: (value) {
-                if (double.tryParse(value) != null) {
-                  _toggleEdit();
-                }
+              onPriceValid: (value) {
+                print('Valid price: $value');
               },
             ),
             SizedBox(height: 20),
