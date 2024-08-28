@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
 import '../../components/Inputs/date_picker_rectangle.dart';
+import '../../components/Inputs/limited_text_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 
@@ -122,12 +123,10 @@ class _LogScreenState extends State<LogScreen> {
               },
             ),
             SizedBox(height: 20),
-            TextField(
+            LimitedTextInputField(
               controller: _observacaoController,
               maxLength: 250,
-              decoration: InputDecoration(
-                labelText: 'Observação',
-              ),
+              labelText: 'Observação',
               onChanged: (value) => _toggleEdit(),
             ),
             SizedBox(height: 20),
