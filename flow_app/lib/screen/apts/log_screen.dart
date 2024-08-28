@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
 import '../../components/Inputs/date_input_field.dart';
-import '../../components/Inputs/hour_input_field.dart';
+import '../../components/Inputs/time_picker_rectangle.dart';
 
 class LogScreen extends StatefulWidget {
   final String cliente;
@@ -111,12 +111,8 @@ class _LogScreenState extends State<LogScreen> {
                 ),
                 SizedBox(width: 10),
                 Expanded(
-                  child: HourInputField(
-                    placeholder: 'Select Time',
-                    onTimeSelected: (time) {
-                      print('Selected Time: $time');
-                      _toggleEdit();
-                    },
+                  child: TimePickerRectangle(
+                    initialTime: TimeOfDay.now(),
                   ),
                 ),
               ],

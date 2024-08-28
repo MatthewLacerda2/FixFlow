@@ -4,10 +4,10 @@ import '../components/Inputs/check_input_field.dart';
 import '../components/Inputs/cnpj_input_field.dart';
 import '../components/Inputs/date_input_field.dart';
 import '../components/Inputs/email_input_field.dart';
-import '../components/Inputs/hour_input_field.dart';
 import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/password_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
+import '../components/Inputs/time_picker_rectangle.dart';
 
 class TestScreen extends StatelessWidget {
   @override
@@ -21,6 +21,10 @@ class TestScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            TimePickerRectangle(
+              initialTime: TimeOfDay.now(),
+            ),
+            SizedBox(height: 30),
             CheckInputField(
               label: 'Agree to Terms',
               initialValue: false,
@@ -33,13 +37,6 @@ class TestScreen extends StatelessWidget {
               placeholder: 'Select Date',
               onDateSelected: (date) {
                 print('Selected Date: $date');
-              },
-            ),
-            SizedBox(height: 20),
-            HourInputField(
-              placeholder: 'Select Time',
-              onTimeSelected: (time) {
-                print('Selected Time: $time');
               },
             ),
             SizedBox(height: 20),
