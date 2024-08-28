@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
-import '../../components/Inputs/date_input_field.dart';
+import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 
 class LogScreen extends StatefulWidget {
@@ -101,12 +101,8 @@ class _LogScreenState extends State<LogScreen> {
             Row(
               children: [
                 Expanded(
-                  child: DateInputField(
-                    placeholder: 'Select Date',
-                    onDateSelected: (date) {
-                      print('Selected Date: $date');
-                      _toggleEdit();
-                    },
+                  child: DatePickerRectangle(
+                    initialDate: DateTime.now(),
                   ),
                 ),
                 SizedBox(width: 10),

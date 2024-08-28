@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../components/Inputs/check_input_field.dart';
 import '../components/Inputs/cnpj_input_field.dart';
-import '../components/Inputs/date_input_field.dart';
+import '../components/Inputs/date_picker_rectangle.dart';
 import '../components/Inputs/email_input_field.dart';
 import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/password_input_field.dart';
@@ -24,19 +24,15 @@ class TestScreen extends StatelessWidget {
             TimePickerRectangle(
               initialTime: TimeOfDay.now(),
             ),
+            DatePickerRectangle(
+              initialDate: DateTime.now(),
+            ),
             SizedBox(height: 30),
             CheckInputField(
               label: 'Agree to Terms',
               initialValue: false,
               onChanged: (isChecked) {
                 print('Checkbox is: $isChecked');
-              },
-            ),
-            SizedBox(height: 20),
-            DateInputField(
-              placeholder: 'Select Date',
-              onDateSelected: (date) {
-                print('Selected Date: $date');
               },
             ),
             SizedBox(height: 20),
