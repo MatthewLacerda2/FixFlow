@@ -5,7 +5,7 @@ import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/limited_text_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
-
+//TODO: buttons must ask for a confirmation
 class LogScreen extends StatefulWidget {
   final String cliente;
   final bool marcouHorario;
