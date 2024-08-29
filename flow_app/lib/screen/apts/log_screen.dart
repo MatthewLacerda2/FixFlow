@@ -8,22 +8,21 @@ import '../../components/Inputs/time_picker_rectangle.dart';
 
 //TODO: buttons must ask for a confirmation
 class LogScreen extends StatefulWidget {
-  final String cliente;
-  final bool marcouHorario;
-  final TimeOfDay horario;
-  final DateTime dia;
-  final double preco;
-  final String observacao;
-
   const LogScreen({
-    Key? key,
+    super.key,
     required this.cliente,
     required this.marcouHorario,
     required this.horario,
     required this.dia,
     required this.preco,
     required this.observacao,
-  }) : super(key: key);
+  });
+  final String cliente;
+  final bool marcouHorario;
+  final TimeOfDay horario;
+  final DateTime dia;
+  final double preco;
+  final String observacao;
 
   @override
   _LogScreenState createState() => _LogScreenState();
@@ -72,7 +71,7 @@ class _LogScreenState extends State<LogScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Atendimento'),
+        title: const Text('Atendimento'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -81,14 +80,15 @@ class _LogScreenState extends State<LogScreen> {
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: <Widget>[
                 Text(
                   'Cliente: ${widget.cliente}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 22),
                 ),
                 if (widget.marcouHorario)
-                  Row(
-                    children: [
+                  const Row(
+                    children: <Widget>[
                       Icon(Icons.check, color: Colors.blue, size: 22),
                       SizedBox(width: 8),
                       Text(
@@ -100,63 +100,70 @@ class _LogScreenState extends State<LogScreen> {
                   ),
               ],
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             Row(
-              children: [
+              children: <Widget>[
                 Expanded(
                   child: DatePickerRectangle(
                     initialDate: widget.dia,
-                    onDateSelected: (date) {
+                    onDateSelected: (DateTime date) {
                       _toggleEdit();
                     },
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: TimePickerRectangle(
                     initialTime: widget.horario,
-                    onTimeSelected: (time) {
+                    onTimeSelected: (TimeOfDay time) {
                       _toggleEdit();
                     },
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             PriceInputField(
               controller: _precoController,
-              onPriceValid: (value) {
+              onPriceValid: (String value) {
                 _toggleEdit();
-                print('Valid price: $value');
               },
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             LimitedTextInputField(
               controller: _observacaoController,
               maxLength: 250,
               labelText: 'Observação',
-              onChanged: (value) => _toggleEdit(),
+              onChanged: (String value) => _toggleEdit(),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+              children: <Widget>[
                 ElevatedButton(
                   onPressed: _isEdited ? _saveChanges : null,
-                  child: Text('Salvar'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.green : Colors.grey,
+                  ),
+                  child: const Text(
+                    'Salvar',
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
                 ),
                 ElevatedButton(
                   onPressed: _isEdited ? _cancelChanges : null,
-                  child: Text('Cancelar'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.blue : Colors.grey,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                  ),
+                  child: const Text(
+                    'Cancelar',
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
                 ),
               ],
-            ),
+            )
           ],
         ),
       ),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
 class DatePickerRectangle extends StatefulWidget {
+  const DatePickerRectangle(
+      {super.key, required this.initialDate, required this.onDateSelected});
   final DateTime initialDate;
   final Function(DateTime) onDateSelected;
-
-  DatePickerRectangle(
-      {required this.initialDate, required this.onDateSelected});
 
   @override
   _DatePickerRectangleState createState() => _DatePickerRectangleState();
@@ -41,18 +40,19 @@ class _DatePickerRectangleState extends State<DatePickerRectangle> {
       child: ElevatedButton(
         onPressed: () => _selectDate(context),
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 230, 230, 230),
-          shadowColor: Colors.transparent,
-          elevation: 0,
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          backgroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
+            borderRadius: BorderRadius.circular(20),
+            side: const BorderSide(color: Colors.grey),
           ),
         ),
         child: Text(
           '${_selectedDate!.day.toString().padLeft(2, '0')}/${_selectedDate!.month.toString().padLeft(2, '0')}/${_selectedDate!.year}',
           style: const TextStyle(
-              fontSize: 24, color: Colors.black, fontWeight: FontWeight.normal),
+              fontSize: 24,
+              color: Color.fromARGB(255, 70, 70, 70),
+              fontWeight: FontWeight.normal),
         ),
       ),
     );
