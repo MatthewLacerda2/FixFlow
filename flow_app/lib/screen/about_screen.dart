@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutScreen extends StatelessWidget {
+  const AboutScreen({super.key});
+
   final String linkedInUrl = 'https://www.linkedin.com/in/matheus-lacerda96/';
   final String whatsappUrl = 'https://wa.me/98999344788';
 
@@ -14,9 +16,9 @@ class AboutScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 40.0),
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.only(top: 40.0),
                 child: Center(
                   child: Text(
                     'Sobre',
@@ -27,35 +29,34 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+                children: <Widget>[
                   Container(
                     width: 120,
                     height: 120,
                     decoration: BoxDecoration(
                       color: Colors.grey[300],
                       borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
+                      image: const DecorationImage(
                         image: NetworkImage('https://i.imgur.com/cXWK4wf.png'),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
+                      children: <Widget>[
+                        const Text(
                           'Matheus Lacerda',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
                           'Desenvolvedor de Software',
                           style: TextStyle(
@@ -68,7 +69,7 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               Text(
                 'Sou um desenvolvedor Full Stack, criando websites, aplicativos, servidores, e até videogames. ' +
                     "Sempre busco novos desafios para entender o modelo de negócio e desenvolver com qualidade",
@@ -77,7 +78,7 @@ class AboutScreen extends StatelessWidget {
                   color: Colors.grey[700],
                 ),
               ),
-              SizedBox(height: 14),
+              const SizedBox(height: 14),
               Text(
                 'Se você tem uma idéia e quer fazer acontecer, venha falar comigo',
                 style: TextStyle(
@@ -85,21 +86,22 @@ class AboutScreen extends StatelessWidget {
                   color: Colors.grey[700],
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Row(
-                children: [
-                  FaIcon(FontAwesomeIcons.linkedin,
+                children: <Widget>[
+                  const FaIcon(FontAwesomeIcons.linkedin,
                       color: Colors.blue, size: 28),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   GestureDetector(
                     onTap: () async {
-                      if (await canLaunch(linkedInUrl)) {
-                        await launch(linkedInUrl);
+                      final Uri linkedinUri = Uri.parse(linkedInUrl);
+                      if (await canLaunchUrl(linkedinUri)) {
+                        await launchUrl(linkedinUri);
                       } else {
                         throw 'Could not launch $linkedInUrl';
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       'Conectar no LinkedIn',
                       style: TextStyle(
                         fontSize: 18,
@@ -108,21 +110,22 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
-                children: [
-                  FaIcon(FontAwesomeIcons.whatsapp,
+                children: <Widget>[
+                  const FaIcon(FontAwesomeIcons.whatsapp,
                       color: Colors.green, size: 28),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   GestureDetector(
                     onTap: () async {
-                      if (await canLaunch(whatsappUrl)) {
-                        await launch(whatsappUrl);
+                      final Uri whatsappUri = Uri.parse(whatsappUrl);
+                      if (await canLaunchUrl(whatsappUri)) {
+                        await launchUrl(whatsappUri);
                       } else {
                         throw 'Could not launch $whatsappUrl';
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       'Chamar no WhatsApp',
                       style: TextStyle(
                         fontSize: 18,
@@ -131,15 +134,15 @@ class AboutScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 90),
+              const SizedBox(height: 90),
               Align(
                 alignment: Alignment.centerLeft,
                 child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: Icon(Icons.arrow_back, color: Colors.black),
-                  label: Text(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  label: const Text(
                     'Voltar',
                     style: TextStyle(color: Colors.black, fontSize: 18),
                   ),
@@ -151,7 +154,8 @@ class AboutScreen extends StatelessWidget {
                         width: 2.0,
                       ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 28, vertical: 9),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 28, vertical: 9),
                     elevation: 0,
                   ),
                 ),

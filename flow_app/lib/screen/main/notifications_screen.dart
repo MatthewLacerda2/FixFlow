@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class NotificationsScreen extends StatelessWidget {
+  const NotificationsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,8 +11,8 @@ class NotificationsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              children: [
+            const Row(
+              children: <Widget>[
                 Icon(Icons.notifications_active_outlined, size: 28),
                 SizedBox(width: 8),
                 Text(
@@ -19,21 +21,23 @@ class NotificationsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 14),
-            Divider(),
+            const SizedBox(height: 14),
+            const Divider(),
             Expanded(
               child: ListView.separated(
                 itemCount: 10,
-                separatorBuilder: (context, index) => Divider(
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(
                   color: Colors.grey,
                   thickness: 1,
                   height: 5,
                 ),
-                itemBuilder: (context, index) {
+                itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    leading: Icon(Icons.error_outline, color: Colors.grey),
+                    leading:
+                        const Icon(Icons.error_outline, color: Colors.grey),
                     title: Text('Something $index'),
-                    subtitle: Text('Agendamento para daqui 10 minutos!'),
+                    subtitle: const Text('Agendamento para daqui 10 minutos!'),
                   );
                 },
               ),

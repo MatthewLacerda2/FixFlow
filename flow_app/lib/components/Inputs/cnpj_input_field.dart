@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 import 'custom_input_field.dart';
 
 class CNPJInputField extends StatelessWidget {
-  final String placeholder;
-  final Function(String) onCNPJChanged;
-
-  CNPJInputField({
+  const CNPJInputField({
+    super.key,
     required this.placeholder,
     required this.onCNPJChanged,
   });
+  final String placeholder;
+  final Function(String) onCNPJChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class CNPJInputField extends StatelessWidget {
       placeholder: placeholder,
       onTextChanged: onCNPJChanged,
       inputType: TextInputType.number,
-      inputFormatters: [
+      inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly,
         _CNPJInputFormatter(),
       ],
@@ -35,9 +35,9 @@ class _CNPJInputFormatter extends TextInputFormatter {
     if (newValue.text.length > 5) {
       return oldValue;
     }
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
-    var formatted = '';
-    for (var i = 0; i < digits.length; i++) {
+    final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    String formatted = '';
+    for (int i = 0; i < digits.length; i++) {
       if (i == 2 || i == 5) formatted += '.';
       if (i == 8) formatted += '/';
       if (i == 12) formatted += '-';

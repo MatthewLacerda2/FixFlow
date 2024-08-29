@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'otp_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
+  RegisterScreen({super.key});
+
   final TextEditingController companyNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -13,7 +15,7 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registrar'),
+        title: const Text('Registrar'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -22,39 +24,40 @@ class RegisterScreen extends StatelessWidget {
           children: <Widget>[
             TextField(
               controller: companyNameController,
-              decoration: InputDecoration(labelText: 'Nome da empresa'),
+              decoration: const InputDecoration(labelText: 'Nome da empresa'),
             ),
             TextField(
               controller: phoneController,
-              decoration: InputDecoration(labelText: 'Telefone'),
+              decoration: const InputDecoration(labelText: 'Telefone'),
               keyboardType: TextInputType.phone,
-              inputFormatters: [
+              inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly,
                 _PhoneInputFormatter(),
               ],
             ),
             TextField(
               controller: emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
             TextField(
               controller: cnpjController,
-              decoration: InputDecoration(labelText: 'CNPJ'),
+              decoration: const InputDecoration(labelText: 'CNPJ'),
               keyboardType: TextInputType.number,
-              inputFormatters: [
+              inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly,
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 // TODO: Validate this data
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => OtpScreen()),
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => const OtpScreen()),
                 );
               },
-              child: Text('Registrar'),
+              child: const Text('Registrar'),
             ),
           ],
         ),
@@ -72,9 +75,9 @@ class _PhoneInputFormatter extends TextInputFormatter {
     if (newValue.text.length > 14) {
       return oldValue;
     }
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
-    var formatted = '';
-    for (var i = 0; i < digits.length; i++) {
+    final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    String formatted = '';
+    for (int i = 0; i < digits.length; i++) {
       if (i == 0) formatted += '(';
       if (i == 2) formatted += ') ';
       if (i == 7) formatted += '-';

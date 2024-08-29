@@ -1,6 +1,8 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  errors:
+    todo: ignore
   exclude:
     - "**/*.g.dart"
     - "./lib/flow_api"
@@ -10,7 +12,7 @@ linter:
     # Code Style Rules
     lines_longer_than_80_chars: false
     prefer_single_quotes: false
-    avoid_print: true
+    avoid_print: false
     avoid_escaping_inner_quotes: true
     prefer_final_locals: true
     sort_constructors_first: true
@@ -40,7 +42,7 @@ linter:
     avoid_unnecessary_containers: true
 
     # Documentation and Comments
-    public_member_api_docs: true
+    public_member_api_docs: false
     slash_for_doc_comments: true
 
     # Other preferences

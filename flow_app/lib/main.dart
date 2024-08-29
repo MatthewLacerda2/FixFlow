@@ -5,13 +5,16 @@ import 'screen/auth/initial_screen.dart';
 import 'screen/main/main_screen.dart';
 
 void main() {
-  runApp(FlowApp());
+  runApp(const FlowApp());
 }
 
 class FlowApp extends StatelessWidget {
+  const FlowApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations(
+        <DeviceOrientation>[DeviceOrientation.portraitUp]);
 
     return MaterialApp(
       title: 'Flow',
@@ -21,13 +24,13 @@ class FlowApp extends StatelessWidget {
       home: FutureBuilder(
         // TODO: Check if the user is logged in
         future: checkIfLoggedIn(),
-        builder: (context, snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else if (snapshot.hasData && snapshot.data == true) {
-            return MainScreen();
+            return const MainScreen();
           } else {
-            return InitialScreen();
+            return const InitialScreen();
           }
         },
       ),

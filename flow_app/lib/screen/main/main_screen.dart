@@ -8,19 +8,21 @@ import 'overview_screen.dart';
 import 'schedules_screen.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
-  _MainScreenState createState() => _MainScreenState();
+  MainScreenState createState() => MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
-    OverviewScreen(),
-    SchedulesScreen(),
-    NotificationsScreen(),
-    LogsScreen(),
-    AccountScreen(),
+  final List<Widget> _screens = <Widget>[
+    const OverviewScreen(),
+    const SchedulesScreen(),
+    const NotificationsScreen(),
+    const LogsScreen(),
+    const AccountScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -34,11 +36,12 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => InitialScreen()),
+              MaterialPageRoute(
+                  builder: (BuildContext context) => const InitialScreen()),
               (Route<dynamic> route) => false,
             );
           },

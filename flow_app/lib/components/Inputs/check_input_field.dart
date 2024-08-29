@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
 class CheckInputField extends StatefulWidget {
-  final String label;
-  final bool initialValue;
-  final Function(bool) onChanged;
-
-  CheckInputField({
+  const CheckInputField({
+    super.key,
     required this.label,
     required this.initialValue,
     required this.onChanged,
   });
+  final String label;
+  final bool initialValue;
+  final Function(bool) onChanged;
 
   @override
-  _CheckInputFieldState createState() => _CheckInputFieldState();
+  CheckInputFieldState createState() => CheckInputFieldState();
 }
 
-class _CheckInputFieldState extends State<CheckInputField> {
+class CheckInputFieldState extends State<CheckInputField> {
   bool _isChecked = false;
 
   @override
@@ -27,8 +27,7 @@ class _CheckInputFieldState extends State<CheckInputField> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
+      children: <Widget>[
         Expanded(
           child: GestureDetector(
             onTap: () {
@@ -39,7 +38,7 @@ class _CheckInputFieldState extends State<CheckInputField> {
             },
             child: Text(
               widget.label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 17,
               ),
             ),
@@ -65,8 +64,8 @@ class _CheckInputFieldState extends State<CheckInputField> {
             ),
             child: _isChecked
                 ? Container(
-                    margin: EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(
+                    margin: const EdgeInsets.all(3.0),
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.blue,
                     ),

@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
+//TODO: password must contain uppercase letters, lowercase letters, numbers, special characters, hieroglyphics and the blood of a virgin
 class PasswordInputField extends StatefulWidget {
-  final String placeholder;
-  final Function(String) onPasswordChanged;
-
-  PasswordInputField({
+  const PasswordInputField({
+    super.key,
     required this.placeholder,
-    required this.onPasswordChanged,
+    this.onPasswordChanged,
   });
+  final String placeholder;
+
+  /// Function called when the value is changed
+  final Function(String)? onPasswordChanged;
 
   @override
-  _PasswordInputFieldState createState() => _PasswordInputFieldState();
+  PasswordInputFieldState createState() => PasswordInputFieldState();
 }
 
-class _PasswordInputFieldState extends State<PasswordInputField> {
+class PasswordInputFieldState extends State<PasswordInputField> {
   bool _obscureText = true;
 
   void _toggleVisibility() {

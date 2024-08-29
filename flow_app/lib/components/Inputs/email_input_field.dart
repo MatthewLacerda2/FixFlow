@@ -1,30 +1,35 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'custom_input_field.dart';
 
+/// Input field for emails, with a proper validation
 class EmailInputField extends StatefulWidget {
-  final String placeholder;
-  final Function(String) onEmailValidated;
-
-  EmailInputField({
+  const EmailInputField({
+    super.key,
     required this.placeholder,
     required this.onEmailValidated,
   });
 
+  final String placeholder;
+
+  /// Function called when the value is changed
+  final Function(String) onEmailValidated;
+
   @override
-  _EmailInputFieldState createState() => _EmailInputFieldState();
+  EmailInputFieldState createState() => EmailInputFieldState();
 }
 
-class _EmailInputFieldState extends State<EmailInputField> {
-  bool isValid = true;
+class EmailInputFieldState extends State<EmailInputField> {
+  bool isValidEmail = true;
 
   void validateEmail(String email) {
     setState(() {
-      isValid = EmailValidator.validate(email);
+      isValidEmail = EmailValidator.validate(email);
     });
 
-    if (isValid) {
+    if (isValidEmail) {
       widget.onEmailValidated(email);
     }
   }
@@ -33,11 +38,11 @@ class _EmailInputFieldState extends State<EmailInputField> {
   Widget build(BuildContext context) {
     return CustomInputField(
       placeholder: widget.placeholder,
-      onTextChanged: (text) {
+      onTextChanged: (String text) {
         validateEmail(text);
       },
       inputType: TextInputType.emailAddress,
-      inputFormatters: [],
+      inputFormatters: const <TextInputFormatter>[],
     );
   }
 }

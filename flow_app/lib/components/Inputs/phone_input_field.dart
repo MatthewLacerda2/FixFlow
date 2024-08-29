@@ -5,13 +5,13 @@ import 'custom_input_field.dart';
 
 //TODO: make the cursor jump once we type a section
 class PhoneInputField extends StatelessWidget {
-  final String placeholder;
-  final Function(String) onPhoneChanged;
-
-  PhoneInputField({
+  const PhoneInputField({
+    super.key,
     required this.placeholder,
     required this.onPhoneChanged,
   });
+  final String placeholder;
+  final Function(String) onPhoneChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class PhoneInputField extends StatelessWidget {
       placeholder: placeholder,
       onTextChanged: onPhoneChanged,
       inputType: TextInputType.phone,
-      inputFormatters: [
+      inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly,
         _PhoneInputFormatter(),
       ],
@@ -36,9 +36,9 @@ class _PhoneInputFormatter extends TextInputFormatter {
     if (newValue.text.length > 14) {
       return oldValue;
     }
-    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
-    var formatted = '';
-    for (var i = 0; i < digits.length; i++) {
+    final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    String formatted = '';
+    for (int i = 0; i < digits.length; i++) {
       if (i == 0) formatted += '(';
       if (i == 2) formatted += ') ';
       if (i == 7) formatted += '-';

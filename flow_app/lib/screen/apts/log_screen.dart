@@ -25,10 +25,10 @@ class LogScreen extends StatefulWidget {
   final String observacao;
 
   @override
-  _LogScreenState createState() => _LogScreenState();
+  LogScreenState createState() => LogScreenState();
 }
 
-class _LogScreenState extends State<LogScreen> {
+class LogScreenState extends State<LogScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 

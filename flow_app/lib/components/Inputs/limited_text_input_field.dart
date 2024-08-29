@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 
+/// A Text field with a set limit number of characters
 class LimitedTextInputField extends StatefulWidget {
-  final TextEditingController controller;
-  final int maxLength;
-  final String labelText;
-  final Function(String) onChanged;
-
-  LimitedTextInputField({
+  const LimitedTextInputField({
+    super.key,
     required this.controller,
     required this.maxLength,
-    required this.labelText,
+    this.labelText,
     required this.onChanged,
   });
 
+  final TextEditingController controller;
+
+  /// The maximum number of characters
+  final int maxLength;
+
+  /// The text in the field. Can be used to setup a initial text
+  final String? labelText;
+
+  final Function(String) onChanged;
+
   @override
-  _LimitedTextInputFieldState createState() => _LimitedTextInputFieldState();
+  LimitedTextInputFieldState createState() => LimitedTextInputFieldState();
 }
 
-class _LimitedTextInputFieldState extends State<LimitedTextInputField> {
+class LimitedTextInputFieldState extends State<LimitedTextInputField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -26,7 +33,7 @@ class _LimitedTextInputFieldState extends State<LimitedTextInputField> {
       decoration: InputDecoration(
         labelText: widget.labelText,
       ),
-      onChanged: (value) {
+      onChanged: (String value) {
         widget.onChanged(value);
       },
     );

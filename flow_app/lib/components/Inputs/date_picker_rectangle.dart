@@ -7,10 +7,10 @@ class DatePickerRectangle extends StatefulWidget {
   final Function(DateTime) onDateSelected;
 
   @override
-  _DatePickerRectangleState createState() => _DatePickerRectangleState();
+  DatePickerRectangleState createState() => DatePickerRectangleState();
 }
 
-class _DatePickerRectangleState extends State<DatePickerRectangle> {
+class DatePickerRectangleState extends State<DatePickerRectangle> {
   DateTime? _selectedDate;
 
   @override

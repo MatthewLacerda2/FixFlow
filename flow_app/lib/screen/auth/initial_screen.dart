@@ -4,6 +4,8 @@ import 'login_screen.dart';
 import 'register_screen.dart';
 
 class InitialScreen extends StatelessWidget {
+  const InitialScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,30 +13,32 @@ class InitialScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'Flow',
               style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
-            Text('Agendamentos Automatizados'),
-            SizedBox(height: 40),
+            const SizedBox(height: 20),
+            const Text('Agendamentos Automatizados'),
+            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => RegisterScreen()),
                 );
               },
-              child: Text('Registrar sua empresa'),
+              child: const Text('Registrar sua empresa'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => const LoginScreen()),
                 );
               },
-              child: Text('Fazer Login'),
+              child: const Text('Fazer Login'),
             ),
           ],
         ),

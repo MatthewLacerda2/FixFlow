@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../components/rounded_icon_button.dart';
 
 class SchedulesScreen extends StatelessWidget {
+  const SchedulesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,8 +15,8 @@ class SchedulesScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  children: [
+                const Row(
+                  children: <Widget>[
                     Icon(Icons.timer_outlined, size: 28),
                     SizedBox(width: 8),
                     Text(
@@ -24,22 +26,22 @@ class SchedulesScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 14),
-                Divider(),
+                const SizedBox(height: 14),
+                const Divider(),
                 Expanded(
                   child: ListView.separated(
                     itemCount: 10,
-                    separatorBuilder: (context, index) =>
-                        Divider(color: Colors.grey, thickness: 1, height: 0),
-                    itemBuilder: (context, index) {
-                      final String? descricao =
-                          'Agendamento de numero ' + index.toString();
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const Divider(
+                            color: Colors.grey, thickness: 1, height: 0),
+                    itemBuilder: (BuildContext context, int index) {
+                      final String? descricao = 'Agendamento de numero $index';
                       return ListTile(
                         title: Text('Cliente: Nome do Cliente $index'),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Hora: 17h45m'),
+                          children: <Widget>[
+                            const Text('Hora: 17h45m'),
                             if (descricao != null) Text(descricao),
                           ],
                         ),

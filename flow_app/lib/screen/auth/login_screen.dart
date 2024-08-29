@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import '../main/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   String errorMessage = '';
@@ -16,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -25,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: <Widget>[
             TextField(
               controller: emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
               ),
             ),
@@ -37,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 setState(() {
@@ -45,22 +47,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       passwordController.text == 'password') {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => MainScreen()),
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const MainScreen()),
                     );
                   } else {
                     errorMessage = 'Wrong email or password';
                   }
                 });
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             GestureDetector(
               onTap: () {
                 print('Redirecting to lost password');
                 // TODO: Create forgot password screen
               },
-              child: Text(
+              child: const Text(
                 'Forgot your password?',
                 style: TextStyle(
                   decoration: TextDecoration.underline,

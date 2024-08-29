@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
+/// Time-Picker button
 class TimePickerRectangle extends StatefulWidget {
   const TimePickerRectangle(
       {super.key, required this.initialTime, required this.onTimeSelected});
+
   final TimeOfDay initialTime;
+
   final Function(TimeOfDay) onTimeSelected;
 
   @override
-  _TimePickerRectangleState createState() => _TimePickerRectangleState();
+  TimePickerRectangleState createState() => TimePickerRectangleState();
 }
 
-class _TimePickerRectangleState extends State<TimePickerRectangle> {
+class TimePickerRectangleState extends State<TimePickerRectangle> {
   TimeOfDay? _selectedTime;
 
   @override

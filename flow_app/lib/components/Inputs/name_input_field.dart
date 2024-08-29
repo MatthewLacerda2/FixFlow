@@ -3,14 +3,17 @@ import 'package:flutter/services.dart';
 
 import 'custom_input_field.dart';
 
+/// Input field for first-name or full-name
 class NameInputField extends StatelessWidget {
-  final String placeholder;
-  final Function(String) onNameChanged;
-
-  NameInputField({
+  const NameInputField({
+    super.key,
     required this.placeholder,
     required this.onNameChanged,
   });
+
+  final String placeholder;
+
+  final Function(String) onNameChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,7 @@ class NameInputField extends StatelessWidget {
       placeholder: placeholder,
       onTextChanged: onNameChanged,
       inputType: TextInputType.name,
-      inputFormatters: [
+      inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
       ],
     );

@@ -4,6 +4,8 @@ import '../../components/rounded_icon_button.dart';
 import '../apts/log_screen.dart';
 
 class LogsScreen extends StatelessWidget {
+  const LogsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,8 +16,8 @@ class LogsScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  children: [
+                const Row(
+                  children: <Widget>[
                     Icon(Icons.note_alt_outlined, size: 28),
                     SizedBox(width: 8),
                     Text(
@@ -25,28 +27,29 @@ class LogsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 14),
-                Divider(),
+                const SizedBox(height: 14),
+                const Divider(),
                 Expanded(
                   child: ListView.separated(
                     itemCount: 10,
-                    separatorBuilder: (context, index) => Divider(
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const Divider(
                       color: Colors.grey,
                       thickness: 1,
                       height: 0,
                     ),
-                    itemBuilder: (context, index) {
+                    itemBuilder: (BuildContext context, int index) {
                       return ListTile(
                         title: Text('Cliente: Nome do Cliente $index'),
-                        subtitle: Text('Hora: 17h45m'),
+                        subtitle: const Text('Hora: 17h45m'),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => LogScreen(
+                              builder: (BuildContext context) => LogScreen(
                                 cliente: 'Fulano $index',
                                 marcouHorario: true,
-                                horario: TimeOfDay(hour: 14, minute: 30),
+                                horario: const TimeOfDay(hour: 14, minute: 30),
                                 dia: DateTime(2024, 8, 27),
                                 preco: 150.00,
                                 observacao: "This is an observation",
