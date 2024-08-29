@@ -102,7 +102,7 @@ class ContactScreenState extends State<ContactScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.blue,
                   ),
                   child: const Text(
                     'Criar agendamento',
