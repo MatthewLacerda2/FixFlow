@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/rounded_icon_button.dart';
+import '../apts/schedule_screen.dart';
 
 class SchedulesScreen extends StatelessWidget {
   const SchedulesScreen({super.key});
@@ -46,7 +47,19 @@ class SchedulesScreen extends StatelessWidget {
                           ],
                         ),
                         onTap: () {
-                          // TODO: Navigate to scheduleView screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => ScheduleScreen(
+                                cliente: 'Fulano $index',
+                                contactado: true,
+                                horario: const TimeOfDay(hour: 14, minute: 30),
+                                dia: DateTime(2024, 8, 27),
+                                preco: 150.00,
+                                observacao: "This is an observation",
+                              ),
+                            ),
+                          );
                         },
                       );
                     },
