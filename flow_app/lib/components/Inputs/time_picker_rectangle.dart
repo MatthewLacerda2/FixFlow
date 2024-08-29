@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class TimePickerRectangle extends StatefulWidget {
   final TimeOfDay initialTime;
+  final Function(TimeOfDay) onTimeSelected;
 
-  TimePickerRectangle({required this.initialTime});
+  TimePickerRectangle(
+      {required this.initialTime, required this.onTimeSelected});
 
   @override
   _TimePickerRectangleState createState() => _TimePickerRectangleState();
@@ -26,6 +28,7 @@ class _TimePickerRectangleState extends State<TimePickerRectangle> {
     if (picked != null && picked != _selectedTime) {
       setState(() {
         _selectedTime = picked;
+        widget.onTimeSelected(_selectedTime!);
       });
     }
   }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class DatePickerRectangle extends StatefulWidget {
   final DateTime initialDate;
+  final Function(DateTime) onDateSelected;
 
-  DatePickerRectangle({required this.initialDate});
+  DatePickerRectangle(
+      {required this.initialDate, required this.onDateSelected});
 
   @override
   _DatePickerRectangleState createState() => _DatePickerRectangleState();
@@ -28,6 +30,7 @@ class _DatePickerRectangleState extends State<DatePickerRectangle> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+        widget.onDateSelected(_selectedDate!);
       });
     }
   }
@@ -43,7 +46,7 @@ class _DatePickerRectangleState extends State<DatePickerRectangle> {
           elevation: 0,
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero, // Remove rounded corners
+            borderRadius: BorderRadius.zero,
           ),
         ),
         child: Text(

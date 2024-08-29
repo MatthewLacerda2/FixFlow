@@ -23,9 +23,15 @@ class TestScreen extends StatelessWidget {
           children: [
             TimePickerRectangle(
               initialTime: TimeOfDay.now(),
+              onTimeSelected: (date) {
+                print(date);
+              },
             ),
             DatePickerRectangle(
               initialDate: DateTime.now(),
+              onDateSelected: (date) {
+                print(date);
+              },
             ),
             SizedBox(height: 30),
             CheckInputField(

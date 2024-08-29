@@ -5,6 +5,7 @@ import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/limited_text_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
+
 //TODO: buttons must ask for a confirmation
 class LogScreen extends StatefulWidget {
   final String cliente;
@@ -54,7 +55,7 @@ class _LogScreenState extends State<LogScreen> {
         // TODO: load animation for when we wait for the response of the server
         // TODO: Check if the response is 200OK or something else
         snack("Salvo!");
-        Navigator.pop(context); // Go back to the logs screen
+        Navigator.pop(context);
       }, undoText: "Confirmar");
     });
   }
@@ -74,7 +75,7 @@ class _LogScreenState extends State<LogScreen> {
         title: Text('Atendimento'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -83,68 +84,75 @@ class _LogScreenState extends State<LogScreen> {
               children: [
                 Text(
                   'Cliente: ${widget.cliente}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                 ),
                 if (widget.marcouHorario)
                   Row(
                     children: [
-                      Icon(Icons.check, color: Colors.green),
-                      SizedBox(width: 5),
+                      Icon(Icons.check, color: Colors.blue, size: 22),
+                      SizedBox(width: 8),
                       Text(
                         'Agendado',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                            fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                     ],
                   ),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 24),
             Row(
               children: [
                 Expanded(
                   child: DatePickerRectangle(
-                    initialDate: DateTime.now(),
+                    initialDate: widget.dia,
+                    onDateSelected: (date) {
+                      _toggleEdit();
+                    },
                   ),
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 16),
                 Expanded(
                   child: TimePickerRectangle(
-                    initialTime: TimeOfDay.now(),
+                    initialTime: widget.horario,
+                    onTimeSelected: (time) {
+                      _toggleEdit();
+                    },
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 16),
             PriceInputField(
               controller: _precoController,
               onPriceValid: (value) {
+                _toggleEdit();
                 print('Valid price: $value');
               },
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 24),
             LimitedTextInputField(
               controller: _observacaoController,
               maxLength: 250,
               labelText: 'Observação',
               onChanged: (value) => _toggleEdit(),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  onPressed: _isEdited ? _cancelChanges : null,
-                  child: _isEdited ? Text('Cancelar') : Text('Voltar'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _isEdited ? Colors.blue : Colors.grey,
-                  ),
-                ),
                 ElevatedButton(
                   onPressed: _isEdited ? _saveChanges : null,
                   child: Text('Salvar'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.green : Colors.grey,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _isEdited ? _cancelChanges : null,
+                  child: Text('Cancelar'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isEdited ? Colors.blue : Colors.grey,
                   ),
                 ),
               ],
