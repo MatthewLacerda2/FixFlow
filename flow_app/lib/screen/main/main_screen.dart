@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'account_screen.dart';
+import 'contacts_screen.dart';
 import 'logs_screen.dart';
-import 'notifications_screen.dart';
 import 'overview_screen.dart';
 import 'schedules_screen.dart';
 
@@ -19,7 +19,7 @@ class MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = <Widget>[
     const OverviewScreen(),
     const SchedulesScreen(),
-    const NotificationsScreen(),
+    const ContactsScreen(),
     const LogsScreen(),
     const AccountScreen(),
   ];
@@ -43,7 +43,8 @@ class MainScreenState extends State<MainScreen> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.schedule), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: ''),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.edit_calendar_outlined), label: ''),
           BottomNavigationBarItem(
               icon: Icon(Icons.note_alt_rounded), label: ''),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
