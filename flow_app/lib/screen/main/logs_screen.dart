@@ -28,7 +28,8 @@ class LogsScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 14),
-                const Divider(),
+                const Divider(color: Colors.black),
+                const SizedBox(height: 12),
                 Expanded(
                   child: ListView.separated(
                     itemCount: 10,
@@ -63,7 +64,7 @@ class LogsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            RoundedIconButton(
+            RoundedButton(
               icon: Icons.add,
               onPressed: () {
                 // TODO: Navigate to log creation screen

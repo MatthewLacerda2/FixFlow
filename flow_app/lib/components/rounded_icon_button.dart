@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class RoundedIconButton extends StatelessWidget {
-  const RoundedIconButton({
+class RoundedButton extends StatelessWidget {
+  const RoundedButton({
     super.key,
     required this.icon,
     required this.onPressed,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../details/create_schedule_screen.dart';
+
 class ContactScreen extends StatefulWidget {
   const ContactScreen(
       {super.key,
@@ -44,7 +46,7 @@ class ContactScreenState extends State<ContactScreen> {
                 Text(
                   'Cliente: ${widget.cliente}',
                   style: const TextStyle(
-                      fontWeight: FontWeight.w500, fontSize: 22),
+                      fontWeight: FontWeight.bold, fontSize: 22),
                 ),
                 Text(
                   '${widget.dia.day.toString().padLeft(2, '0')} / ${widget.dia.month.toString().padLeft(2, '0')} / ${widget.dia.year}',
@@ -56,7 +58,7 @@ class ContactScreenState extends State<ContactScreen> {
             const SizedBox(height: 23),
             const Text(
               'Atendimento anterior:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
             ),
             const SizedBox(height: 16),
             Text(
@@ -85,7 +87,19 @@ class ContactScreenState extends State<ContactScreen> {
                 ElevatedButton(
                   onPressed: () {
                     print("debug is on the table");
-                    // TODO: navigator push to screen yet to be created
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => CreateScheduleScreen(
+                          cliente: widget.cliente,
+                          contactado: true,
+                          horario: TimeOfDay.now(),
+                          dia: DateTime(2024, 8, 27),
+                          preco: 150.00,
+                          observacao: "This is an observation",
+                        ),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

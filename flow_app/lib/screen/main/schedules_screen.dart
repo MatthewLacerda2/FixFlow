@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/rounded_icon_button.dart';
 import '../apts/schedule_screen.dart';
+import '../details/create_schedule_screen.dart';
 
 class SchedulesScreen extends StatelessWidget {
   const SchedulesScreen({super.key});
@@ -28,7 +29,8 @@ class SchedulesScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 14),
-                const Divider(),
+                const Divider(color: Colors.black),
+                const SizedBox(height: 12),
                 Expanded(
                   child: ListView.separated(
                     itemCount: 10,
@@ -67,10 +69,21 @@ class SchedulesScreen extends StatelessWidget {
                 ),
               ],
             ),
-            RoundedIconButton(
+            RoundedButton(
               icon: Icons.add,
               onPressed: () {
-                // TODO: Navigate to schedule creation screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => CreateScheduleScreen(
+                      contactado: false,
+                      horario: TimeOfDay.now(),
+                      dia: DateTime(2024, 8, 27),
+                      preco: 150.00,
+                      observacao: "This is an observation",
+                    ),
+                  ),
+                );
               },
             ),
           ],

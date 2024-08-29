@@ -27,7 +27,8 @@ class ContactsScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 14),
-                const Divider(),
+                const Divider(color: Colors.black),
+                const SizedBox(height: 12),
                 Expanded(
                   child: ListView.separated(
                     itemCount: 10,
