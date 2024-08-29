@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../auth/initial_screen.dart';
 import 'account_screen.dart';
 import 'logs_screen.dart';
 import 'notifications_screen.dart';
@@ -34,22 +33,11 @@ class MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => const InitialScreen()),
-              (Route<dynamic> route) => false,
-            );
-          },
+      body: SafeArea(
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: _screens,
         ),
-      ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

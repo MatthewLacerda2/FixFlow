@@ -6,7 +6,7 @@ import '../intro/introduction_screen.dart';
 import '../test_screen.dart';
 
 //TODO: make opção de sair (com confirmação)
-
+//TODO: make section for people to give feedback
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
@@ -75,7 +75,7 @@ class AccountScreen extends StatelessWidget {
               },
             ),
             AccountOption(
-              title: 'Sobre',
+              title: 'Contato',
               onTap: () {
                 Navigator.push(
                   context,

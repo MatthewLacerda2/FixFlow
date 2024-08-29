@@ -18,6 +18,7 @@ class FlowApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Flow',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
