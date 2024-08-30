@@ -44,7 +44,7 @@ class TimePickerRectangleState extends State<TimePickerRectangle> {
           backgroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(12),
             side: const BorderSide(color: Colors.grey),
           ),
         ),

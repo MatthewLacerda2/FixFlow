@@ -13,12 +13,12 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(22),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const Padding(
-                padding: EdgeInsets.only(top: 40.0),
+                padding: EdgeInsets.only(top: 20),
                 child: Center(
                   child: Text(
                     'Sobre',
@@ -89,30 +89,6 @@ class AboutScreen extends StatelessWidget {
               const SizedBox(height: 40),
               Row(
                 children: <Widget>[
-                  const FaIcon(FontAwesomeIcons.linkedin,
-                      color: Colors.blue, size: 28),
-                  const SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: () async {
-                      final Uri linkedinUri = Uri.parse(linkedInUrl);
-                      if (await canLaunchUrl(linkedinUri)) {
-                        await launchUrl(linkedinUri);
-                      } else {
-                        throw 'Could not launch $linkedInUrl';
-                      }
-                    },
-                    child: const Text(
-                      'Conectar no LinkedIn',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: <Widget>[
                   const FaIcon(FontAwesomeIcons.whatsapp,
                       color: Colors.green, size: 28),
                   const SizedBox(width: 10),
@@ -127,6 +103,30 @@ class AboutScreen extends StatelessWidget {
                     },
                     child: const Text(
                       'Chamar no WhatsApp',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: <Widget>[
+                  const FaIcon(FontAwesomeIcons.linkedin,
+                      color: Colors.blue, size: 28),
+                  const SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: () async {
+                      final Uri linkedinUri = Uri.parse(linkedInUrl);
+                      if (await canLaunchUrl(linkedinUri)) {
+                        await launchUrl(linkedinUri);
+                      } else {
+                        throw 'Could not launch $linkedInUrl';
+                      }
+                    },
+                    child: const Text(
+                      'Conectar no LinkedIn',
                       style: TextStyle(
                         fontSize: 18,
                       ),

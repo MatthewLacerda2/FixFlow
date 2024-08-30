@@ -43,7 +43,7 @@ class DatePickerRectangleState extends State<DatePickerRectangle> {
           backgroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
             side: const BorderSide(color: Colors.grey),
           ),
         ),

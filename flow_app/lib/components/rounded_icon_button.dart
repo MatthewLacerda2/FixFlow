@@ -14,17 +14,21 @@ class RoundedButton extends StatelessWidget {
     return Positioned(
       bottom: 16,
       right: 16,
-      child: FloatingActionButton(
-        onPressed: onPressed,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        elevation: 4,
-        backgroundColor: Colors.white,
-        child: Icon(
-          icon,
-          size: 36,
-          color: Colors.purple,
+      child: SizedBox(
+        width: 68,
+        height: 68,
+        child: FloatingActionButton(
+          onPressed: onPressed,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 4,
+          backgroundColor: Colors.purple,
+          child: Icon(
+            icon,
+            size: 52,
+            color: Colors.white,
+          ),
         ),
       ),
     );

@@ -41,19 +41,19 @@ class MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.schedule), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Main'),
+          BottomNavigationBarItem(icon: Icon(Icons.schedule), label: 'Agenda'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.edit_calendar_outlined), label: ''),
+              icon: Icon(Icons.edit_calendar_outlined), label: 'Lembrete'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.note_alt_rounded), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
+              icon: Icon(Icons.note_alt_rounded), label: 'Atendimento'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Config'),
         ],
         backgroundColor: Colors.black,
         selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey[700],
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
+        unselectedItemColor: Colors.grey[600],
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

@@ -18,6 +18,7 @@ class AccountScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            const SizedBox(height: 10),
             //TODO: fetch data, get from local storage, whatever
             const Text(
               'Nome da Empresa',
@@ -28,19 +29,19 @@ class AccountScreen extends StatelessWidget {
               'CNPJ: 00.000.000/0001-00',
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 5),
             Text(
               '(98) 99934-4788',
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 5),
             Text(
               'email@example.com',
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 13),
             const Divider(),
-            const SizedBox(height: 15),
+            const SizedBox(height: 5),
             AccountOption(
               title: 'Configurações de Notificação',
               onTap: () {

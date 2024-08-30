@@ -21,7 +21,7 @@ class IntroductionScreenPage extends StatelessWidget {
         PageViewModel(
           title: "Gerencie seus agendamentos",
           body:
-              "Crie e acompanhe agendamentos de serviço com calma, sem se perder.",
+              "Crie e acompanhe agendamentos de serviço, com calma e sem se perder.",
           image: const Padding(
             padding: EdgeInsets.only(bottom: 24.0),
             child: Center(child: Icon(Icons.event_note, size: 90)),
