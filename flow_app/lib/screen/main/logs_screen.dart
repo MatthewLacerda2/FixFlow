@@ -95,7 +95,32 @@ class LogsScreen extends StatelessWidget {
               ],
             ),
             RoundedButton(
+              icon: Icons.person_add_alt_1_sharp,
+              size: 36,
+              bottom: 100,
+              right: 24,
+              color: const Color.fromARGB(255, 0, 175, 0),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => CreateLogScreen(
+                      contactado: false,
+                      horario: TimeOfDay.now(),
+                      dia: DateTime(2024, 8, 27),
+                      preco: 150.00,
+                      observacao: "This is an observation",
+                    ),
+                  ),
+                );
+              },
+            ),
+            RoundedButton(
               icon: Icons.add,
+              size: 68,
+              bottom: 18,
+              right: 16,
+              color: Colors.purple,
               onPressed: () {
                 Navigator.push(
                   context,

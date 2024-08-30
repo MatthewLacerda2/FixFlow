@@ -1,32 +1,40 @@
 import 'package:flutter/material.dart';
 
 class RoundedButton extends StatelessWidget {
-  const RoundedButton({
-    super.key,
-    required this.icon,
-    required this.onPressed,
-  });
+  const RoundedButton(
+      {super.key,
+      required this.icon,
+      required this.onPressed,
+      required this.size,
+      required this.bottom,
+      required this.right,
+      required this.color});
   final IconData icon;
   final VoidCallback onPressed;
+
+  final double size;
+  final double bottom;
+  final double right;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: 16,
-      right: 16,
+      bottom: bottom,
+      right: right,
       child: SizedBox(
-        width: 68,
-        height: 68,
+        width: size,
+        height: size,
         child: FloatingActionButton(
           onPressed: onPressed,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(size / 6),
           ),
           elevation: 4,
-          backgroundColor: Colors.purple,
+          backgroundColor: color,
           child: Icon(
             icon,
-            size: 52,
+            size: size / 1.4,
             color: Colors.white,
           ),
         ),
