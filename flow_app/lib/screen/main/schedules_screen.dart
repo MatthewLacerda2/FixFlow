@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/rounded_icon_button.dart';
 import '../apts/schedule_screen.dart';
-import '../details/create_schedule_screen.dart';
+import '../edit_apt/create_schedule_screen.dart';
 
 //TODO: filters (date, hour, client)
 class SchedulesScreen extends StatelessWidget {

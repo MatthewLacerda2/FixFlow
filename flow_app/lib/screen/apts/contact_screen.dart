@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../details/create_schedule_screen.dart';
+import '../edit_apt/create_schedule_screen.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen(

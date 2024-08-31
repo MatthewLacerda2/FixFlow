@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/Inputs/check_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
+import '../../components/colored_border_text_button.dart';
 
 class AppConfigScreen extends StatelessWidget {
   const AppConfigScreen({super.key});
@@ -87,36 +88,38 @@ class AppConfigScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 24),
-              TextButton(
+              ColoredBorderTextButton(
+                text: 'Trocar telefone',
                 onPressed: () {
-                  // TODO: create change telefone screen
+                  // TODO: create screen
                 },
-                child: const Text('Trocar telefone',
-                    style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15)),
+                textColor: Colors.green,
               ),
-              TextButton(
+              const SizedBox(height: 16),
+              ColoredBorderTextButton(
+                text: 'Trocar senha',
                 onPressed: () {
-                  // TODO: create change password screen
+                  // TODO: create screen
                 },
-                child: const Text('Trocar senha',
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15)),
+                textColor: Colors.blue,
               ),
-              TextButton(
+              const SizedBox(height: 16),
+              ColoredBorderTextButton(
+                text: 'Desativar conta',
                 onPressed: () {
-                  // TODO: create delete account screen
+                  // TODO: create screen
                 },
-                child: const Text('Deletar conta',
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15)),
+                textColor: Colors.grey[850]!,
               ),
+              const SizedBox(height: 16),
+              ColoredBorderTextButton(
+                text: 'Deletar conta',
+                onPressed: () {
+                  // TODO: create screen
+                },
+                textColor: Colors.red,
+              ),
+              const SizedBox(height: 60),
             ],
           ),
         ),

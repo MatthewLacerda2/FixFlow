@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/rounded_icon_button.dart';
 import '../apts/log_screen.dart';
-import '../details/create_log_screen.dart';
+import '../edit_apt/create_log_screen.dart';
 
 class LogsScreen extends StatelessWidget {
   const LogsScreen({super.key});
