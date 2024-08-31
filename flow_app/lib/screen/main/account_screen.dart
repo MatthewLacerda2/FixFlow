@@ -6,7 +6,6 @@ import '../intro/introduction_screen.dart';
 import 'app_config_screen.dart';
 
 //TODO: make opção de sair (com confirmação)
-//TODO: make section for people to give feedback
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
@@ -14,7 +13,7 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

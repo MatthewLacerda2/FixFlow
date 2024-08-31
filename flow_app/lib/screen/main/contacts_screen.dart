@@ -49,9 +49,8 @@ class ContactsScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                  color: Colors.grey.shade300, width: 1),
-                              boxShadow: [
+                              border: Border.all(color: Colors.grey.shade300),
+                              boxShadow: <BoxShadow>[
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.25),
                                   spreadRadius: 1.5,
@@ -62,10 +61,10 @@ class ContactsScreen extends StatelessWidget {
                             ),
                             child: ListTile(
                               title: Text('Cliente: Cliente $index'),
-                              subtitle: Column(
+                              subtitle: const Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  const Text('Hora: 17h45m'),
+                                  Text('Hora: 17h45m'),
                                 ],
                               ),
                               onTap: () {

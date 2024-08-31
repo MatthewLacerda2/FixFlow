@@ -52,7 +52,7 @@ class SchedulesScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                   color: Colors.grey.shade300, width: 1),
-                              boxShadow: [
+                              boxShadow: <BoxShadow>[
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.25),
                                   spreadRadius: 1.5,
