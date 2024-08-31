@@ -42,7 +42,7 @@ class TimePickerRectangleState extends State<TimePickerRectangle> {
         onPressed: () => _selectTime(context),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
             side: const BorderSide(color: Colors.grey),
@@ -51,7 +51,7 @@ class TimePickerRectangleState extends State<TimePickerRectangle> {
         child: Text(
           '${_selectedTime!.hourOfPeriod.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')} ${_selectedTime!.period == DayPeriod.am ? "| AM" : "| PM"}',
           style: const TextStyle(
-              fontSize: 24,
+              fontSize: 18,
               color: Color.fromARGB(255, 70, 70, 70),
               fontWeight: FontWeight.normal),
         ),

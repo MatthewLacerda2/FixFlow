@@ -41,7 +41,7 @@ class DatePickerRectangleState extends State<DatePickerRectangle> {
         onPressed: () => _selectDate(context),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
             side: const BorderSide(color: Colors.grey),
@@ -50,7 +50,7 @@ class DatePickerRectangleState extends State<DatePickerRectangle> {
         child: Text(
           '${_selectedDate!.day.toString().padLeft(2, '0')}/${_selectedDate!.month.toString().padLeft(2, '0')}/${_selectedDate!.year}',
           style: const TextStyle(
-              fontSize: 24,
+              fontSize: 18,
               color: Color.fromARGB(255, 70, 70, 70),
               fontWeight: FontWeight.normal),
         ),

@@ -115,23 +115,31 @@ class CreateLogScreenState extends State<CreateLogScreen> {
             ),
             const SizedBox(height: 24),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Expanded(
-                  child: DatePickerRectangle(
-                    initialDate: widget.dia,
-                    onDateSelected: (DateTime date) {
-                      _toggleEdit();
-                    },
-                  ),
+                Row(
+                  children: <Widget>[
+                    const Text('Data:', style: TextStyle(fontSize: 18)),
+                    const SizedBox(width: 6),
+                    DatePickerRectangle(
+                      initialDate: widget.dia,
+                      onDateSelected: (DateTime date) {
+                        _toggleEdit();
+                      },
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: TimePickerRectangle(
-                    initialTime: widget.horario,
-                    onTimeSelected: (TimeOfDay time) {
-                      _toggleEdit();
-                    },
-                  ),
+                Row(
+                  children: <Widget>[
+                    const Text('Hora:', style: TextStyle(fontSize: 18)),
+                    const SizedBox(width: 6),
+                    TimePickerRectangle(
+                      initialTime: widget.horario,
+                      onTimeSelected: (TimeOfDay time) {
+                        _toggleEdit();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

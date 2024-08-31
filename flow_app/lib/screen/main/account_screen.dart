@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/account_option.dart';
 import '../about_screen.dart';
 import '../intro/introduction_screen.dart';
-import '../test_screen.dart';
+import 'app_config_screen.dart';
 
 //TODO: make opção de sair (com confirmação)
 //TODO: make section for people to give feedback
@@ -43,25 +43,14 @@ class AccountScreen extends StatelessWidget {
             const Divider(),
             const SizedBox(height: 5),
             AccountOption(
-              title: 'Configurações de Notificação',
+              title: 'Configurações da Conta',
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => const TestScreen()),
+                      builder: (BuildContext context) =>
+                          const AppConfigScreen()),
                 );
-              },
-            ),
-            AccountOption(
-              title: 'Configurações da Conta',
-              onTap: () {
-                // TODO: Navigate to Account settings
-              },
-            ),
-            AccountOption(
-              title: 'Configurações do Aplicativo',
-              onTap: () {
-                // TODO: Navigate to App settings
               },
             ),
             AccountOption(
@@ -80,6 +69,19 @@ class AccountScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => const AboutScreen()),
+                );
+              },
+            ),
+            AccountOption(
+              title: 'Criar período ocioso',
+              titleStyle: const TextStyle(
+                  color: Colors.green, fontWeight: FontWeight.bold),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  //TODO: criar screen
                   MaterialPageRoute(
                       builder: (BuildContext context) => const AboutScreen()),
                 );
