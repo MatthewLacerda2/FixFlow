@@ -22,26 +22,26 @@ class AccountScreen extends StatelessWidget {
             //TODO: fetch data, get from local storage, whatever
             const Text(
               'Nome da Empresa',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             Text(
               'CNPJ: 00.000.000/0001-00',
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 6),
             Text(
               '(98) 99934-4788',
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 6),
             Text(
               'email@example.com',
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
-            const SizedBox(height: 13),
+            const SizedBox(height: 12),
             const Divider(),
-            const SizedBox(height: 5),
+            const SizedBox(height: 6),
             AccountOption(
               title: 'Configurações da Conta',
               onTap: () {
