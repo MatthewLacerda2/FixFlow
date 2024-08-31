@@ -57,7 +57,7 @@ class LogsScreen extends StatelessWidget {
                             border: Border.all(
                               color: Colors.grey.shade300,
                             ),
-                            boxShadow: [
+                            boxShadow: <BoxShadow>[
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.25),
                                 spreadRadius: 1.5,
@@ -72,7 +72,7 @@ class LogsScreen extends StatelessWidget {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
+                                MaterialPageRoute<void>(
                                   builder: (BuildContext context) => LogScreen(
                                     cliente: 'Fulano $index',
                                     marcouHorario: true,
@@ -102,7 +102,7 @@ class LogsScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                     builder: (BuildContext context) => CreateLogScreen(
                       contactado: false,
                       horario: TimeOfDay.now(),
@@ -123,7 +123,7 @@ class LogsScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                     builder: (BuildContext context) => CreateLogScreen(
                       contactado: false,
                       horario: TimeOfDay.now(),

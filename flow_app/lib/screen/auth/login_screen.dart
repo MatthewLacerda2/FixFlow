@@ -47,7 +47,7 @@ class LoginScreenState extends State<LoginScreen> {
                       passwordController.text == 'password') {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(
+                      MaterialPageRoute<void>(
                           builder: (BuildContext context) =>
                               const MainScreen()),
                     );

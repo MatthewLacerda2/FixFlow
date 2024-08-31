@@ -50,8 +50,7 @@ class SchedulesScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                  color: Colors.grey.shade300, width: 1),
+                              border: Border.all(color: Colors.grey.shade300),
                               boxShadow: <BoxShadow>[
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.25),
@@ -73,7 +72,7 @@ class SchedulesScreen extends StatelessWidget {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  MaterialPageRoute<void>(
                                     builder: (BuildContext context) =>
                                         ScheduleScreen(
                                       cliente: 'Fulano $index',
@@ -103,7 +102,7 @@ class SchedulesScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                     builder: (BuildContext context) => CreateScheduleScreen(
                       contactado: false,
                       horario: TimeOfDay.now(),
@@ -124,7 +123,7 @@ class SchedulesScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                     builder: (BuildContext context) => CreateScheduleScreen(
                       contactado: false,
                       horario: TimeOfDay.now(),

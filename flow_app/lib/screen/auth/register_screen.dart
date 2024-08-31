@@ -53,7 +53,7 @@ class RegisterScreen extends StatelessWidget {
                 // TODO: Validate this data
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                       builder: (BuildContext context) => const OtpScreen()),
                 );
               },

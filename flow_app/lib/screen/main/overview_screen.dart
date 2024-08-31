@@ -70,7 +70,7 @@ class OverviewScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                       builder: (BuildContext context) =>
                           const NotificationsScreen()),
                 );

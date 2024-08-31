@@ -89,7 +89,7 @@ class ContactScreenState extends State<ContactScreen> {
                     print("debug is on the table");
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
+                      MaterialPageRoute<void>(
                         builder: (BuildContext context) => CreateScheduleScreen(
                           cliente: widget.cliente,
                           contactado: true,

@@ -71,8 +71,7 @@ class AboutScreen extends StatelessWidget {
               ),
               const SizedBox(height: 25),
               Text(
-                'Sou um desenvolvedor Full Stack, criando websites, aplicativos, servidores, e até videogames. ' +
-                    "Sempre busco novos desafios para entender o modelo de negócio e desenvolver com qualidade",
+                'Sou um desenvolvedor Full Stack, criando websites, aplicativos, servidores, e até videogames. Sempre busco novos desafios para entender o modelo de negócio e desenvolver com qualidade',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[700],

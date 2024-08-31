@@ -46,7 +46,7 @@ class AccountScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                       builder: (BuildContext context) =>
                           const AppConfigScreen()),
                 );
@@ -57,7 +57,7 @@ class AccountScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                       builder: (BuildContext context) =>
                           const IntroductionScreenPage()),
                 );
@@ -68,7 +68,7 @@ class AccountScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                       builder: (BuildContext context) => const AboutScreen()),
                 );
               },
@@ -81,7 +81,7 @@ class AccountScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   //TODO: criar screen
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                       builder: (BuildContext context) => const AboutScreen()),
                 );
               },

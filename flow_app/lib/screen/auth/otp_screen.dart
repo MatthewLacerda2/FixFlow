@@ -11,7 +11,8 @@ class OtpScreen extends StatefulWidget {
 
 class OtpScreenState extends State<OtpScreen> {
   final List<TextEditingController> controllers =
-      List.generate(6, (int index) => TextEditingController());
+      List<TextEditingController>.generate(
+          6, (int index) => TextEditingController());
   String errorMessage = '';
 
   void _checkOtp() {
@@ -20,7 +21,7 @@ class OtpScreenState extends State<OtpScreen> {
     if (enteredCode == '123456') {
       Navigator.push(
         context,
-        MaterialPageRoute(
+        MaterialPageRoute<void>(
             builder: (BuildContext context) => const IntroductionScreenPage()),
       );
     } else {
@@ -53,7 +54,7 @@ class OtpScreenState extends State<OtpScreen> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(6, (int index) {
+              children: List<Widget>.generate(6, (int index) {
                 return Row(
                   children: <Widget>[
                     SizedBox(

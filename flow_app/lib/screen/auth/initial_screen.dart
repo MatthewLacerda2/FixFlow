@@ -24,7 +24,7 @@ class InitialScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                       builder: (BuildContext context) => RegisterScreen()),
                 );
               },
@@ -34,7 +34,7 @@ class InitialScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                       builder: (BuildContext context) => const LoginScreen()),
                 );
               },

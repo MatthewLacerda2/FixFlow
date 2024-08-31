@@ -22,7 +22,7 @@ class FlowApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: FutureBuilder(
+      home: FutureBuilder<bool>(
         // TODO: Check if the user is logged in
         future: checkIfLoggedIn(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {

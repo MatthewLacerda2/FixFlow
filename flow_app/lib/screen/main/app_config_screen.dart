@@ -23,7 +23,7 @@ class AppConfigScreen extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               const SizedBox(height: 14),
-              ...List.generate(7, (int index) {
+              ...List<Widget>.generate(7, (int index) {
                 final List<String> daysOfWeek = <String>[
                   'Domingo',
                   'Segunda',
