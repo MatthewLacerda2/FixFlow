@@ -1,1 +1,0 @@
-//variaveis pra depois

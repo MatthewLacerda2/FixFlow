@@ -20,9 +20,9 @@ class AppConfigScreen extends StatelessWidget {
             children: <Widget>[
               const Text(
                 'Horário Comercial',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 15),
               ...List<Widget>.generate(7, (int index) {
                 final List<String> daysOfWeek = <String>[
                   'Domingo',
@@ -52,17 +52,17 @@ class AppConfigScreen extends StatelessWidget {
                 },
               ),
               // TODO: handle google calendar, simultaneous appointments
-              const SizedBox(height: 30),
+              const SizedBox(height: 32),
               Container(
                 height: 10,
                 color: Colors.grey.shade800,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 32),
               const Text(
                 'Notificações',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 15),
               CheckInputField(
                 label: 'Aviso de "agendamento próximo"',
                 initialValue: true,
