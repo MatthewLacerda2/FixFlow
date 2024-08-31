@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../components/account_option.dart';
+import '../AppConfig/account_option.dart';
 import '../about_screen.dart';
 import '../intro/introduction_screen.dart';
 import 'app_config_screen.dart';

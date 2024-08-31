@@ -45,11 +45,12 @@ class LoginScreenState extends State<LoginScreen> {
                 setState(() {
                   if (emailController.text == 'test@example.com' &&
                       passwordController.text == 'password') {
-                    Navigator.pushReplacement(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute<void>(
                           builder: (BuildContext context) =>
                               const MainScreen()),
+                      (Route<dynamic> route) => false,
                     );
                   } else {
                     errorMessage = 'Wrong email or password';

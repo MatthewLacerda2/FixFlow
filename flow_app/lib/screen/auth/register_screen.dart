@@ -51,10 +51,11 @@ class RegisterScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // TODO: Validate this data
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute<void>(
                       builder: (BuildContext context) => const OtpScreen()),
+                  (Route<dynamic> route) => false,
                 );
               },
               child: const Text('Registrar'),
