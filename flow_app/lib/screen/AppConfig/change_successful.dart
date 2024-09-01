@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../main/account_screen.dart';
+import '../main/app_config_screen.dart';
 
 class ChangeSuccessfulScreen extends StatelessWidget {
-  final String title;
-  final String description;
-
   const ChangeSuccessfulScreen({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
-  }) : super(key: key);
+  });
+  final String title;
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +45,14 @@ class ChangeSuccessfulScreen extends StatelessWidget {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute<void>(
-                      builder: (BuildContext context) => const AccountScreen()),
+                      builder: (BuildContext context) =>
+                          const AppConfigScreen()),
                   (Route<dynamic> route) => false,
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                side: const BorderSide(width: 2),
+                side: const BorderSide(width: 1.7),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               ),

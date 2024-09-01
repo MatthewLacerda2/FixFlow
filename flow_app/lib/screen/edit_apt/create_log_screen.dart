@@ -7,6 +7,7 @@ import '../../components/Inputs/name_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 
+//TODO: check if client exists. if doesnt, create one
 class CreateLogScreen extends StatefulWidget {
   const CreateLogScreen({
     super.key,
