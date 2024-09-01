@@ -24,30 +24,31 @@ class ChangeSuccessfulScreen extends StatelessWidget {
               color: Colors.black,
               size: 120,
             ),
-            const SizedBox(height: 48),
+            const SizedBox(height: 60),
             Text(
               title,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 30,
+                fontSize: 28,
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 20),
             Text(
               description,
+              textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 16,
               ),
             ),
-            const SizedBox(height: 80),
+            const SizedBox(height: 90),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute<void>(
                       builder: (BuildContext context) =>
                           const AppConfigScreen()),
-                  (Route<dynamic> route) => false,
                 );
               },
               style: ElevatedButton.styleFrom(

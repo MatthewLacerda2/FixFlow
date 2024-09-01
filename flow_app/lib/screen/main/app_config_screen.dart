@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Inputs/check_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
+import '../AppConfig/change_phone/change_phone_screen.dart';
 import '../AppConfig/change_successful.dart';
 import '../AppConfig/deactivate_account/deactivate_account_screen.dart';
 
@@ -93,7 +94,11 @@ class AppConfigScreen extends StatelessWidget {
               ColoredBorderTextButton(
                 text: 'Trocar telefone',
                 onPressed: () {
-                  //TODO: trocar telefone screen
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              const ChangePhoneScreen()));
                 },
                 textColor: Colors.green,
               ),

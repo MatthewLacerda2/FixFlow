@@ -9,7 +9,7 @@ class CustomButton extends StatelessWidget {
     required this.backgroundColor,
     this.borderColor,
     required this.borderRadius,
-    required this.borderWidth,
+    this.borderWidth,
     required this.padding,
     required this.onPressed,
   });
@@ -19,7 +19,7 @@ class CustomButton extends StatelessWidget {
   final Color backgroundColor;
   final Color? borderColor;
   final double borderRadius;
-  final double borderWidth;
+  final double? borderWidth;
   final EdgeInsets padding;
   final VoidCallback onPressed;
 
@@ -28,8 +28,8 @@ class CustomButton extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor,
-        border:
-            Border.all(color: borderColor ?? Colors.black, width: borderWidth),
+        border: Border.all(
+            color: borderColor ?? Colors.black, width: borderWidth ?? 1.6),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: TextButton(

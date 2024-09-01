@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../intro/introduction_screen.dart';
 import 'otp_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -51,10 +52,15 @@ class RegisterScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // TODO: Validate this data
+                //TODO: there are a bunch of pushes that should be verified if we want to delete the previous routes or not
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute<void>(
-                      builder: (BuildContext context) => const OtpScreen()),
+                      builder: (BuildContext context) => const OtpScreen(
+                          message:
+                              'Enviamos um SMS com um código para o telefone (98) 99934-4788. Insira-o aqui para confirmar o seu telefone:',
+                          phoneNumber: "98999344788",
+                          nextScreen: IntroductionScreenPage())),
                   (Route<dynamic> route) => false,
                 );
               },

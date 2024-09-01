@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../intro/introduction_screen.dart';
-
+//TODO: passar onPressed no data, pois nem sempre a gente quer dar replacement no push
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  const OtpScreen(
+      {super.key,
+      required this.message,
+      required this.phoneNumber,
+      required this.nextScreen});
+
+  final String message;
+  final String phoneNumber;
+  final Widget nextScreen;
 
   @override
   OtpScreenState createState() => OtpScreenState();
@@ -19,10 +26,10 @@ class OtpScreenState extends State<OtpScreen> {
     final String enteredCode =
         controllers.map((TextEditingController c) => c.text).join();
     if (enteredCode == '123456') {
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute<void>(
-            builder: (BuildContext context) => const IntroductionScreenPage()),
+            builder: (BuildContext context) => widget.nextScreen),
       );
     } else {
       setState(() {
@@ -35,20 +42,23 @@ class OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Verificação OTP'),
+        title: const Text(
+          'Verificação OTP',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 140.0),
         child: Column(
           children: <Widget>[
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: EdgeInsets.only(bottom: 75.0),
+                padding: const EdgeInsets.only(bottom: 75.0),
                 child: Text(
-                  'Enviamos um SMS com um código de seis dígitos para você. Insira o código aqui para confirmar o seu telefone:',
+                  widget.message,
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
             ),
