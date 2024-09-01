@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Inputs/check_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
+import '../AppConfig/change_password/change_password_screen.dart';
 import '../AppConfig/change_phone/change_phone_screen.dart';
-import '../AppConfig/change_successful.dart';
 import '../AppConfig/deactivate_account/deactivate_account_screen.dart';
 
 class AppConfigScreen extends StatelessWidget {
@@ -110,10 +110,7 @@ class AppConfigScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute<void>(
                         builder: (BuildContext context) =>
-                            const ChangeSuccessfulScreen(
-                                title: "Sucesso",
-                                description:
-                                    "Sua senha foi trocada com sucesso")),
+                            const ChangePasswordScreen()),
                   );
                 },
                 textColor: Colors.blue,
