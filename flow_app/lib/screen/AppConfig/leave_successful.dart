@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../main/app_config_screen.dart';
+import '../auth/initial_screen.dart';
 
-class ChangeSuccessfulScreen extends StatelessWidget {
-  const ChangeSuccessfulScreen({
+class LeaveSuccessfulScreen extends StatelessWidget {
+  const LeaveSuccessfulScreen({
     super.key,
     required this.title,
     required this.description,
@@ -47,8 +47,8 @@ class ChangeSuccessfulScreen extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          const AppConfigScreen()),
+                      builder: (BuildContext context) => const InitialScreen()),
+                  //TODO: make it drop your data before leaving
                 );
               },
               style: ElevatedButton.styleFrom(
