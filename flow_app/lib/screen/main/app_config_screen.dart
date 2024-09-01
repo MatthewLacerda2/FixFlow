@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/Inputs/check_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/colored_border_text_button.dart';
+import '../AppConfig/change_successful.dart';
 
 class AppConfigScreen extends StatelessWidget {
   const AppConfigScreen({super.key});
@@ -91,7 +92,15 @@ class AppConfigScreen extends StatelessWidget {
               ColoredBorderTextButton(
                 text: 'Trocar telefone',
                 onPressed: () {
-                  // TODO: create screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const ChangeSuccessfulScreen(
+                                title: "Sucesso",
+                                description:
+                                    "Sua senha foi trocada com sucesso")),
+                  );
                 },
                 textColor: Colors.green,
               ),
