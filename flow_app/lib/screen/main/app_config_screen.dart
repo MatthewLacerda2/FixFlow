@@ -4,6 +4,7 @@ import '../../components/Inputs/check_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/colored_border_text_button.dart';
 import '../AppConfig/change_successful.dart';
+import '../AppConfig/deactivate_account/deactivate_account_screen.dart';
 
 class AppConfigScreen extends StatelessWidget {
   const AppConfigScreen({super.key});
@@ -116,7 +117,12 @@ class AppConfigScreen extends StatelessWidget {
               ColoredBorderTextButton(
                 text: 'Desativar conta',
                 onPressed: () {
-                  // TODO: create screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const DeactivateAccountScreen()),
+                  );
                 },
                 textColor: Colors.grey[850]!,
               ),
