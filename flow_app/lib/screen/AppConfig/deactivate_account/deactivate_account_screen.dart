@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../components/Buttons/custom_button.dart';
 import '../../main/app_config_screen.dart';
 
 class DeactivateAccountScreen extends StatelessWidget {
@@ -40,18 +41,21 @@ class DeactivateAccountScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 60),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                        builder: (BuildContext context) =>
-                            const AppConfigScreen()),
-                  );
-                },
-                child: const Text('Voltar'),
-              ),
+            CustomButton(
+              text: "Voltar",
+              textSize: 18,
+              backgroundColor: Colors.grey[300]!,
+              borderRadius: 12,
+              borderWidth: 1.6,
+              padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 30),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          const AppConfigScreen()),
+                );
+              },
             ),
             const Spacer(),
           ],

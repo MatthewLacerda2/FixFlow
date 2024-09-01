@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Inputs/check_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
-import '../../components/colored_border_text_button.dart';
 import '../AppConfig/change_successful.dart';
 import '../AppConfig/deactivate_account/deactivate_account_screen.dart';
 
@@ -93,6 +93,14 @@ class AppConfigScreen extends StatelessWidget {
               ColoredBorderTextButton(
                 text: 'Trocar telefone',
                 onPressed: () {
+                  //TODO: trocar telefone screen
+                },
+                textColor: Colors.green,
+              ),
+              const SizedBox(height: 16),
+              ColoredBorderTextButton(
+                text: 'Trocar senha',
+                onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
@@ -102,14 +110,6 @@ class AppConfigScreen extends StatelessWidget {
                                 description:
                                     "Sua senha foi trocada com sucesso")),
                   );
-                },
-                textColor: Colors.green,
-              ),
-              const SizedBox(height: 16),
-              ColoredBorderTextButton(
-                text: 'Trocar senha',
-                onPressed: () {
-                  // TODO: create screen
                 },
                 textColor: Colors.blue,
               ),
