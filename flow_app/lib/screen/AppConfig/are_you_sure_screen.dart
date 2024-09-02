@@ -41,6 +41,7 @@ class AreYouSureScreen extends StatelessWidget {
             const SizedBox(height: 26),
             Text(
               description,
+              textAlign: TextAlign.justify,
               style: const TextStyle(fontSize: 17),
             ),
             const SizedBox(height: 40),
