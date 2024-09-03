@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/rounded_icon_button.dart';
-import '../../components/ScheduleList.dart';
+import '../../components/schedules_list.dart';
 import '../apts/schedule_screen.dart';
 import '../edit_apt/create_schedule_screen.dart';
 
