@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/Buttons/rounded_icon_button.dart';
 import '../../components/logs_list.dart';
 import '../apts/log_screen.dart';
+import '../create_client_screen.dart';
 import '../edit_apt/create_log_screen.dart';
 
 class LogsScreen extends StatelessWidget {
@@ -87,12 +88,14 @@ class LogsScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (BuildContext context) => CreateLogScreen(
-                      contactado: false,
-                      horario: TimeOfDay.now(),
-                      dia: DateTime(2024, 8, 27),
-                      preco: 150.00,
-                      observacao: "This is an observation",
+                    builder: (BuildContext context) => CreateClientScreen(
+                      nextScreen: CreateLogScreen(
+                        contactado: false,
+                        horario: TimeOfDay.now(),
+                        dia: DateTime(2024, 8, 27),
+                        preco: 150.00,
+                        observacao: "This is an observation",
+                      ),
                     ),
                   ),
                 );

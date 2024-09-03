@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../components/Inputs/CPF_input_field.dart';
 import '../components/Inputs/check_input_field.dart';
 import '../components/Inputs/cnpj_input_field.dart';
 import '../components/Inputs/date_picker_rectangle.dart';
@@ -52,7 +53,7 @@ class TestScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             NameInputField(
-              placeholder: 'Nome da Empresa',
+              placeholder: 'Nome do Empresa',
               onNameChanged: (String name) {
                 print('Name is: $name');
               },
@@ -78,6 +79,12 @@ class TestScreen extends StatelessWidget {
                 print('CNPJ is: $cnpj');
               },
             ),
+            const SizedBox(height: 20),
+            CPFInputField(
+                placeholder: "CPF",
+                onCPFChanged: (String cpf) {
+                  print('CPF is: $cpf');
+                })
           ],
         ),
       ),

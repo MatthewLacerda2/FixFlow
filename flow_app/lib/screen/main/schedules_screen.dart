@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/Buttons/rounded_icon_button.dart';
 import '../../components/schedules_list.dart';
 import '../apts/schedule_screen.dart';
+import '../create_client_screen.dart';
 import '../edit_apt/create_schedule_screen.dart';
 
 //TODO: filters (date, hour, client)
@@ -83,12 +84,14 @@ class SchedulesScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (BuildContext context) => CreateScheduleScreen(
-                      contactado: false,
-                      horario: TimeOfDay.now(),
-                      dia: DateTime(2024, 8, 27),
-                      preco: 150.00,
-                      observacao: "This is an observation",
+                    builder: (BuildContext context) => CreateClientScreen(
+                      nextScreen: CreateScheduleScreen(
+                        contactado: false,
+                        horario: TimeOfDay.now(),
+                        dia: DateTime(2024, 8, 27),
+                        preco: 150.00,
+                        observacao: "This is an observation",
+                      ),
                     ),
                   ),
                 );
