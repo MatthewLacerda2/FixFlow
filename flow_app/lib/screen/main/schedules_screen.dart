@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/rounded_icon_button.dart';
+import '../../components/ScheduleList.dart';
 import '../apts/schedule_screen.dart';
 import '../edit_apt/create_schedule_screen.dart';
 
@@ -44,80 +45,32 @@ class SchedulesScreen extends StatelessWidget {
                         const Divider(
                             color: Colors.transparent, thickness: 1, height: 9),
                     itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.5),
-                          child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.grey.shade300),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.25),
-                                    spreadRadius: 1.5,
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
+                      return SchedulesList(
+                        clientName: 'nomeDoCliente',
+                        price: 150.00,
+                        hour: '17h45m',
+                        date: '21/12/24',
+                        service: 'troca de peças',
+                        observation: 'Agendamento de numero $index',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) => ScheduleScreen(
+                                cliente: 'Fulano $index',
+                                contactado: true,
+                                horario: const TimeOfDay(hour: 14, minute: 30),
+                                dia: DateTime(2024, 8, 27),
+                                preco: 150.00,
+                                observacao: "This is an observation",
                               ),
-                              child: ListTile(
-                                title: const Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text('Cliente: nomeDoCliente'),
-                                    Text(
-                                      'R\$ 150.00',
-                                      style: TextStyle(
-                                          color: Colors.blue,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text('Hora: 17h45m'),
-                                        Text('Data: 21/12/24'),
-                                      ],
-                                    ),
-                                    const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text('Serviço: troca de peças'),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                        'Observação: Agendamento de numero $index'),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute<void>(
-                                      builder: (BuildContext context) =>
-                                          ScheduleScreen(
-                                        cliente: 'Fulano $index',
-                                        contactado: true,
-                                        horario: const TimeOfDay(
-                                            hour: 14, minute: 30),
-                                        dia: DateTime(2024, 8, 27),
-                                        preco: 150.00,
-                                        observacao: "This is an observation",
-                                      ),
-                                    ),
-                                  );
-                                },
-                              )));
+                            ),
+                          );
+                        },
+                      );
                     },
                   ),
-                ),
+                )
               ],
             ),
             RoundedButton(
