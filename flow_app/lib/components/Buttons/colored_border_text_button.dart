@@ -6,9 +6,11 @@ class ColoredBorderTextButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     required this.textColor,
+    this.width,
   });
 
   final String text;
+  final double? width;
   final VoidCallback onPressed;
   final Color textColor;
 
@@ -22,7 +24,7 @@ class ColoredBorderTextButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1.0),
+          padding: EdgeInsets.symmetric(horizontal: width ?? 10, vertical: 1),
         ),
         child: Text(
           text,

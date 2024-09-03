@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/Buttons/colored_border_text_button.dart';
 import '../main/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -39,8 +40,11 @@ class LoginScreenState extends State<LoginScreen> {
               ),
               obscureText: true,
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
+            const SizedBox(height: 24),
+            ColoredBorderTextButton(
+              text: "Login",
+              textColor: Colors.grey[700]!,
+              width: 40,
               onPressed: () {
                 setState(() {
                   if (emailController.text == 'test@example.com' &&
@@ -57,21 +61,6 @@ class LoginScreenState extends State<LoginScreen> {
                   }
                 });
               },
-              child: const Text('Login'),
-            ),
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {
-                print('Redirecting to lost password');
-                // TODO: Create forgot password screen
-              },
-              child: const Text(
-                'Forgot your password?',
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  color: Colors.blue,
-                ),
-              ),
             ),
           ],
         ),
