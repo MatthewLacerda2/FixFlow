@@ -22,35 +22,35 @@ class CreateClientScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             NameInputField(
               placeholder: 'Nome do(a) Cliente',
               onNameChanged: (String name) {
                 print('Name is: $name');
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             PhoneInputField(
               placeholder: 'Telefone',
               onPhoneChanged: (String phone) {
                 print('Phone Number: $phone');
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             EmailInputField(
               placeholder: 'Email',
               onEmailValidated: (String email) {
                 print('Validated Email: $email');
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             CPFInputField(
               placeholder: "CPF",
               onCPFChanged: (String cpf) {
                 print('CPF is: $cpf');
               },
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 46),
             Align(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

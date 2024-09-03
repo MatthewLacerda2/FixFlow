@@ -76,9 +76,9 @@ class SchedulesScreen extends StatelessWidget {
             ),
             RoundedButton(
               icon: Icons.person_add_alt_1_sharp,
-              size: 36,
+              size: 38,
               bottom: 100,
-              right: 24,
+              right: 17,
               color: const Color.fromARGB(255, 0, 175, 0),
               onPressed: () {
                 Navigator.push(
