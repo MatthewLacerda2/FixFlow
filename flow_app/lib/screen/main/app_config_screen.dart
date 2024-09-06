@@ -8,6 +8,10 @@ import '../AppConfig/change_password/change_password_screen.dart';
 import '../AppConfig/change_phone/change_phone_screen.dart';
 import '../AppConfig/deactivate_account/deactivate_account_screen.dart';
 
+//TODO: the preload options are not loading
+//TODO: the vertical size of the input area is too big
+//TODO: the background is not white
+//TODO: the counter is outside the input area
 class AppConfigScreen extends StatelessWidget {
   const AppConfigScreen({super.key});
 
@@ -47,7 +51,7 @@ class AppConfigScreen extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               const Text(
-                'Opções',
+                'Opções de Serviços',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
               ),
               const SizedBox(height: 12),
@@ -55,7 +59,20 @@ class AppConfigScreen extends StatelessWidget {
                   description: "Serviço...",
                   options: ['Item 1', 'Item 2', 'Item 3'],
                   characterLimit: 20),
-              const SizedBox(height: 12),
+              const SizedBox(height: 3),
+              const Text(
+                'Opções mais comuns de serviços prestados',
+                style: TextStyle(color: Colors.grey, fontSize: 12),
+              ),
+              const SizedBox(height: 10),
+              CheckInputField(
+                label: 'Permitir apenas serviços listados?',
+                initialValue: false,
+                onChanged: (bool isChecked) {
+                  print('Outros: $isChecked');
+                },
+              ),
+              const SizedBox(height: 18),
               CheckInputField(
                 label: 'Atende aos feriados?',
                 initialValue: false,
@@ -63,7 +80,7 @@ class AppConfigScreen extends StatelessWidget {
                   print('Atende aos feriados: $isChecked');
                 },
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               CheckInputField(
                 label: 'Atende a domicílio?',
                 initialValue: false,
@@ -150,7 +167,15 @@ class AppConfigScreen extends StatelessWidget {
                 onPressed: () {
                   // TODO: create screen
                 },
-                textColor: Colors.red,
+                textColor: Colors.red[900]!,
+              ),
+              const SizedBox(height: 16),
+              ColoredBorderTextButton(
+                text: 'Sair',
+                onPressed: () {
+                  // TODO: sair screen
+                },
+                textColor: Colors.red[500]!,
               ),
               const SizedBox(height: 60),
             ],
