@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Inputs/check_input_field.dart';
+import '../../components/Inputs/enum_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../AppConfig/change_password/change_password_screen.dart';
 import '../AppConfig/change_phone/change_phone_screen.dart';
@@ -40,6 +41,21 @@ class AppConfigScreen extends StatelessWidget {
                 return _CommercialHoursRow(day: daysOfWeek[index]);
               }),
               const SizedBox(height: 18),
+              Container(
+                height: 10,
+                color: Colors.grey.shade800,
+              ),
+              const SizedBox(height: 32),
+              const Text(
+                'Opções',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              const SizedBox(height: 12),
+              const EnumField(
+                  description: "Serviço...",
+                  options: ['Item 1', 'Item 2', 'Item 3'],
+                  characterLimit: 20),
+              const SizedBox(height: 12),
               CheckInputField(
                 label: 'Atende aos feriados?',
                 initialValue: false,
@@ -56,12 +72,12 @@ class AppConfigScreen extends StatelessWidget {
                 },
               ),
               // TODO: handle google calendar, simultaneous appointments
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
               Container(
                 height: 10,
                 color: Colors.grey.shade800,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
               const Text(
                 'Notificações',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
