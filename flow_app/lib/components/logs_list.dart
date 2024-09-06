@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 
 class LogsList extends StatelessWidget {
-  final String clientName;
-  final double price;
-  final String hour;
-  final String date;
-  final String? service;
-  final String? observation;
-  final VoidCallback onTap;
 
   const LogsList({
     super.key,
@@ -19,6 +12,13 @@ class LogsList extends StatelessWidget {
     this.observation,
     required this.onTap,
   });
+  final String clientName;
+  final double price;
+  final String hour;
+  final String date;
+  final String? service;
+  final String? observation;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

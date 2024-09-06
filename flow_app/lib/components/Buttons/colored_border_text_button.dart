@@ -6,6 +6,7 @@ class ColoredBorderTextButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     required this.textColor,
+    this.backgroundColor,
     this.width,
   });
 
@@ -13,12 +14,14 @@ class ColoredBorderTextButton extends StatelessWidget {
   final double? width;
   final VoidCallback onPressed;
   final Color textColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: textColor, width: 2),
+        border: Border.all(color: backgroundColor ?? textColor, width: 2),
+        color: backgroundColor ?? Colors.white,
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextButton(

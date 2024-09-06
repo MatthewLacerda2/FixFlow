@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../components/Buttons/rounded_icon_button.dart';
+import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/logs_list.dart';
 import '../apts/log_screen.dart';
 import '../create_client_screen.dart';
@@ -78,7 +78,7 @@ class LogsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            RoundedButton(
+            RoundedIconedButton(
               icon: Icons.person_add_alt_1_sharp,
               size: 38,
               bottom: 100,
@@ -101,7 +101,7 @@ class LogsScreen extends StatelessWidget {
                 );
               },
             ),
-            RoundedButton(
+            RoundedIconedButton(
               icon: Icons.add,
               size: 68,
               bottom: 18,

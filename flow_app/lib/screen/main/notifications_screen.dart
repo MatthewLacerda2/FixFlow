@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//TODO: make navigation bar still show up
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
 

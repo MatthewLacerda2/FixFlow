@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../components/Buttons/rounded_icon_button.dart';
+import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/schedules_list.dart';
 import '../apts/schedule_screen.dart';
 import '../create_client_screen.dart';
@@ -74,7 +74,7 @@ class SchedulesScreen extends StatelessWidget {
                 )
               ],
             ),
-            RoundedButton(
+            RoundedIconedButton(
               icon: Icons.person_add_alt_1_sharp,
               size: 38,
               bottom: 100,
@@ -97,7 +97,7 @@ class SchedulesScreen extends StatelessWidget {
                 );
               },
             ),
-            RoundedButton(
+            RoundedIconedButton(
               icon: Icons.add,
               size: 68,
               bottom: 18,

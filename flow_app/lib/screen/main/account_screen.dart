@@ -97,6 +97,20 @@ class AccountScreen extends StatelessWidget {
                 );
               },
             ),
+            const SizedBox(height: 55),
+            AccountOption(
+              title: 'Sair',
+              titleStyle: const TextStyle(
+                  color: Colors.red, fontWeight: FontWeight.bold),
+              onTap: () {
+                // Navigator.push(
+                //   context,
+                //   //TODO: criar screen
+                //   MaterialPageRoute<void>(
+                //       builder: (BuildContext context) => const AboutScreen()),
+                // );
+              },
+            ),
           ],
         ),
       ),

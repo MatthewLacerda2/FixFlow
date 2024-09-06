@@ -43,12 +43,12 @@ class MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Main'),
-          BottomNavigationBarItem(icon: Icon(Icons.schedule), label: 'Agenda'),
           BottomNavigationBarItem(
               icon: Icon(Icons.edit_calendar_outlined), label: 'Lembrete'),
+          BottomNavigationBarItem(icon: Icon(Icons.schedule), label: 'Agenda'),
           BottomNavigationBarItem(
               icon: Icon(Icons.note_alt_rounded), label: 'Atendimento'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Config'),
+          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Config'),
         ],
         backgroundColor: Colors.black,
         selectedItemColor: Colors.white,
