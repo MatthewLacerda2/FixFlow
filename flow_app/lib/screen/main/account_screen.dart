@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../AppConfig/account_option.dart';
+import '../AppConfig/create_idle_period_screen.dart';
 import '../about_screen.dart';
 import '../intro/introduction_screen.dart';
 import '../test_screen.dart';
@@ -93,7 +94,8 @@ class AccountScreen extends StatelessWidget {
                   context,
                   //TODO: criar screen
                   MaterialPageRoute<void>(
-                      builder: (BuildContext context) => const AboutScreen()),
+                      builder: (BuildContext context) =>
+                          const CreateIdlePeriodScreen()),
                 );
               },
             ),
