@@ -15,7 +15,7 @@ class ChangeSuccessfulScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

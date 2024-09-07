@@ -188,7 +188,7 @@ class OverviewScreen extends StatelessWidget {
                   text: 'Mensalidades',
                   textColor: Colors.black,
                   textSize: 16,
-                  backgroundColor: Colors.grey[400]!,
+                  backgroundColor: Colors.grey[300]!,
                   width: 100,
                   onPressed: () {
                     // TODO: Navigate to Mensalidades Screen

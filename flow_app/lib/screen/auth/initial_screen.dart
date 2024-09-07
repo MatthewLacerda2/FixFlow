@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
+import 'forgot_password_screen.dart';
 import 'login_screen.dart';
 import 'register_screen.dart';
 
@@ -57,7 +58,11 @@ class InitialScreen extends StatelessWidget {
             const SizedBox(height: 30),
             GestureDetector(
               onTap: () {
-                // Handle forgot password tap
+                Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const ForgotPasswordScreen()));
               },
               child: const Text(
                 'Esqueceu sua senha?',
