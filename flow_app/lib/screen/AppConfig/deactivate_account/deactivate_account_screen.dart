@@ -43,9 +43,9 @@ class DeactivateAccountScreen extends StatelessWidget {
             ),
             const SizedBox(height: 64),
             Align(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
                   CustomButton(
                     text: "Cancelar",
                     textSize: 16,
@@ -76,21 +76,25 @@ class DeactivateAccountScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                            builder: (BuildContext context) => AreYouSureScreen(
-                                title: "Confirmar desativação da conta?",
-                                description:
-                                    "Digite sua senha para confirmar a desativação\n\nLembre-se que você pode re-ativar sua conta e retomar tudo, a qualquer momento",
-                                changeSuccessfulScreenTitle: "Conta desativada",
-                                changeSuccessfulScreenDescription:
-                                    "Sua conta foi desativada, mas não perdida. Você pode reativar-la e continuar daonde parou, com o mesmo e-mail e senha\n\nVolte logo!",
-                                onPressed: () {
-                                  //TODO: http request to deactivate account
-                                  print("debug");
-                                })),
+                          builder: (BuildContext context) => AreYouSureScreen(
+                            title: "Confirmar desativação da conta?",
+                            description:
+                                "Digite sua senha para confirmar a desativação\n\nLembre-se que você pode re-ativar sua conta e retomar tudo, a qualquer momento",
+                            changeSuccessfulScreenTitle: "Conta desativada",
+                            changeSuccessfulScreenDescription:
+                                "Sua conta foi desativada, mas não perdida. Você pode reativar-la e continuar daonde parou, com o mesmo e-mail e senha\n\nVolte logo!",
+                            onPressed: () {
+                              //TODO: http request to deactivate account
+                              print("debug");
+                            },
+                          ),
+                        ),
                       );
                     },
                   )
-                ])),
+                ],
+              ),
+            ),
             const Spacer(),
           ],
         ),

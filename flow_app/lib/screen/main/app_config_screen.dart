@@ -7,6 +7,7 @@ import '../../components/Inputs/time_picker_rectangle.dart';
 import '../AppConfig/change_password/change_password_screen.dart';
 import '../AppConfig/change_phone/change_phone_screen.dart';
 import '../AppConfig/deactivate_account/deactivate_account_screen.dart';
+import '../AppConfig/delete_account/delete_warning_screen.dart';
 
 //TODO: the preload options are not loading
 //TODO: the vertical size of the input area is too big
@@ -57,7 +58,7 @@ class AppConfigScreen extends StatelessWidget {
               const SizedBox(height: 12),
               const EnumField(
                   description: "Serviço...",
-                  options: ['Item 1', 'Item 2', 'Item 3'],
+                  options: <String>['Item 1', 'Item 2', 'Item 3'],
                   characterLimit: 20),
               const SizedBox(height: 3),
               const Text(
@@ -165,7 +166,13 @@ class AppConfigScreen extends StatelessWidget {
               ColoredBorderTextButton(
                 text: 'Deletar conta',
                 onPressed: () {
-                  // TODO: create screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          const DeleteWarningScreen(),
+                    ),
+                  );
                 },
                 textColor: Colors.red[900]!,
               ),
