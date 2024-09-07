@@ -11,10 +11,10 @@ class EnumField extends StatefulWidget {
   final int characterLimit;
 
   @override
-  _EnumFieldState createState() => _EnumFieldState();
+  EnumFieldState createState() => EnumFieldState();
 }
 
-class _EnumFieldState extends State<EnumField> {
+class EnumFieldState extends State<EnumField> {
   final TextEditingController _textEditingController = TextEditingController();
   final List<String> _items = <String>[];
 

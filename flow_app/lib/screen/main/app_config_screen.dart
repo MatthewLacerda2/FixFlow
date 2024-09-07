@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
+import '../../components/Buttons/custom_button.dart';
 import '../../components/Inputs/check_input_field.dart';
 import '../../components/Inputs/enum_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
+import '../../components/warning_modal.dart';
 import '../AppConfig/change_password/change_password_screen.dart';
 import '../AppConfig/change_phone/change_phone_screen.dart';
 import '../AppConfig/deactivate_account/deactivate_account_screen.dart';
 import '../AppConfig/delete_account/delete_warning_screen.dart';
+import '../auth/initial_screen.dart';
 
 //TODO: the preload options are not loading
 //TODO: the vertical size of the input area is too big
@@ -180,7 +183,38 @@ class AppConfigScreen extends StatelessWidget {
               ColoredBorderTextButton(
                 text: 'Sair',
                 onPressed: () {
-                  // TODO: sair screen
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return WarningModal(
+                        title: "Você quer sair da conta?",
+                        optionOne: CustomButton(
+                          text: "Sim",
+                          textSize: 16,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.black,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    const InitialScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                        optionTwo: CustomButton(
+                          text: "Não",
+                          textSize: 16,
+                          backgroundColor: Colors.blue,
+                          textColor: Colors.black,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      );
+                    },
+                  );
                 },
                 textColor: Colors.red[500]!,
               ),

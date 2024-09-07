@@ -8,9 +8,9 @@ class CustomButton extends StatelessWidget {
     this.textColor,
     required this.backgroundColor,
     this.borderColor,
-    required this.borderRadius,
+    this.borderRadius,
     this.borderWidth,
-    required this.padding,
+    this.padding,
     required this.onPressed,
   });
   final String text;
@@ -18,9 +18,9 @@ class CustomButton extends StatelessWidget {
   final Color? textColor;
   final Color backgroundColor;
   final Color? borderColor;
-  final double borderRadius;
+  final double? borderRadius;
   final double? borderWidth;
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
   final VoidCallback onPressed;
 
   @override
@@ -30,12 +30,13 @@ class CustomButton extends StatelessWidget {
         color: backgroundColor,
         border: Border.all(
             color: borderColor ?? Colors.black, width: borderWidth ?? 1.6),
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: BorderRadius.circular(borderRadius ?? 12),
       ),
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          padding: padding,
+          padding: padding ??
+              const EdgeInsets.symmetric(vertical: 1, horizontal: 30),
         ),
         child: Text(
           text,
