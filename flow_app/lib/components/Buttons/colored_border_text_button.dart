@@ -7,6 +7,7 @@ class ColoredBorderTextButton extends StatelessWidget {
     required this.onPressed,
     required this.textColor,
     this.backgroundColor,
+    this.textSize,
     this.width,
   });
 
@@ -14,6 +15,7 @@ class ColoredBorderTextButton extends StatelessWidget {
   final double? width;
   final VoidCallback onPressed;
   final Color textColor;
+  final double? textSize;
   final Color? backgroundColor;
 
   @override
@@ -34,7 +36,7 @@ class ColoredBorderTextButton extends StatelessWidget {
           style: TextStyle(
             color: textColor,
             fontWeight: FontWeight.bold,
-            fontSize: 15,
+            fontSize: textSize ?? 15,
           ),
         ),
       ),

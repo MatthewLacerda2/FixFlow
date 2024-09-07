@@ -62,7 +62,7 @@ class CreateIdlePeriodScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 const Text(
-                  'Fim: ',
+                  'Fim:    ',
                   style: TextStyle(fontSize: 18),
                 ),
                 DatePickerRectangle(

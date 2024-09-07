@@ -87,13 +87,19 @@ class OverviewScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 22),
+                const SizedBox(height: 9),
+                const Divider(
+                  color: Colors.grey,
+                  height: 1,
+                ),
+                const SizedBox(height: 26),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     ColoredBorderTextButton(
                       text: 'Finanças',
                       textColor: Colors.white,
+                      textSize: 16,
                       backgroundColor: Colors.blueAccent,
                       width: 50,
                       onPressed: () {
@@ -103,36 +109,38 @@ class OverviewScreen extends StatelessWidget {
                     ColoredBorderTextButton(
                       text: 'Estatísticas',
                       textColor: Colors.white,
+                      textSize: 16,
                       backgroundColor: Colors.blueAccent,
-                      width: 50,
+                      width: 42,
                       onPressed: () {
                         // TODO: Navigate to Calendário Screen
                       },
                     ),
                   ],
                 ),
-                const SizedBox(height: 22),
+                const SizedBox(height: 24),
                 ColoredBorderTextButton(
                   text: 'Calendário',
                   textColor: Colors.white,
+                  textSize: 16,
                   backgroundColor: Colors.blueAccent,
                   width: 130,
                   onPressed: () {
                     // TODO: Navigate to Estatísticas Screen
                   },
                 ),
-                const SizedBox(height: 26),
+                const SizedBox(height: 22),
                 const Text('Ver todos',
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 14),
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     RoundedIconedButton(
                       icon: Icons.person,
                       text: 'Clientes',
-                      size: 68,
+                      size: 76,
                       bottom: 18,
                       right: 16,
                       color: Colors.blueAccent,
@@ -143,7 +151,7 @@ class OverviewScreen extends StatelessWidget {
                     RoundedIconedButton(
                       icon: Icons.edit_calendar_outlined,
                       text: 'Lembretes',
-                      size: 68,
+                      size: 76,
                       bottom: 18,
                       right: 16,
                       color: Colors.blueAccent,
@@ -154,7 +162,7 @@ class OverviewScreen extends StatelessWidget {
                     RoundedIconedButton(
                       icon: Icons.schedule,
                       text: 'Agenda',
-                      size: 68,
+                      size: 76,
                       bottom: 18,
                       right: 16,
                       color: Colors.blueAccent,
@@ -164,8 +172,8 @@ class OverviewScreen extends StatelessWidget {
                     ),
                     RoundedIconedButton(
                       icon: Icons.note_alt_rounded,
-                      text: 'Atendimentos',
-                      size: 68,
+                      text: 'Atendimento',
+                      size: 76,
                       bottom: 18,
                       right: 16,
                       color: Colors.blueAccent,
@@ -175,10 +183,11 @@ class OverviewScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 22),
+                const SizedBox(height: 28),
                 ColoredBorderTextButton(
                   text: 'Mensalidades',
                   textColor: Colors.black,
+                  textSize: 16,
                   backgroundColor: Colors.grey[400]!,
                   width: 100,
                   onPressed: () {
