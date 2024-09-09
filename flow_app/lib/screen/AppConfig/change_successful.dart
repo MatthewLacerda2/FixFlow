@@ -38,7 +38,7 @@ class ChangeSuccessfulScreen extends StatelessWidget {
               description,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 17,
+                fontSize: 18,
               ),
             ),
             const SizedBox(height: 64),

@@ -31,7 +31,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             const Text(
               "Digite seu e-mail e enviaremos um link para redefinir sua senha.",
               textAlign: TextAlign.justify,
-              style: TextStyle(fontSize: 17),
+              style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 40),
             EmailInputField(

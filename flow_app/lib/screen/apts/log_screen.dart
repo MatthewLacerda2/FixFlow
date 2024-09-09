@@ -147,7 +147,7 @@ class LogScreenState extends State<LogScreen> {
                   ),
                   child: const Text(
                     'Salvar',
-                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
                 ElevatedButton(
@@ -159,7 +159,7 @@ class LogScreenState extends State<LogScreen> {
                   ),
                   child: const Text(
                     'Cancelar',
-                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ],

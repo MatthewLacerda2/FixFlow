@@ -42,7 +42,7 @@ class AreYouSureScreen extends StatelessWidget {
             Text(
               description,
               textAlign: TextAlign.justify,
-              style: const TextStyle(fontSize: 17),
+              style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 40),
             const PasswordInputField(placeholder: "Senha"),

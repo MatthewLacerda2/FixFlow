@@ -73,7 +73,7 @@ class LogsScreen extends StatelessWidget {
                         ),
                         child: const Text(
                           'Hora',
-                          style: TextStyle(color: Colors.white, fontSize: 15),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ),
                       ElevatedButton(
@@ -99,7 +99,7 @@ class LogsScreen extends StatelessWidget {
                         ),
                         child: const Text(
                           'Data',
-                          style: TextStyle(color: Colors.white, fontSize: 15),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ),
                       ElevatedButton(
@@ -122,7 +122,7 @@ class LogsScreen extends StatelessWidget {
                         ),
                         child: const Text(
                           'Cliente',
-                          style: TextStyle(color: Colors.white, fontSize: 15),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ),
                     ],
