@@ -52,7 +52,6 @@ class RegisterScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // TODO: Validate this data
-                //TODO: there are a bunch of pushes that should be verified if we want to delete the previous routes or not
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute<void>(

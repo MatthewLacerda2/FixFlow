@@ -9,7 +9,6 @@ import '../apts/log_screen.dart';
 import '../create_client_screen.dart';
 import '../edit_apt/create_log_screen.dart';
 
-//TODO: adicionar filtro de preço
 class LogsScreen extends StatelessWidget {
   const LogsScreen({super.key});
 

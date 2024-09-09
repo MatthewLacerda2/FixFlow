@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-//TODO: passar onPressed no data, pois nem sempre a gente quer dar replacement no push
 class OtpScreen extends StatefulWidget {
   const OtpScreen(
       {super.key,

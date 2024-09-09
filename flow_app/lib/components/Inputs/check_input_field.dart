@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-//TODO:Transformar o circulo em caixa, e mover ele pra esquerda
 class CheckInputField extends StatefulWidget {
   const CheckInputField({
     super.key,

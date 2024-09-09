@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 
 import 'custom_input_field.dart';
 
-//TODO: make the cursor jump once we type a section
 class PhoneInputField extends StatelessWidget {
   const PhoneInputField({
     super.key,

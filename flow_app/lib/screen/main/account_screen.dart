@@ -7,7 +7,6 @@ import '../intro/introduction_screen.dart';
 import '../test_screen.dart';
 import 'app_config_screen.dart';
 
-//TODO: make opção de sair (com confirmação)
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
@@ -92,7 +91,6 @@ class AccountScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  //TODO: criar screen
                   MaterialPageRoute<void>(
                       builder: (BuildContext context) =>
                           const CreateIdlePeriodScreen()),

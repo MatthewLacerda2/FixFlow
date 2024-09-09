@@ -12,10 +12,7 @@ import '../AppConfig/deactivate_account/deactivate_account_screen.dart';
 import '../AppConfig/delete_account/delete_warning_screen.dart';
 import '../auth/initial_screen.dart';
 
-//TODO: the preload options are not loading
-//TODO: the vertical size of the input area is too big
-//TODO: the background is not white
-//TODO: the counter is outside the input area
+//TODO: gotta load the account configs
 class AppConfigScreen extends StatelessWidget {
   const AppConfigScreen({super.key});
 

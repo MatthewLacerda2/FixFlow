@@ -9,7 +9,6 @@ import '../apts/schedule_screen.dart';
 import '../create_client_screen.dart';
 import '../edit_apt/create_schedule_screen.dart';
 
-//TODO: filters (date, hour, client)
 class SchedulesScreen extends StatelessWidget {
   const SchedulesScreen({super.key});
 
