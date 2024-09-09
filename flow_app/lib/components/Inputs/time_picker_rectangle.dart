@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Time-Picker button
 class TimePickerRectangle extends StatefulWidget {
   const TimePickerRectangle(
       {super.key, required this.initialTime, required this.onTimeSelected});
@@ -41,7 +40,7 @@ class TimePickerRectangleState extends State<TimePickerRectangle> {
       child: ElevatedButton(
         onPressed: () => _selectTime(context),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.grey[100],
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -50,9 +49,9 @@ class TimePickerRectangleState extends State<TimePickerRectangle> {
         ),
         child: Text(
           '${_selectedTime!.hourOfPeriod.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')} ${_selectedTime!.period == DayPeriod.am ? "| AM" : "| PM"}',
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 18,
-              color: Color.fromARGB(255, 70, 70, 70),
+              color: Colors.grey[900],
               fontWeight: FontWeight.normal),
         ),
       ),

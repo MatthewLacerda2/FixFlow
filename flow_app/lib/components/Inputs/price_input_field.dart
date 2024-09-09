@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+//TODO:make it handle price by itself, and take an initial price
 class PriceInputField extends StatefulWidget {
   const PriceInputField({
     super.key,

@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
-import 'Buttons/custom_button.dart';
-
 class WarningModal extends StatelessWidget {
   const WarningModal({
     super.key,
     required this.title,
     this.optionOne,
     this.optionTwo,
+    this.backgroundColor,
     this.description,
   });
   final String title;
   final String? description;
-  final CustomButton? optionOne;
-  final CustomButton? optionTwo;
+  final Widget? optionOne;
+  final Widget? optionTwo;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor ?? Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -34,7 +34,7 @@ class WarningModal extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
             if (description != null)
               Text(
                 description!,
@@ -49,7 +49,8 @@ class WarningModal extends StatelessWidget {
                 if (optionOne != null) optionOne!,
                 if (optionTwo != null) optionTwo!,
               ],
-            )
+            ),
+            const SizedBox(height: 2),
           ],
         ),
       ),

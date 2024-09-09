@@ -29,22 +29,6 @@ class CheckInputFieldState extends State<CheckInputField> {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Expanded(
-          child: GestureDetector(
-            onTap: () {
-              setState(() {
-                _isChecked = !_isChecked;
-              });
-              widget.onChanged(_isChecked);
-            },
-            child: Text(
-              widget.label,
-              style: const TextStyle(
-                fontSize: 17,
-              ),
-            ),
-          ),
-        ),
         GestureDetector(
           onTap: () {
             setState(() {
@@ -53,10 +37,10 @@ class CheckInputFieldState extends State<CheckInputField> {
             widget.onChanged(_isChecked);
           },
           child: Container(
-            width: 24,
-            height: 24,
+            width: 22,
+            height: 22,
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(3),
               border: Border.all(
                 color: Colors.grey.shade600,
                 width: 2.0,
@@ -65,13 +49,20 @@ class CheckInputFieldState extends State<CheckInputField> {
             ),
             child: _isChecked
                 ? Container(
-                    margin: const EdgeInsets.all(3.0),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
+                    margin: const EdgeInsets.all(1.8),
+                    decoration: BoxDecoration(
                       color: Colors.blue,
+                      borderRadius: BorderRadius.circular(3),
                     ),
                   )
                 : null,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          widget.label,
+          style: const TextStyle(
+            fontSize: 18,
           ),
         ),
       ],
