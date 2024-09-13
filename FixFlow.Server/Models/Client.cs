@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Server.Models.DTO;
-
+//TODO: considerar quando o cliente é outra empresa
 namespace Server.Models;
 
 public class Client : IdentityUser {
