@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../AppConfig/account_option.dart';
 import '../AppConfig/create_idle_period_screen.dart';
-import '../about_screen.dart';
 import '../intro/introduction_screen.dart';
-import '../test_screen.dart';
-import 'app_config_screen.dart';
+import 'account/about_screen.dart';
+import 'account/app_config_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -42,16 +41,6 @@ class AccountScreen extends StatelessWidget {
             const SizedBox(height: 12),
             const Divider(),
             const SizedBox(height: 6),
-            AccountOption(
-              title: 'Test Screen',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                      builder: (BuildContext context) => const TestScreen()),
-                );
-              },
-            ),
             AccountOption(
               title: 'Configurações da Conta',
               onTap: () {

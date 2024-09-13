@@ -91,7 +91,7 @@ class ClientScreen extends StatelessWidget {
             Expanded(
               child: ListView.separated(
                 shrinkWrap: true,
-                physics: PageScrollPhysics(),
+                physics: const PageScrollPhysics(),
                 itemCount: 10,
                 separatorBuilder: (BuildContext context, int index) =>
                     const Divider(
