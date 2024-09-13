@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../components/Buttons/custom_button.dart';
 import '../../components/Inputs/email_input_field.dart';
 import '../AppConfig/leave_successful.dart';
-import '../main/app_config_screen.dart';
+import '../main/account/app_config_screen.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});

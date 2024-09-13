@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../components/Buttons/custom_button.dart';
 import '../../../components/Inputs/phone_input_field.dart';
 import '../../auth/otp_screen.dart';
-import '../../main/app_config_screen.dart';
+import '../../main/account/app_config_screen.dart';
 import '../change_successful.dart';
 
 class ChangePhoneScreen extends StatelessWidget {

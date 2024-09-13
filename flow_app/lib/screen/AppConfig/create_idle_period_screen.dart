@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../components/Buttons/custom_button.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
-import '../main/app_config_screen.dart';
+import '../main/account/app_config_screen.dart';
 import 'change_successful.dart';
 
 //TODO: load the schedules which are in that period, let the user decide if he wants to delete them and tell the user, or maintain the schedule

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
-import '../../main/app_config_screen.dart';
+import '../../main/account/app_config_screen.dart';
 import '../are_you_sure_screen.dart';
 
 class DeleteAccountScreen extends StatelessWidget {

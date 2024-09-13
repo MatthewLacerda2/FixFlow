@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../main/main_screen.dart';
 
-//TODO: credentials
+//TODO: http request credentials
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 

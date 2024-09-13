@@ -5,9 +5,9 @@ import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/schedules_list.dart';
 import '../../components/warning_modal.dart';
+import '../apts/edit_apt/create_schedule_screen.dart';
 import '../apts/schedule_screen.dart';
 import '../create_client_screen.dart';
-import '../edit_apt/create_schedule_screen.dart';
 
 class SchedulesScreen extends StatelessWidget {
   const SchedulesScreen({super.key});

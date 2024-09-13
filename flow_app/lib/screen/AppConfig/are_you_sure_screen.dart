@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
 import '../../components/Inputs/password_input_field.dart';
-import '../main/app_config_screen.dart';
+import '../main/account/app_config_screen.dart';
 import 'leave_successful.dart';
 
 class AreYouSureScreen extends StatelessWidget {

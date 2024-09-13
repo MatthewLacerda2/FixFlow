@@ -5,9 +5,9 @@ import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/logs_list.dart';
 import '../../components/warning_modal.dart';
+import '../apts/edit_apt/create_log_screen.dart';
 import '../apts/log_screen.dart';
 import '../create_client_screen.dart';
-import '../edit_apt/create_log_screen.dart';
 
 class LogsScreen extends StatelessWidget {
   const LogsScreen({super.key});

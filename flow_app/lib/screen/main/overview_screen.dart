@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../Overview/Clients/clients_screen.dart';
-import 'notifications_screen.dart';
+import '../Overview/notifications_screen.dart';
 
 class OverviewScreen extends StatelessWidget {
   const OverviewScreen({super.key});

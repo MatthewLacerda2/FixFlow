@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
-import '../../components/Inputs/date_picker_rectangle.dart';
-import '../../components/Inputs/limited_text_input_field.dart';
-import '../../components/Inputs/name_input_field.dart';
-import '../../components/Inputs/price_input_field.dart';
-import '../../components/Inputs/time_picker_rectangle.dart';
+import '../../../components/Inputs/date_picker_rectangle.dart';
+import '../../../components/Inputs/limited_text_input_field.dart';
+import '../../../components/Inputs/name_input_field.dart';
+import '../../../components/Inputs/price_input_field.dart';
+import '../../../components/Inputs/time_picker_rectangle.dart';
 
 class CreateScheduleScreen extends StatefulWidget {
   const CreateScheduleScreen({
