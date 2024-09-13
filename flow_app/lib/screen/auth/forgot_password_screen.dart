@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../components/Buttons/custom_button.dart';
 import '../../components/Inputs/email_input_field.dart';
 import '../AppConfig/leave_successful.dart';
-import '../main/account/app_config_screen.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -53,12 +52,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                     borderWidth: 1.6,
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const AppConfigScreen()),
-                      );
+                      Navigator.pop(context);
                     },
                   ),
                   CustomButton(
