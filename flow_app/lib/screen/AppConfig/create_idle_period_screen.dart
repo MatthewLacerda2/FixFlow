@@ -31,17 +31,17 @@ class CreateIdlePeriodScreen extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              "Isso pode ser útil para manutenções, feriados ou qualquer outra situação em que você não possa realizar atendimentos",
+              "Não será possível criar ou editar agendamentos para períodos ociosos.\nIsso pode ser útil quando você não puder realizar atendimentos, como durante feriados ou manutenções.",
               textAlign: TextAlign.justify,
               style: TextStyle(fontSize: 16, color: Colors.grey[700]),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 const Text(
                   'Início: ',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
                 DatePickerRectangle(
                   initialDate: DateTime.now(),
@@ -63,7 +63,7 @@ class CreateIdlePeriodScreen extends StatelessWidget {
               children: <Widget>[
                 const Text(
                   'Fim:    ',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
                 DatePickerRectangle(
                   initialDate: DateTime.now(),
@@ -79,7 +79,7 @@ class CreateIdlePeriodScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 66),
+            const SizedBox(height: 50),
             Align(
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -53,7 +53,7 @@ class TestScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             NameInputField(
-              placeholder: 'Nome do Empresa',
+              placeholder: 'Nome da Empresa',
               onNameChanged: (String name) {
                 print('Name is: $name');
               },

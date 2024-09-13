@@ -85,7 +85,7 @@ class AboutScreen extends StatelessWidget {
                   color: Colors.grey[700],
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 24),
               Row(
                 children: <Widget>[
                   const FaIcon(FontAwesomeIcons.whatsapp,
@@ -104,6 +104,7 @@ class AboutScreen extends StatelessWidget {
                       'Chamar no WhatsApp',
                       style: TextStyle(
                         fontSize: 18,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -128,6 +129,7 @@ class AboutScreen extends StatelessWidget {
                       'Conectar no LinkedIn',
                       style: TextStyle(
                         fontSize: 18,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
