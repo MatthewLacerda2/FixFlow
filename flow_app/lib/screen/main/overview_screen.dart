@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
+import '../Overview/Clients/clients_screen.dart';
 import 'notifications_screen.dart';
 
 class OverviewScreen extends StatelessWidget {
@@ -145,7 +146,13 @@ class OverviewScreen extends StatelessWidget {
                       right: 16,
                       color: Colors.blueAccent,
                       onPressed: () {
-                        // TODO: Navigate to Clientes Screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) =>
+                                const ClientsScreen(),
+                          ),
+                        );
                       },
                     ),
                     RoundedIconedButton(

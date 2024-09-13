@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
 
-import '../../components/Buttons/rounded_iconed_button.dart';
-import '../../components/Inputs/date_picker_rectangle.dart';
-import '../../components/Inputs/time_picker_rectangle.dart';
-import '../../components/logs_list.dart';
-import '../../components/warning_modal.dart';
-import '../apts/log_screen.dart';
-import '../create_client_screen.dart';
-import '../edit_apt/create_log_screen.dart';
+import '../../../components/Inputs/date_picker_rectangle.dart';
+import '../../../components/Inputs/time_picker_rectangle.dart';
+import '../../../components/Screens/Overview/Clients/client_list.dart';
+import '../../../components/warning_modal.dart';
+import 'client_screen.dart';
 
-class LogsScreen extends StatelessWidget {
-  const LogsScreen({super.key});
+class ClientsScreen extends StatelessWidget {
+  const ClientsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(0),
+      body: SafeArea(
         child: Stack(
           children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color: Colors.yellowAccent,
+                  color: const Color.fromARGB(255, 43, 255, 36),
                   padding: const EdgeInsets.all(8),
                   height: 60,
                   child: const Row(
                     children: <Widget>[
-                      Icon(Icons.note_alt_outlined, size: 28),
+                      Icon(Icons.person, size: 28),
                       SizedBox(width: 8),
                       Text(
-                        'Atendimentos',
+                        'Clientes',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
@@ -139,25 +135,17 @@ class LogsScreen extends StatelessWidget {
                       height: 9,
                     ),
                     itemBuilder: (BuildContext context, int index) {
-                      return LogsList(
-                        clientName: 'Nome do Cliente $index',
-                        price: 150.00,
-                        hour: '17h45m',
-                        date: '21/12/24',
-                        service: 'Serviço $index',
-                        observation: "Observação $index",
+                      return ClientList(
+                        name: 'Nome do Cliente $index',
+                        lastAppointment: DateTime.now(),
+                        phone: '(98) 99934 - 4788',
+                        email: 'math2.0@hotmail.com',
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(
-                              builder: (BuildContext context) => LogScreen(
-                                cliente: 'Fulano $index',
-                                marcouHorario: true,
-                                horario: const TimeOfDay(hour: 14, minute: 30),
-                                dia: DateTime(2024, 8, 27),
-                                preco: 150.00,
-                                observacao: "This is an observation",
-                              ),
+                              builder: (BuildContext context) =>
+                                  const ClientScreen(),
                             ),
                           );
                         },
@@ -166,50 +154,6 @@ class LogsScreen extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            RoundedIconedButton(
-              icon: Icons.person_add_alt_1_sharp,
-              size: 38,
-              bottom: 100,
-              right: 17,
-              color: const Color.fromARGB(255, 0, 175, 0),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => CreateClientScreen(
-                      nextScreen: CreateLogScreen(
-                        contactado: false,
-                        horario: TimeOfDay.now(),
-                        dia: DateTime(2024, 8, 27),
-                        preco: 150.00,
-                        observacao: "This is an observation",
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-            RoundedIconedButton(
-              icon: Icons.add,
-              size: 68,
-              bottom: 18,
-              right: 16,
-              color: Colors.purple,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => CreateLogScreen(
-                      contactado: false,
-                      horario: TimeOfDay.now(),
-                      dia: DateTime(2024, 8, 27),
-                      preco: 150.00,
-                      observacao: "This is an observation",
-                    ),
-                  ),
-                );
-              },
             ),
           ],
         ),
