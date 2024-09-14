@@ -23,7 +23,7 @@ class LogsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color: Colors.yellowAccent,
+                  color: Colors.orange,
                   padding: const EdgeInsets.all(8),
                   height: 60,
                   child: const Row(
@@ -55,7 +55,7 @@ class LogsScreen extends StatelessWidget {
                             builder: (BuildContext context) {
                               return WarningModal(
                                 title: "Faixa de horário",
-                                backgroundColor: Colors.yellow,
+                                backgroundColor: Colors.orange,
                                 optionOne: TimePickerRectangle(
                                     initialTime: TimeOfDay.now(),
                                     onTimeSelected:
@@ -69,7 +69,7 @@ class LogsScreen extends StatelessWidget {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow,
+                          backgroundColor: Colors.orange,
                         ),
                         child: const Text(
                           'Hora',
@@ -83,7 +83,7 @@ class LogsScreen extends StatelessWidget {
                             builder: (BuildContext context) {
                               return WarningModal(
                                 title: "Entre os dias",
-                                backgroundColor: Colors.yellow,
+                                backgroundColor: Colors.orange,
                                 optionOne: DatePickerRectangle(
                                     initialDate: DateTime.now(),
                                     onDateSelected: (DateTime selectedTime) {}),
@@ -95,7 +95,7 @@ class LogsScreen extends StatelessWidget {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow,
+                          backgroundColor: Colors.orange,
                         ),
                         child: const Text(
                           'Data',
@@ -109,7 +109,7 @@ class LogsScreen extends StatelessWidget {
                             builder: (BuildContext context) {
                               return WarningModal(
                                 title: "Nome do cliente",
-                                backgroundColor: Colors.yellow,
+                                backgroundColor: Colors.orange,
                                 optionOne: DatePickerRectangle(
                                     initialDate: DateTime.now(),
                                     onDateSelected: (DateTime selectedTime) {}),
@@ -118,7 +118,7 @@ class LogsScreen extends StatelessWidget {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow,
+                          backgroundColor: Colors.orange,
                         ),
                         child: const Text(
                           'Cliente',

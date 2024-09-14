@@ -131,7 +131,7 @@ class OverviewScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 22),
-                const Text('Ver todos',
+                const Text('Informações',
                     style:
                         TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),

@@ -48,7 +48,7 @@ class TimePickerRectangleState extends State<TimePickerRectangle> {
           ),
         ),
         child: Text(
-          '${_selectedTime!.hourOfPeriod.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')} ${_selectedTime!.period == DayPeriod.am ? "| AM" : "| PM"}',
+          '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}h',
           style: TextStyle(
               fontSize: 18,
               color: Colors.grey[900],
