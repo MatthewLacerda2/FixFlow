@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../components/Buttons/colored_border_text_button.dart';
+import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
-import '../../components/Inputs/date_picker_rectangle.dart';
-import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/schedules_list.dart';
-import '../../components/warning_modal.dart';
 import '../apts/edit_apt/create_schedule_screen.dart';
 import '../apts/schedule_screen.dart';
 import '../create_client_screen.dart';
@@ -46,87 +45,32 @@ class SchedulesScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return WarningModal(
-                                title: "Faixa de horário",
-                                backgroundColor: Colors.greenAccent,
-                                optionOne: TimePickerRectangle(
-                                    initialTime: TimeOfDay.now(),
-                                    onTimeSelected:
-                                        (TimeOfDay selectedTime) {}),
-                                optionTwo: TimePickerRectangle(
-                                    initialTime: TimeOfDay.now(),
-                                    onTimeSelected:
-                                        (TimeOfDay selectedTime) {}),
-                              );
-                            },
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.greenAccent,
-                        ),
-                        child: const Text(
-                          'Hora',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
+                      const OrderButton(
+                        icon: Icons.perm_contact_cal,
+                        iconSize: 40,
+                        iconColor: Colors.greenAccent,
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return WarningModal(
-                                title: "Entre os dias",
-                                backgroundColor: Colors.greenAccent,
-                                optionOne: DatePickerRectangle(
-                                    initialDate: DateTime.now(),
-                                    onDateSelected: (DateTime selectedTime) {}),
-                                optionTwo: DatePickerRectangle(
-                                    initialDate: DateTime.now(),
-                                    onDateSelected: (DateTime selectedTime) {}),
-                              );
-                            },
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.greenAccent,
-                        ),
-                        child: const Text(
-                          'Data',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
+                      const OrderButton(
+                        icon: Icons.attach_money,
+                        iconSize: 40,
+                        iconColor: Colors.greenAccent,
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return WarningModal(
-                                title: "Nome do cliente",
-                                backgroundColor: Colors.greenAccent,
-                                optionOne: DatePickerRectangle(
-                                    initialDate: DateTime.now(),
-                                    onDateSelected: (DateTime selectedTime) {}),
-                              );
-                            },
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.greenAccent,
-                        ),
-                        child: const Text(
-                          'Cliente',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
+                      const OrderButton(
+                        icon: Icons.calendar_today,
+                        iconSize: 40,
+                        iconColor: Colors.greenAccent,
                       ),
+                      ColoredBorderTextButton(
+                        text: "Filtros",
+                        onPressed: () {},
+                        backgroundColor: Colors.greenAccent,
+                        borderColor: Colors.grey,
+                        textColor: Colors.white,
+                      )
                     ],
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 Expanded(
                   child: ListView.separated(
                     itemCount: 10,

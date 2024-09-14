@@ -6,6 +6,7 @@ class ColoredBorderTextButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     required this.textColor,
+    this.borderColor,
     this.backgroundColor,
     this.textSize,
     this.width,
@@ -15,6 +16,7 @@ class ColoredBorderTextButton extends StatelessWidget {
   final double? width;
   final VoidCallback onPressed;
   final Color textColor;
+  final Color? borderColor;
   final double? textSize;
   final Color? backgroundColor;
 
@@ -22,20 +24,22 @@ class ColoredBorderTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: backgroundColor ?? textColor, width: 2),
+        border: Border.all(
+            color: borderColor ?? backgroundColor ?? textColor, width: 1.8),
         color: backgroundColor ?? Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: width ?? 10, vertical: 1),
+          padding: EdgeInsets.symmetric(horizontal: width ?? 10),
         ),
         child: Text(
           text,
           style: TextStyle(
             color: textColor,
             fontWeight: FontWeight.bold,
+            height: 0,
             fontSize: textSize ?? 15,
           ),
         ),
