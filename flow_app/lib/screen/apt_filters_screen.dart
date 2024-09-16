@@ -69,7 +69,12 @@ class AptFiltersScreen extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                  const Text(
+                    'Horários:',
+                    style: TextStyle(fontSize: 16),
+                  ),
                   Expanded(
                     child: TimePickerRectangle(
                       initialTime: TimeOfDay.now(),
@@ -78,7 +83,7 @@ class AptFiltersScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const Text('às', style: TextStyle(fontSize: 16)),
                   Expanded(
                     child: TimePickerRectangle(
                       initialTime: TimeOfDay.now(),
@@ -91,7 +96,9 @@ class AptFiltersScreen extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                  const Text('Entre', style: TextStyle(fontSize: 16)),
                   Expanded(
                     child: DatePickerRectangle(
                       initialDate: DateTime.now(),
@@ -100,7 +107,7 @@ class AptFiltersScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const Text('a', style: TextStyle(fontSize: 16)),
                   Expanded(
                     child: DatePickerRectangle(
                       initialDate: DateTime.now(),
