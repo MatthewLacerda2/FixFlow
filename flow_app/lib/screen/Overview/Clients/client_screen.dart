@@ -64,6 +64,22 @@ class ClientScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 2),
+            const Row(
+              children: <Widget>[
+                Text(
+                  'Total gasto: ',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'R\$1510',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue),
+                )
+              ],
+            ),
+            const SizedBox(height: 2),
             const Text(
               'Tempo médio de retorno: 90 dias',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

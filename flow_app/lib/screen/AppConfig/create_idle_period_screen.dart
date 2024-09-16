@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../components/Buttons/custom_button.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
-import '../main/account_screen.dart';
 import 'change_successful.dart';
 
 //TODO: load the schedules which are in that period, let the user decide if he wants to delete them and tell the user, or maintain the schedule
@@ -31,7 +30,7 @@ class CreateIdlePeriodScreen extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              "Não será possível criar ou editar agendamentos para períodos ociosos.\nIsso pode ser útil quando você não puder realizar atendimentos, como durante feriados ou manutenções.",
+              "Não será possível criar agendamentos para um período ocioso. Isso pode ser útil durante feriados ou manutenções.",
               textAlign: TextAlign.justify,
               style: TextStyle(fontSize: 16, color: Colors.grey[700]),
             ),
@@ -93,12 +92,7 @@ class CreateIdlePeriodScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(vertical: 1, horizontal: 44),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const AccountScreen()),
-                      );
+                      Navigator.pop(context);
                     },
                   ),
                   CustomButton(
