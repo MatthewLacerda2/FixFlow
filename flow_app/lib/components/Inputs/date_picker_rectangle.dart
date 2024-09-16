@@ -42,8 +42,8 @@ class DatePickerRectangleState extends State<DatePickerRectangle> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(color: Colors.grey),
+          shape: const RoundedRectangleBorder(
+            side: BorderSide(color: Colors.grey),
           ),
         ),
         child: Text(
