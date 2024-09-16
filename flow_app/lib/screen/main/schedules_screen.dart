@@ -4,6 +4,7 @@ import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/schedules_list.dart';
+import '../apt_filters_screen.dart';
 import '../apts/edit_apt/create_schedule_screen.dart';
 import '../apts/schedule_screen.dart';
 import '../create_client_screen.dart';
@@ -62,7 +63,15 @@ class SchedulesScreen extends StatelessWidget {
                       ),
                       ColoredBorderTextButton(
                         text: "Filtros",
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) =>
+                                  const AptFiltersScreen(),
+                            ),
+                          );
+                        },
                         backgroundColor: Colors.greenAccent,
                         borderColor: Colors.grey,
                         textColor: Colors.white,

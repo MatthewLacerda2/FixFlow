@@ -4,6 +4,7 @@ import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/logs_list.dart';
+import '../apt_filters_screen.dart';
 import '../apts/edit_apt/create_log_screen.dart';
 import '../apts/log_screen.dart';
 import '../create_client_screen.dart';
@@ -50,23 +51,31 @@ class LogsScreen extends StatelessWidget {
                       const OrderButton(
                         icon: Icons.perm_contact_cal,
                         iconSize: 40,
-                        iconColor: Colors.green,
+                        iconColor: Colors.blue,
                       ),
                       const OrderButton(
                         icon: Icons.attach_money,
                         iconSize: 40,
-                        iconColor: Colors.green,
+                        iconColor: Colors.blue,
                       ),
                       const OrderButton(
                         icon: Icons.calendar_today,
                         iconSize: 40,
-                        iconColor: Colors.green,
+                        iconColor: Colors.blue,
                       ),
                       ColoredBorderTextButton(
                         text: "Filtros",
-                        onPressed: () {},
-                        backgroundColor: Colors.green,
-                        borderColor: Colors.grey,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) =>
+                                  const AptFiltersScreen(),
+                            ),
+                          );
+                        },
+                        backgroundColor: Colors.blue,
+                        borderColor: Colors.black,
                         textColor: Colors.white,
                       )
                     ],

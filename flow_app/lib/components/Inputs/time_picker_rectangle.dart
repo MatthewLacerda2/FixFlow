@@ -40,11 +40,10 @@ class TimePickerRectangleState extends State<TimePickerRectangle> {
       child: ElevatedButton(
         onPressed: () => _selectTime(context),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.grey[100],
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: const BorderSide(color: Colors.grey),
+          backgroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          shape: const RoundedRectangleBorder(
+            side: BorderSide(color: Colors.grey),
           ),
         ),
         child: Text(
