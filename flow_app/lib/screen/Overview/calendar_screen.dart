@@ -5,7 +5,7 @@ class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
   @override
-  State<CalendarScreen> createState() => _CalendarScreenState();
+  _CalendarScreenState createState() => _CalendarScreenState();
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
@@ -30,7 +30,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         children: <Widget>[
           // Month header
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
               DateFormat('MMMM y').format(currentDate),
               style: const TextStyle(
@@ -91,7 +91,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         firstDayOfMonth.weekday; // Monday is 1, Sunday is 7
 
     return GridView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16), // Reduced padding
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 7,
         crossAxisSpacing: 4,
@@ -170,7 +170,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget _buildDetailsSection() {
     return schedules.containsKey(selectedDate)
         ? Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 16, vertical: 1), // Reduced padding
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),

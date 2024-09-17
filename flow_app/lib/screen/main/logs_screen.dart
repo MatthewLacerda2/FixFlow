@@ -50,6 +50,7 @@ class LogsScreen extends StatelessWidget {
                     children: <Widget>[
                       const OrderButton(
                         icon: Icons.perm_contact_cal,
+                        isUp: true,
                         iconSize: 40,
                         iconColor: Colors.blue,
                       ),

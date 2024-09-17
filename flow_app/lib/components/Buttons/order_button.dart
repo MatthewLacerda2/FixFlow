@@ -29,7 +29,7 @@ class OrderButton extends StatelessWidget {
         ),
         isUp == null
             ? SizedBox(
-                width: (isUp == null) ? iconSize - 10 : iconSize,
+                width: iconSize,
                 height: iconSize,
               )
             : Icon(
