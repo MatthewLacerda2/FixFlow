@@ -41,6 +41,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           // Day of the week labels
           _buildWeekDayLabels(),
+          const SizedBox(height: 8),
           // Calendar Header (Month view)
           Expanded(
             child: PageView.builder(
@@ -85,23 +86,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   // Builds the calendar view for the month
   Widget _buildMonthView(int month) {
-    final DateTime firstDayOfMonth = DateTime(currentDate.year, month, 1);
+    final DateTime firstDayOfMonth = DateTime(currentDate.year, month, 2);
     final int daysInMonth = DateUtils.getDaysInMonth(currentDate.year, month);
     final int firstWeekday =
-        firstDayOfMonth.weekday; // Monday is 1, Sunday is 7
+        firstDayOfMonth.weekday;
 
     return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16), // Reduced padding
+      
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 7,
         crossAxisSpacing: 4,
         mainAxisSpacing: 4,
       ),
       itemCount: daysInMonth +
-          (firstWeekday - 1), // Fill with empty spaces for days before 1st
+          (firstWeekday - 1),
       itemBuilder: (BuildContext context, int index) {
         if (index < firstWeekday - 1) {
-          return const SizedBox(); // Empty slots for the first week
+          return const SizedBox();
         } else {
           final int day = index - (firstWeekday - 2);
           return _buildDayCell(day);
@@ -137,7 +139,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
+          border: day == selectedDate ? Border.all(color: Colors.grey) : null,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -180,7 +182,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Events for Day $selectedDate:',
+                  'Dia $selectedDate:',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 16),
                 ),
