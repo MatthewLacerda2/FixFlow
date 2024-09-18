@@ -4,7 +4,6 @@ import '../../../components/Buttons/colored_border_text_button.dart';
 import '../../../components/logs_list.dart';
 import '../../apts/log_screen.dart';
 
-//TODO:Expanded area doesn't scroll the page
 class ClientScreen extends StatelessWidget {
   const ClientScreen({super.key});
 

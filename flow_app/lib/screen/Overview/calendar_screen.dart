@@ -240,6 +240,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 );
             },
           )
-        : const SizedBox();
+        : const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  'Sem eventos',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 }
