@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../components/Buttons/rounded_iconed_button.dart';
+import '../apts/edit_apt/create_log_screen.dart';
+import '../apts/edit_apt/create_schedule_screen.dart';
+
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
@@ -25,12 +29,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
       appBar: AppBar(
         title: const Text('Calendar'),
       ),
-      body: Column(
+      body: Stack(
+        children: <Widget>[
+          Column(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
-              DateFormat('MMMM y').format(currentDate),
+                  DateFormat('MMMM').format(currentDate),
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
@@ -38,9 +44,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
           ),
           _buildWeekDayLabels(),
-          const SizedBox(height: 8),
+              const SizedBox(height: 10),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.4,
+                height: MediaQuery.of(context).size.height * 0.385,
             child: PageView.builder(
               itemCount: 12, // 12 months
               controller: PageController(initialPage: currentDate.month - 1),
@@ -60,16 +66,62 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           const SizedBox(height: 20),
           _buildDetailsSection(),
-        ],        
+            ],
+      ),
+          RoundedIconedButton(
+            icon: Icons.add,
+            size: 60,
+            bottom: 110,
+            right: 18,
+            color: Colors.greenAccent,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => CreateScheduleScreen(
+                    contactado: false,
+                    horario: TimeOfDay.now(),
+                    dia: DateTime(2024, 8, 27),
+                    preco: 150.00,
+                    observacao: "This is an observation",
+                  ),
+                ),
+              );
+            },
+          ),
+          RoundedIconedButton(
+            icon: Icons.add,
+            size: 60,
+            bottom: 30,
+            right: 18,
+            color: Colors.blueAccent,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => CreateLogScreen(
+                    contactado: false,
+                    horario: TimeOfDay.now(),
+                    dia: DateTime(2024, 8, 27),
+                    preco: 150.00,
+                    observacao: "This is an observation",
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildWeekDayLabels() {
     const List<String> daysOfWeek = <String>['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: daysOfWeek
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: daysOfWeek
           .map((String day) => Expanded(
                 child: Center(
                   child: Text(
@@ -81,6 +133,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               ))
           .toList(),
+      ),
     );
   }
 
@@ -169,21 +222,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget _buildDetailsSection() {
     return schedules.containsKey(selectedDate)
         ? Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: 1),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
+            width: 350,
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: BorderRadius.all(Radius.circular(16)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  'Dia $selectedDate:',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                const SizedBox(height: 8),
                 ...schedules[selectedDate]!.map((String event) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),

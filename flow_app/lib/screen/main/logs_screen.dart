@@ -125,7 +125,7 @@ class LogsScreen extends StatelessWidget {
               icon: Icons.person_add_alt_1_sharp,
               size: 38,
               bottom: 100,
-              right: 17,
+              right: 16,
               color: const Color.fromARGB(255, 0, 175, 0),
               onPressed: () {
                 Navigator.push(

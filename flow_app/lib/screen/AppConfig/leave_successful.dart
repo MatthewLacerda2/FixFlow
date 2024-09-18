@@ -38,7 +38,7 @@ class LeaveSuccessfulScreen extends StatelessWidget {
               description,
               textAlign: TextAlign.justify,
               style: const TextStyle(
-                fontSize: 17,
+                fontSize: 16,
               ),
             ),
             const SizedBox(height: 64),
