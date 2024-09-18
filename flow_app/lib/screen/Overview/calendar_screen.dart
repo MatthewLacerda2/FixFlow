@@ -221,33 +221,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget _buildDetailsSection() {
     return schedules.containsKey(selectedDate)
-        ? Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
-            width: 350,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.shade300),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.25),
-                  spreadRadius: 1.5,
-                  blurRadius: 4,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: ListView.builder(
+        ? ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: schedules[selectedDate]!.length,
               itemBuilder: (BuildContext context, int index) {
-                return ListTile(
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                elevation: 1,
+                child: ListTile(
                   title: Text(schedules[selectedDate]![index]),
-                  contentPadding: EdgeInsets.zero,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                ),
                 );
-              },
-            ),
+            },
           )
         : const SizedBox();
   }
