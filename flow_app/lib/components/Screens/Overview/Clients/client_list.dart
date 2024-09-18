@@ -34,9 +34,10 @@ class ClientList extends StatelessWidget {
           ],
         ),
         child: ListTile(
-          subtitle: Column(
+          subtitle: Row(
             children: <Widget>[
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     'Cliente: $name',
