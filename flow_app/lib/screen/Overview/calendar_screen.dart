@@ -9,7 +9,6 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  // Mock of calendar events
   Map<int, List<String>> schedules = <int, List<String>>{
     3: <String>['9:00 AM - Schedule 1', '1:00 PM - Schedule 2'],
     7: <String>['Appointment at 10:00 AM'],
@@ -28,7 +27,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       body: Column(
         children: <Widget>[
-          // Month header
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
@@ -39,11 +37,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
             ),
           ),
-          // Day of the week labels
           _buildWeekDayLabels(),
           const SizedBox(height: 8),
-          // Calendar Header (Month view)
-          Expanded(
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.4,
             child: PageView.builder(
               itemCount: 12, // 12 months
               controller: PageController(initialPage: currentDate.month - 1),
@@ -57,14 +54,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
               },
             ),
           ),
-          // Selected Date Details
+          Container(
+            height: 1,
+            color: Colors.grey,
+          ),
+          const SizedBox(height: 20),
           _buildDetailsSection(),
-        ],
+        ],        
       ),
     );
   }
 
-  // Builds the labels for the days of the week
   Widget _buildWeekDayLabels() {
     const List<String> daysOfWeek = <String>['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     return Row(
@@ -84,7 +84,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // Builds the calendar view for the month
   Widget _buildMonthView(int month) {
     final DateTime firstDayOfMonth = DateTime(currentDate.year, month, 2);
     final int daysInMonth = DateUtils.getDaysInMonth(currentDate.year, month);
@@ -112,7 +111,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // Builds each date cell
   Widget _buildDayCell(int day) {
     final List<String> dayEvents = schedules[day] ?? <String>[];
 
@@ -168,12 +166,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // Builds the section below showing what's up for the selected date
   Widget _buildDetailsSection() {
     return schedules.containsKey(selectedDate)
         ? Container(
             padding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: 1), // Reduced padding
+                horizontal: 16, vertical: 1),
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
