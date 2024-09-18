@@ -224,20 +224,29 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ? Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
             width: 350,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(16)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ...schedules[selectedDate]!.map((String event) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Text(event),
-                  );
-                }),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade300),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.25),
+                  spreadRadius: 1.5,
+                  blurRadius: 4,
+                  offset: const Offset(0, 3),
+                ),
               ],
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: schedules[selectedDate]!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(schedules[selectedDate]![index]),
+                  contentPadding: EdgeInsets.zero,
+                );
+              },
             ),
           )
         : const SizedBox();
