@@ -10,7 +10,7 @@ using Server.Models.Utils;
 namespace Server.Controllers;
 
 /// <summary>
-/// Controller class for Client CRUD requests
+/// Controller class for Client's stuff
 /// </summary>
 [ApiController]
 [Route(Common.api_route + "client")]
@@ -19,12 +19,10 @@ public class ClientController : ControllerBase {
 
 	private readonly ServerContext _context;
 	private readonly UserManager<Client> _userManager;
-	private readonly RoleManager<IdentityRole> _roleManager;
 
-	public ClientController(ServerContext context, UserManager<Client> userManager, RoleManager<IdentityRole> roleManager) {
+	public ClientController(ServerContext context, UserManager<Client> userManager) {
 		_context = context;
 		_userManager = userManager;
-		_roleManager = roleManager;
 	}
 
 	/// <summary>
@@ -100,69 +98,14 @@ public class ClientController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
 	[HttpPost]
-	public async Task<IActionResult> CreateClient([FromBody] ClientRegister clientRegister) {
-
-		if (!string.IsNullOrWhiteSpace(clientRegister.PhoneNumber)) {
-
-			var existingPhone = _context.Clients.Where(c => c.PhoneNumber == clientRegister.PhoneNumber);
-			if (existingPhone != null) {
-				return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
-			}
-
-		}
-		else {
-			clientRegister.PhoneNumber = string.Empty;
-		}
-
-		if (!string.IsNullOrWhiteSpace(clientRegister.CPF)) {
-
-			var existingCPF = _context.Clients.Where(c => c.CPF == clientRegister.CPF);
-			if (existingCPF != null) {
-				return BadRequest(AlreadyRegisteredErrors.CPF);
-			}
-
-		}
-		else {
-			clientRegister.CPF = string.Empty;
-		}
-
-		if (!string.IsNullOrWhiteSpace(clientRegister.Email)) {
-			var existingEmail = await _userManager.FindByEmailAsync(clientRegister.Email);
-			if (existingEmail == null) {
-				existingEmail = await _context.Clients.FirstOrDefaultAsync(x => x.Email == clientRegister.Email);
-			}
-			if (existingEmail != null) {
-				return BadRequest(AlreadyRegisteredErrors.Email);
-			}
-		}
-		else {
-			clientRegister.Email = string.Empty;
-		}
+	public async Task<IActionResult> CreateClient([FromBody] ClientCreate clientRegister) {
 
 		Client client = new Client(clientRegister);
 
-		IdentityResult userCreationResult = new IdentityResult();
-
-		if (client.signedUp) {
-			userCreationResult = await _userManager.CreateAsync(client, clientRegister.confirmPassword);
-		}
-		else {
-			userCreationResult = await _userManager.CreateAsync(client);
-		}
+		IdentityResult userCreationResult = await _userManager.CreateAsync(client);
 
 		if (!userCreationResult.Succeeded) {
 			return StatusCode(500, "Internal Server Error: Register Client Unsuccessful");
-		}
-
-		var roleExist = await _roleManager.RoleExistsAsync(Common.Client_Role);
-		if (!roleExist) {
-			await _roleManager.CreateAsync(new IdentityRole(Common.Client_Role));
-		}
-
-		var userRoleAddResult = await _userManager.AddToRoleAsync(client, Common.Client_Role);
-
-		if (!userRoleAddResult.Succeeded) {
-			return StatusCode(500, "Internal Server Error: Add Client Role Unsuccessful");
 		}
 
 		await _context.SaveChangesAsync();
@@ -179,7 +122,7 @@ public class ClientController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
-	public async Task<IActionResult> UpdateClient([FromBody] ClientRegister upClient) {
+	public async Task<IActionResult> UpdateClient([FromBody] ClientCreate upClient) {
 
 		var existingClient = await _userManager.FindByIdAsync(upClient.Id);
 		if (existingClient == null) {
@@ -196,16 +139,6 @@ public class ClientController : ControllerBase {
 			}
 		}
 
-		if (existingClient.UserName != upClient.UserName) {
-			var existingUsername = _context.Clients.Where(x => x.UserName == upClient.UserName);
-			if (existingUsername.Any()) {
-				return BadRequest(AlreadyRegisteredErrors.UserName);
-			}
-			else {
-				await _userManager.SetUserNameAsync(existingClient, upClient.UserName);
-			}
-		}
-
 		if (existingClient.PhoneNumber != upClient.PhoneNumber) {
 			var existingPhonenumber = _context.Clients.Where(x => x.PhoneNumber == upClient.PhoneNumber);
 			if (existingPhonenumber.Any()) {
@@ -216,34 +149,20 @@ public class ClientController : ControllerBase {
 			}
 		}
 
+		if (existingClient.Email != upClient.Email) {
+			var existingEmail = _context.Clients.Where(x => x.Email == upClient.Email);
+			if (existingEmail.Any()) {
+				return BadRequest(AlreadyRegisteredErrors.Email);
+			}
+			else {
+				await _userManager.SetEmailAsync(existingClient, upClient.Email);
+			}
+		}
+
 		existingClient.additionalNote = upClient.additionalNote;
 
 		await _context.SaveChangesAsync();
 
 		return Ok((ClientDTO)existingClient);
-	}
-
-	/// <summary>
-	/// Deletes the Client with the given Id
-	/// </summary>
-	/// <param name="Id">The Id of the Client to be deleted</param>
-	/// <returns>NoContentResult</returns>
-	/// <response code="204">Client was found, and thus deleted</response>
-	/// <response code="400">There was no Client with the given Id</response>
-	[ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(ClientDTO))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpDelete("{Id}")]
-	public async Task<IActionResult> DeleteClient(string Id) {
-
-		var client = await _userManager.FindByIdAsync(Id);
-		if (client == null) {
-			return BadRequest(NotExistErrors.Client);
-		}
-
-		await _userManager.DeleteAsync(client);
-
-		await _context.SaveChangesAsync();
-
-		return NoContent();
 	}
 }

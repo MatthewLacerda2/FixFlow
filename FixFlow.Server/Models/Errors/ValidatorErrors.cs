@@ -15,6 +15,7 @@ public struct ValidatorErrors {
 	public static readonly string PriceMustBeNaturalNumber = "Price must be Greater Than or Equal to Zero.";
 
 	public static readonly string CPFisInvalid = "CPF is invalid.";
+	public static readonly string CNPJisInvalid = "CNPJ is invalid.";
 	public static readonly string UsernameIsEmpty = "UserName is empty!";
 	public static readonly string UsernameHasWhitespaces = "Username cannot contain whitespaces.";
 	public static readonly string ShortPassword = "Password must have at least 8 characters.";

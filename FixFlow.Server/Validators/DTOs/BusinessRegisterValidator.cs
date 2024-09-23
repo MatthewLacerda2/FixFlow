@@ -7,12 +7,6 @@ namespace Server.Validators.DTOs;
 
 public class BusinessRegisterValidator : AbstractValidator<BusinessRegister> {
 	public BusinessRegisterValidator() {
-		RuleFor(x => x.CPF).Custom((cpf, context) => {
-			if (cpf != null && StringChecker.isCPFvalid(cpf)) {
-				context.AddFailure(ValidatorErrors.CPFisInvalid);
-			}
-		});
-
 		RuleFor(x => x.Name).Custom((userName, context) => {
 			if (string.IsNullOrWhiteSpace(userName)) {
 				context.AddFailure(ValidatorErrors.UsernameIsEmpty);
@@ -33,5 +27,7 @@ public class BusinessRegisterValidator : AbstractValidator<BusinessRegister> {
 		});
 
 		RuleFor(x => x.confirmPassword).Equal(x => x.password).WithErrorCode(ValidatorErrors.ConfirmPassword);
+
+		RuleFor(x => x.CNPJ).Matches(@"^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$").WithMessage(ValidatorErrors.CNPJisInvalid);
 	}
 }

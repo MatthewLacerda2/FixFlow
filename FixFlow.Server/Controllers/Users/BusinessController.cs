@@ -34,7 +34,7 @@ public class BusinessController : ControllerBase {
 	/// <returns>BusinessDTO</returns>/// 
 	/// <response code="200">The Business's DTO</response>
 	/// <response code="404">There was no Business with the given Id</response>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BusinessDTO>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BusinessInfo>))]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[HttpGet("{Id}")]
 	public async Task<IActionResult> ReadBusiness(string Id) {
@@ -45,7 +45,7 @@ public class BusinessController : ControllerBase {
 			return NotFound(NotExistErrors.Business);
 		}
 
-		return Ok((BusinessDTO)business);
+		return Ok((BusinessInfo)business);
 	}
 
 	/// <summary>
@@ -60,7 +60,7 @@ public class BusinessController : ControllerBase {
 	/// <param name="sort">Orders the result by a given field. Does not order if the field does not exist</param>
 	/// <returns>BusinessDTO[]</returns>
 	/// <response code="200">Returns an array ofBusinessDTO</response>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BusinessDTO[]>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BusinessInfo[]>))]
 	[HttpGet]
 	public async Task<IActionResult> ReadBusiness(string? username, uint? offset, uint? limit, string? sort) {
 
@@ -86,7 +86,7 @@ public class BusinessController : ControllerBase {
 
 		businessQuery = businessQuery.Skip((int)offset).Take((int)limit);
 
-		var resultsArray = await businessQuery.Select(c => (BusinessDTO)c).ToArrayAsync();
+		var resultsArray = await businessQuery.Select(c => (BusinessInfo)c).ToArrayAsync();
 
 		return Ok(resultsArray);
 	}
@@ -97,7 +97,7 @@ public class BusinessController : ControllerBase {
 	/// <returns>The created Business's Data</returns>
 	/// <response code="200">BusinessDTO</response>
 	/// <response code="400">The Client's (PhoneNumber || CPF || Email) does not exist</response>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessInfo))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
 	[HttpPost]
@@ -139,7 +139,7 @@ public class BusinessController : ControllerBase {
 
 		await _context.SaveChangesAsync();
 
-		return CreatedAtAction(nameof(CreateBusiness), (BusinessDTO)Business);
+		return CreatedAtAction(nameof(CreateBusiness), (BusinessInfo)Business);
 	}
 
 	/// <summary>
@@ -148,7 +148,7 @@ public class BusinessController : ControllerBase {
 	/// <returns>BusinessDTO</returns>
 	/// <response code="200">Updated Business's DTO</response>
 	/// <response code="400">There was no Business with the given Id</response>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessInfo))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
 	public async Task<IActionResult> UpdateBusiness([FromBody] BusinessRegister upBusiness) {
@@ -206,7 +206,7 @@ public class BusinessController : ControllerBase {
 
 		await _context.SaveChangesAsync();
 
-		return Ok((BusinessDTO)existingBusiness);
+		return Ok((BusinessInfo)existingBusiness);
 	}
 
 	/// <summary>

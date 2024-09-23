@@ -2,14 +2,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models.DTO;
 
-public class ClientDTO {
+public class ClientUpdate {
 
 	[Required]
-	public string Id { get; set; }
+	public string Id { get; set; } = string.Empty;
+
+	/// <summary>
+	/// The business from which the Client is a customer
+	/// </summary>
+	[Required]
+	public string businessId { get; set; } = string.Empty;
 
 	[Required]
 	[MinLength(5)]
-	public string FullName { get; set; }
+	public string FullName { get; set; } = string.Empty;
 
 	/// <summary>
 	/// CPF. Must be on format XXX.XXX.XXX-XX
@@ -28,16 +34,8 @@ public class ClientDTO {
 	/// </summary>
 	[Required]
 	[Phone]
-	public string PhoneNumber { get; set; }
+	public string PhoneNumber { get; set; } = string.Empty;
 
 	[EmailAddress]
 	public string? Email { get; set; }
-
-	public ClientDTO(string _Id, string fullname, string cpf, string _phoneNumber, string _email) {
-		Id = _Id;
-		FullName = fullname;
-		CPF = cpf;
-		PhoneNumber = _phoneNumber;
-		Email = _email;
-	}
 }

@@ -4,40 +4,31 @@ namespace Server.Models.DTO;
 
 public class BusinessRegister {
 
-	[Required]
-	public string Id { get; set; }
-
 	/// <summary>
-	/// NickName. Must not contain spaces
+	/// The Name of the Business or Business owner
 	/// </summary>
 	[Required]
 	[MinLength(2)]
-	public string Name { get; set; }
-
-	/// <summary>
-	/// CPF. Must be on format XXX.XXX.XXX-XX
-	/// </summary>
-	[Length(14, 14)]
-	public string CPF { get; set; }
-	//TODO: tem que ao menos CPF *OU* CNPJ
+	public string Name { get; set; } = string.Empty;
 
 	/// <summary>
 	/// CNPJ. Must be on format XX.XXX.XXX/XXXX-XX
 	/// </summary>
-	public string? CNPJ { get; set; }
+	[Length(18, 18)]
+	public string CNPJ { get; set; } = string.Empty;
 
 	[MinLength(5)]
-	public string description { get; set; }
+	public string description { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Phone Number. Must contain only numbers and/or a '+'
 	/// </summary>
 	[Required]
 	[Phone]
-	public string PhoneNumber { get; set; }
+	public string PhoneNumber { get; set; } = string.Empty;
 
 	[EmailAddress]
-	public string Email { get; set; }
+	public string Email { get; set; } = string.Empty;
 
 	[MinLength(7)]
 	public string password = string.Empty;
@@ -47,16 +38,4 @@ public class BusinessRegister {
 	/// </summary>
 	[MinLength(7)]
 	public string confirmPassword { get; set; } = string.Empty;
-
-	public BusinessRegister(string id, string name, string cpf, string cnpj, string _userName, string phonenumber, string email, string _description) {
-		Id = id;
-		Name = name;
-		CPF = cpf;
-		CNPJ = cnpj;
-
-		Name = _userName;
-		PhoneNumber = phonenumber;
-		Email = email;
-		description = _description;
-	}
 }

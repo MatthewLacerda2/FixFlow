@@ -17,15 +17,15 @@ namespace Server.Controllers;
 [Route("api/v1/accounts")]
 public class AccountsController : ControllerBase {
 
-	private readonly SignInManager<IdentityUser> _signInManager;
-	private readonly UserManager<IdentityUser> _userManager;
+	private readonly SignInManager<Business> _signInManager;
+	private readonly UserManager<Business> _userManager;
 	private readonly IConfiguration _configuration;
 	private readonly ServerContext _context;
 	private readonly MailResetPassword _emailResetPasswordService;
 
 	public static readonly int ResetEmailTokenExpirationInMinutes = 15;
 
-	public AccountsController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
+	public AccountsController(SignInManager<Business> signInManager, UserManager<Business> userManager,
 								IConfiguration configuration, ServerContext context, MailResetPassword emailResetPasswordService) {
 		_signInManager = signInManager;
 		_userManager = userManager;
@@ -45,9 +45,8 @@ public class AccountsController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> Login([FromBody] FlowLoginRequest model) {
 
-		if (!string.IsNullOrEmpty(model.Email)) {
-
-			var userExists = _userManager.FindByEmailAsync(model.Email).Result;
+		if (!string.IsNullOrEmpty(model.email)) {
+			var userExists = _userManager.FindByEmailAsync(model.email).Result;
 
 			if (userExists == null) {
 				return Unauthorized("Wrong UserName/Email or Password");
@@ -61,7 +60,6 @@ public class AccountsController : ControllerBase {
 
 				model.UserName = userExists.UserName!;
 			}
-
 		}
 
 		var result = await _signInManager.PasswordSignInAsync(model.UserName, model.password, true, false);
