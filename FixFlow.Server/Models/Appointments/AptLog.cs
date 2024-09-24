@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Server.Models.Appointments;
 
 public class AptLog {
-	
+
 	[Required]
 	public string Id { get; set; }
 

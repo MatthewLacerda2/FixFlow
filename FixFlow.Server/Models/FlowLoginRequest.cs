@@ -11,5 +11,5 @@ public class FlowLoginRequest {
 	[Required]
 	[MinLength(7)]
 	public string password { get; set; }
-	
+
 }
