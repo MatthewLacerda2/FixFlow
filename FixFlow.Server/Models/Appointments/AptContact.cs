@@ -63,15 +63,4 @@ public class AptContact {
 		businessId = string.Empty;
 		Business = null!;
 	}
-
-	public AptContact(string _clientId, string _businessId, string _prevAppoint, DateTime _dateTime) {
-		Id = Guid.NewGuid().ToString();
-		clientId = _clientId;
-		businessId = _businessId;
-		aptLogId = _prevAppoint;
-		Client = null!;
-		Business = null!;
-		aptLog = null!;
-		dateTime = _dateTime;
-	}
 }

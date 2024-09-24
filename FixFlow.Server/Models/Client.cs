@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
-using Server.Models.DTO;
 //TODO: considerar quando o cliente é outra empresa
 namespace Server.Models;
 
@@ -27,25 +26,5 @@ public class Client : IdentityUser {
 	public Client() {
 		FullName = string.Empty;
 		businessId = string.Empty;
-	}
-
-	public Client(string _businessId, string fullname, string cpf, string _additionalNote, string _phoneNumber, string _email) {
-		businessId = _businessId;
-		FullName = fullname;
-		CPF = cpf;
-		additionalNote = _additionalNote;
-
-		PhoneNumber = _phoneNumber;
-		Email = _email;
-	}
-
-	public Client(ClientCreate register) {
-		businessId = register.businessId;
-		FullName = register.FullName;
-		CPF = register.CPF;
-		additionalNote = register.additionalNote;
-
-		PhoneNumber = register.PhoneNumber;
-		Email = register.Email;
 	}
 }

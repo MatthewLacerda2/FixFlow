@@ -12,4 +12,8 @@ public class FlowLoginRequest {
 	[MinLength(7)]
 	public string password { get; set; }
 
+	public FlowLoginRequest() {
+		email = string.Empty;
+		password = string.Empty;
+	}
 }

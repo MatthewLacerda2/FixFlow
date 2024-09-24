@@ -62,14 +62,4 @@ public class AptSchedule {
 		businessId = string.Empty;
 		Business = null!;
 	}
-
-	public AptSchedule(string _clientId, string _businessId, DateTime _dateTime) {
-		Id = Guid.NewGuid().ToString();
-		clientId = _clientId;
-		businessId = _businessId;
-		Client = null!;
-		Contact = null!;
-		dateTime = _dateTime;
-		Business = null!;
-	}
 }
