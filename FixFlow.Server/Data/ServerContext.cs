@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using Server.Models.Appointments;
-using Server.Models.DTO;
-using Server.Models.PasswordReset;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext {
@@ -14,8 +12,6 @@ public class ServerContext : IdentityDbContext {
 	public DbSet<AptLog> Logs { get; set; } = default!;
 	public DbSet<AptContact> Contacts { get; set; } = default!;
 	public DbSet<AptSchedule> Schedules { get; set; } = default!;
-
-	public DbSet<PasswordResetRequest> Resets { get; set; } = default!;
 
 	public DbSet<IdlePeriod> IdlePeriods { get; set; } = default!;
 

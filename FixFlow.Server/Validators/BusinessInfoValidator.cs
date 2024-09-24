@@ -1,5 +1,5 @@
 using FluentValidation;
-using Server.Models.DTO;
+using Server.Models;
 using Server.Models.Erros;
 
 namespace Server.Validators;

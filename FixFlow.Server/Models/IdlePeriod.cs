@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Server.Models.DTO;
+namespace Server.Models;
 
 public class IdlePeriod {
 
