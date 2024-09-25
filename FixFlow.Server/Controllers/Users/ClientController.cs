@@ -13,7 +13,7 @@ namespace Server.Controllers;
 /// Controller class for Client's stuff
 /// </summary>
 [ApiController]
-[Route(Common.api_route + "client")]
+[Route(Common.api_v1 + "client")]
 [Produces("application/json")]
 public class ClientController : ControllerBase {
 
@@ -23,26 +23,6 @@ public class ClientController : ControllerBase {
 	public ClientController(ServerContext context, UserManager<Client> userManager) {
 		_context = context;
 		_userManager = userManager;
-	}
-
-	/// <summary>
-	/// Get a Client with the given Id
-	/// </summary>
-	/// <returns>ClientDTO</returns>
-	/// <param name="Id">The Client's Id</param>
-	/// <response code="200">The ClientDTO</response>
-	/// <response code="404">There was no Client with the given Id</response>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO>))]
-	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-	[HttpGet("{Id}")]
-	public async Task<IActionResult> ReadClient(string Id) {
-
-		var client = await _userManager.FindByIdAsync(Id);
-		if (client == null) {
-			return NotFound(NotExistErrors.Client);
-		}
-
-		return Ok((ClientDTO)client);
 	}
 
 	/// <summary>
@@ -83,7 +63,7 @@ public class ClientController : ControllerBase {
 
 		clientsQuery = clientsQuery.Skip((int)offset).Take((int)limit);
 
-		var resultsArray = await clientsQuery.Select(c => (ClientDTO)c).ToArrayAsync();
+		var resultsArray = await clientsQuery.ToArrayAsync();
 
 		return Ok(resultsArray);
 	}
@@ -98,9 +78,9 @@ public class ClientController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
 	[HttpPost]
-	public async Task<IActionResult> CreateClient([FromBody] ClientCreate clientRegister) {
+	public async Task<IActionResult> CreateClient([FromBody] ClientCreate clientCreate) {
 
-		Client client = new Client(clientRegister);
+		Client client = (Client)clientCreate;
 
 		IdentityResult userCreationResult = await _userManager.CreateAsync(client);
 
@@ -122,7 +102,7 @@ public class ClientController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
-	public async Task<IActionResult> UpdateClient([FromBody] ClientCreate upClient) {
+	public async Task<IActionResult> UpdateClient([FromBody] ClientDTO upClient) {
 
 		var existingClient = await _userManager.FindByIdAsync(upClient.Id);
 		if (existingClient == null) {

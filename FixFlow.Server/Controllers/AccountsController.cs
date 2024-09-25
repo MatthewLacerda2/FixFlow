@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Server.Data;
 using Server.Models;
-using Server.Models.PasswordReset;
+using Server.Models.Utils;
 using Server.Services;
 
 namespace Server.Controllers;
@@ -23,7 +23,7 @@ public class AccountsController : ControllerBase {
 	private readonly ServerContext _context;
 	private readonly MailResetPassword _emailResetPasswordService;
 
-	public static readonly int ResetEmailTokenExpirationInMinutes = 15;
+	const string wrongCredentialsMessage = "Wrong UserName/Email or Password";
 
 	public AccountsController(SignInManager<Business> signInManager, UserManager<Business> userManager,
 								IConfiguration configuration, ServerContext context, MailResetPassword emailResetPasswordService) {
@@ -35,9 +35,9 @@ public class AccountsController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Get a Token when Logging in, with either UserName or Email, and Password
+	/// Login with an email and password
 	/// </summary>
-	/// <returns>string</returns>
+	/// <returns>BusinessInfo</returns>
 	/// <response code="200">Successfull login</response>
 	/// <response code="401">Unauthorized login</response>
 	[ProducesResponseType(StatusCodes.Status200OK)]
@@ -45,40 +45,26 @@ public class AccountsController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> Login([FromBody] FlowLoginRequest model) {
 
-		if (!string.IsNullOrEmpty(model.email)) {
-			var userExists = _userManager.FindByEmailAsync(model.email).Result;
+		var userExists = _userManager.FindByEmailAsync(model.email).Result;
 
-			if (userExists == null) {
-				return Unauthorized("Wrong UserName/Email or Password");
-			}
-			else {
-				var hasPassword = await _userManager.HasPasswordAsync(userExists);
-
-				if (!hasPassword) {
-					return Unauthorized("Wrong UserName/Email or Password");
-				}
-
-				model.UserName = userExists.UserName!;
-			}
+		if (userExists == null) {
+			return Unauthorized(wrongCredentialsMessage);
 		}
 
-		var result = await _signInManager.PasswordSignInAsync(model.UserName, model.password, true, false);
+		var result = await _signInManager.PasswordSignInAsync(userExists, model.password, true, false);
 
-		if (result.Succeeded) {
-			var user = await _userManager.FindByNameAsync(model.UserName);
-
-			var roles = await _userManager.GetRolesAsync(user!);
-
-			var token = GenerateToken(user!, roles.ToArray());
-
-			await _context.SaveChangesAsync();
-			return Ok(token);
+		if (!result.Succeeded) {
+			return Unauthorized(wrongCredentialsMessage);
 		}
 
-		return Unauthorized("Wrong UserName/Email or Password");
+		var token = GenerateToken(userExists);
+
+		await _context.SaveChangesAsync();
+		return Ok(token);
 	}
 
-	private string GenerateToken(IdentityUser user, string[] roles) {
+	private string GenerateToken(Business user) {
+
 		var UserDTOJson = JsonConvert.SerializeObject(user);
 
 		var claims = new List<Claim>{
@@ -86,15 +72,10 @@ public class AccountsController : ControllerBase {
 			new Claim(ClaimTypes.Email, user.Email!),
 			new Claim("UserDTO",UserDTOJson)
 		};
-
-		foreach (var role in roles) {
-			claims.Add(new Claim(ClaimTypes.Role, role));
-		}
-
 		var key = Encoding.UTF32.GetBytes(_configuration["Jwt:SecretKey"]!);
 		var tokenDescriptor = new SecurityTokenDescriptor {
 			Subject = new ClaimsIdentity(claims),
-			Expires = DateTime.UtcNow.AddMinutes(20),
+			Expires = DateTime.UtcNow.AddMinutes(Common.tokenExpirationTimeInMinutes),
 			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
 		};
 
@@ -102,93 +83,6 @@ public class AccountsController : ControllerBase {
 		var token = tokenHandler.CreateToken(tokenDescriptor);
 
 		return tokenHandler.WriteToken(token);
-	}
-
-	/// <summary>
-	/// Sends an email with the link for resetting the password
-	/// </summary>
-	/// <returns>NoContentResult</returns>
-	/// <response code="404">Email not found</response>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpPost("reset/email")]
-	public async Task<ActionResult> PasswordResetEmail([FromBody] string email) {
-
-		IdentityUser user = _userManager.FindByEmailAsync(email).Result!;
-		if (user == null) {
-			return BadRequest("Email not found");
-		}
-
-		var hasEmail = _context.Resets.Where(r => r.Email == email).First();
-		if (hasEmail != null && hasEmail.dateTime >= DateTime.Now.AddMinutes(-ResetEmailTokenExpirationInMinutes)) {
-			return BadRequest("Cannot send Email at this time");
-		}
-
-		var PasswordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-		PasswordResetRequest passwordReset = new PasswordResetRequest(email, PasswordResetToken, DateTime.Now);
-		await _context.Resets.AddAsync(passwordReset);
-
-		await _emailResetPasswordService.SendResetPasswordEmailAsync(passwordReset);
-
-		return Ok("Password Reset Email sent");
-
-	}
-
-	/// <summary>
-	/// Changes password for the User who wanted to reset it
-	/// User must have the link sent in the 'Password Reset' email
-	/// </summary>
-	/// <returns>string</returns>
-	/// <response code="200">Password change successfull</response>
-	/// <response code="401">Password change unsucessfull</response>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpPatch("reset/request")]
-	public async Task<IActionResult> PasswordResetRequest([FromBody] PasswordReset passwordReset) {
-
-		IdentityUser user = _userManager.FindByEmailAsync(passwordReset.Email).Result!;
-		if (user == null) {
-			return BadRequest("Email not found");
-		}
-
-		PasswordResetRequest pr = _context.Resets.Find(passwordReset.token)!;
-
-		if (pr == null || pr.dateTime < DateTime.Now.AddMinutes(-ResetEmailTokenExpirationInMinutes)) {
-			return BadRequest("Password Change Unsuccessfull. ");
-		}
-
-		var result = await _userManager.ResetPasswordAsync(user, passwordReset.token, passwordReset.password);
-
-		if (!result.Succeeded) {
-			return BadRequest("Password Change Unsuccessfull. " + result.Errors);
-		}
-
-		await _context.SaveChangesAsync();
-
-		return Ok("Password changed successfully");
-	}
-
-	/// <summary>
-	/// Returns the PasswordReset belonging to that token
-	/// Used when the User tries to access a 'Password Reset' link
-	/// </summary>
-	/// <param name="token">The Token for the Password Reset Request</param>
-	/// <returns>The data model needed when trying to Reset the Password
-	/// We only need the Email, but we send the whole 'PasswordResetRequest' model for convenience at the Front-End
-	/// </returns>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PasswordReset))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpPatch("reset/link")]
-	public async Task<IActionResult> PasswordResetLinkValidation(string token) {
-		var validated = await _context.Resets.FindAsync(token);
-
-		if (validated == null) {
-			return BadRequest("Invalid!");
-		}
-
-		PasswordReset PR = new PasswordReset(validated.Email, validated.token);
-
-		return Ok(PR);
 	}
 
 	/// <summary>

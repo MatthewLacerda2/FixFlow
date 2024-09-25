@@ -2,6 +2,8 @@ namespace Server.Models.Filters;
 
 public class AptLogFilter {
 
+	public string businessId = string.Empty;
+
 	public string? client;
 	public string? service;
 
@@ -11,7 +13,7 @@ public class AptLogFilter {
 	public DateOnly minDateTime;
 	public DateOnly maxDateTime;
 
-	public ScheduleSort sort = ScheduleSort.Date;
+	public LogSort sort = LogSort.Date;
 
 	public bool descending = false;
 	public int offset = 0;
@@ -20,5 +22,5 @@ public class AptLogFilter {
 }
 
 public enum LogSort {
-	Client, Price, Hour, Date
+	Client, Price, Date
 }

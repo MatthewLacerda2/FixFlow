@@ -5,14 +5,11 @@ using Server.Models.Utils;
 
 namespace Server.Validators.DTOs;
 
-public class BusinessRegisterValidator : AbstractValidator<BusinessRegister> {
+public class BusinessRegisterValidator : AbstractValidator<BusinessRegisterRequest> {
 	public BusinessRegisterValidator() {
 		RuleFor(x => x.Name).Custom((userName, context) => {
 			if (string.IsNullOrWhiteSpace(userName)) {
 				context.AddFailure(ValidatorErrors.UsernameIsEmpty);
-			}
-			if (userName.Contains(" ")) {
-				context.AddFailure(ValidatorErrors.UsernameHasWhitespaces);
 			}
 		});
 

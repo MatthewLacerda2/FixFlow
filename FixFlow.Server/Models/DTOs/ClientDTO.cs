@@ -33,11 +33,23 @@ public class ClientDTO {
 	[EmailAddress]
 	public string? Email { get; set; }
 
-	public ClientDTO(string _Id, string fullname, string cpf, string _phoneNumber, string _email) {
+	public ClientDTO(string _Id, string fullname, string? cpf, string _phoneNumber, string? _email, string? additionalNote) {
 		Id = _Id;
 		FullName = fullname;
 		CPF = cpf;
 		PhoneNumber = _phoneNumber;
 		Email = _email;
+	}
+
+	public static explicit operator ClientDTO(Client client) {
+		return new ClientDTO
+		(
+			client.Id,
+			client.FullName,
+			client.CPF,
+			client.PhoneNumber!,
+			client.Email,
+			client.additionalNote
+		);
 	}
 }

@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
-using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
 using Server.Models.Filters;
@@ -17,7 +15,7 @@ namespace Server.Controllers;
 /// Logs are simply registration that the Appointment was done
 /// </remarks>
 [ApiController]
-[Route(Common.api_route + "logs")]
+[Route(Common.api_v1 + "logs")]
 [Produces("application/json")]
 public class AptLogController : ControllerBase {
 
@@ -63,41 +61,46 @@ public class AptLogController : ControllerBase {
 
 		var logsQuery = _context.Logs.AsQueryable();
 
-		if (!string.IsNullOrWhiteSpace(filter.clientId)) {
-			logsQuery = logsQuery.Where(x => x.clientId == filter.clientId);
+		logsQuery = logsQuery.Where(x => x.businessId == filter.businessId);
+
+		if (!string.IsNullOrWhiteSpace(filter.client)) {
+			logsQuery = logsQuery.Where(x => x.Client.FullName.Contains(filter.client!));
 		}
 
-		if (!string.IsNullOrWhiteSpace(filter.businessId)) {
-			logsQuery = logsQuery.Where(x => x.businessId == filter.businessId);
+		if (filter.service != null) {
+			logsQuery = logsQuery.Where(x => x.service != null && x.service == filter.service);
 		}
-
-		if (filter.hasSchedule.HasValue) {
-			logsQuery = logsQuery.Where(x => x.scheduleId != null == filter.hasSchedule.Value);
-		}
-
-		logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
-		logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
 
 		logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
 		logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
 
+		logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
+		logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
+
 		switch (filter.sort) {
-			case LogSort.ClientId:
-				logsQuery = logsQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
-				break;
-			case LogSort.BusinessId:
-				logsQuery = logsQuery.OrderBy(s => s.businessId).ThenBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+			case LogSort.Client:
+				logsQuery = logsQuery.OrderBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
 				break;
 			case LogSort.Date:
-				logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
+				logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
 				break;
 			case LogSort.Price:
-				logsQuery = logsQuery.OrderByDescending(s => s.price).ThenBy(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
+				logsQuery = logsQuery.OrderByDescending(s => s.price).ThenBy(s => s.dateTime).ThenBy(s => s.Id);
 				break;
 		}
 
 		if (filter.descending) {
-			logsQuery.Order();
+			switch (filter.sort) {
+				case LogSort.Client:
+					logsQuery = logsQuery.OrderByDescending(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+					break;
+				case LogSort.Date:
+					logsQuery = logsQuery.OrderBy(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+					break;
+				case LogSort.Price:
+					logsQuery = logsQuery.OrderBy(s => s.price).ThenBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+					break;
+			}
 		}
 
 		var resultsArray = await logsQuery
@@ -127,6 +130,7 @@ public class AptLogController : ControllerBase {
 			}
 		}
 
+		//TODO: check for idle period and business hours
 		_context.Logs.Add(newLog);
 		await _context.SaveChangesAsync();
 
@@ -149,14 +153,7 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.AptLog);
 		}
 
-		if (!string.IsNullOrWhiteSpace(upLog.scheduleId)) {
-			var existingSchedule = _context.Schedules.Find(upLog.scheduleId);
-
-			if (existingSchedule == null) {
-				return BadRequest(NotExistErrors.AptSchedule);
-			}
-		}
-
+		//TODO: check for idle period and business hours
 		_context.Logs.Update(upLog);
 		await _context.SaveChangesAsync();
 

@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
-using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
 using Server.Models.Filters;
@@ -17,7 +15,7 @@ namespace Server.Controllers;
 /// Schedules are simply the setup of an Appointment, not the Appointment itself
 /// </remarks>
 [ApiController]
-[Route(Common.api_route + "schedules")]
+[Route(Common.api_v1 + "schedules")]
 [Produces("application/json")]
 public class AptScheduleController : ControllerBase {
 
@@ -61,35 +59,46 @@ public class AptScheduleController : ControllerBase {
 	public async Task<IActionResult> ReadSchedules([FromBody] AptScheduleFilter filter) {
 		var schedulesQuery = _context.Schedules.AsQueryable();
 
-		if (!string.IsNullOrWhiteSpace(filter.clientId)) {
-			schedulesQuery = schedulesQuery.Where(x => x.clientId == filter.clientId);
+		schedulesQuery = _context.Schedules.Where(x => x.businessId == filter.businessId);
+
+		if (!string.IsNullOrWhiteSpace(filter.client)) {
+			schedulesQuery = schedulesQuery.Where(x => x.Client.FullName.Contains(filter.client));
 		}
 
-		if (!string.IsNullOrWhiteSpace(filter.businessId)) {
-			schedulesQuery = schedulesQuery.Where(x => x.businessId == filter.businessId);
-		}
-
-		if (filter.hasContact.HasValue) {
-			schedulesQuery = schedulesQuery.Where(x => x.contactId != null == filter.hasContact.Value);
+		if (!string.IsNullOrWhiteSpace(filter.service)) {
+			schedulesQuery = schedulesQuery.Where(x => x.service != null && x.service.Contains(filter.service));
 		}
 
 		schedulesQuery = schedulesQuery.Where(x => x.dateTime >= new DateTime(filter.minDateTime, new TimeOnly(0)));
 		schedulesQuery = schedulesQuery.Where(x => x.dateTime <= new DateTime(filter.maxDateTime, new TimeOnly(0)));
 
+		schedulesQuery = schedulesQuery.Where(x => x.price >= filter.minPrice);
+		schedulesQuery = schedulesQuery.Where(x => x.price <= filter.maxPrice);
+
 		switch (filter.sort) {
-			case ScheduleSort.ClientId:
-				schedulesQuery = schedulesQuery.OrderBy(s => s.clientId).ThenByDescending(s => s.dateTime).ThenBy(s => s.businessId).ThenBy(s => s.Id);
+			case ScheduleSort.Client:
+				schedulesQuery = schedulesQuery.OrderBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
 				break;
-			case ScheduleSort.BusinessId:
-				schedulesQuery = schedulesQuery.OrderBy(s => s.businessId).ThenByDescending(s => s.dateTime).ThenBy(s => s.clientId).ThenBy(s => s.Id);
+			case ScheduleSort.Price:
+				schedulesQuery = schedulesQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.Id);
 				break;
 			case ScheduleSort.Date:
-				schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.businessId).ThenBy(s => s.clientId).ThenBy(s => s.Id);
+				schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
 				break;
 		}
 
 		if (filter.descending) {
-			schedulesQuery.Reverse();
+			switch (filter.sort) {
+				case ScheduleSort.Client:
+					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+					break;
+				case ScheduleSort.Price:
+					schedulesQuery = schedulesQuery.OrderByDescending(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.Id);
+					break;
+				case ScheduleSort.Date:
+					schedulesQuery = schedulesQuery.OrderBy(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.price).ThenBy(s => s.Id);
+					break;
+			}
 		}
 
 		var resultsArray = await schedulesQuery
@@ -110,14 +119,8 @@ public class AptScheduleController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPost]
 	public async Task<IActionResult> CreateSchedule([FromBody] AptSchedule newAppointment) {
-		if (!string.IsNullOrWhiteSpace(newAppointment.contactId)) {
-			var existingContact = _context.Contacts.Find(newAppointment.contactId);
 
-			if (existingContact == null) {
-				return BadRequest(NotExistErrors.AptContact);
-			}
-		}
-
+		//TODO: check for idle period and business hours
 		_context.Schedules.Add(newAppointment);
 		await _context.SaveChangesAsync();
 
@@ -140,14 +143,7 @@ public class AptScheduleController : ControllerBase {
 			return BadRequest(NotExistErrors.AptSchedule);
 		}
 
-		if (upAppointment.contactId != null) {
-			var existingContact = _context.Contacts.Find(upAppointment.contactId);
-
-			if (existingContact == null) {
-				return BadRequest(NotExistErrors.AptContact);
-			}
-		}
-
+		//TODO: check for idle period and business hours
 		_context.Schedules.Update(upAppointment);
 		await _context.SaveChangesAsync();
 

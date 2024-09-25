@@ -1,4 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
+using Server.Models.DTO;
 
 namespace Server.Models;
 
@@ -19,7 +22,22 @@ public class Business : IdentityUser {
 	/// </summary>
 	public string CNPJ { get; set; }
 
-	public string description { get; set; }
+	public string Description { get; set; }
+
+	[NotMapped]
+	public string token { get; set; }
+
+	/// <summary>
+	/// The DateTimes of the week where the business is open
+	/// </summary>
+	public DateTime[,] BusinessDays { get; set; } = new DateTime[2, 7];
+
+	[MaxLength(16)]
+	public string[] Services { get; set; }
+
+	public bool allowListedServicesOnly { get; set; } = false;
+	public bool holidayOpen { get; set; } = false;
+	public bool domicileService { get; set; } = false;
 
 	public Business() {
 		CreatedDate = DateTime.Now;
@@ -27,6 +45,22 @@ public class Business : IdentityUser {
 
 		Name = string.Empty;
 		CNPJ = string.Empty;
-		description = string.Empty;
+		Description = string.Empty;
+	}
+
+	public Business(string name, string email, string cnpj, string phoneNumber, string description) {
+		CreatedDate = DateTime.Now;
+		LastLogin = DateTime.Now;
+
+		Name = name;
+		UserName = name.Replace(" ", string.Empty);
+		Email = email;
+		CNPJ = cnpj;
+		PhoneNumber = phoneNumber;
+		Description = description;
+	}
+
+	public static explicit operator Business(BusinessRegisterRequest request) {
+		return new Business(request.Name, request.Email, request.CNPJ, request.PhoneNumber, request.description);
 	}
 }

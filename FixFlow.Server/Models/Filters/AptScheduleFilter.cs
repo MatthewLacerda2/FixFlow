@@ -2,6 +2,8 @@ namespace Server.Models.Filters;
 
 public class AptScheduleFilter {
 
+	public string businessId = string.Empty;
+
 	public string? client;
 	public string? service;
 
@@ -20,5 +22,5 @@ public class AptScheduleFilter {
 }
 
 public enum ScheduleSort {
-	Client, Price, Hour, Date
+	Client, Price, Date
 }

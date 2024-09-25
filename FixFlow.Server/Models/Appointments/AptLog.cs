@@ -52,6 +52,8 @@ public class AptLog {
 	/// </summary>
 	public DateTime dateTime { get; set; } = DateTime.Now;
 
+	public string? service { get; set; }
+
 	public float price { get; set; }
 
 	/// <summary>

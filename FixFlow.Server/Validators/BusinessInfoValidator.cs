@@ -6,7 +6,7 @@ namespace Server.Validators;
 
 public class BusinessInfoValidator : AbstractValidator<BusinessInfo> {
 	public BusinessInfoValidator() {
-		RuleFor(x => x.businessDays).Custom((businessDays, context) => {
+		RuleFor(x => x.BusinessDays).Custom((businessDays, context) => {
 			if (businessDays.GetLength(0) != 2 || businessDays.GetLength(1) != 7) {
 				context.AddFailure(ValidatorErrors.businessDayLength);
 			}
