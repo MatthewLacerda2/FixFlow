@@ -26,12 +26,12 @@ public class OTPController : ControllerBase {
 	/// <param name="phoneNumber"></param>
 	[HttpPost]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
-	public IActionResult CreateBusinessOTP(string phoneNumber) {
+	public async Task<IActionResult> CreateBusinessOTP(string phoneNumber) {
 
 		OTP otp = new OTP(phoneNumber, OTP_use_purpose.create_business);
 
 		_context.Add(otp);
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 
 		return Ok();
 	}

@@ -122,7 +122,7 @@ public class BusinessController : ControllerBase {
 		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.businessId == Id));
 		_context.Schedules.RemoveRange(_context.Schedules.Where(x => x.businessId == Id));
 
-		_context.Clients.RemoveRange(_context.Clients.Where(x => x.businessId == Id));
+		_context.Clients.RemoveRange(_context.Clients.Where(x => x.BusinessId == Id));
 
 		await _userManager.DeleteAsync(business);
 

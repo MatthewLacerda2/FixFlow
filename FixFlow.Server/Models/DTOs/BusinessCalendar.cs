@@ -1,11 +1,13 @@
+using Server.Models.Appointments;
+
 namespace Server.Models.DTO;
 
-public class BusinessCalendar {
-	public BusinessCalendarDay[] days = Array.Empty<BusinessCalendarDay>();
-}
-
 public class BusinessCalendarDay {
-	public string[] events = Array.Empty<string>();
+
 	public bool isIdlePeriod;
-	public bool isHoliday;
+	public string? holiday;
+
+	public AptSchedule[] schedules = Array.Empty<AptSchedule>();
+	public AptLog[] logs = Array.Empty<AptLog>();
+
 }

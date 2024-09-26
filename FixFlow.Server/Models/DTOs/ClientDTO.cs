@@ -2,6 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models.DTO;
 
+/// <summary>
+/// Brief information about the Client
+/// </summary>
 public class ClientDTO {
 
 	[Required]
@@ -49,7 +52,7 @@ public class ClientDTO {
 			client.CPF,
 			client.PhoneNumber!,
 			client.Email,
-			client.additionalNote
+			client.AdditionalNote
 		);
 	}
 }

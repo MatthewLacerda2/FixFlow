@@ -10,7 +10,7 @@ public class Client : IdentityUser {
 	/// The business from which the Client is a customer
 	/// </summary>
 	[Required]
-	public string businessId { get; set; }
+	public string BusinessId { get; set; }
 
 	[Required]
 	[MinLength(5)]
@@ -22,20 +22,20 @@ public class Client : IdentityUser {
 	[Length(14, 14)]
 	public string? CPF { get; set; }
 
-	public string? additionalNote { get; set; }
+	public string? AdditionalNote { get; set; }
 
 	public Client() {
 		FullName = string.Empty;
-		businessId = string.Empty;
+		BusinessId = string.Empty;
 	}
 
 	public Client(string businessId, string phoneNumber, string fullName, string? email, string? cpf, string? additionalNote) {
-		this.businessId = businessId;
-		this.PhoneNumber = phoneNumber;
-		this.FullName = fullName;
-		this.Email = email;
-		this.CPF = cpf;
-		this.additionalNote = additionalNote;
+		BusinessId = businessId;
+		PhoneNumber = phoneNumber;
+		FullName = fullName;
+		Email = email;
+		CPF = cpf;
+		AdditionalNote = additionalNote;
 	}
 
 	public static explicit operator Client(ClientCreate clientCreate) {

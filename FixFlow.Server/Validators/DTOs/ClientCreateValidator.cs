@@ -10,13 +10,7 @@ namespace Server.Validators.DTOs;
 
 public class ClientRegisterValidator : AbstractValidator<ClientCreate> {
 
-	public ClientRegisterValidator(UserManager<Business> businessManager, ServerContext serverContext) {
-
-		RuleFor(x => x.businessId).Custom((businessId, context) => {
-			if (businessManager.FindByIdAsync(businessId).Result == null) {
-				context.AddFailure(ValidatorErrors.BusinessIdRequired);
-			}
-		});
+	public ClientRegisterValidator(ServerContext serverContext) {
 
 		RuleFor(x => x.FullName).Custom((fullname, context) => {
 			if (StringChecker.IsFullNameValid(fullname)) {

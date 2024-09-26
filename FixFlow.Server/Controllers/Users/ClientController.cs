@@ -13,7 +13,7 @@ namespace Server.Controllers;
 /// Controller class for Client's stuff
 /// </summary>
 [ApiController]
-[Route(Common.api_v1 + "client")]
+[Route(Common.api_v1 + nameof(Client))]
 [Produces("application/json")]
 public class ClientController : ControllerBase {
 
@@ -26,44 +26,30 @@ public class ClientController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Gets a number of Clients, with optional filters
+	/// Gets a number of Clients. May filter by Full Name
 	/// </summary>
-	/// <remarks>
-	/// Does not return Not Found, but an Array of size 0 instead
-	/// </remarks>
 	/// <returns>ClientDTO[]</returns>
-	/// <param name="fullname">Filter the Clients whose fullname contain the given string</param>
-	/// <param name="offset">Offsets the result by a given amount</param>
-	/// <param name="limit">Limits the result by a given amount</param>
-	/// <param name="sort">Orders the result by Client, Price or DateTime. Add suffix 'desc' to order descending</param>
+	/// <param name="businessId"></param>
+	/// <param name="offset"></param>
+	/// <param name="limit"></param>
+	/// <param name="fullname">Optionally filter the clients whose fullname contain the string</param>
 	/// <response code="200">Returns an array of ClientDTO</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO[]>))]
 	[HttpGet]
-	public async Task<IActionResult> ReadClients(string? fullname, uint? offset, uint? limit, string? sort) {
-
+	public async Task<IActionResult> ReadClients(string businessId, uint offset, uint limit, string? fullname) {
+		//TODO: Implement sorting
 		var clientsQuery = _context.Clients.AsQueryable();
 
+		clientsQuery = clientsQuery.Where(client => client.BusinessId == businessId);
+
 		if (!string.IsNullOrWhiteSpace(fullname)) {
-			clientsQuery = clientsQuery.Where(client => client.FullName!.Contains(fullname, StringComparison.OrdinalIgnoreCase));
+			clientsQuery = clientsQuery.Where(client => client.FullName.Contains(fullname));
 		}
-
-		if (!string.IsNullOrWhiteSpace(sort)) {
-			sort = sort.ToLower();
-			if (sort.Contains("name")) {
-				clientsQuery = clientsQuery.OrderBy(c => c.FullName).ThenBy(c => c.UserName);
-			}
-		}
-
-		if (!string.IsNullOrWhiteSpace(sort) && sort.Contains("desc")) {
-			clientsQuery.Reverse();
-		}
-
-		offset = offset.HasValue ? offset : 0;
-		limit = limit.HasValue ? limit : 10;
 
 		clientsQuery = clientsQuery.Skip((int)offset).Take((int)limit);
 
-		var resultsArray = await clientsQuery.ToArrayAsync();
+		var clients = await clientsQuery.ToArrayAsync();
+		var resultsArray = clients.Select(client => (ClientDTO)client).ToArray();
 
 		return Ok(resultsArray);
 	}
@@ -80,10 +66,29 @@ public class ClientController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateClient([FromBody] ClientCreate clientCreate) {
 
+		bool phoneTaken = _context.Clients.Where(x => x.BusinessId == clientCreate.businessId).Any(x => x.PhoneNumber == clientCreate.PhoneNumber);
+		if (phoneTaken) {
+			return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
+		}
+
+		if (clientCreate.CPF == null) {
+			bool cpfTaken = _context.Clients.Where(x => x.BusinessId == clientCreate.businessId).Any(x => x.CPF == clientCreate.CPF);
+			if (cpfTaken) {
+				return BadRequest(AlreadyRegisteredErrors.CPF);
+			}
+		}
+
+		if (clientCreate.Email != null) {
+
+			bool emailTaken = _context.Clients.Where(x => x.BusinessId == clientCreate.businessId).Any(x => x.Email == clientCreate.Email);
+			if (emailTaken) {
+				return BadRequest(AlreadyRegisteredErrors.Email);
+			}
+		}
+
 		Client client = (Client)clientCreate;
 
 		IdentityResult userCreationResult = await _userManager.CreateAsync(client);
-
 		if (!userCreationResult.Succeeded) {
 			return StatusCode(500, "Internal Server Error: Register Client Unsuccessful");
 		}
@@ -139,7 +144,7 @@ public class ClientController : ControllerBase {
 			}
 		}
 
-		existingClient.additionalNote = upClient.additionalNote;
+		existingClient.AdditionalNote = upClient.additionalNote;
 
 		await _context.SaveChangesAsync();
 

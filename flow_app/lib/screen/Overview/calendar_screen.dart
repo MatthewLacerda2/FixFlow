@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../apts/edit_apt/create_log_screen.dart';
 import '../apts/edit_apt/create_schedule_screen.dart';
-
+//TODO: we got to think of a better way to let users do actions like creating, editing or deleting schedules, logs and idle periods
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
