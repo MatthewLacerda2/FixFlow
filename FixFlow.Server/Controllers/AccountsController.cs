@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Bogus;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ public class AccountsController : ControllerBase {
 	/// <summary>
 	/// Login with an email and password
 	/// </summary>
-	/// <returns>BusinessInfo</returns>
+	/// <returns>Business</returns>
 	/// <response code="200">Successfull login</response>
 	/// <response code="401">Unauthorized login</response>
 	[ProducesResponseType(StatusCodes.Status200OK)]
@@ -46,31 +47,32 @@ public class AccountsController : ControllerBase {
 	public async Task<IActionResult> Login([FromBody] FlowLoginRequest model) {
 
 		var userExists = _userManager.FindByEmailAsync(model.email).Result;
-
 		if (userExists == null) {
 			return Unauthorized(wrongCredentialsMessage);
 		}
 
 		var result = await _signInManager.PasswordSignInAsync(userExists, model.password, true, false);
-
 		if (!result.Succeeded) {
 			return Unauthorized(wrongCredentialsMessage);
 		}
 
 		var token = GenerateToken(userExists);
 
+		userExists.LastLogin = DateTime.Now;
+		userExists.isActive = true;
 		await _context.SaveChangesAsync();
-		return Ok(token);
+
+		userExists.token = token;
+
+		return Ok(userExists);
 	}
 
-	private string GenerateToken(Business user) {
+	private string GenerateToken(Business business) {
 
-		var UserDTOJson = JsonConvert.SerializeObject(user);
+		var businessJson = JsonConvert.SerializeObject(business);
 
 		var claims = new List<Claim>{
-			new Claim(ClaimTypes.Name, user.UserName!),
-			new Claim(ClaimTypes.Email, user.Email!),
-			new Claim("UserDTO",UserDTOJson)
+			new Claim("Business", businessJson)
 		};
 		var key = Encoding.UTF32.GetBytes(_configuration["Jwt:SecretKey"]!);
 		var tokenDescriptor = new SecurityTokenDescriptor {

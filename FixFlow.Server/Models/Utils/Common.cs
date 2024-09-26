@@ -6,4 +6,6 @@ public static class Common {
 
 	public const int tokenExpirationTimeInMinutes = 20;
 
+	public const int otpExpirationTimeInMinutes = 5;
+
 }

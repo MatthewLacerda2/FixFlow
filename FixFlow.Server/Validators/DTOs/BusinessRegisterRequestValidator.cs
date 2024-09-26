@@ -7,8 +7,8 @@ namespace Server.Validators.DTOs;
 
 public class BusinessRegisterValidator : AbstractValidator<BusinessRegisterRequest> {
 	public BusinessRegisterValidator() {
-		RuleFor(x => x.Name).Custom((userName, context) => {
-			if (string.IsNullOrWhiteSpace(userName)) {
+		RuleFor(x => x.Name).Custom((name, context) => {
+			if (string.IsNullOrWhiteSpace(name)) {
 				context.AddFailure(ValidatorErrors.UsernameIsEmpty);
 			}
 		});

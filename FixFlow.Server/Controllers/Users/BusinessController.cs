@@ -12,7 +12,7 @@ namespace Server.Controllers;
 /// Controller class for Business CRUD requests
 /// </summary>
 [ApiController]
-[Route(Common.api_v1 + "business")]
+[Route(Common.api_v1 + nameof(Business))]
 [Produces("application/json")]
 public class BusinessController : ControllerBase {
 
@@ -36,16 +36,25 @@ public class BusinessController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateBusiness([FromBody] BusinessRegisterRequest businessRegister) {
 
+		OTP otp = _context.OTPs.Where(o => o.PhoneNumber == businessRegister.PhoneNumber && o.Code == businessRegister.OTPCode).FirstOrDefault()!;
+		if(otp==null){
+			return BadRequest("Código inválido");
+		}
+		if(otp.Purpose != OTP_use_purpose.create_business){
+			return BadRequest("Código inválido");
+		}
+		if(otp.ExpiryTime < DateTime.UtcNow || otp.IsUsed){
+			return BadRequest("Código expirado");
+		}
+
 		var existingEmail = await _userManager.FindByEmailAsync(businessRegister.Email);
 		if (existingEmail != null) {
 			return BadRequest(AlreadyRegisteredErrors.Email);
 		}
-
 		var existingPhone = _context.Business.Where(c => c.PhoneNumber == businessRegister.PhoneNumber);
 		if (existingPhone.Any()) {
 			return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
 		}
-
 		var existingCNPJ = _context.Business.Where(c => c.CNPJ == businessRegister.CNPJ);
 		if (existingCNPJ.Any()) {
 			return BadRequest(AlreadyRegisteredErrors.CNPJ);
@@ -54,14 +63,12 @@ public class BusinessController : ControllerBase {
 		Business Business = (Business)businessRegister;
 
 		var userCreationResult = await _userManager.CreateAsync(Business, businessRegister.confirmPassword);
-
 		if (!userCreationResult.Succeeded) {
 			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful");
 		}
 
+		otp.IsUsed = true;
 		await _context.SaveChangesAsync();
-
-		//TODO: give token
 
 		return CreatedAtAction(nameof(CreateBusiness), Business);
 	}
@@ -75,22 +82,23 @@ public class BusinessController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
-	public async Task<IActionResult> UpdateBusiness([FromBody] Business businessInfo) {
+	public async Task<IActionResult> UpdateBusiness([FromBody] Business upBusiness) {
 
-		var existingBusiness = await _userManager.FindByIdAsync(businessInfo.Id);
-		if (existingBusiness == null) {
+		var businessExists = await _userManager.FindByIdAsync(upBusiness.Id);
+		if (businessExists == null) {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		existingBusiness.Description = businessInfo.Description;
-		existingBusiness.BusinessDays = businessInfo.BusinessDays;
-		existingBusiness.allowListedServicesOnly = businessInfo.allowListedServicesOnly;
-		existingBusiness.holidayOpen = businessInfo.holidayOpen;
-		existingBusiness.domicileService = businessInfo.domicileService;
+		businessExists.Name = upBusiness.Name;
+		businessExists.BusinessDays = upBusiness.BusinessDays;
+		businessExists.Services = upBusiness.Services;
+		businessExists.allowListedServicesOnly = upBusiness.allowListedServicesOnly;
+		businessExists.holidayOpen = upBusiness.holidayOpen;
+		businessExists.domicileService = upBusiness.domicileService;
 
 		await _context.SaveChangesAsync();
 
-		return Ok(businessInfo);
+		return Ok(upBusiness);
 	}
 
 	/// <summary>

@@ -27,9 +27,6 @@ public class BusinessRegisterRequest {
 	[Phone]
 	public string PhoneNumber { get; set; } = string.Empty;
 
-	[MinLength(5)]
-	public string description { get; set; } = string.Empty;
-
 	[MinLength(7)]
 	public string password = string.Empty;
 
@@ -38,4 +35,7 @@ public class BusinessRegisterRequest {
 	/// </summary>
 	[MinLength(7)]
 	public string confirmPassword { get; set; } = string.Empty;
+
+	[Length(6, 6)]
+	public string OTPCode { get; set; } = string.Empty;
 }

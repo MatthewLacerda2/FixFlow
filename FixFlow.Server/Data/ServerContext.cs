@@ -5,6 +5,7 @@ using Server.Models.Appointments;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext {
+
 	public DbSet<Client> Clients { get; set; } = default!;
 	public DbSet<Business> Business { get; set; } = default!;
 
@@ -13,6 +14,8 @@ public class ServerContext : IdentityDbContext {
 	public DbSet<AptSchedule> Schedules { get; set; } = default!;
 
 	public DbSet<IdlePeriod> IdlePeriods { get; set; } = default!;
+
+	public DbSet<OTP> OTPs { get; set; } = default!;
 
 	public ServerContext(DbContextOptions<ServerContext> options)
 		: base(options) {

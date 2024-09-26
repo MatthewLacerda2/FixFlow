@@ -22,10 +22,8 @@ public class Business : IdentityUser {
 	/// </summary>
 	public string CNPJ { get; set; }
 
-	public string Description { get; set; }
-
 	[NotMapped]
-	public string token { get; set; }
+	public string token { get; set; } = string.Empty;
 
 	/// <summary>
 	/// The DateTimes of the week where the business is open
@@ -45,22 +43,21 @@ public class Business : IdentityUser {
 
 		Name = string.Empty;
 		CNPJ = string.Empty;
-		Description = string.Empty;
+		Services = Array.Empty<string>();
 	}
 
-	public Business(string name, string email, string cnpj, string phoneNumber, string description) {
+	public Business(string name, string email, string cnpj, string phoneNumber) {
 		CreatedDate = DateTime.Now;
 		LastLogin = DateTime.Now;
 
 		Name = name;
-		UserName = name.Replace(" ", string.Empty);
 		Email = email;
 		CNPJ = cnpj;
 		PhoneNumber = phoneNumber;
-		Description = description;
+		Services = Array.Empty<string>();
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {
-		return new Business(request.Name, request.Email, request.CNPJ, request.PhoneNumber, request.description);
+		return new Business(request.Name, request.Email, request.CNPJ, request.PhoneNumber);
 	}
 }
