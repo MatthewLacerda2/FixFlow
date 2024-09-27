@@ -1,5 +1,3 @@
-using Server.Models.Appointments;
-
 namespace Server.Models.Erros;
 
 public struct NotExistErrors {
@@ -11,5 +9,7 @@ public struct NotExistErrors {
 	public static readonly string AptSchedule = nameof(Appointments.AptSchedule) + doesNotExist;
 	public static readonly string Client = nameof(Models.Client) + doesNotExist;
 	public static readonly string Business = nameof(Models.Business) + doesNotExist;
+
+	public static readonly string Service = "Log must have a listed service";
 
 }

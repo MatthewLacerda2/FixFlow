@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
+using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
 using Server.Models.Filters;
@@ -20,30 +22,13 @@ namespace Server.Controllers;
 public class AptLogController : ControllerBase {
 
 	private readonly ServerContext _context;
+	private readonly UserManager<Business> _userManager;
+	private readonly UserManager<Client> _clientManager;
 
-	public AptLogController(ServerContext context) {
+	public AptLogController(ServerContext context, UserManager<Business> userManager, UserManager<Client> clientManager) {
 		_context = context;
-	}
-
-	/// <summary>
-	/// Get the Log with the given Id
-	/// </summary>
-	/// <param name="Id">The Log's Id</param>
-	/// <returns>AptLog</returns>
-	/// <response code="200">The Appointment Log</response>
-	/// <response code="404">There was no Appointment Log with the given Id</response>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
-	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
-	[HttpGet("{Id}")]
-	public async Task<IActionResult> ReadLog(string Id) {
-
-		var log = await _context.Logs.FindAsync(Id);
-
-		if (log == null) {
-			return NotFound(NotExistErrors.AptLog);
-		}
-
-		return Ok(log);
+		_userManager = userManager;
+		_clientManager = clientManager;
 	}
 
 	/// <summary>
@@ -68,14 +53,14 @@ public class AptLogController : ControllerBase {
 		}
 
 		if (filter.service != null) {
-			logsQuery = logsQuery.Where(x => x.service != null && x.service == filter.service);
+			logsQuery = logsQuery.Where(x => x.service != null && x.service.Contains(filter.service));
 		}
-
-		logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
-		logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
 
 		logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
 		logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
+
+		logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
+		logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
 
 		switch (filter.sort) {
 			case LogSort.Client:
@@ -122,6 +107,25 @@ public class AptLogController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateLog([FromBody] AptLog newLog) {
 
+		var existingClient = _context.Clients.Find(newLog.clientId);
+		if (existingClient == null) {
+			return BadRequest(NotExistErrors.Client);
+		}
+
+		var existingBusiness = _context.Business.Find(newLog.businessId);
+		if (existingBusiness == null) {
+			return BadRequest(NotExistErrors.Business);
+		}
+
+		if (existingBusiness.allowListedServicesOnly) {
+			if (newLog.service == null) {
+				return BadRequest(NotExistErrors.Service);
+			}
+			if (!existingBusiness.Services.Any(s => s.Equals(newLog.service))) {
+				return BadRequest(NotExistErrors.Service);
+			}
+		}
+
 		if (!string.IsNullOrWhiteSpace(newLog.scheduleId)) {
 			var existingSchedule = _context.Schedules.Find(newLog.scheduleId);
 
@@ -130,7 +134,7 @@ public class AptLogController : ControllerBase {
 			}
 		}
 
-		//TODO: check for idle period and business hours
+		newLog.Id = new Guid().ToString();
 		_context.Logs.Add(newLog);
 		await _context.SaveChangesAsync();
 
@@ -147,6 +151,33 @@ public class AptLogController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPut]
 	public async Task<IActionResult> UpdateLog([FromBody] AptLog upLog) {
+
+		var existingClient = _context.Clients.Find(upLog.clientId);
+		if (existingClient == null) {
+			return BadRequest(NotExistErrors.Client);
+		}
+
+		var existingBusiness = _context.Business.Find(upLog.businessId);
+		if (existingBusiness == null) {
+			return BadRequest(NotExistErrors.Business);
+		}
+
+		if (existingBusiness.allowListedServicesOnly) {
+			if (upLog.service == null) {
+				return BadRequest(NotExistErrors.Service);
+			}
+			if (!existingBusiness.Services.Any(s => s.Equals(upLog.service))) {
+				return BadRequest(NotExistErrors.Service);
+			}
+		}
+
+		if (!string.IsNullOrWhiteSpace(upLog.scheduleId)) {
+			var existingSchedule = _context.Schedules.Find(upLog.scheduleId);
+
+			if (existingSchedule == null) {
+				return BadRequest(NotExistErrors.AptSchedule);
+			}
+		}
 
 		var existingLog = _context.Logs.Find(upLog.Id);
 		if (existingLog == null) {

@@ -13,7 +13,7 @@ public class ServerContext : IdentityDbContext {
 	public DbSet<AptContact> Contacts { get; set; } = default!;
 	public DbSet<AptSchedule> Schedules { get; set; } = default!;
 
-	public DbSet<IdleDay> IdleDays { get; set; } = default!;
+	public DbSet<IdlePeriod> IdlePeriods { get; set; } = default!;
 
 	public DbSet<OTP> OTPs { get; set; } = default!;
 
