@@ -55,23 +55,6 @@ class InitialScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 30),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                        builder: (BuildContext context) =>
-                            const ForgotPasswordScreen()));
-              },
-              child: const Text(
-                'Esqueceu sua senha?',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
           ],
         ),
       ),
