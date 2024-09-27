@@ -9,7 +9,7 @@ public class Business : IdentityUser {
 	public DateTime CreatedDate { get; set; }
 	public DateTime LastLogin { get; set; }
 
-	public bool isActive = true;
+	public bool IsActive = true;
 
 	/// <summary>
 	/// The Name of the Business or Business owner

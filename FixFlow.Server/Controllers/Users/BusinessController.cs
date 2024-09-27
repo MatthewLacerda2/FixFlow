@@ -117,6 +117,21 @@ public class BusinessController : ControllerBase {
 		return Ok(upBusiness);
 	}
 
+	[HttpPatch("{Id}")]
+	public async Task<IActionResult> DeactivateBusiness([FromBody] string Id) {
+
+		var business = await _userManager.FindByIdAsync(Id);
+		if (business == null) {
+			return BadRequest(NotExistErrors.Business);
+		}
+
+		business.IsActive = false;
+
+		await _context.SaveChangesAsync();
+
+		return Ok(business);
+	}
+
 	/// <summary>
 	/// Deletes the Business with the given Id
 	/// </summary>
