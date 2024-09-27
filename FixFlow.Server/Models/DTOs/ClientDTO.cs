@@ -23,8 +23,7 @@ public class ClientDTO {
 	/// <summary>
 	/// Special information about the Client, if applicable
 	/// </summary>
-	[MaxLength(255)]
-	public string? additionalNote { get; set; }
+	public string? AdditionalNote { get; set; }
 
 	/// <summary>
 	/// Phone Number. Must contain only numbers
@@ -36,11 +35,11 @@ public class ClientDTO {
 	[EmailAddress]
 	public string? Email { get; set; }
 
-	public ClientDTO(string _Id, string fullname, string? cpf, string _phoneNumber, string? _email, string? additionalNote) {
+	public ClientDTO(string _Id, string fullname, string _phoneNumber, string? _email, string? additionalNote) {
 		Id = _Id;
 		FullName = fullname;
-		CPF = cpf;
 		PhoneNumber = _phoneNumber;
+		AdditionalNote = additionalNote;
 		Email = _email;
 	}
 
@@ -49,7 +48,6 @@ public class ClientDTO {
 		(
 			client.Id,
 			client.FullName,
-			client.CPF,
 			client.PhoneNumber!,
 			client.Email,
 			client.AdditionalNote

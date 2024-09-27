@@ -14,7 +14,7 @@ public class AptLog {
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Models.Client))]
-	public string clientId { get; set; }
+	public string ClientId { get; set; }
 
 	/// <summary>
 	/// Navigation Property of the Client
@@ -58,7 +58,7 @@ public class AptLog {
 
 	public AptLog() {
 		Id = Guid.NewGuid().ToString();
-		clientId = string.Empty;
+		ClientId = string.Empty;
 		Client = null!;
 		businessId = string.Empty;
 		Business = null!;

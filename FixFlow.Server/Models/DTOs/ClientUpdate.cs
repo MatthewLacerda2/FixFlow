@@ -26,7 +26,6 @@ public class ClientUpdate {
 	/// <summary>
 	/// Special information about the Client, if applicable
 	/// </summary>
-	[MaxLength(255)]
 	public string? additionalNote { get; set; }
 
 	/// <summary>

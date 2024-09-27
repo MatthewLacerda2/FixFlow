@@ -14,7 +14,7 @@ public class AptSchedule {
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Models.Client))]
-	public string clientId { get; set; }
+	public string ClientId { get; set; }
 
 	/// <summary>
 	/// Navigation Property of the Client
@@ -60,7 +60,7 @@ public class AptSchedule {
 
 	public AptSchedule() {
 		Id = Guid.NewGuid().ToString();
-		clientId = string.Empty;
+		ClientId = string.Empty;
 		Client = null!;
 		Contact = null!;
 		businessId = string.Empty;

@@ -15,6 +15,7 @@ namespace Server.Controllers;
 
 [ApiController]
 [Route("api/v1/accounts")]
+[Produces("application/json")]
 public class AccountsController : ControllerBase {
 
 	private readonly SignInManager<Business> _signInManager;

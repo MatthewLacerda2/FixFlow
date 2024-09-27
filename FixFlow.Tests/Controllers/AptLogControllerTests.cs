@@ -83,7 +83,7 @@ public class AptLogControllerTests {
 
 				c.price = 30f;
 
-				if (i == 0) c.clientId = otherClient.Id;
+				if (i == 0) c.ClientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.dateTime = DateTime.MinValue;
 				if (i == 3) c.dateTime = DateTime.MaxValue;
@@ -129,7 +129,7 @@ public class AptLogControllerTests {
 
 				c.price = 30f;
 
-				if (i == 0) c.clientId = otherClient.Id;
+				if (i == 0) c.ClientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.dateTime = DateTime.MinValue;
 				if (i == 3) c.dateTime = DateTime.MaxValue;

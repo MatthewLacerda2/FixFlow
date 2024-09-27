@@ -103,7 +103,7 @@ public class AptLogController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateLog([FromBody] AptLog newLog) {
 
-		var existingClient = _context.Clients.Find(newLog.clientId);
+		var existingClient = _context.Clients.Find(newLog.ClientId);
 		if (existingClient == null) {
 			return BadRequest(NotExistErrors.Client);
 		}
@@ -139,7 +139,7 @@ public class AptLogController : ControllerBase {
 	[HttpPut]
 	public async Task<IActionResult> UpdateLog([FromBody] AptLog upLog) {
 
-		var existingClient = _context.Clients.Find(upLog.clientId);
+		var existingClient = _context.Clients.Find(upLog.ClientId);
 		if (existingClient == null) {
 			return BadRequest(NotExistErrors.Client);
 		}

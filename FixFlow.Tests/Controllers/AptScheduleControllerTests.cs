@@ -83,7 +83,7 @@ public class AptScheduleControllerTests {
 			.Generate(5)
 			.Select((c, i) => {
 
-				if (i == 0) c.clientId = otherClient.Id;
+				if (i == 0) c.ClientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.dateTime = DateTime.MinValue;
 				if (i == 3) c.dateTime = DateTime.MaxValue;
@@ -122,7 +122,7 @@ public class AptScheduleControllerTests {
 			.Generate(9)
 			.Select((c, i) => {
 
-				if (i == 0) c.clientId = otherClient.Id;
+				if (i == 0) c.ClientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.dateTime = DateTime.MinValue;
 				if (i == 3) c.dateTime = DateTime.MaxValue;

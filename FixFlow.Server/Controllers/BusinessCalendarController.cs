@@ -8,6 +8,7 @@ namespace Server.Controllers;
 
 [ApiController]
 [Route(Common.api_v1 + nameof(BusinessCalendarDay))]
+[Produces("application/json")]
 public class BusinessCalendarController : ControllerBase {
 
 	private readonly ServerContext _context;

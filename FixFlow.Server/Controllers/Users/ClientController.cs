@@ -25,6 +25,35 @@ public class ClientController : ControllerBase {
 		_userManager = userManager;
 	}
 
+	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientFullInfo))]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+	[HttpGet]
+	public async Task<IActionResult> GetClientFullInfo([FromBody] string clientId) {
+
+		var client = await _userManager.FindByIdAsync(clientId);
+		if (client == null) {
+			return BadRequest(NotExistErrors.Client);
+		}
+
+		var clientFullInfo = (ClientFullInfo)client;
+
+		var firstLog = _context.Logs.Where(x => x.ClientId == clientId).OrderBy(x => x.dateTime).First();
+		if (firstLog != null) {
+			clientFullInfo.firstLog = firstLog.dateTime;
+		}
+
+		var lastLog = _context.Logs.Where(x => x.ClientId == clientId).OrderByDescending(x => x.dateTime).First();
+		if (lastLog != null) {
+			clientFullInfo.firstLog = lastLog.dateTime;
+		}
+
+		clientFullInfo.logs = _context.Logs.Where(x => x.ClientId == clientId).ToArray();
+
+		clientFullInfo.numSchedules = _context.Schedules.Where(x => x.ClientId == clientId).Count();
+
+		return Ok(clientFullInfo);
+	}
+
 	/// <summary>
 	/// Gets a number of Clients. May filter by Full Name
 	/// </summary>
@@ -144,7 +173,7 @@ public class ClientController : ControllerBase {
 			}
 		}
 
-		existingClient.AdditionalNote = upClient.additionalNote;
+		existingClient.AdditionalNote = upClient.AdditionalNote;
 
 		await _context.SaveChangesAsync();
 
