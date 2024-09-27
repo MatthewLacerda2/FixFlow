@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Server.Models.DTO;
@@ -30,20 +29,12 @@ public class Business : IdentityUser {
 	/// </summary>
 	public DateTime[,] BusinessDays { get; set; } = new DateTime[2, 7];
 
-	[MaxLength(16)]
-	public string[] Services { get; set; }
-
-	public bool allowListedServicesOnly { get; set; } = false;
-	public bool holidayOpen { get; set; } = false;
-	public bool domicileService { get; set; } = false;
-
 	public Business() {
 		CreatedDate = DateTime.Now;
 		LastLogin = DateTime.Now;
 
 		Name = string.Empty;
 		CNPJ = string.Empty;
-		Services = Array.Empty<string>();
 	}
 
 	public Business(string name, string email, string cnpj, string phoneNumber) {
@@ -54,7 +45,6 @@ public class Business : IdentityUser {
 		Email = email;
 		CNPJ = cnpj;
 		PhoneNumber = phoneNumber;
-		Services = Array.Empty<string>();
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {

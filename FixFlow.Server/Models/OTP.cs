@@ -5,7 +5,7 @@ namespace Server.Models;
 
 public class OTP {
 
-	public Guid Id { get; set; }
+	public string Id { get; set; }
 
 	[Length(6, 6)]
 	public string Code { get; set; }
@@ -21,7 +21,7 @@ public class OTP {
 		PhoneNumber = "9888263255";
 		Purpose = OTP_use_purpose.create_business;
 
-		Id = new Guid();
+		Id = new Guid().ToString();
 		Code = new Random().Next(0, 1000000).ToString("D6");
 		ExpiryTime = DateTime.UtcNow.AddMinutes(Common.otpExpirationTimeInMinutes);
 		IsUsed = false;
@@ -31,15 +31,14 @@ public class OTP {
 		PhoneNumber = phoneNumber;
 		Purpose = purpose;
 
-		Id = new Guid();
+		Id = new Guid().ToString();
 		Code = new Random().Next(0, 1000000).ToString("D6");
 		ExpiryTime = DateTime.UtcNow.AddMinutes(Common.otpExpirationTimeInMinutes);
 		IsUsed = false;
-		Purpose = purpose;
 	}
 }
 
 public enum OTP_use_purpose {
 	//TODO: are we gonna send an OTP just for the new phone? or for the old phone and ask for confirmation?
-	create_business, delete_business, change_phone
+	create_business, delete_business
 }

@@ -52,10 +52,6 @@ public class AptLogController : ControllerBase {
 			logsQuery = logsQuery.Where(x => x.Client.FullName.Contains(filter.client!));
 		}
 
-		if (filter.service != null) {
-			logsQuery = logsQuery.Where(x => x.service != null && x.service.Contains(filter.service));
-		}
-
 		logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
 		logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
 
@@ -117,15 +113,6 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (existingBusiness.allowListedServicesOnly) {
-			if (newLog.service == null) {
-				return BadRequest(NotExistErrors.Service);
-			}
-			if (!existingBusiness.Services.Any(s => s.Equals(newLog.service))) {
-				return BadRequest(NotExistErrors.Service);
-			}
-		}
-
 		if (!string.IsNullOrWhiteSpace(newLog.scheduleId)) {
 			var existingSchedule = _context.Schedules.Find(newLog.scheduleId);
 
@@ -160,15 +147,6 @@ public class AptLogController : ControllerBase {
 		var existingBusiness = _context.Business.Find(upLog.businessId);
 		if (existingBusiness == null) {
 			return BadRequest(NotExistErrors.Business);
-		}
-
-		if (existingBusiness.allowListedServicesOnly) {
-			if (upLog.service == null) {
-				return BadRequest(NotExistErrors.Service);
-			}
-			if (!existingBusiness.Services.Any(s => s.Equals(upLog.service))) {
-				return BadRequest(NotExistErrors.Service);
-			}
 		}
 
 		if (!string.IsNullOrWhiteSpace(upLog.scheduleId)) {

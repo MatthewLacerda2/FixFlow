@@ -52,15 +52,9 @@ public class AptLog {
 	/// </summary>
 	public DateTime dateTime { get; set; } = DateTime.Now;
 
-	public string? service { get; set; }
-
 	public float price { get; set; }
 
-	/// <summary>
-	/// Special information about the Appointment, if applicable
-	/// </summary>
-	/// <value></value>
-	public string? observation { get; set; }
+	public string? description { get; set; }
 
 	public AptLog() {
 		Id = Guid.NewGuid().ToString();

@@ -25,10 +25,30 @@ public class BusinessController : ControllerBase {
 	}
 
 	/// <summary>
+	/// Gets the Business with the given Id.
+	/// Used when the User opens the app, but is already logged in
+	/// </summary>
+	/// <returns>The Business' Data</returns>
+	/// <response code="200"></response>
+	/// <response code="400"></response>
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+	[HttpPost]
+	public async Task<IActionResult> GetBusiness([FromBody] string businessId) {
+
+		var business = await _userManager.FindByIdAsync(businessId);
+		if (business == null) {
+			return BadRequest(NotExistErrors.Business);
+		}
+
+		return Ok(business);
+	}
+
+	/// <summary>
 	/// Creates a Business User
 	/// </summary>
-	/// <returns>The created Business's Data</returns>
-	/// <response code="200">BusinessInfo</response>
+	/// <returns>The created Business' Data</returns>
+	/// <response code="200"></response>
 	/// <response code="400"></response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -36,16 +56,16 @@ public class BusinessController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateBusiness([FromBody] BusinessRegisterRequest businessRegister) {
 
-		OTP otp = _context.OTPs.Where(o => o.PhoneNumber == businessRegister.PhoneNumber && o.Code == businessRegister.OTPCode).FirstOrDefault()!;
+		OTP otp = _context.OTPs.Where(o => o.PhoneNumber == businessRegister.PhoneNumber)
+								.Where(o => o.ExpiryTime <= DateTime.Now.AddMinutes(Common.otpExpirationTimeInMinutes))
+								.Where(o => o.Purpose == OTP_use_purpose.create_business)
+								.Where(o => o.IsUsed == false)
+								.First();
 		if (otp == null) {
 			return BadRequest("Código inválido");
 		}
-		if (otp.Purpose != OTP_use_purpose.create_business) {
-			return BadRequest("Código inválido");
-		}
-		if (otp.ExpiryTime < DateTime.UtcNow || otp.IsUsed) {
-			return BadRequest("Código expirado");
-		}
+
+		//TODO:validate CNPJ
 
 		var existingEmail = await _userManager.FindByEmailAsync(businessRegister.Email);
 		if (existingEmail != null) {
@@ -91,10 +111,6 @@ public class BusinessController : ControllerBase {
 
 		businessExists.Name = upBusiness.Name;
 		businessExists.BusinessDays = upBusiness.BusinessDays;
-		businessExists.Services = upBusiness.Services;
-		businessExists.allowListedServicesOnly = upBusiness.allowListedServicesOnly;
-		businessExists.holidayOpen = upBusiness.holidayOpen;
-		businessExists.domicileService = upBusiness.domicileService;
 
 		await _context.SaveChangesAsync();
 
@@ -111,7 +127,7 @@ public class BusinessController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpDelete("{Id}")]
-	public async Task<IActionResult> DeleteBusiness(string Id) {
+	public async Task<IActionResult> DeleteBusiness([FromBody] string Id) {
 
 		var business = await _userManager.FindByIdAsync(Id);
 		if (business == null) {
