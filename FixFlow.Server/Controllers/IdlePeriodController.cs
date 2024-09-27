@@ -30,7 +30,7 @@ public class IdlePeriodController : ControllerBase {
 	[HttpPost]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	public async Task<IActionResult> CreateIdlePeriod(IdlePeriod idlePeriod) {
+	public async Task<IActionResult> CreateIdlePeriod([FromBody] IdlePeriod idlePeriod) {
 
 		if (_userManager.FindByIdAsync(idlePeriod.businessId) == null) {
 			return BadRequest(NotExistErrors.Business);
@@ -40,28 +40,24 @@ public class IdlePeriodController : ControllerBase {
 			return BadRequest("Idle Period end has passed");
 		}
 
-		foreach (IdlePeriod idp in _context.IdlePeriods.Where(idp => idp.businessId == idlePeriod.businessId)) {
-			if (idp.start >= idlePeriod.start) {
-				if (idp.start <= idlePeriod.finish) {
-					return BadRequest("Idle Period already exists");
-				}
-				else {
-					idp.finish = idlePeriod.start;
-					await _context.SaveChangesAsync();
-					return Ok();
-				}
+		IdlePeriod idp = _context.IdlePeriods.Where(idp => idp.businessId == idlePeriod.businessId)
+						.Where(idp => idp.start <= idlePeriod.start).First();
+
+		if (idp != null) {
+			if (idp.finish >= idlePeriod.finish) {
+				return BadRequest("Idle Period already exists");
 			}
-			else if (idlePeriod.finish <= idp.start) {
-				idp.start = idlePeriod.finish;
-				await _context.SaveChangesAsync();
-				return Ok();
+			else {
+				idp.finish = idlePeriod.finish;
 			}
 		}
+		else {
+			_context.IdlePeriods.Add(idlePeriod);
+		}
 
-		_context.IdlePeriods.Add(idlePeriod);
 		await _context.SaveChangesAsync();
 
-		return Ok();
+		return Ok(idlePeriod);
 	}
 
 	/// <summary>
