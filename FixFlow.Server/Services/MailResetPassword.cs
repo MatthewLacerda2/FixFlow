@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Mail;
 using Server.Controllers;
 using Server.Data;
-using Server.Models.PasswordReset;
 
 namespace Server.Services;
 
@@ -31,14 +30,6 @@ public class MailResetPassword : BackgroundService {
 			Console.WriteLine("EmailResetPassword Alive and well...");
 			await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
 		}
-	}
-
-	public async Task SendResetPasswordEmailAsync(PasswordResetRequest pr) {
-		await SendResetEmailAsync(pr.Email, pr.token);
-
-		await Task.Delay(TimeSpan.FromMinutes(AccountsController.ResetEmailTokenExpirationInMinutes));
-
-		_context.Resets.Remove(pr);
 	}
 
 	private async Task SendResetEmailAsync(string to, string token) {

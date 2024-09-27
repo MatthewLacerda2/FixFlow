@@ -106,14 +106,12 @@ public class FlowSeeder {
 
 		.RuleFor(e => e.Id, f => f.Random.Guid().ToString())
 		.RuleFor(e => e.Name, f => f.Name.FullName())
-		.RuleFor(e => e.CPF, f => f.Person.Cpf())
 		.RuleFor(e => e.CreatedDate, f => f.Date.Between(Jan1st2024, Jan1st2024.AddDays(30)))
 		.RuleFor(e => e.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
 		.RuleFor(e => e.Email, (f, e) => f.Internet.Email(e.Name.ToLower()))
 		.RuleFor(e => e.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 
 		.RuleFor(e => e.CNPJ, f => f.Company.Cnpj())
-		.RuleFor(e => e.description, f => f.Commerce.Department())
 
 		.RuleFor(e => e.UserName, f => f.Internet.UserName())
 		.RuleFor(e => e.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
@@ -143,23 +141,14 @@ public class FlowSeeder {
 
 		.RuleFor(c => c.Id, f => f.Random.Guid().ToString())
 		.RuleFor(c => c.FullName, f => f.Name.FullName())
-		.RuleFor(c => c.CreatedDate, f => f.Date.Between(Jan1st2024, Jan1st2024.AddDays(90)))
-		.RuleFor(c => c.LastLogin, f => f.Date.Between(DateTime.Now.AddDays(-60), DateTime.Now))
 		.RuleFor(c => c.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
-
-		.RuleFor(c => c.additionalNote, f => f.Random.Bool(0.1f) ? f.Random.Words() : null)
-		.RuleFor(c => c.signedUp, f => f.Random.Bool(0.4f))
 
 		.RuleFor(c => c.UserName, f => f.Internet.UserName())
 		.RuleFor(c => c.NormalizedUserName, (f, e) => e.UserName!.ToUpper())
 
-		.RuleFor(c => c.Email, (f, c) => c.signedUp || f.Random.Bool(0.85f) ? f.Internet.Email(c.FullName.ToLower()) : null)
 		.RuleFor(c => c.NormalizedEmail, (f, c) => c.Email!.ToUpper())
 		.RuleFor(c => c.EmailConfirmed, false)
 
-		.RuleFor(c => c.CPF, (f, c) => c.signedUp || f.Random.Bool(0.45f) ? f.Person.Cpf() : null)
-
-		.RuleFor(c => c.PasswordHash, (f, c) => c.signedUp ? f.Random.Guid().ToString().Replace("-", "/") : null)
 		.RuleFor(c => c.AccessFailedCount, 0)
 		.RuleFor(c => c.SecurityStamp, "")
 		.RuleFor(c => c.ConcurrencyStamp, "")

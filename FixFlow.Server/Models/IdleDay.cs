@@ -1,8 +1,8 @@
 namespace Server.Models;
 
-public class IdlePeriod {
+public class IdleDay {
 
 	public string businessId = string.Empty;
-	public DateOnly start, finish;
+	public DateOnly day;
 
 }

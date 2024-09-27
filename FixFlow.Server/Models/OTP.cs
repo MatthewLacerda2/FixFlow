@@ -22,17 +22,17 @@ public class OTP {
 		Purpose = OTP_use_purpose.create_business;
 
 		Id = new Guid();
-		Code = new Random().Next(0, 1000000).ToString("D6");		
+		Code = new Random().Next(0, 1000000).ToString("D6");
 		ExpiryTime = DateTime.UtcNow.AddMinutes(Common.otpExpirationTimeInMinutes);
 		IsUsed = false;
 	}
 
-	public OTP(string phoneNumber, OTP_use_purpose purpose){
+	public OTP(string phoneNumber, OTP_use_purpose purpose) {
 		PhoneNumber = phoneNumber;
 		Purpose = purpose;
 
 		Id = new Guid();
-		Code = new Random().Next(0, 1000000).ToString("D6");		
+		Code = new Random().Next(0, 1000000).ToString("D6");
 		ExpiryTime = DateTime.UtcNow.AddMinutes(Common.otpExpirationTimeInMinutes);
 		IsUsed = false;
 		Purpose = purpose;

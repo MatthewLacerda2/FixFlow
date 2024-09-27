@@ -37,13 +37,13 @@ public class BusinessController : ControllerBase {
 	public async Task<IActionResult> CreateBusiness([FromBody] BusinessRegisterRequest businessRegister) {
 
 		OTP otp = _context.OTPs.Where(o => o.PhoneNumber == businessRegister.PhoneNumber && o.Code == businessRegister.OTPCode).FirstOrDefault()!;
-		if(otp==null){
+		if (otp == null) {
 			return BadRequest("Código inválido");
 		}
-		if(otp.Purpose != OTP_use_purpose.create_business){
+		if (otp.Purpose != OTP_use_purpose.create_business) {
 			return BadRequest("Código inválido");
 		}
-		if(otp.ExpiryTime < DateTime.UtcNow || otp.IsUsed){
+		if (otp.ExpiryTime < DateTime.UtcNow || otp.IsUsed) {
 			return BadRequest("Código expirado");
 		}
 
