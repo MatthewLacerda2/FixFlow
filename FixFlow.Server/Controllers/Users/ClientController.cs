@@ -25,31 +25,31 @@ public class ClientController : ControllerBase {
 		_userManager = userManager;
 	}
 
-	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientFullInfo))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientFullInfo))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpGet]
-	public async Task<IActionResult> GetClientFullInfo([FromBody] string clientId) {
+	[HttpGet("{id}")]
+	public async Task<IActionResult> GetClientFullInfo(string id) {
 
-		var client = await _userManager.FindByIdAsync(clientId);
+		var client = await _userManager.FindByIdAsync(id);
 		if (client == null) {
 			return BadRequest(NotExistErrors.Client);
 		}
 
 		var clientFullInfo = (ClientFullInfo)client;
 
-		var firstLog = _context.Logs.Where(x => x.ClientId == clientId).OrderBy(x => x.dateTime).First();
+		var firstLog = _context.Logs.Where(x => x.ClientId == id).OrderBy(x => x.dateTime).FirstOrDefault();
 		if (firstLog != null) {
 			clientFullInfo.firstLog = firstLog.dateTime;
 		}
 
-		var lastLog = _context.Logs.Where(x => x.ClientId == clientId).OrderByDescending(x => x.dateTime).First();
+		var lastLog = _context.Logs.Where(x => x.ClientId == id).OrderByDescending(x => x.dateTime).First();
 		if (lastLog != null) {
 			clientFullInfo.firstLog = lastLog.dateTime;
 		}
 
-		clientFullInfo.logs = _context.Logs.Where(x => x.ClientId == clientId).ToArray();
+		clientFullInfo.logs = _context.Logs.Where(x => x.ClientId == id).ToArray();
 
-		clientFullInfo.numSchedules = _context.Schedules.Where(x => x.ClientId == clientId).Count();
+		clientFullInfo.numSchedules = _context.Schedules.Where(x => x.ClientId == id).Count();
 
 		return Ok(clientFullInfo);
 	}

@@ -33,7 +33,7 @@ public class BusinessController : ControllerBase {
 	/// <response code="400"></response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpPost]
+	[HttpGet]
 	public async Task<IActionResult> GetBusiness([FromBody] string businessId) {
 
 		var business = await _userManager.FindByIdAsync(businessId);
@@ -117,7 +117,7 @@ public class BusinessController : ControllerBase {
 		return Ok(upBusiness);
 	}
 
-	[HttpPatch("{Id}")]
+	[HttpPatch("deactivate")]
 	public async Task<IActionResult> DeactivateBusiness([FromBody] string Id) {
 
 		var business = await _userManager.FindByIdAsync(Id);
@@ -141,7 +141,7 @@ public class BusinessController : ControllerBase {
 	/// <response code="400">There was no Business with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpDelete("{Id}")]
+	[HttpDelete]
 	public async Task<IActionResult> DeleteBusiness([FromBody] string Id) {
 
 		var business = await _userManager.FindByIdAsync(Id);

@@ -136,7 +136,7 @@ public class AptLogController : ControllerBase {
 	/// <response code="400">There was no AptLog with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpPut]
+	[HttpPatch]
 	public async Task<IActionResult> UpdateLog([FromBody] AptLog upLog) {
 
 		var existingClient = _context.Clients.Find(upLog.ClientId);
@@ -178,8 +178,8 @@ public class AptLogController : ControllerBase {
 	/// <response code="400">There was no Log with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpDelete("{Id}")]
-	public async Task<IActionResult> DeleteLog(string Id) {
+	[HttpDelete]
+	public async Task<IActionResult> DeleteLog([FromBody] string Id) {
 
 		var logToDelete = _context.Logs.Find(Id);
 		if (logToDelete == null) {

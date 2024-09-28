@@ -26,26 +26,6 @@ public class AptScheduleController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Get the Schedule with the given Id
-	/// </summary>
-	/// <param name="Id">The Schedule's Id</param>
-	/// <returns>AptSchedule</returns>
-	/// <response code="200">The AppointmentSchedule with the given Id</response>
-	/// <response code="404">There was no Appointment Schedule with the given Id</response>/// 
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule))]
-	[ProducesResponseType(StatusCodes.Status404NotFound)]
-	[HttpGet("{Id}")]
-	public async Task<IActionResult> ReadSchedule(string Id) {
-		var schedule = await _context.Schedules.FindAsync(Id);
-
-		if (schedule == null) {
-			return NotFound(NotExistErrors.AptSchedule);
-		}
-
-		return Ok(schedule);
-	}
-
-	/// <summary>
 	/// Gets a number of Appointment Schedules, with optional filters
 	/// </summary>
 	/// <remarks>
@@ -159,8 +139,8 @@ public class AptScheduleController : ControllerBase {
 	/// <response code="400">There was no Schedule with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpDelete("{Id}")]
-	public async Task<IActionResult> DeleteSchedule(string Id) {
+	[HttpDelete]
+	public async Task<IActionResult> DeleteSchedule([FromBody] string Id) {
 		var scheduleToDelete = _context.Schedules.Find(Id);
 		if (scheduleToDelete == null) {
 			return BadRequest(NotExistErrors.AptSchedule);
