@@ -28,7 +28,7 @@ public class IdlePeriodController : ControllerBase {
 	/// </summary>
 	/// <param name="idlePeriod"></param>
 	[HttpPost]
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	public async Task<IActionResult> CreateIdlePeriod([FromBody] IdlePeriod idlePeriod) {
 
@@ -64,7 +64,7 @@ public class IdlePeriodController : ControllerBase {
 	/// Removes Idle days
 	/// </summary>
 	[HttpDelete]
-	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	public async Task<IActionResult> RemoveIdlePeriod([FromBody] string idlePeriodId) {
 

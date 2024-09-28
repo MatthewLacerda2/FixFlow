@@ -117,6 +117,8 @@ public class BusinessController : ControllerBase {
 		return Ok(upBusiness);
 	}
 
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch("deactivate")]
 	public async Task<IActionResult> DeactivateBusiness([FromBody] string Id) {
 
@@ -129,7 +131,7 @@ public class BusinessController : ControllerBase {
 
 		await _context.SaveChangesAsync();
 
-		return Ok(business);
+		return Ok();
 	}
 
 	/// <summary>

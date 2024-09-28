@@ -41,7 +41,7 @@ public class AccountsController : ControllerBase {
 	/// <returns>Business</returns>
 	/// <response code="200">Successfull login</response>
 	/// <response code="401">Unauthorized login</response>
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[HttpPost]
 	public async Task<IActionResult> Login([FromBody] FlowLoginRequest model) {

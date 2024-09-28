@@ -23,7 +23,7 @@ public class BusinessCalendarController : ControllerBase {
 	/// <returns>Business</returns>
 	/// <response code="200">Successfull login</response>
 	/// <response code="401">Unauthorized login</response>
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessCalendarDay[]))]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[HttpGet]
 	public async Task<IActionResult> GetBusinessCalendar([FromBody] string businessId) {

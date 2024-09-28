@@ -122,7 +122,7 @@ public class AptLogController : ControllerBase {
 
 		await _context.SaveChangesAsync();
 
-		return CreatedAtAction(nameof(CreateLog), createLog);
+		return CreatedAtAction(nameof(CreateLog), newLog);
 	}
 
 	/// <summary>
