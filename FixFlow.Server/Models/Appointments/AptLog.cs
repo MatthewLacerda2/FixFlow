@@ -27,7 +27,7 @@ public class AptLog {
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Models.Business))]
-	public string businessId { get; set; }
+	public string BusinessId { get; set; }
 
 	/// <summary>
 	/// Navigation Property of the Business
@@ -59,8 +59,22 @@ public class AptLog {
 	public AptLog() {
 		Id = Guid.NewGuid().ToString();
 		ClientId = string.Empty;
+		BusinessId = string.Empty;
 		Client = null!;
-		businessId = string.Empty;
+		Business = null!;
+	}
+
+	public AptLog(CreateAptLog newLog) {
+		Id = Guid.NewGuid().ToString();
+		ClientId = newLog.ClientId;
+		BusinessId = newLog.BusinessId;
+		scheduleId = newLog.scheduleId;
+
+		this.dateTime = newLog.dateTime;
+		this.price = newLog.price;
+		this.description = newLog.description;
+
+		Client = null!;
 		Business = null!;
 	}
 }

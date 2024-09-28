@@ -46,7 +46,7 @@ public class AptLogController : ControllerBase {
 
 		var logsQuery = _context.Logs.AsQueryable();
 
-		logsQuery = logsQuery.Where(x => x.businessId == filter.businessId);
+		logsQuery = logsQuery.Where(x => x.BusinessId == filter.businessId);
 
 		if (!string.IsNullOrWhiteSpace(filter.client)) {
 			logsQuery = logsQuery.Where(x => x.Client.FullName.Contains(filter.client!));
@@ -101,31 +101,28 @@ public class AptLogController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptLog))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPost]
-	public async Task<IActionResult> CreateLog([FromBody] AptLog newLog) {
+	public async Task<IActionResult> CreateLog([FromBody] CreateAptLog createLog) {
 
-		var existingClient = _context.Clients.Find(newLog.ClientId);
+		var existingClient = _context.Clients.Find(createLog.ClientId);
 		if (existingClient == null) {
 			return BadRequest(NotExistErrors.Client);
 		}
 
-		var existingBusiness = _context.Business.Find(newLog.businessId);
+		var existingBusiness = _context.Business.Find(createLog.BusinessId);
 		if (existingBusiness == null) {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (!string.IsNullOrWhiteSpace(newLog.scheduleId)) {
-			var existingSchedule = _context.Schedules.Find(newLog.scheduleId);
+		AptLog newLog = new AptLog(createLog);
 
-			if (existingSchedule == null) {
-				return BadRequest(NotExistErrors.AptSchedule);
-			}
-		}
-
-		newLog.Id = new Guid().ToString();
 		_context.Logs.Add(newLog);
+
+		AptContact contact = new AptContact(newLog, createLog.dateTime);
+		_context.Contacts.Add(contact);
+
 		await _context.SaveChangesAsync();
 
-		return CreatedAtAction(nameof(CreateLog), newLog);
+		return CreatedAtAction(nameof(CreateLog), createLog);
 	}
 
 	/// <summary>
@@ -144,7 +141,7 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.Client);
 		}
 
-		var existingBusiness = _context.Business.Find(upLog.businessId);
+		var existingBusiness = _context.Business.Find(upLog.BusinessId);
 		if (existingBusiness == null) {
 			return BadRequest(NotExistErrors.Business);
 		}
@@ -187,6 +184,13 @@ public class AptLogController : ControllerBase {
 		}
 
 		_context.Logs.Remove(logToDelete);
+
+		var contact = _context.Contacts.Where(x => x.aptLogId == Id).First();
+
+		if (contact != null && contact.dateTime < DateTime.Now) {
+			_context.Contacts.Remove(contact);
+		}
+
 		await _context.SaveChangesAsync();
 		return NoContent();
 	}

@@ -57,10 +57,21 @@ public class AptContact {
 	public AptContact() {
 		Id = Guid.NewGuid().ToString();
 		clientId = string.Empty;
-		Client = null!;
 		aptLogId = string.Empty;
-		aptLog = null!;
 		businessId = string.Empty;
+		Client = null!;
+		aptLog = null!;
+		Business = null!;
+	}
+
+	public AptContact(AptLog log, DateTime dateTime) {
+		Id = Guid.NewGuid().ToString();
+		this.clientId = log.ClientId;
+		this.businessId = log.BusinessId;
+		this.aptLogId = log.Id;
+		this.dateTime = dateTime;
+		Client = null!;
+		aptLog = null!;
 		Business = null!;
 	}
 }

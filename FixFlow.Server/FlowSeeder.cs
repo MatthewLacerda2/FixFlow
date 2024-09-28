@@ -187,7 +187,7 @@ public class FlowSeeder {
 		.UseDateTimeReference(Jan1st2024)
 
 		.RuleFor(x => x.ClientId, clientId)
-		.RuleFor(x => x.businessId, businessId)
+		.RuleFor(x => x.BusinessId, businessId)
 		.RuleFor(x => x.scheduleId, scheduleId)
 
 		.RuleFor(x => x.Id, f => f.Random.Guid().ToString())
