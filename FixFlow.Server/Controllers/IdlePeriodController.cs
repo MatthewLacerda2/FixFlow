@@ -70,7 +70,7 @@ public class IdlePeriodController : ControllerBase {
 
 		var idlePeriod = _context.IdlePeriods.Find(idlePeriodId);
 		if (idlePeriod == null) {
-			return BadRequest("Idle Period does not exist");
+			return BadRequest(NotExistErrors.IdlePeriod);
 		}
 
 		_context.IdlePeriods.Remove(idlePeriod);

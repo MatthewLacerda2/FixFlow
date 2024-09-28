@@ -8,7 +8,7 @@ public class AptScheduleValidator : AbstractValidator<AptSchedule> {
 
 	public AptScheduleValidator() {
 
-		RuleFor(x => x.dateTime).GreaterThanOrEqualTo(DateTime.Now).WithMessage(ValidatorErrors.DateHasntPassedYet);
+		RuleFor(x => x.dateTime).GreaterThanOrEqualTo(DateTime.Now).WithMessage(ValidatorErrors.DateMustBeInTheFuture);
 		RuleFor(x => x.dateTime).LessThanOrEqualTo(DateTime.Now.AddMonths(7)).WithMessage(ValidatorErrors.DateIsTooFarInFuture);
 
 	}

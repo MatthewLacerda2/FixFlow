@@ -116,12 +116,12 @@ public class BusinessController : ControllerBase {
 		}
 
 		if (upBusiness.BusinessDays.GetLength(0) != 2 || upBusiness.BusinessDays.GetLength(1) != 7) {
-			return BadRequest("BusinessDays must be a [2x7] matrix.");
+			return BadRequest(ValidatorErrors.BusinessDaysInvalidMatrix);
 		}
 
 		for (int i = 0; i < 7; i++) {
 			if (upBusiness.BusinessDays[0, i] > upBusiness.BusinessDays[1, i]) {
-				return BadRequest($"Start time must be less than or equal to end time for day {i + 1}.");
+				return BadRequest($"Business Days start time must be less than End time, for day {i + 1}.");
 			}
 		}
 

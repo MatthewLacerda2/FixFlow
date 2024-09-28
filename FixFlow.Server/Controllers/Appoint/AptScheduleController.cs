@@ -113,7 +113,7 @@ public class AptScheduleController : ControllerBase {
 
 		if (existingBusiness.allowListedServicesOnly) {
 			if (!existingBusiness.services.Contains(newAppointment.service)) {
-				return BadRequest("The Business only allows listed services");
+				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
 
@@ -128,7 +128,7 @@ public class AptScheduleController : ControllerBase {
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.businessId == newAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
 			if (idp.start <= newAppointment.dateTime && idp.finish >= newAppointment.dateTime) {
-				return BadRequest("The Appointment is within an Idle Period");
+				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
 			}
 		}
 
@@ -157,7 +157,7 @@ public class AptScheduleController : ControllerBase {
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.businessId == upAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
 			if (idp.start <= upAppointment.dateTime && idp.finish >= upAppointment.dateTime) {
-				return BadRequest("The Appointment is within an Idle Period");
+				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
 			}
 		}
 

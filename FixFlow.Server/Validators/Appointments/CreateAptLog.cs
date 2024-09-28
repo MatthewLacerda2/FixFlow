@@ -19,7 +19,7 @@ public class CreateAptLogValidator : AbstractValidator<CreateAptLog> {
 			.WithMessage(ValidatorErrors.DateHasntPassedYet);
 
 		RuleFor(x => x.whenShouldClientComeBack)
-			.LessThanOrEqualTo(DateTime.Now.Date)
-			.WithMessage(ValidatorErrors.DateHasntPassedYet);
+			.GreaterThan(DateTime.Now.Date)
+			.WithMessage(ValidatorErrors.DateMustBeInTheFuture);
 	}
 }

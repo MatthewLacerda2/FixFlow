@@ -4,9 +4,9 @@ using Server.Models.Filters;
 
 namespace Server.Validators.Appointments;
 
-public class AptLogFilterValidator : AbstractValidator<AptLogFilter> {
+public class AptScheduleFilterValidator : AbstractValidator<AptScheduleFilter> {
 
-	public AptLogFilterValidator() {
+	public AptScheduleFilterValidator() {
 		RuleFor(x => x.minPrice)
 			.GreaterThanOrEqualTo(0)
 			.WithMessage(ValidatorErrors.PriceMustBeNaturalNumber);

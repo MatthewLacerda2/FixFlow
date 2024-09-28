@@ -115,7 +115,7 @@ public class AptLogController : ControllerBase {
 
 		if (existingBusiness.allowListedServicesOnly) {
 			if (!existingBusiness.services.Contains(createLog.service)) {
-				return BadRequest("The Business only allows listed services");
+				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
 
