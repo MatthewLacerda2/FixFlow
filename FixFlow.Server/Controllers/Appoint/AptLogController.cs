@@ -113,6 +113,12 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
+		if (existingBusiness.allowListedServicesOnly) {
+			if (!existingBusiness.services.Contains(createLog.service)) {
+				return BadRequest("The Business only allows listed services");
+			}
+		}
+
 		AptLog newLog = new AptLog(createLog);
 
 		AptSchedule aptSchedule = _context.Schedules.Where(x => x.ClientId == createLog.ClientId)

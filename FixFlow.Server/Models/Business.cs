@@ -29,6 +29,10 @@ public class Business : IdentityUser {
 	/// </summary>
 	public DateTime[,] BusinessDays { get; set; } = new DateTime[2, 7];
 
+	public string[] services = Array.Empty<string>();
+	public bool allowListedServicesOnly = false;
+	public bool openOnHolidays = false;
+
 	public Business() {
 		CreatedDate = DateTime.Now;
 		LastLogin = DateTime.Now;

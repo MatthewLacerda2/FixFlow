@@ -29,6 +29,8 @@ public class CreateAptLog {
 
 	public float price { get; set; }
 
+	public string? service { get; set; }
+
 	public string? description { get; set; }
 
 	/// <summary>

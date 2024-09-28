@@ -94,8 +94,8 @@ public class AptScheduleController : ControllerBase {
 	/// Create an Appointment Schedule
 	/// </summary>
 	/// <returns>AptSchedule</returns>
-	/// <response code="200">The created Appointment Schedule</response>
-	/// <response code="400">The given (ClientId || ContactId) does not exist</response>
+	/// <response code="200"></response>
+	/// <response code="400"></response>
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptSchedule))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPost]
@@ -109,6 +109,12 @@ public class AptScheduleController : ControllerBase {
 		var existingBusiness = _context.Business.Find(newAppointment.BusinessId);
 		if (existingBusiness == null) {
 			return BadRequest(NotExistErrors.Business);
+		}
+
+		if (existingBusiness.allowListedServicesOnly) {
+			if (!existingBusiness.services.Contains(newAppointment.service)) {
+				return BadRequest("The Business only allows listed services");
+			}
 		}
 
 		AptContact contact = _context.Contacts.Where(x => x.ClientId == newAppointment.ClientId)

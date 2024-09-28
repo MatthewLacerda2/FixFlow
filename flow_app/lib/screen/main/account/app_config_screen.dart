@@ -82,14 +82,6 @@ class AppConfigScreen extends StatelessWidget {
                   print('Atende aos feriados: $isChecked');
                 },
               ),
-              const SizedBox(height: 16),
-              CheckInputField(
-                label: 'Atende a domicílio?',
-                initialValue: false,
-                onChanged: (bool isChecked) {
-                  print('Atende a domicílio: $isChecked');
-                },
-              ),
               // TODO: handle google calendar, simultaneous appointments
               const SizedBox(height: 28),
               Container(
