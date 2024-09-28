@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.Data;
+using Server.Models;
+using Server.Models.Appointments;
 using Server.Models.DTO;
 using Server.Models.Erros;
 using Server.Models.Utils;
@@ -36,8 +38,22 @@ public class BusinessCalendarController : ControllerBase {
 		int daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
 		BusinessCalendarDay[] businessCalendarDays = new BusinessCalendarDay[daysInMonth];
 
-		//TODO: insert idle periods
-		//TODO: insert appointments
+		int i = 0;
+		foreach (BusinessCalendarDay day in businessCalendarDays) {
+			day.date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, i);
+			i++;
+
+			day.schedules = _context.Schedules.Where(x => x.BusinessId == businessId)
+							.Where(x => x.dateTime == day.date)
+							.ToArray();
+
+			day.logs = _context.Logs.Where(x => x.BusinessId == businessId)
+							.Where(x => x.dateTime == day.date)
+							.ToArray();
+
+			day.idlePeriods = _context.IdlePeriods.Where(x => x.businessId == businessId)
+								.Where(x => x.isDateWithinIdlePeriod(day.date)).ToArray();
+		}
 
 		return Ok(businessCalendarDays);
 	}

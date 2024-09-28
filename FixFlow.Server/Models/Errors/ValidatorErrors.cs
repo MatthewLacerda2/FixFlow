@@ -5,6 +5,7 @@ namespace Server.Models.Erros;
 public struct ValidatorErrors {
 
 	public static readonly string DateMustBe2024orForward = "Date must be from 2024 and earlier.";
+	public static readonly string DateIsTooFarInFuture = "Date is too far in the future.";
 	public static readonly string DateHasntPassedYet = "Date hasn't even passed yet!";
 	public static readonly string MinDateMustBeOlder = "MinDate must be older than MaxDate";
 
