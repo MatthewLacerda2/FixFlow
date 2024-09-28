@@ -32,14 +32,8 @@ public class AptLogController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Gets a number of Appointment Logs, with optional filters
+	/// Gets a number of filtered Logs
 	/// </summary>
-	/// <remarks>
-	/// Does not return Not Found, but an Array of size 0 instead
-	/// </remarks>
-	/// <param name="filter">The Filter Properties of the Query</param>
-	/// <returns>AptLog[]</returns>
-	/// <response code="200">Returns an array of AppointmentLog</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
 	[HttpGet]
 	public async Task<IActionResult> ReadLogs([FromBody] AptLogFilter filter) {
@@ -55,8 +49,8 @@ public class AptLogController : ControllerBase {
 		logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
 		logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
 
-		logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.ToDateTime(TimeOnly.MinValue).Date);
-		logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.ToDateTime(TimeOnly.MaxValue).Date);
+		logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.Date);
+		logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.Date);
 
 		switch (filter.sort) {
 			case LogSort.Client:
@@ -93,11 +87,11 @@ public class AptLogController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Create an Appointment Log
+	/// Creates a Log
 	/// </summary>
-	/// <returns>AptLog</returns>
-	/// <response code="200">The created Appointment Log</response>
-	/// <response code="400">The given (ClientId || ScheduleId) does not exist</response>
+	/// <remarks>
+	/// Generates a Contact
+	/// </remarks>
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptLog))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPost]
@@ -142,9 +136,6 @@ public class AptLogController : ControllerBase {
 	/// <summary>
 	/// Update the Appointment Log with the given Id
 	/// </summary>
-	/// <returns>AptLog</returns>
-	/// <response code="200">The updated Appointment Log</response>
-	/// <response code="400">There was no AptLog with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
@@ -182,10 +173,6 @@ public class AptLogController : ControllerBase {
 	/// <summary>
 	/// Deletes the Appointment Log with the given Id
 	/// </summary>
-	/// <param name="Id">The Id of the AptLog to be deleted</param>
-	/// <returns>NoContentResult</returns>
-	/// <response code="204">No Content</response>
-	/// <response code="400">There was no Log with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpDelete]

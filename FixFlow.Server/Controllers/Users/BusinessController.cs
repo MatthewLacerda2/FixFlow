@@ -26,11 +26,8 @@ public class BusinessController : ControllerBase {
 
 	/// <summary>
 	/// Gets the Business with the given Id.
-	/// Used when the User opens the app, but is already logged in
+	/// Used when the User logs-in or opens the app
 	/// </summary>
-	/// <returns>The Business' Data</returns>
-	/// <response code="200"></response>
-	/// <response code="400"></response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpGet]
@@ -47,9 +44,6 @@ public class BusinessController : ControllerBase {
 	/// <summary>
 	/// Creates a Business User
 	/// </summary>
-	/// <returns>The created Business' Data</returns>
-	/// <response code="200"></response>
-	/// <response code="400"></response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -102,9 +96,6 @@ public class BusinessController : ControllerBase {
 	/// <summary>
 	/// Updates the Business with the given Id
 	/// </summary>
-	/// <returns>BusinessDTO</returns>
-	/// <response code="200">Updated Business's DTO</response>
-	/// <response code="400">There was no Business with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
@@ -133,6 +124,10 @@ public class BusinessController : ControllerBase {
 		return Ok(upBusiness);
 	}
 
+	/// <summary>
+	/// Deactivates the Business Account with the given Id.
+	/// That freezes the subscription, and stops notifications
+	/// </summary>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch("deactivate")]
@@ -153,10 +148,6 @@ public class BusinessController : ControllerBase {
 	/// <summary>
 	/// Deletes the Business with the given Id
 	/// </summary>
-	/// <param name="Id">The Id of the Business to be deleted</param>
-	/// <returns>NoContentResult</returns>
-	/// <response code="200">Business was found, and thus deleted</response>
-	/// <response code="400">There was no Business with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpDelete]

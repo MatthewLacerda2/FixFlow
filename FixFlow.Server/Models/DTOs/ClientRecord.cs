@@ -4,9 +4,9 @@ using Server.Models.Appointments;
 namespace Server.Models.DTO;
 
 /// <summary>
-/// Dossiê about the Client
+/// Client history in the business
 /// </summary>
-public class ClientFullInfo {
+public class ClientRecord {
 
 	[Required]
 	[MinLength(5)]
@@ -36,8 +36,8 @@ public class ClientFullInfo {
 
 	public int numSchedules { get; set; }
 
-	public static explicit operator ClientFullInfo(Client client) {
-		return new ClientFullInfo {
+	public static explicit operator ClientRecord(Client client) {
+		return new ClientRecord {
 			FullName = client.FullName,
 			PhoneNumber = client.PhoneNumber!,
 			Email = client.Email,

@@ -22,7 +22,6 @@ public class OTPController : ControllerBase {
 	/// <summary>
 	/// Creates an OTP for when creating a Business
 	/// </summary>
-	/// <param name="phoneNumber"></param>
 	[HttpPost]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	public async Task<IActionResult> CreateBusinessOTP([FromBody] string phoneNumber) {

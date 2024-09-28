@@ -38,9 +38,6 @@ public class AccountsController : ControllerBase {
 	/// <summary>
 	/// Login with an email and password
 	/// </summary>
-	/// <returns>Business</returns>
-	/// <response code="200">Successfull login</response>
-	/// <response code="401">Unauthorized login</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[HttpPost]
@@ -90,9 +87,6 @@ public class AccountsController : ControllerBase {
 	/// <summary>
 	/// Logout method
 	/// </summary>
-	/// <returns>string</returns>
-	/// <response code="200">Logout successfull</response>
-	/// <response code="500">Logout unsucessfull. Probable Internal Server Error</response>
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[Authorize]

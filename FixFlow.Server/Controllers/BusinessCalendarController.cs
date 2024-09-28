@@ -22,9 +22,6 @@ public class BusinessCalendarController : ControllerBase {
 	/// <summary>
 	/// Login with an email and password
 	/// </summary>
-	/// <returns>Business</returns>
-	/// <response code="200">Successfull login</response>
-	/// <response code="401">Unauthorized login</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessCalendarDay[]))]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[HttpGet]

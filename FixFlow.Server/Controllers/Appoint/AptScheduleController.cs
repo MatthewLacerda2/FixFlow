@@ -27,14 +27,8 @@ public class AptScheduleController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Gets a number of Appointment Schedules, with optional filters
+	/// Gets a number of filtered Schedules
 	/// </summary>
-	/// <remarks>
-	/// Does not return Not Found, but an Array of size 0 instead
-	/// </remarks>
-	/// <param name="filter">The Filter Properties of the Query</param>
-	/// <returns>AptSchedule[]</returns>
-	/// <response code="200">Returns an array of AppointmentSchedule</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptSchedule[]>))]
 	[HttpGet]
 	public async Task<IActionResult> ReadSchedules([FromBody] AptScheduleFilter filter) {
@@ -50,8 +44,8 @@ public class AptScheduleController : ControllerBase {
 			schedulesQuery = schedulesQuery.Where(x => x.service != null && x.service.Contains(filter.service));
 		}
 
-		schedulesQuery = schedulesQuery.Where(x => x.dateTime >= new DateTime(filter.minDateTime, new TimeOnly(0)));
-		schedulesQuery = schedulesQuery.Where(x => x.dateTime <= new DateTime(filter.maxDateTime, new TimeOnly(0)));
+		schedulesQuery = schedulesQuery.Where(x => x.dateTime >= filter.minDateTime);
+		schedulesQuery = schedulesQuery.Where(x => x.dateTime <= filter.maxDateTime);
 
 		schedulesQuery = schedulesQuery.Where(x => x.price >= filter.minPrice);
 		schedulesQuery = schedulesQuery.Where(x => x.price <= filter.maxPrice);
@@ -91,11 +85,8 @@ public class AptScheduleController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Create an Appointment Schedule
+	/// Creates an Appointment Schedule
 	/// </summary>
-	/// <returns>AptSchedule</returns>
-	/// <response code="200"></response>
-	/// <response code="400"></response>
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptSchedule))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPost]
@@ -141,9 +132,6 @@ public class AptScheduleController : ControllerBase {
 	/// <summary>
 	/// Update the Appointment Schedule with the given Id
 	/// </summary>
-	/// <returns>AptSchedule</returns>
-	/// <response code="200">The updated Appointment Schedule</response>
-	/// <response code="400">There was no AptSchedule with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPut]
@@ -170,10 +158,6 @@ public class AptScheduleController : ControllerBase {
 	/// <summary>
 	/// Deletes the Appointment Schedule with the given Id
 	/// </summary>
-	/// <param name="Id">The Id of the AptSchedule to be deleted</param>
-	/// <returns>NoContentResult</returns>
-	/// <response code="204">No Content</response>
-	/// <response code="400">There was no Schedule with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpDelete]

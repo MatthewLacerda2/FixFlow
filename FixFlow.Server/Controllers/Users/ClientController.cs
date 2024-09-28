@@ -25,44 +25,42 @@ public class ClientController : ControllerBase {
 		_userManager = userManager;
 	}
 
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientFullInfo))]
+	/// <summary>
+	/// Get Client Record in the Business.
+	/// Credentials, but also schedules and logs history
+	/// </summary>
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientRecord))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetClientFullInfo(string id) {
+	public async Task<IActionResult> GetClientRecord(string id) {
 
 		var client = await _userManager.FindByIdAsync(id);
 		if (client == null) {
 			return BadRequest(NotExistErrors.Client);
 		}
 
-		var clientFullInfo = (ClientFullInfo)client;
+		var clientRecord = (ClientRecord)client;
 
 		var firstLog = _context.Logs.Where(x => x.ClientId == id).OrderBy(x => x.dateTime).FirstOrDefault();
 		if (firstLog != null) {
-			clientFullInfo.firstLog = firstLog.dateTime;
+			clientRecord.firstLog = firstLog.dateTime;
 		}
 
 		var lastLog = _context.Logs.Where(x => x.ClientId == id).OrderByDescending(x => x.dateTime).First();
 		if (lastLog != null) {
-			clientFullInfo.firstLog = lastLog.dateTime;
+			clientRecord.firstLog = lastLog.dateTime;
 		}
 
-		clientFullInfo.logs = _context.Logs.Where(x => x.ClientId == id).ToArray();
+		clientRecord.logs = _context.Logs.Where(x => x.ClientId == id).ToArray();
 
-		clientFullInfo.numSchedules = _context.Schedules.Where(x => x.ClientId == id).Count();
+		clientRecord.numSchedules = _context.Schedules.Where(x => x.ClientId == id).Count();
 
-		return Ok(clientFullInfo);
+		return Ok(clientRecord);
 	}
 
 	/// <summary>
-	/// Gets a number of Clients. May filter by Full Name
+	/// Gets a number of filtered Clients
 	/// </summary>
-	/// <returns>ClientDTO[]</returns>
-	/// <param name="businessId"></param>
-	/// <param name="offset"></param>
-	/// <param name="limit"></param>
-	/// <param name="fullname">Optionally filter the clients whose fullname contain the string</param>
-	/// <response code="200">Returns an array of ClientDTO</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO[]>))]
 	[HttpGet]
 	public async Task<IActionResult> ReadClients(string businessId, uint offset, uint limit, string? fullname) {
@@ -87,9 +85,6 @@ public class ClientController : ControllerBase {
 	/// <summary>
 	/// Create a Client Account
 	/// </summary>
-	/// <returns>ClientDTO</returns>
-	/// <response code="200">The created Client's DTO</response>
-	/// <response code="400">The Client's (PhoneNumber || CPF || Email) does not exist</response>
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
@@ -131,9 +126,6 @@ public class ClientController : ControllerBase {
 	/// <summary>
 	/// Updates the Client with the given Id
 	/// </summary>
-	/// <returns>ClientDTO</returns>
-	/// <response code="200">Updated Client's DTO</response>
-	/// <response code="400">There was no Client with the given Id</response>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
