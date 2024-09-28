@@ -58,7 +58,6 @@ public class BusinessController : ControllerBase {
 
 		OTP otp = _context.OTPs.Where(o => o.PhoneNumber == businessRegister.PhoneNumber)
 								.Where(o => o.ExpiryTime <= DateTime.Now.AddMinutes(Common.otpExpirationTimeInMinutes))
-								.Where(o => o.Purpose == OTP_use_purpose.create_business)
 								.Where(o => o.IsUsed == false)
 								.First();
 		if (otp == null) {
