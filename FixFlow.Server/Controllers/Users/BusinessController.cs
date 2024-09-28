@@ -79,9 +79,16 @@ public class BusinessController : ControllerBase {
 			return BadRequest(AlreadyRegisteredErrors.CNPJ);
 		}
 
-		Business Business = (Business)businessRegister;
+		Business business = (Business)businessRegister;
 
-		var userCreationResult = await _userManager.CreateAsync(Business, businessRegister.confirmPassword);
+		DateTime[,] businessDays = new DateTime[2, 7];
+		for (int i = 0; i < 7; i++) {
+			business.BusinessDays[0, i] = new DateTime(2024, 1, 1, 8, 0, 0);
+			business.BusinessDays[1, i] = new DateTime(2024, 1, 1, 18, 0, 0);
+		}
+		business.BusinessDays = businessDays;
+
+		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.confirmPassword);
 		if (!userCreationResult.Succeeded) {
 			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful");
 		}
@@ -89,7 +96,7 @@ public class BusinessController : ControllerBase {
 		otp.IsUsed = true;
 		await _context.SaveChangesAsync();
 
-		return CreatedAtAction(nameof(CreateBusiness), Business);
+		return CreatedAtAction(nameof(CreateBusiness), business);
 	}
 
 	/// <summary>
@@ -106,6 +113,16 @@ public class BusinessController : ControllerBase {
 		var businessExists = await _userManager.FindByIdAsync(upBusiness.Id);
 		if (businessExists == null) {
 			return BadRequest(NotExistErrors.Business);
+		}
+
+		if (upBusiness.BusinessDays.GetLength(0) != 2 || upBusiness.BusinessDays.GetLength(1) != 7) {
+			return BadRequest("BusinessDays must be a [2x7] matrix.");
+		}
+
+		for (int i = 0; i < 7; i++) {
+			if (upBusiness.BusinessDays[0, i] > upBusiness.BusinessDays[1, i]) {
+				return BadRequest($"Start time must be less than or equal to end time for day {i + 1}.");
+			}
 		}
 
 		businessExists.Name = upBusiness.Name;

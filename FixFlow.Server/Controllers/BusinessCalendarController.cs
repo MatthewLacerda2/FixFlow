@@ -28,7 +28,7 @@ public class BusinessCalendarController : ControllerBase {
 	[HttpGet]
 	public async Task<IActionResult> GetBusinessCalendar([FromBody] string businessId) {
 
-		bool businessExists = _context.Business.Find(businessId) != null;
+		bool businessExists = await _context.Business.FindAsync(businessId) != null;
 		if (!businessExists) {
 			return NotFound(NotExistErrors.Business);
 		}
