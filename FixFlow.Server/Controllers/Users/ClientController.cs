@@ -66,7 +66,6 @@ public class ClientController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDTO[]>))]
 	[HttpGet]
 	public async Task<IActionResult> ReadClients(string businessId, uint offset, uint limit, string? fullname) {
-		//TODO: Implement sorting
 		var clientsQuery = _context.Clients.AsQueryable();
 
 		clientsQuery = clientsQuery.Where(client => client.BusinessId == businessId);
@@ -74,6 +73,8 @@ public class ClientController : ControllerBase {
 		if (!string.IsNullOrWhiteSpace(fullname)) {
 			clientsQuery = clientsQuery.Where(client => client.FullName.Contains(fullname));
 		}
+
+		clientsQuery = clientsQuery.OrderBy(client => client.FullName).ThenBy(client => client.PhoneNumber);
 
 		clientsQuery = clientsQuery.Skip((int)offset).Take((int)limit);
 

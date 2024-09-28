@@ -170,7 +170,7 @@ public class FlowSeeder {
 		.UseDateTimeReference(Jan1st2024)
 
 		.RuleFor(s => s.ClientId, clientId)
-		.RuleFor(s => s.businessId, businessId)
+		.RuleFor(s => s.BusinessId, businessId)
 		.RuleFor(s => s.contactId, contactId)
 
 		.RuleFor(s => s.Id, f => f.Random.Guid().ToString())
@@ -204,7 +204,7 @@ public class FlowSeeder {
 		.StrictMode(false)
 		.UseDateTimeReference(Jan1st2024)
 
-		.RuleFor(c => c.clientId, clientId)
+		.RuleFor(c => c.ClientId, clientId)
 		.RuleFor(c => c.businessId, businessId)
 		.RuleFor(c => c.aptLogId, aptLogId)
 		.RuleFor(c => c.dateTime, f => f.Date.Between(DateTime.Now.AddDays(30), DateTime.Now.AddDays(60)))

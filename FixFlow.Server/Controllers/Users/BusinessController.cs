@@ -153,7 +153,7 @@ public class BusinessController : ControllerBase {
 
 		_context.Logs.RemoveRange(_context.Logs.Where(x => x.BusinessId == Id));
 		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.businessId == Id));
-		_context.Schedules.RemoveRange(_context.Schedules.Where(x => x.businessId == Id));
+		_context.Schedules.RemoveRange(_context.Schedules.Where(x => x.BusinessId == Id));
 
 		_context.Clients.RemoveRange(_context.Clients.Where(x => x.BusinessId == Id));
 

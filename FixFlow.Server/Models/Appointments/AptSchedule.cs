@@ -27,7 +27,7 @@ public class AptSchedule {
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Models.Business))]
-	public string businessId { get; set; }
+	public string BusinessId { get; set; }
 
 	/// <summary>
 	/// Navigation Property of the Business
@@ -63,7 +63,7 @@ public class AptSchedule {
 		ClientId = string.Empty;
 		Client = null!;
 		Contact = null!;
-		businessId = string.Empty;
+		BusinessId = string.Empty;
 		Business = null!;
 	}
 }

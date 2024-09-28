@@ -113,9 +113,15 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		//TODO: check for idle period and business hours
-
 		AptLog newLog = new AptLog(createLog);
+
+		AptSchedule aptSchedule = _context.Schedules.Where(x => x.ClientId == createLog.ClientId)
+								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
+								.OrderByDescending(x => x.dateTime).First();
+
+		if (aptSchedule != null) {
+			newLog.scheduleId = aptSchedule.Id;
+		}
 
 		_context.Logs.Add(newLog);
 

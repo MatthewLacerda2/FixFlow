@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
+using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
 using Server.Models.Filters;
@@ -39,7 +40,7 @@ public class AptScheduleController : ControllerBase {
 	public async Task<IActionResult> ReadSchedules([FromBody] AptScheduleFilter filter) {
 		var schedulesQuery = _context.Schedules.AsQueryable();
 
-		schedulesQuery = _context.Schedules.Where(x => x.businessId == filter.businessId);
+		schedulesQuery = _context.Schedules.Where(x => x.BusinessId == filter.businessId);
 
 		if (!string.IsNullOrWhiteSpace(filter.client)) {
 			schedulesQuery = schedulesQuery.Where(x => x.Client.FullName.Contains(filter.client));
@@ -100,7 +101,31 @@ public class AptScheduleController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateSchedule([FromBody] AptSchedule newAppointment) {
 
-		//TODO: check for idle period and business hours
+		var existingClient = _context.Clients.Find(newAppointment.ClientId);
+		if (existingClient == null) {
+			return BadRequest(NotExistErrors.Client);
+		}
+
+		var existingBusiness = _context.Business.Find(newAppointment.BusinessId);
+		if (existingBusiness == null) {
+			return BadRequest(NotExistErrors.Business);
+		}
+
+		AptContact contact = _context.Contacts.Where(x => x.ClientId == newAppointment.ClientId)
+								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
+								.OrderByDescending(x => x.dateTime).First();
+
+		if (contact != null) {
+			newAppointment.contactId = contact.Id;
+		}
+
+		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.businessId == newAppointment.BusinessId).ToArray();
+		foreach (IdlePeriod idp in idps) {
+			if (idp.start <= newAppointment.dateTime && idp.finish >= newAppointment.dateTime) {
+				return BadRequest("The Appointment is within an Idle Period");
+			}
+		}
+
 		_context.Schedules.Add(newAppointment);
 		await _context.SaveChangesAsync();
 
@@ -123,7 +148,13 @@ public class AptScheduleController : ControllerBase {
 			return BadRequest(NotExistErrors.AptSchedule);
 		}
 
-		//TODO: check for idle period and business hours
+		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.businessId == upAppointment.BusinessId).ToArray();
+		foreach (IdlePeriod idp in idps) {
+			if (idp.start <= upAppointment.dateTime && idp.finish >= upAppointment.dateTime) {
+				return BadRequest("The Appointment is within an Idle Period");
+			}
+		}
+
 		_context.Schedules.Update(upAppointment);
 		await _context.SaveChangesAsync();
 
@@ -141,6 +172,7 @@ public class AptScheduleController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpDelete]
 	public async Task<IActionResult> DeleteSchedule([FromBody] string Id) {
+
 		var scheduleToDelete = _context.Schedules.Find(Id);
 		if (scheduleToDelete == null) {
 			return BadRequest(NotExistErrors.AptSchedule);

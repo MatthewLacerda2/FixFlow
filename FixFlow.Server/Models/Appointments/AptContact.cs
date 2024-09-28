@@ -14,7 +14,7 @@ public class AptContact {
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Models.Client))]
-	public string clientId { get; set; }
+	public string ClientId { get; set; }
 
 	/// <summary>
 	/// Navigation Property of the Client
@@ -56,7 +56,7 @@ public class AptContact {
 
 	public AptContact() {
 		Id = Guid.NewGuid().ToString();
-		clientId = string.Empty;
+		ClientId = string.Empty;
 		aptLogId = string.Empty;
 		businessId = string.Empty;
 		Client = null!;
@@ -66,7 +66,7 @@ public class AptContact {
 
 	public AptContact(AptLog log, DateTime dateTime) {
 		Id = Guid.NewGuid().ToString();
-		this.clientId = log.ClientId;
+		this.ClientId = log.ClientId;
 		this.businessId = log.BusinessId;
 		this.aptLogId = log.Id;
 		this.dateTime = dateTime;
