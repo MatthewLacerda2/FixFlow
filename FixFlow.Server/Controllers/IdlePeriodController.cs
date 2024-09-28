@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Models;
 using Server.Models.Erros;
@@ -24,9 +25,20 @@ public class IdlePeriodController : ControllerBase {
 	}
 
 	/// <summary>
+	/// Returns all Idle Periods that contain the given date
+	/// </summary>
+	[HttpGet]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod[]))]
+	public async Task<IActionResult> GetIdlePeriodsAtDate([FromBody] DateTime date) {
+		return Ok(await _context.IdlePeriods.Where(ip => ip.isDateWithinIdlePeriod(date)).ToArrayAsync());
+	}
+
+	/// <summary>
 	/// Creates an Idle period
 	/// </summary>
-	/// <param name="idlePeriod"></param>
+	/// <remarks>
+	/// Idle Periods are allowed to overlap
+	/// </remarks>
 	[HttpPost]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -37,22 +49,7 @@ public class IdlePeriodController : ControllerBase {
 		}
 
 		if (idlePeriod.finish <= DateTime.Now) {
-			return BadRequest("Idle Period end has passed");
-		}
-
-		IdlePeriod idp = _context.IdlePeriods.Where(idp => idp.businessId == idlePeriod.businessId)
-						.Where(idp => idp.start <= idlePeriod.start).First();
-
-		if (idp != null) {
-			if (idp.finish >= idlePeriod.finish) {
-				return BadRequest("Idle Period already exists");
-			}
-			else {
-				idp.finish = idlePeriod.finish;
-			}
-		}
-		else {
-			_context.IdlePeriods.Add(idlePeriod);
+			return BadRequest(ValidatorErrors.IdlePeriodHasPassed);
 		}
 
 		await _context.SaveChangesAsync();

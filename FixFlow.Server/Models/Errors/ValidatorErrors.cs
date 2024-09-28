@@ -12,6 +12,8 @@ public struct ValidatorErrors {
 	public static readonly string DateHasntPassedYet = "Date hasn't even passed yet!";
 	public static readonly string DateMustBeInTheFuture = "Date must be in the future.";
 
+	public static readonly string IdlePeriodHasPassed = "Idle Period has passed.";
+
 	public static readonly string MinDateMustBeOlder = "MinDate must be older than MaxDate.";
 	public static readonly string MinDateIsGreaterThanMaxDate = "MinDate must be less than MaxDate.";
 	public static readonly string StartMustBeGreaterThanFinish = "Start time must be greater than Finish time.";
