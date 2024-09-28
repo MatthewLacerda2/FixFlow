@@ -38,7 +38,6 @@ public class BusinessCalendarController : ControllerBase {
 
 		//TODO: insert idle periods
 		//TODO: insert appointments
-		//TODO: insert holidays
 
 		return Ok(businessCalendarDays);
 	}

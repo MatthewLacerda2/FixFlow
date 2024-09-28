@@ -50,7 +50,53 @@ class AppConfigScreen extends StatelessWidget {
                 height: 10,
                 color: Colors.grey.shade800,
               ),
-              const SizedBox(height: 26),
+              
+              const SizedBox(height: 32),
+              const Text(
+                'Opções de Serviços',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              const SizedBox(height: 12),
+              const EnumField(
+                  description: "Serviço...",
+                  options: <String>['Item 1', 'Item 2', 'Item 3'],
+                  characterLimit: 20),
+              const SizedBox(height: 3),
+              const Text(
+                'Opções mais comuns de serviços prestados',
+                style: TextStyle(color: Colors.grey, fontSize: 12),
+              ),
+              const SizedBox(height: 10),
+              CheckInputField(
+                label: 'Permitir apenas serviços listados?',
+                initialValue: false,
+                onChanged: (bool isChecked) {
+                  print('Outros: $isChecked');
+                },
+              ),
+              const SizedBox(height: 18),
+              CheckInputField(
+                label: 'Atende aos feriados?',
+                initialValue: false,
+                onChanged: (bool isChecked) {
+                  print('Atende aos feriados: $isChecked');
+                },
+              ),
+              const SizedBox(height: 16),
+              CheckInputField(
+                label: 'Atende a domicílio?',
+                initialValue: false,
+                onChanged: (bool isChecked) {
+                  print('Atende a domicílio: $isChecked');
+                },
+              ),
+              // TODO: handle google calendar, simultaneous appointments
+              const SizedBox(height: 28),
+              Container(
+                height: 10,
+                color: Colors.grey.shade800,
+              ),
+              const SizedBox(height: 28),
               const Text(
                 'Notificações',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),

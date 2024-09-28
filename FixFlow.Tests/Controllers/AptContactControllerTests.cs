@@ -84,7 +84,7 @@ public class AptContactControllerTests {
 		var mockContacts = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49)
 			.Generate(4)
 			.Select((c, i) => {
-				if (i == 0) c.clientId = otherClient.Id;
+				if (i == 0) c.ClientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.dateTime = DateTime.MinValue;
 				if (i == 3) c.dateTime = DateTime.MaxValue;
@@ -127,7 +127,7 @@ public class AptContactControllerTests {
 		var mockContacts = FlowSeeder.GetContactFaker(client.Id, business.Id, aptLog.Id, 49)
 			.Generate(10)
 			.Select((c, i) => {
-				if (i == 0) c.clientId = otherClient.Id;
+				if (i == 0) c.ClientId = otherClient.Id;
 				if (i == 1) c.businessId = otherBusiness.Id;
 				if (i == 2) c.aptLogId = otherAptLog.Id;
 				if (i == 3) c.dateTime = DateTime.MinValue;
@@ -169,7 +169,7 @@ public class AptContactControllerTests {
 		Assert.NotNull(result);
 		var createdContact = Assert.IsType<AptContact>(result!.Value);
 		Assert.Equal(StatusCodes.Status201Created, result!.StatusCode);
-		Assert.Equal(newContact.clientId, createdContact.clientId);
+		Assert.Equal(newContact.ClientId, createdContact.ClientId);
 	}
 
 	[Fact]
