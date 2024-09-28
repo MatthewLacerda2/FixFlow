@@ -4,9 +4,9 @@ using Server.Models.Erros;
 
 namespace Server.Validators.Appointments;
 
-public class AptLogValidator : AbstractValidator<AptLog> {
+public class CreateAptLogValidator : AbstractValidator<CreateAptLog> {
 
-	public AptLogValidator() {
+	public CreateAptLogValidator() {
 		RuleFor(x => x.price)
 			.GreaterThanOrEqualTo(0)
 			.WithMessage(ValidatorErrors.PriceMustBeNaturalNumber);
@@ -16,6 +16,10 @@ public class AptLogValidator : AbstractValidator<AptLog> {
 			.WithMessage(ValidatorErrors.DateMustBe2024orForward);
 		RuleFor(x => x.dateTime)
 			.LessThanOrEqualTo(DateTime.Now)
+			.WithMessage(ValidatorErrors.DateHasntPassedYet);
+
+		RuleFor(x => x.whenShouldClientComeBack)
+			.LessThanOrEqualTo(DateTime.Now.Date)
 			.WithMessage(ValidatorErrors.DateHasntPassedYet);
 	}
 }

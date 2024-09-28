@@ -113,6 +113,8 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
+		//TODO: check for idle period and business hours
+
 		AptLog newLog = new AptLog(createLog);
 
 		_context.Logs.Add(newLog);
@@ -159,7 +161,6 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.AptLog);
 		}
 
-		//TODO: check for idle period and business hours
 		_context.Logs.Update(upLog);
 		await _context.SaveChangesAsync();
 

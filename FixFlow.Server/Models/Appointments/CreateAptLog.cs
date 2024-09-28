@@ -31,5 +31,9 @@ public class CreateAptLog {
 
 	public string? description { get; set; }
 
-	public DateOnly whenShouldClientComeBack { get; set; }
+	/// <summary>
+	/// The Date when we expect the Client to schedule another appointment.
+	/// We are leaving as DateTime for simplicity but we only need the Date from this class
+	/// </summary>
+	public DateTime whenShouldClientComeBack { get; set; }
 }
