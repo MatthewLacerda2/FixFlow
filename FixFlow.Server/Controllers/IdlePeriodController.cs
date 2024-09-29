@@ -52,6 +52,9 @@ public class IdlePeriodController : ControllerBase {
 			return BadRequest(ValidatorErrors.IdlePeriodHasPassed);
 		}
 
+		idlePeriod.Id = new Guid().ToString();
+		_context.IdlePeriods.Add(idlePeriod);
+
 		await _context.SaveChangesAsync();
 
 		return Ok(idlePeriod);

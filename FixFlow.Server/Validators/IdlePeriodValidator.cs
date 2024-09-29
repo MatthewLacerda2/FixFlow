@@ -9,6 +9,6 @@ public class IdlePeriodValidator : AbstractValidator<IdlePeriod> {
 
 		RuleFor(idlePeriod => idlePeriod.start)
 			.LessThan(idlePeriod => idlePeriod.finish)
-			.WithMessage(ValidatorErrors.StartMustBeGreaterThanFinish);
+			.WithMessage(ValidatorErrors.StartMustBeOlderThanFinish);
 	}
 }

@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Server.Models.DTO;
 
@@ -19,13 +18,12 @@ public class Business : IdentityUser {
 	/// <summary>
 	/// CNPJ. Must be on format XX.XXX.XXX/XXXX-XX
 	/// </summary>
-	[Key]
 	public string CNPJ { get; set; }
 
 	/// <summary>
 	/// The DateTimes of the week where the business is open
 	/// </summary>
-	public DateTime[,] BusinessDays { get; set; } = new DateTime[2, 7];
+	public BusinessDay[] BusinessDays { get; set; } = new BusinessDay[7];
 
 	public string[] services = Array.Empty<string>();
 	public bool allowListedServicesOnly = false;
@@ -47,6 +45,13 @@ public class Business : IdentityUser {
 		Email = email;
 		CNPJ = cnpj;
 		PhoneNumber = phoneNumber;
+
+		for (int i = 0; i < BusinessDays.Length; i++) {
+			DateTime start = new DateTime(DateTime.Now.Year, 1, 1, 8, 0, 0);
+			DateTime end = new DateTime(DateTime.Now.Year, 1, 1, 18, 0, 0);
+
+			BusinessDays[i] = new BusinessDay(i, start, end);
+		}
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {

@@ -35,12 +35,12 @@ public class BusinessController : ControllerBase {
 
 		var claimBusinessId = User.Claims.FirstOrDefault(c => c.Type == "businessId");
 		if (claimBusinessId == null) {
-			return BadRequest("Your token does not have a BusinessId.");
+			return BadRequest(ValidatorErrors.TokenNotHaveBusinessId);
 		}
 
 		string businessId = claimBusinessId.Value;
 		if (businessId == null) {
-			return BadRequest("Your token's BusinessId value is null.");
+			return BadRequest(ValidatorErrors.NullBusinessId);
 		}
 
 		var business = await _userManager.FindByIdAsync(businessId);
@@ -65,7 +65,7 @@ public class BusinessController : ControllerBase {
 								.Where(o => o.IsUsed == false)
 								.First();
 		if (otp == null) {
-			return BadRequest("Código inválido");
+			return BadRequest(ValidatorErrors.InvalidOTP);
 		}
 
 		//TODO:validate CNPJ
@@ -84,13 +84,6 @@ public class BusinessController : ControllerBase {
 		}
 
 		Business business = (Business)businessRegister;
-
-		DateTime[,] businessDays = new DateTime[2, 7];
-		for (int i = 0; i < 7; i++) {
-			business.BusinessDays[0, i] = new DateTime(2024, 1, 1, 8, 0, 0);
-			business.BusinessDays[1, i] = new DateTime(2024, 1, 1, 18, 0, 0);
-		}
-		business.BusinessDays = businessDays;
 
 		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.confirmPassword);
 		if (!userCreationResult.Succeeded) {
@@ -121,8 +114,11 @@ public class BusinessController : ControllerBase {
 		}
 
 		for (int i = 0; i < 7; i++) {
-			if (upBusiness.BusinessDays[0, i] > upBusiness.BusinessDays[1, i]) {
-				return BadRequest($"Business Days start time must be less than End time, for day {i + 1}.");
+			if (upBusiness.BusinessDays[i].start >= upBusiness.BusinessDays[i].end) {
+				return BadRequest($"Business Day start time must be less than End time, for day {i + 1}.");
+			}
+			if (upBusiness.BusinessDays[i].dayOfTheWeek != i) {
+				return BadRequest($"Business Day dayOfTheWeek must be {i}, for day {i + 1}.");
 			}
 		}
 

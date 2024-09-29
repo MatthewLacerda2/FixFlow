@@ -5,6 +5,11 @@ public struct ValidatorErrors {
 	public static readonly string UnlistedService = "The Business only allows listed services.";
 	public static readonly string BusinessDaysInvalidMatrix = "BusinessDays must be a [2x7] matrix.";
 
+	public static readonly string TokenNotHaveBusinessId = "Your token does not have a BusinessId.";
+	public static readonly string NullBusinessId = "Your token's BusinessId value is null.";
+
+	public static readonly string InvalidOTP = "Código OTP inválido";
+
 	public static readonly string MinPriceIsGreaterThanMaxPrice = "MinPrice must be less than or equal to MaxPrice.";
 
 	public static readonly string DateMustBe2024orForward = "Date must be from 2024 and earlier.";
@@ -16,7 +21,7 @@ public struct ValidatorErrors {
 
 	public static readonly string MinDateMustBeOlder = "MinDate must be older than MaxDate.";
 	public static readonly string MinDateIsGreaterThanMaxDate = "MinDate must be less than MaxDate.";
-	public static readonly string StartMustBeGreaterThanFinish = "Start time must be greater than Finish time.";
+	public static readonly string StartMustBeOlderThanFinish = "Start time must be older than Finish time.";
 
 	public static readonly string DateWithinIdlePeriod = "The Date is within an Idle Period";
 

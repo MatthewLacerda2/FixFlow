@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using Server.Models.Appointments;
+using Server.Models.DTO;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext {
@@ -25,6 +26,21 @@ public class ServerContext : IdentityDbContext {
 		base.OnModelCreating(builder);
 
 		//FlowSeeder flowSeeder = new FlowSeeder(builder, 617);
+
+		builder.Entity<Business>()
+			   .HasIndex(b => b.CNPJ)
+			   .IsUnique();
+
+		builder.Entity<Client>()
+				.HasIndex(c => c.CPF)
+				.IsUnique();
+
+		builder.Entity<IdlePeriod>()
+				.HasIndex(c => c.Id)
+				.IsUnique();
+
+		builder.Entity<Business>()
+		   .OwnsMany(b => b.BusinessDays);
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
