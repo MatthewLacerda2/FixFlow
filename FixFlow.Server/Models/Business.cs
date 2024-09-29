@@ -21,9 +21,6 @@ public class Business : IdentityUser {
 	/// </summary>
 	public string CNPJ { get; set; }
 
-	[NotMapped]
-	public string token { get; set; } = string.Empty;
-
 	/// <summary>
 	/// The DateTimes of the week where the business is open
 	/// </summary>

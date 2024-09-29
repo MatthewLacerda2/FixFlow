@@ -38,7 +38,7 @@ public class AccountsController : ControllerBase {
 	/// <summary>
 	/// Login with an email and password
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[HttpPost]
 	public async Task<IActionResult> Login([FromBody] FlowLoginRequest model) {
@@ -59,17 +59,15 @@ public class AccountsController : ControllerBase {
 		userExists.IsActive = true;
 		await _context.SaveChangesAsync();
 
-		userExists.token = token;
-
-		return Ok(userExists);
+		return Ok(token);
 	}
 
 	private string GenerateToken(Business business) {
 
-		var businessJson = JsonConvert.SerializeObject(business);
-
 		var claims = new List<Claim>{
-			new Claim("Business", businessJson)
+			new Claim(ClaimTypes.Name, business.Name),
+			new Claim(ClaimTypes.Email, business.Email!),
+			new Claim("businessId", business.Id)
 		};
 		var key = Encoding.UTF32.GetBytes(_configuration["Jwt:SecretKey"]!);
 		var tokenDescriptor = new SecurityTokenDescriptor {
