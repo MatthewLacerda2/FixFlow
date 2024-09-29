@@ -65,4 +65,48 @@ public class IdlePeriodControllerTests {
 		// Assert
 		Assert.IsType<BadRequestObjectResult>(result);
 	}
+
+	[Fact]
+	public async Task CreateIdlePeriod_ValidIdlePeriod_ReturnsOk() {
+		// Arrange
+		var business = new Business("lenda", "lenda@gmail.com", "987.6543.321-8901", "98988263255");
+		_context.Business.Add(business);
+		await _context.SaveChangesAsync();
+
+		var idlePeriod = new IdlePeriod(business.Id, DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "Test");
+
+		// Act
+		var result = await _controller.CreateIdlePeriod(idlePeriod) as OkObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		var createdIdlePeriod = Assert.IsType<IdlePeriod>(result!.Value);
+		Assert.Equal(idlePeriod.BusinessId, createdIdlePeriod.BusinessId);
+		Assert.Equal(idlePeriod.start, createdIdlePeriod.start);
+		Assert.Equal(idlePeriod.finish, createdIdlePeriod.finish);
+		Assert.Equal(idlePeriod.Description, createdIdlePeriod.Description);
+	}
+
+	[Fact]
+	public async Task CreateIdlePeriod_BusinessNotFound_ReturnsBadRequest() {
+		// Arrange
+		var idlePeriod = new IdlePeriod("666", DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "Test");
+		// Act
+		var result = await _controller.CreateIdlePeriod(idlePeriod);
+		// Assert
+		Assert.IsType<BadRequestObjectResult>(result);
+	}
+
+	[Fact]
+	public async Task CreateIdlePeriod_IdlePeriodHasPassed_ReturnsBadRequest() {
+		// Arrange
+		var business = new Business("lenda", "lenda@gmail.com", "987.6543.321-8901", "98988263255");
+		var idlePeriod = new IdlePeriod(business.Id, DateTime.Now.AddDays(-2), DateTime.Now.AddDays(-1), "Test");
+		_context.Business.Add(business);
+		await _context.SaveChangesAsync();
+		// Act
+		var result = await _controller.CreateIdlePeriod(idlePeriod);
+		// Assert
+		Assert.IsType<BadRequestObjectResult>(result);
+	}
 }
