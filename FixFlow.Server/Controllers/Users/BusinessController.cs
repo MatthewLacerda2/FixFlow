@@ -84,7 +84,7 @@ public class BusinessController : ControllerBase {
 		}
 
 		Business business = (Business)businessRegister;
-		business.Id = new Guid().ToString();
+		business.Id = Guid.NewGuid().ToString();
 
 		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.confirmPassword);
 		if (!userCreationResult.Succeeded) {

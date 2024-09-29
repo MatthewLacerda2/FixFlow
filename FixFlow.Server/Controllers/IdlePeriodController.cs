@@ -17,11 +17,9 @@ namespace FixFlow.Server.Controllers.Users;
 public class IdlePeriodController : ControllerBase {
 
 	private readonly ServerContext _context;
-	private readonly UserManager<Business> _userManager;
 
-	public IdlePeriodController(ServerContext context, UserManager<Business> userManager) {
+	public IdlePeriodController(ServerContext context) {
 		_context = context;
-		_userManager = userManager;
 	}
 
 	/// <summary>
@@ -29,8 +27,18 @@ public class IdlePeriodController : ControllerBase {
 	/// </summary>
 	[HttpGet]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod[]))]
-	public async Task<IActionResult> GetIdlePeriodsAtDate([FromBody] DateTime date) {
-		return Ok(await _context.IdlePeriods.Where(x => x.start <= date && x.finish >= date).ToArrayAsync());
+	public async Task<IActionResult> GetIdlePeriodsAtDate([FromBody] BusinessIdlePeriodsRequest period) {
+
+		var business = _context.Business.Find(period.BusinessId);
+		if (business == null) {
+			return BadRequest(NotExistErrors.Business);
+		}
+
+		var idlePeriods = await _context.IdlePeriods.Where(x => x.BusinessId == period.BusinessId)
+								.Where(x => x.start <= period.Date && x.finish >= period.Date)
+								.ToArrayAsync();
+
+		return Ok(idlePeriods);
 	}
 
 	/// <summary>
@@ -44,7 +52,7 @@ public class IdlePeriodController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	public async Task<IActionResult> CreateIdlePeriod([FromBody] IdlePeriod idlePeriod) {
 
-		if (_userManager.FindByIdAsync(idlePeriod.BusinessId) == null) {
+		if (_context.Business.Find(idlePeriod.BusinessId) == null) {
 			return BadRequest(NotExistErrors.Business);
 		}
 
@@ -52,7 +60,7 @@ public class IdlePeriodController : ControllerBase {
 			return BadRequest(ValidatorErrors.IdlePeriodHasPassed);
 		}
 
-		idlePeriod.Id = new Guid().ToString();
+		idlePeriod.Id = Guid.NewGuid().ToString();
 		_context.IdlePeriods.Add(idlePeriod);
 
 		await _context.SaveChangesAsync();
