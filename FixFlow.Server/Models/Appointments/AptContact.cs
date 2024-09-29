@@ -30,23 +30,11 @@ public class AptContact {
 	public string businessId { get; set; }
 
 	/// <summary>
-	/// Navigation Property of the Business
-	/// </summary>
-	[JsonIgnore]
-	public Business Business { get; set; }
-
-	/// <summary>
 	/// The Id of the Log that precedes this Contact
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(AptLog))]
 	public string aptLogId { get; set; }
-
-	/// <summary>
-	/// Navigation Property of the Log
-	/// </summary>
-	[JsonIgnore]
-	public AptLog aptLog { get; set; }
 
 	/// <summary>
 	/// The Date to Contact the Client
@@ -60,8 +48,6 @@ public class AptContact {
 		aptLogId = string.Empty;
 		businessId = string.Empty;
 		Client = null!;
-		aptLog = null!;
-		Business = null!;
 	}
 
 	public AptContact(AptLog log, DateTime dateTime) {
@@ -71,7 +57,5 @@ public class AptContact {
 		this.aptLogId = log.Id;
 		this.dateTime = dateTime;
 		Client = null!;
-		aptLog = null!;
-		Business = null!;
 	}
 }

@@ -30,22 +30,10 @@ public class AptSchedule {
 	public string BusinessId { get; set; }
 
 	/// <summary>
-	/// Navigation Property of the Business
-	/// </summary>
-	[JsonIgnore]
-	public Business Business { get; set; }
-
-	/// <summary>
 	/// The Id of the Contact that precedes this Schedule, if any
 	/// </summary>
 	[ForeignKey(nameof(AptContact))]
 	public string? contactId { get; set; }
-
-	/// <summary>
-	/// Navigation Property of the Contact
-	/// </summary>
-	[JsonIgnore]
-	public AptContact? Contact { get; set; }
 
 	/// <summary>
 	/// The scheduled DateTime of the Appointment
@@ -61,9 +49,7 @@ public class AptSchedule {
 	public AptSchedule() {
 		Id = Guid.NewGuid().ToString();
 		ClientId = string.Empty;
-		Client = null!;
-		Contact = null!;
 		BusinessId = string.Empty;
-		Business = null!;
+		Client = null!;
 	}
 }

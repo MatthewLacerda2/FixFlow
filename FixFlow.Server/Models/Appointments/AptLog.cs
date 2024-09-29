@@ -30,22 +30,10 @@ public class AptLog {
 	public string BusinessId { get; set; }
 
 	/// <summary>
-	/// Navigation Property of the Business
-	/// </summary>
-	[JsonIgnore]
-	public Business Business { get; set; }
-
-	/// <summary>
 	/// The Id of the Schedule that precedes this Log, if any
 	/// </summary>
 	[ForeignKey(nameof(AptSchedule))]
 	public string? scheduleId { get; set; }
-
-	/// <summary>
-	/// Navigation Property of the Schedule
-	/// </summary>
-	[JsonIgnore]
-	public AptSchedule? Schedule { get; set; }
 
 	/// <summary>
 	/// The DateTime when the Log was registered
@@ -63,7 +51,6 @@ public class AptLog {
 		ClientId = string.Empty;
 		BusinessId = string.Empty;
 		Client = null!;
-		Business = null!;
 	}
 
 	public AptLog(CreateAptLog newLog) {
@@ -76,8 +63,6 @@ public class AptLog {
 		this.dateTime = newLog.dateTime;
 		this.price = newLog.price;
 		this.description = newLog.description;
-
 		Client = null!;
-		Business = null!;
 	}
 }

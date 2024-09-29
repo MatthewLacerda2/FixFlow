@@ -34,10 +34,8 @@ public class OTPControllerTests {
 	public async Task CreateBusinessOTP_ReturnsOkResult() {
 		// Arrange
 		string phoneNumber = "1234567890";
-
 		// Act
 		var result = await _controller.CreateBusinessOTP(phoneNumber);
-
 		// Assert
 		Assert.IsType<OkResult>(result);
 	}
