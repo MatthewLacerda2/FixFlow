@@ -15,18 +15,7 @@ public class IdlePeriodControllerTests {
 
 	public IdlePeriodControllerTests() {
 
-		var connectionStringBuilder = new SqliteConnectionStringBuilder();
-		connectionStringBuilder.DataSource = ":memory:";
-
-		var connection = new SqliteConnection(connectionStringBuilder.ToString());
-
-		DbContextOptions<ServerContext> _dbContextOptions = new DbContextOptionsBuilder<ServerContext>()
-			.UseSqlite(connection)
-			.Options;
-
-		_context = new ServerContext(_dbContextOptions);
-		_context.Database.OpenConnection();
-		_context.Database.EnsureCreated();
+		_context = new Util().SetupDbContextForTests();
 
 		_controller = new IdlePeriodController(_context);
 	}

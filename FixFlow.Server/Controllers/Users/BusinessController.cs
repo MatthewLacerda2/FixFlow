@@ -31,17 +31,7 @@ public class BusinessController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpGet]
-	public async Task<IActionResult> GetBusiness() {
-
-		var claimBusinessId = User.Claims.FirstOrDefault(c => c.Type == "businessId");
-		if (claimBusinessId == null) {
-			return BadRequest(ValidatorErrors.TokenNotHaveBusinessId);
-		}
-
-		string businessId = claimBusinessId.Value;
-		if (businessId == null) {
-			return BadRequest(ValidatorErrors.NullBusinessId);
-		}
+	public async Task<IActionResult> GetBusiness([FromBody] string businessId) {
 
 		var business = await _userManager.FindByIdAsync(businessId);
 		if (business == null) {
