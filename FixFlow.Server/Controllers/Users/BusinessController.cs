@@ -101,21 +101,12 @@ public class BusinessController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (upBusiness.BusinessDays.Count != 7) {
-			return BadRequest(ValidatorErrors.BusinessDayCountMustBe7);
-		}
-
-		for (int i = 0; i < 7; i++) {
-			if (upBusiness.BusinessDays[i].start >= upBusiness.BusinessDays[i].end) {
-				return BadRequest($"Business Day start time must be less than End time, for day {i + 1}.");
-			}
-			if (upBusiness.BusinessDays[i].dayOfTheWeek != i) {
-				return BadRequest($"Business Day dayOfTheWeek must be {i}, for day {i + 1}.");
-			}
-		}
-
 		businessExists.Name = upBusiness.Name;
+		businessExists.Email = upBusiness.Email;
 		businessExists.BusinessDays = upBusiness.BusinessDays;
+		businessExists.services = upBusiness.services;
+		businessExists.allowListedServicesOnly = upBusiness.allowListedServicesOnly;
+		businessExists.openOnHolidays = upBusiness.openOnHolidays;
 
 		await _context.SaveChangesAsync();
 

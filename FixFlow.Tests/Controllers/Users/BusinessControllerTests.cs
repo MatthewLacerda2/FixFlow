@@ -155,4 +155,43 @@ public class BusinessControllerTests {
 		Assert.Equal(createdBusiness.CNPJ, businessRegister.CNPJ);
 		Assert.Equal(createdBusiness.PhoneNumber, businessRegister.PhoneNumber);
 	}
+
+	[Fact]
+	public async Task UpdateBusiness_ReturnsOkResult_WhenBusinessExists() {
+		// Arrange
+		var businessId = "test-business-id";
+		var business = new Business("lenda", "lenda@gmail.com", "123.4567.789-0001", "98999344788") { Id = businessId };
+		var updatedBusiness = new Business("updatedName", "updated@gmail.com", "123.4567.789-0001", "98999344788") { Id = businessId };
+
+		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync(business);
+
+		// Act
+		var result = await _controller.UpdateBusiness(updatedBusiness);
+
+		// Assert
+		var okResult = Assert.IsType<OkObjectResult>(result);
+		Assert.Equal(updatedBusiness, okResult.Value);
+
+		Assert.Equal(business.Name, updatedBusiness.Name);
+		Assert.Equal(business.Email, updatedBusiness.Email);
+		Assert.Equal(business.BusinessDays, updatedBusiness.BusinessDays);
+		Assert.Equal(business.allowListedServicesOnly, updatedBusiness.allowListedServicesOnly);
+		Assert.Equal(business.openOnHolidays, updatedBusiness.openOnHolidays);
+	}
+
+	[Fact]
+	public async Task UpdateBusiness_ReturnsBadRequest_WhenBusinessDoesNotExist() {
+		// Arrange
+		var businessId = "non-existent-business-id";
+		var updatedBusiness = new Business("updatedName", "updated@gmail.com", "123.4567.789-0001", "98999344788") { Id = businessId };
+
+		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync((Business)null!);
+
+		// Act
+		var result = await _controller.UpdateBusiness(updatedBusiness);
+
+		// Assert
+		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+	}
 }
