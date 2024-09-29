@@ -16,4 +16,9 @@ public class FlowLoginRequest {
 		email = string.Empty;
 		password = string.Empty;
 	}
+
+	public FlowLoginRequest(string email, string password) {
+		this.email = email;
+		this.password = password;
+	}
 }

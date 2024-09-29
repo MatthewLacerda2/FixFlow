@@ -8,7 +8,6 @@ using Microsoft.IdentityModel.Tokens;
 using Server.Data;
 using Server.Models;
 using Server.Models.Utils;
-using Server.Services;
 
 namespace Server.Controllers;
 
@@ -21,17 +20,15 @@ public class AccountsController : ControllerBase {
 	private readonly UserManager<Business> _userManager;
 	private readonly IConfiguration _configuration;
 	private readonly ServerContext _context;
-	private readonly MailResetPassword _emailResetPasswordService;
 
 	const string wrongCredentialsMessage = "Wrong UserName/Email or Password";
 
 	public AccountsController(SignInManager<Business> signInManager, UserManager<Business> userManager,
-								IConfiguration configuration, ServerContext context, MailResetPassword emailResetPasswordService) {
+								IConfiguration configuration, ServerContext context) {
 		_signInManager = signInManager;
 		_userManager = userManager;
 		_configuration = configuration;
 		_context = context;
-		_emailResetPasswordService = emailResetPasswordService;
 	}
 
 	/// <summary>
@@ -42,7 +39,7 @@ public class AccountsController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> Login([FromBody] FlowLoginRequest model) {
 
-		var userExists = _userManager.FindByEmailAsync(model.email).Result;
+		var userExists = await _userManager.FindByEmailAsync(model.email);
 		if (userExists == null) {
 			return Unauthorized(wrongCredentialsMessage);
 		}
