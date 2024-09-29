@@ -109,4 +109,33 @@ public class IdlePeriodControllerTests {
 		// Assert
 		Assert.IsType<BadRequestObjectResult>(result);
 	}
+
+	[Fact]
+	public async Task RemoveIdlePeriod_ValidId_ReturnsNoContent() {
+		// Arrange
+		var business = new Business("lenda", "lenda@gmail.com", "987.6543.321-8901", "98988263255");
+		_context.Business.Add(business);
+		await _context.SaveChangesAsync();
+
+		var idlePeriod = new IdlePeriod(business.Id, DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "Test");
+		_context.IdlePeriods.Add(idlePeriod);
+		await _context.SaveChangesAsync();
+
+		// Act
+		var result = await _controller.RemoveIdlePeriod(idlePeriod.Id);
+
+		// Assert
+		Assert.IsType<NoContentResult>(result);
+		Assert.Null(_context.IdlePeriods.Find(idlePeriod.Id));
+	}
+
+	[Fact]
+	public async Task RemoveIdlePeriod_InvalidId_ReturnsBadRequest() {
+		// Arrange
+		var invalidId = "invalid-id";
+		// Act
+		var result = await _controller.RemoveIdlePeriod(invalidId);
+		// Assert
+		Assert.IsType<BadRequestObjectResult>(result);
+	}
 }
