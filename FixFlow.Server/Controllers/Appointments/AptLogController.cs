@@ -125,7 +125,7 @@ public class AptLogController : ControllerBase {
 
 		_context.Logs.Add(newLog);
 
-		AptContact contact = new AptContact(newLog, createLog.dateTime);
+		AptContact contact = new AptContact(newLog, createLog.whenShouldClientComeBack);
 		_context.Contacts.Add(contact);
 
 		await _context.SaveChangesAsync();

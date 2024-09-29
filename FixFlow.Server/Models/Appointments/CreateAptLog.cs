@@ -38,4 +38,14 @@ public class CreateAptLog {
 	/// We are leaving as DateTime for simplicity but we only need the Date from this class
 	/// </summary>
 	public DateTime whenShouldClientComeBack { get; set; }
+
+	public CreateAptLog(string clientId, string businessId, string? scheduleId, DateTime dateTime, float price, string? service, string? description) {
+		ClientId = clientId;
+		BusinessId = businessId;
+		this.scheduleId = scheduleId;
+		this.dateTime = dateTime;
+		this.price = price;
+		this.service = service;
+		this.description = description;
+	}
 }

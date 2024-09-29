@@ -4,6 +4,7 @@ using Moq;
 using Server.Controllers;
 using Server.Data;
 using Server.Models;
+using Server.Models.Appointments;
 using Server.Models.DTO;
 using Server.Models.Erros;
 
@@ -185,10 +186,79 @@ public class BusinessControllerTests {
 		var businessId = "non-existent-business-id";
 		var updatedBusiness = new Business("updatedName", "updated@gmail.com", "123.4567.789-0001", "98999344788") { Id = businessId };
 
+		// Act
+		var result = await _controller.UpdateBusiness(updatedBusiness);
+
+		// Assert
+		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+	}
+
+	[Fact]
+	public async Task DeactivateBusiness_ReturnsOkResult_WhenBusinessExists() {
+		// Arrange
+		var businessId = "test-business-id";
+		var business = new Business("lenda", "lenda@gmail.com", "123.4567.789-0001", "98999344788") { Id = businessId, IsActive = true };
+		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync(business);
+
+		// Act
+		var result = await _controller.DeactivateBusiness(businessId);
+
+		// Assert
+		var okResult = Assert.IsType<OkResult>(result);
+		Assert.False(business.IsActive);
+	}
+
+	[Fact]
+	public async Task DeactivateBusiness_ReturnsBadRequest_WhenBusinessDoesNotExist() {
+		// Arrange
+		var businessId = "non-existent-business-id";
+
+		// Act
+		var result = await _controller.DeactivateBusiness(businessId);
+
+		// Assert
+		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+	}
+
+	[Fact]
+	public async Task DeleteBusiness_ReturnsOkResult_WhenBusinessExists() {
+		// Arrange
+		var businessId = "test-business-id";
+		var business = new Business("lenda", "lenda@gmail.com", "123.4567.789-0001", "98999344788") { Id = businessId };
+		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync(business);
+		_mockUserManager.Setup(x => x.DeleteAsync(business)).ReturnsAsync(IdentityResult.Success);
+
+		Client client = new Client(businessId, "98912345678", "fulano da silva bezerra", null, null, null);
+		AptSchedule schedule = new AptSchedule(client.Id, businessId, DateTime.Now.AddDays(-1), 100f);
+		CreateAptLog createAptLog = new CreateAptLog(client.Id, businessId, schedule.Id, DateTime.Now, 100f, null, null);
+		AptLog log = new AptLog(createAptLog);
+		AptContact contact = new AptContact(log, DateTime.Now);
+
+		_context.AddRange(client, contact, schedule, log);
+		_context.SaveChanges();
+
+		// Act
+		var result = await _controller.DeleteBusiness(businessId);
+
+		// Assert
+		var okResult = Assert.IsType<NoContentResult>(result);
+
+		Assert.Empty(_context.Clients.Where(x => x.BusinessId == businessId));
+		Assert.Empty(_context.Contacts.Where(x => x.businessId == businessId));
+		Assert.Empty(_context.Schedules.Where(x => x.BusinessId == businessId));
+		Assert.Empty(_context.Logs.Where(x => x.BusinessId == businessId));
+	}
+
+	[Fact]
+	public async Task DeleteBusiness_ReturnsBadRequest_WhenBusinessDoesNotExist() {
+		// Arrange
+		var businessId = "non-existent-business-id";
 		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync((Business)null!);
 
 		// Act
-		var result = await _controller.UpdateBusiness(updatedBusiness);
+		var result = await _controller.DeleteBusiness(businessId);
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);

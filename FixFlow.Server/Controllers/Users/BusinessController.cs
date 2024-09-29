@@ -135,7 +135,7 @@ public class BusinessController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Deletes the Business with the given Id
+	/// Deletes the Business with the given Id and all it's data owned by it
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -147,9 +147,9 @@ public class BusinessController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		_context.Logs.RemoveRange(_context.Logs.Where(x => x.BusinessId == Id));
 		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.businessId == Id));
 		_context.Schedules.RemoveRange(_context.Schedules.Where(x => x.BusinessId == Id));
+		_context.Logs.RemoveRange(_context.Logs.Where(x => x.BusinessId == Id));
 
 		_context.Clients.RemoveRange(_context.Clients.Where(x => x.BusinessId == Id));
 

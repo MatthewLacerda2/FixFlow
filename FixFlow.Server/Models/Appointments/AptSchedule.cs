@@ -26,7 +26,7 @@ public class AptSchedule {
 	/// The Id of the Business who owns this Contact
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Models.Business))]
+	[ForeignKey(nameof(Business))]
 	public string BusinessId { get; set; }
 
 	/// <summary>
@@ -50,6 +50,16 @@ public class AptSchedule {
 		Id = Guid.NewGuid().ToString();
 		ClientId = string.Empty;
 		BusinessId = string.Empty;
+		dateTime = DateTime.Now;
+		Client = null!;
+	}
+
+	public AptSchedule(string clientId, string businessId, DateTime dateTime, float price) {
+		Id = Guid.NewGuid().ToString();
+		ClientId = clientId;
+		BusinessId = businessId;
+		this.dateTime = dateTime;
+		this.price = price;
 		Client = null!;
 	}
 }
