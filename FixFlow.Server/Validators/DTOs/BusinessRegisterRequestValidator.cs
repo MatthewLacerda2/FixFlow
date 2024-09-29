@@ -13,7 +13,7 @@ public class BusinessRegisterValidator : AbstractValidator<BusinessRegisterReque
 			}
 		});
 
-		RuleFor(x => x.password).Custom((currentPassword, context) => {
+		RuleFor(x => x.Password).Custom((currentPassword, context) => {
 			if (currentPassword.Length < 8) {
 				context.AddFailure(ValidatorErrors.ShortPassword);
 			}
@@ -23,7 +23,7 @@ public class BusinessRegisterValidator : AbstractValidator<BusinessRegisterReque
 			}
 		});
 
-		RuleFor(x => x.confirmPassword).Equal(x => x.password).WithErrorCode(ValidatorErrors.ConfirmPassword);
+		RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithErrorCode(ValidatorErrors.ConfirmPassword);
 
 		RuleFor(x => x.CNPJ).Matches(@"^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$").WithMessage(ValidatorErrors.CNPJisInvalid);
 	}

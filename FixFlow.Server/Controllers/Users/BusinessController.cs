@@ -44,21 +44,20 @@ public class BusinessController : ControllerBase {
 	/// <summary>
 	/// Creates a Business User
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
+	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
 	[HttpPost]
 	public async Task<IActionResult> CreateBusiness([FromBody] BusinessRegisterRequest businessRegister) {
 
-		OTP otp = _context.OTPs.Where(o => o.PhoneNumber == businessRegister.PhoneNumber)
-								.Where(o => o.ExpiryTime <= DateTime.Now.AddMinutes(Common.otpExpirationTimeInMinutes))
+		OTP otp = _context.OTPs.Where(o => o.Code == businessRegister.OTPCode)
+								.Where(o => o.PhoneNumber == businessRegister.PhoneNumber)
+								.Where(o => o.ExpiryTime >= DateTime.Now)
 								.Where(o => o.IsUsed == false)
-								.First();
+								.FirstOrDefault()!;
 		if (otp == null) {
 			return BadRequest(ValidatorErrors.InvalidOTP);
 		}
-
-		//TODO:validate CNPJ
 
 		var existingEmail = await _userManager.FindByEmailAsync(businessRegister.Email);
 		if (existingEmail != null) {
@@ -73,10 +72,12 @@ public class BusinessController : ControllerBase {
 			return BadRequest(AlreadyRegisteredErrors.CNPJ);
 		}
 
+		//TODO:validate CNPJ
+
 		Business business = (Business)businessRegister;
 		business.Id = Guid.NewGuid().ToString();
 
-		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.confirmPassword);
+		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.ConfirmPassword);
 		if (!userCreationResult.Succeeded) {
 			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful");
 		}
