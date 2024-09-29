@@ -8,7 +8,7 @@ public class Business : IdentityUser {
 	public DateTime CreatedDate { get; set; }
 	public DateTime LastLogin { get; set; }
 
-	public bool IsActive = true;
+	public bool IsActive { get; set; }
 
 	/// <summary>
 	/// The Name of the Business or Business owner
@@ -23,11 +23,11 @@ public class Business : IdentityUser {
 	/// <summary>
 	/// The DateTimes of the week where the business is open
 	/// </summary>
-	public BusinessDay[] BusinessDays { get; set; } = new BusinessDay[7];
+	public List<BusinessDay> BusinessDays { get; set; } = new List<BusinessDay>();
 
 	public string[] services = Array.Empty<string>();
-	public bool allowListedServicesOnly = false;
-	public bool openOnHolidays = false;
+	public bool allowListedServicesOnly { get; set; }
+	public bool openOnHolidays { get; set; }
 
 	public Business() {
 		CreatedDate = DateTime.Now;
@@ -35,6 +35,8 @@ public class Business : IdentityUser {
 
 		Name = string.Empty;
 		CNPJ = string.Empty;
+
+		IsActive = true;
 	}
 
 	public Business(string name, string email, string cnpj, string phoneNumber) {
@@ -46,12 +48,15 @@ public class Business : IdentityUser {
 		CNPJ = cnpj;
 		PhoneNumber = phoneNumber;
 
-		for (int i = 0; i < BusinessDays.Length; i++) {
+		BusinessDays = new List<BusinessDay>(7);
+		for (int i = 0; i < BusinessDays.Count; i++) {
 			DateTime start = new DateTime(DateTime.Now.Year, 1, 1, 8, 0, 0);
 			DateTime end = new DateTime(DateTime.Now.Year, 1, 1, 18, 0, 0);
 
 			BusinessDays[i] = new BusinessDay(i, start, end);
 		}
+
+		IsActive = true;
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {

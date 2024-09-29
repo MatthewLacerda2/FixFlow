@@ -6,14 +6,14 @@ namespace Server.Models.DTO;
 public class BusinessCalendarDay {
 
 	[JsonIgnore]
-	public DateTime date;
+	public DateTime date { get; set; }
 
-	public string description = string.Empty;
+	public string description { get; set; } = string.Empty;
 
-	public IdlePeriod[] idlePeriods = Array.Empty<IdlePeriod>();
-	public string[] holiday = Array.Empty<string>();
+	public IdlePeriod[] idlePeriods { get; set; } = Array.Empty<IdlePeriod>();
+	public string[] holiday { get; set; } = Array.Empty<string>();
 
-	public AptSchedule[] schedules = Array.Empty<AptSchedule>();
-	public AptLog[] logs = Array.Empty<AptLog>();
+	public AptSchedule[] schedules { get; set; } = Array.Empty<AptSchedule>();
+	public AptLog[] logs { get; set; } = Array.Empty<AptLog>();
 
 }

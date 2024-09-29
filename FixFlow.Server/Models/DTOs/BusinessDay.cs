@@ -2,10 +2,10 @@ namespace Server.Models.DTO;
 
 public class BusinessDay {
 
-	public int dayOfTheWeek;
+	public int dayOfTheWeek { get; set; }
 
-	public DateTime start;
-	public DateTime end;
+	public DateTime start { get; set; }
+	public DateTime end { get; set; }
 
 	public BusinessDay() {
 		dayOfTheWeek = 0;

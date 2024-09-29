@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
-using Xunit;
 
 namespace FixFlow.Tests.Controllers;
 
@@ -14,9 +13,9 @@ public class OTPControllerTests {
 
 	public OTPControllerTests() {
 
-		var connectionStringBuilder = new SqliteConnectionStringBuilder {
-			DataSource = ":memory:"
-		};
+		var connectionStringBuilder = new SqliteConnectionStringBuilder();
+		connectionStringBuilder.DataSource = ":memory:";
+
 		var connection = new SqliteConnection(connectionStringBuilder.ToString());
 
 		DbContextOptions<ServerContext> _dbContextOptions = new DbContextOptionsBuilder<ServerContext>()

@@ -116,7 +116,7 @@ public class AptScheduleController : ControllerBase {
 			newAppointment.contactId = contact.Id;
 		}
 
-		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.businessId == newAppointment.BusinessId).ToArray();
+		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == newAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
 			if (idp.start <= newAppointment.dateTime && idp.finish >= newAppointment.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
@@ -142,7 +142,7 @@ public class AptScheduleController : ControllerBase {
 			return BadRequest(NotExistErrors.AptSchedule);
 		}
 
-		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.businessId == upAppointment.BusinessId).ToArray();
+		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == upAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
 			if (idp.start <= upAppointment.dateTime && idp.finish >= upAppointment.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);

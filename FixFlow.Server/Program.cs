@@ -7,11 +7,8 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Serilog;
-using Serilog.Sinks.MSSqlServer;
 using Server.Data;
 using Server.Models;
-using Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +24,7 @@ builder.Services.AddIdentity<Client, IdentityRole>()
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 builder.Services.AddDbContext<ServerContext>(options =>
-	options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 23))));
+	options.UseNpgsql(connectionString));
 
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 

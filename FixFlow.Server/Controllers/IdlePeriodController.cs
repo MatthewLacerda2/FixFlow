@@ -30,7 +30,7 @@ public class IdlePeriodController : ControllerBase {
 	[HttpGet]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod[]))]
 	public async Task<IActionResult> GetIdlePeriodsAtDate([FromBody] DateTime date) {
-		return Ok(await _context.IdlePeriods.Where(ip => ip.isDateWithinIdlePeriod(date)).ToArrayAsync());
+		return Ok(await _context.IdlePeriods.Where(x => x.start <= date && x.finish >= date).ToArrayAsync());
 	}
 
 	/// <summary>
@@ -44,7 +44,7 @@ public class IdlePeriodController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	public async Task<IActionResult> CreateIdlePeriod([FromBody] IdlePeriod idlePeriod) {
 
-		if (_userManager.FindByIdAsync(idlePeriod.businessId) == null) {
+		if (_userManager.FindByIdAsync(idlePeriod.BusinessId) == null) {
 			return BadRequest(NotExistErrors.Business);
 		}
 

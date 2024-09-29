@@ -84,6 +84,7 @@ public class BusinessController : ControllerBase {
 		}
 
 		Business business = (Business)businessRegister;
+		business.Id = new Guid().ToString();
 
 		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.confirmPassword);
 		if (!userCreationResult.Succeeded) {
@@ -109,8 +110,8 @@ public class BusinessController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (upBusiness.BusinessDays.GetLength(0) != 2 || upBusiness.BusinessDays.GetLength(1) != 7) {
-			return BadRequest(ValidatorErrors.BusinessDaysInvalidMatrix);
+		if (upBusiness.BusinessDays.Count != 7) {
+			return BadRequest(ValidatorErrors.BusinessDayCountMustBe7);
 		}
 
 		for (int i = 0; i < 7; i++) {

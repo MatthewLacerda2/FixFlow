@@ -2,15 +2,19 @@ namespace Server.Models;
 
 public class IdlePeriod {
 
-	public string Id = string.Empty;
+	public string Id { get; set; }
 
-	public string description = string.Empty;
+	public string description { get; set; }
 
-	public string businessId = string.Empty;
-	public DateTime start, finish;
+	public string BusinessId { get; set; }
+	public DateTime start { get; set; }
+	public DateTime finish { get; set; }
 
-	public bool isDateWithinIdlePeriod(DateTime date) {
-		return date >= start && date <= finish;
+	public IdlePeriod() {
+		Id = new Guid().ToString();
+		description = "desk";
+		BusinessId = "business-id";
+		start = DateTime.Now;
+		finish = DateTime.Now.AddDays(1);
 	}
-
 }

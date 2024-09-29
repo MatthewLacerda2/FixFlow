@@ -3,10 +3,10 @@ namespace Server.Models.Erros;
 public struct ValidatorErrors {
 
 	public static readonly string UnlistedService = "The Business only allows listed services.";
-	public static readonly string BusinessDaysInvalidMatrix = "BusinessDays must be a [2x7] matrix.";
 
 	public static readonly string TokenNotHaveBusinessId = "Your token does not have a BusinessId.";
 	public static readonly string NullBusinessId = "Your token's BusinessId value is null.";
+	public static readonly string BusinessDayCountMustBe7 = "There must be exactly 7 business days";
 
 	public static readonly string InvalidOTP = "Código OTP inválido";
 
