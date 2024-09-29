@@ -34,15 +34,11 @@ public class BusinessController : ControllerBase {
 	public async Task<IActionResult> GetBusiness() {
 
 		var claimBusinessId = User.Claims.FirstOrDefault(c => c.Type == "businessId");
-		string businessId = null!;
-
 		if (claimBusinessId == null) {
 			return BadRequest("Your token does not have a BusinessId.");
 		}
-		else {
-			businessId = claimBusinessId.Value;
-		}
 
+		string businessId = claimBusinessId.Value;
 		if (businessId == null) {
 			return BadRequest("Your token's BusinessId value is null.");
 		}

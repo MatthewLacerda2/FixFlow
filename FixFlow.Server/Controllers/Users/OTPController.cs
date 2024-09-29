@@ -3,7 +3,7 @@ using Server.Data;
 using Server.Models;
 using Server.Models.Utils;
 
-namespace FixFlow.Server.Controllers.Users;
+namespace FixFlow.Server.Controllers;
 
 /// <summary>
 /// Controller class for OTP usage

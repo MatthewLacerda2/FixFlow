@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Server.Models.DTO;
 
@@ -19,6 +19,7 @@ public class Business : IdentityUser {
 	/// <summary>
 	/// CNPJ. Must be on format XX.XXX.XXX/XXXX-XX
 	/// </summary>
+	[Key]
 	public string CNPJ { get; set; }
 
 	/// <summary>

@@ -20,6 +20,7 @@ public class Client : IdentityUser {
 	/// CPF. Must be on format XXX.XXX.XXX-XX
 	/// </summary>
 	[Length(14, 14)]
+	[Key]
 	public string? CPF { get; set; }
 
 	public string? AdditionalNote { get; set; }
