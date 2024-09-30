@@ -205,7 +205,7 @@ public class ClientControllerTests {
 		_context.Clients.Add(client);
 		_context.SaveChanges();
 
-		var updatedClient = new ClientDTO(client.Id, "matheus lacerda bezerra", "98999344788", "lenda@hotmail.com", "A solid 4", "123.456.789-00");
+		var updatedClient = new ClientDTO(client.Id, "matheus lacerda bezerra", "98999344788", "lenda@hotmail.com", "A solid 4", "987.654.321-00");
 
 		// Act
 		var result = await _controller.UpdateClient(updatedClient);

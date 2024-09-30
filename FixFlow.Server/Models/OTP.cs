@@ -16,14 +16,7 @@ public class OTP {
 	public DateTime ExpiryTime { get; set; }
 	public bool IsUsed { get; set; }
 
-	public OTP() {
-		PhoneNumber = "9888263255";
-
-		Id = Guid.NewGuid().ToString();
-		Code = new Random().Next(0, 1000000).ToString("D6");
-		ExpiryTime = DateTime.UtcNow.AddMinutes(Common.otpExpirationTimeInMinutes);
-		IsUsed = false;
-	}
+	public OTP() : this("9888263255") { }
 
 	public OTP(string phoneNumber) {
 		PhoneNumber = phoneNumber;

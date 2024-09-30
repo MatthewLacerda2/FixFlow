@@ -12,13 +12,7 @@ public class IdlePeriod {
 	public DateTime start { get; set; }
 	public DateTime finish { get; set; }
 
-	public IdlePeriod() {
-		Id = Guid.NewGuid().ToString();
-		Description = string.Empty;
-		BusinessId = string.Empty;
-		start = DateTime.Now;
-		finish = DateTime.Now.AddDays(1);
-	}
+	public IdlePeriod() : this(string.Empty, DateTime.Now, DateTime.Now.AddDays(1), null!) { }
 
 	public IdlePeriod(string businessId, DateTime start, DateTime finish, string descript) {
 		Id = Guid.NewGuid().ToString();

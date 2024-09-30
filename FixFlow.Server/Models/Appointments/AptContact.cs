@@ -26,7 +26,7 @@ public class AptContact {
 	/// The Id of the Business who owns this Contact
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Models.Business))]
+	[ForeignKey(nameof(Business))]
 	public string businessId { get; set; }
 
 	/// <summary>

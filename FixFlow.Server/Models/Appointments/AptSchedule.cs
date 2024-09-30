@@ -46,13 +46,7 @@ public class AptSchedule {
 
 	public float price { get; set; }
 
-	public AptSchedule() {
-		Id = Guid.NewGuid().ToString();
-		ClientId = string.Empty;
-		BusinessId = string.Empty;
-		dateTime = DateTime.Now;
-		Client = null!;
-	}
+	public AptSchedule() : this(string.Empty, string.Empty, DateTime.Now, 0) { }
 
 	public AptSchedule(string clientId, string businessId, DateTime dateTime, float price) {
 		Id = Guid.NewGuid().ToString();
