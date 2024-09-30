@@ -5,7 +5,6 @@ import '../../../components/Inputs/check_input_field.dart';
 import '../../../components/Inputs/enum_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
 import '../../../components/warning_modal.dart';
-import '../../AppConfig/change_password/change_password_screen.dart';
 import '../../AppConfig/change_phone/change_phone_screen.dart';
 import '../../AppConfig/deactivate_account/deactivate_account_screen.dart';
 import '../../AppConfig/delete_account/delete_warning_screen.dart';

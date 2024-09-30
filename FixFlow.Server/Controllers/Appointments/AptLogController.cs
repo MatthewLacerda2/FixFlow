@@ -47,7 +47,7 @@ public class AptLogController : ControllerBase {
 		}
 
 		if (!string.IsNullOrWhiteSpace(filter.service)) {
-			logsQuery = logsQuery.Where(x => x.service != null && x.service.Contains(filter.service!));
+			logsQuery = logsQuery.Where(x => x.Service != null && x.Service.Contains(filter.service!));
 		}
 
 		logsQuery = logsQuery.Where(x => x.Price >= filter.minPrice);
@@ -166,7 +166,7 @@ public class AptLogController : ControllerBase {
 
 		existingLog.scheduleId = upLog.ScheduleId;
 		existingLog.dateTime = upLog.dateTime;
-		existingLog.service = upLog.Service;
+		existingLog.Service = upLog.Service;
 		existingLog.Price = upLog.Price;
 		existingLog.description = upLog.Description;
 

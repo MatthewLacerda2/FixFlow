@@ -40,7 +40,7 @@ public class AptLog {
 	/// </summary>
 	public DateTime dateTime { get; set; } = DateTime.Now;
 
-	public string? service { get; set; }
+	public string? Service { get; set; }
 
 	public float Price { get; set; }
 
@@ -58,7 +58,7 @@ public class AptLog {
 		ClientId = newLog.ClientId;
 		BusinessId = newLog.BusinessId;
 		scheduleId = newLog.scheduleId;
-		service = newLog.service;
+		Service = newLog.service;
 
 		this.dateTime = newLog.dateTime;
 		this.Price = newLog.price;

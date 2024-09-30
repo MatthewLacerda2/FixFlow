@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
-import 'forgot_password_screen.dart';
 import 'login_screen.dart';
 import 'register_screen.dart';
 

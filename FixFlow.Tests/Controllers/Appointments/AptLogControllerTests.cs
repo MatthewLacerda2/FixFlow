@@ -32,9 +32,13 @@ public class AptLogControllerTests {
 
 	[Fact]
 	public async Task ReadLogs_ReturnsFilteredLogs() {
+		// Arrange
 		var client1Name = "fulano da silva";
 
-		var business1 = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788");
+		var business1 = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
+			allowListedServicesOnly = true,
+			services = ["Service 1", "Service 2"]
+		};
 		var business2 = new Business("b-2", "b-2@gmail.com", "123.4567.789-0001", "98988263255");
 		var client1 = new Client(business1.Id, "789456123", client1Name, null, null, null);
 		var client2 = new Client(business2.Id, "123456789", "ciclano da silva", null, null, null);
@@ -43,16 +47,15 @@ public class AptLogControllerTests {
 		_context.Business.AddRange(business1, business2);
 		_context.Clients.AddRange(client1, client2, client3);
 
-		// Arrange
 		var logs = new List<AptLog>();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 11; i++) {
 			logs.Add(new AptLog {
 				Id = Guid.NewGuid().ToString(),
 				BusinessId = business1.Id,
 				ClientId = client1.Id,
-				dateTime = DateTime.Now.AddDays(-i),
+				dateTime = DateTime.Now.AddHours(-i * 24),
 				Price = i * 10,
-				service = $"Option {i}"
+				Service = "Service 1"
 			});
 		}
 
@@ -61,6 +64,9 @@ public class AptLogControllerTests {
 
 		logs[1] = logs[5];
 		logs[1].Price = 40;
+
+		logs[10] = logs[4];
+		logs[10].Service = "Service 2";
 
 		_context.Logs.AddRange(logs);
 		_context.SaveChanges();
@@ -72,11 +78,14 @@ public class AptLogControllerTests {
 			maxPrice = 80,
 			minDateTime = DateTime.Now.AddDays(-7),
 			maxDateTime = DateTime.Now.AddDays(-3),
+			service = "Service 1",
 			sort = LogSort.Price,
 			descending = true,
 			offset = 1,
 			limit = 1
 		};
+
+		var expectedLog = logs[5];
 
 		// Act
 		var result = await _controller.ReadLogs(filter) as OkObjectResult;
@@ -88,9 +97,9 @@ public class AptLogControllerTests {
 		Assert.Single(filteredLogs);
 
 		Assert.Equal(client1Name, filteredLogs!.First().Client.FullName);
-		Assert.Equal(40, filteredLogs!.First().Price);
-		Assert.Equal(DateTime.Now.AddDays(-4).Date, filteredLogs!.First().dateTime.Date);
-		Assert.Equal("Option 4", filteredLogs!.First().service);
+		Assert.Equal(expectedLog.Price, filteredLogs!.First().Price);
+		Assert.Equal(DateTime.Now.AddDays(-5).Date, filteredLogs!.First().dateTime.Date);
+		Assert.Equal(expectedLog.Service, filteredLogs!.First().Service);
 	}
 
 	[Fact]
@@ -141,7 +150,7 @@ public class AptLogControllerTests {
 			services = ["Service 1", "Service 2"]
 		};
 		var client = new Client(business.Id, "98988263255", "Client Name", null, null, null);
-		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now, 100);
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now, 100, null);
 		_context.Business.Add(business);
 		_context.Clients.Add(client);
 		_context.Schedules.Add(schedule);
@@ -159,7 +168,7 @@ public class AptLogControllerTests {
 		Assert.NotNull(createdLog);
 		Assert.Equal(createLog.ClientId, createdLog!.ClientId);
 		Assert.Equal(createLog.BusinessId, createdLog.BusinessId);
-		Assert.Equal(createLog.service, createdLog.service);
+		Assert.Equal(createLog.service, createdLog.Service);
 		Assert.Equal(createLog.price, createdLog.Price);
 		Assert.Equal(createLog.dateTime, createdLog.dateTime);
 
@@ -196,7 +205,7 @@ public class AptLogControllerTests {
 			BusinessId = business.Id,
 			dateTime = DateTime.Now,
 			Price = 100,
-			service = "Service 2"
+			Service = "Service 2"
 		};
 
 		_context.Business.Add(business);
@@ -228,7 +237,7 @@ public class AptLogControllerTests {
 			BusinessId = business.Id,
 			dateTime = DateTime.Now,
 			Price = 100,
-			service = "Service 2"
+			Service = "Service 2"
 		};
 
 		_context.Business.Add(business);
@@ -255,14 +264,14 @@ public class AptLogControllerTests {
 			services = ["Service 1", "Service 2"]
 		};
 		var client = new Client(business.Id, "123456789", "Client Name", null, null, null);
-		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddHours(-1), 100);
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddHours(-1), 100, null);
 		var log = new AptLog {
 			ClientId = client.Id,
 			BusinessId = business.Id,
 			scheduleId = null,
 			dateTime = DateTime.Now.AddHours(-1),
 			Price = 100,
-			service = "Service 1"
+			Service = "Service 1"
 		};
 
 		_context.Business.Add(business);
@@ -282,7 +291,7 @@ public class AptLogControllerTests {
 		var updatedLog = Assert.IsType<AptLog>(result.Value);
 		Assert.Equal(upLog.ScheduleId, updatedLog.scheduleId);
 		Assert.Equal(upLog.dateTime, updatedLog.dateTime);
-		Assert.Equal(upLog.Service, updatedLog.service);
+		Assert.Equal(upLog.Service, updatedLog.Service);
 		Assert.Equal(upLog.Price, updatedLog.Price);
 		Assert.Equal(upLog.Description, updatedLog.description);
 	}
@@ -312,7 +321,7 @@ public class AptLogControllerTests {
 			BusinessId = business.Id,
 			dateTime = DateTime.Now,
 			Price = 100,
-			service = "Service 1"
+			Service = "Service 1"
 		};
 		var contact = new AptContact(log, DateTime.Now.AddDays(-30));
 

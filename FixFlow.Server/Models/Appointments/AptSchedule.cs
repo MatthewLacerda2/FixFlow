@@ -29,27 +29,28 @@ public class AptSchedule {
 	[ForeignKey(nameof(Business))]
 	public string BusinessId { get; set; }
 
-	public bool wasContacted { get; set; }
+	public bool WasContacted { get; set; }
 
 	/// <summary>
 	/// The scheduled DateTime of the Appointment
 	/// </summary>
 	public DateTime dateTime { get; set; }
 
-	public string? service { get; set; }
+	public string? Service { get; set; }
 
 	public string? observation { get; set; }
 
-	public float price { get; set; }
+	public float Price { get; set; }
 
-	public AptSchedule() : this(string.Empty, string.Empty, DateTime.Now, 0) { }
+	public AptSchedule() : this(string.Empty, string.Empty, DateTime.Now, 0, null) { }
 
-	public AptSchedule(string clientId, string businessId, DateTime dateTime, float price) {
+	public AptSchedule(string clientId, string businessId, DateTime dateTime, float price, string? service) {
 		Id = Guid.NewGuid().ToString();
 		ClientId = clientId;
 		BusinessId = businessId;
 		this.dateTime = dateTime;
-		this.price = price;
+		this.Price = price;
+		this.Service = service;
 		Client = null!;
 	}
 }

@@ -41,37 +41,37 @@ public class AptScheduleController : ControllerBase {
 		}
 
 		if (!string.IsNullOrWhiteSpace(filter.service)) {
-			schedulesQuery = schedulesQuery.Where(x => x.service != null && x.service.Contains(filter.service));
+			schedulesQuery = schedulesQuery.Where(x => x.Service != null && x.Service.Contains(filter.service));
 		}
 
 		schedulesQuery = schedulesQuery.Where(x => x.dateTime >= filter.minDateTime);
 		schedulesQuery = schedulesQuery.Where(x => x.dateTime <= filter.maxDateTime);
 
-		schedulesQuery = schedulesQuery.Where(x => x.price >= filter.minPrice);
-		schedulesQuery = schedulesQuery.Where(x => x.price <= filter.maxPrice);
+		schedulesQuery = schedulesQuery.Where(x => x.Price >= filter.minPrice);
+		schedulesQuery = schedulesQuery.Where(x => x.Price <= filter.maxPrice);
 
 		switch (filter.sort) {
 			case ScheduleSort.Client:
-				schedulesQuery = schedulesQuery.OrderBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+				schedulesQuery = schedulesQuery.OrderBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
 				break;
 			case ScheduleSort.Price:
-				schedulesQuery = schedulesQuery.OrderBy(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.Id);
+				schedulesQuery = schedulesQuery.OrderBy(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.Id);
 				break;
 			case ScheduleSort.Date:
-				schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+				schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
 				break;
 		}
 
 		if (filter.descending) {
 			switch (filter.sort) {
 				case ScheduleSort.Client:
-					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
 					break;
 				case ScheduleSort.Price:
-					schedulesQuery = schedulesQuery.OrderByDescending(s => s.price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.Id);
+					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.Id);
 					break;
 				case ScheduleSort.Date:
-					schedulesQuery = schedulesQuery.OrderBy(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.price).ThenBy(s => s.Id);
+					schedulesQuery = schedulesQuery.OrderBy(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.Price).ThenBy(s => s.Id);
 					break;
 			}
 		}
@@ -102,8 +102,8 @@ public class AptScheduleController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (newAppointment.service != null && existingBusiness.allowListedServicesOnly) {
-			if (!existingBusiness.services.Contains(newAppointment.service)) {
+		if (newAppointment.Service != null && existingBusiness.allowListedServicesOnly) {
+			if (!existingBusiness.services.Contains(newAppointment.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -126,7 +126,7 @@ public class AptScheduleController : ControllerBase {
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
-		newAppointment.wasContacted = contact != null;
+		newAppointment.WasContacted = contact != null;
 
 		_context.Schedules.Add(newAppointment);
 		await _context.SaveChangesAsync();
@@ -148,8 +148,8 @@ public class AptScheduleController : ControllerBase {
 		}
 
 		var existingBusiness = _context.Business.Find(upSchedule.BusinessId);
-		if (upSchedule.service != null && existingBusiness!.allowListedServicesOnly) {
-			if (!existingBusiness.services.Contains(upSchedule.service)) {
+		if (upSchedule.Service != null && existingBusiness!.allowListedServicesOnly) {
+			if (!existingBusiness.services.Contains(upSchedule.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -174,7 +174,7 @@ public class AptScheduleController : ControllerBase {
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
-		upSchedule.wasContacted = contact != null;
+		upSchedule.WasContacted = contact != null;
 
 		_context.Schedules.Update(upSchedule);
 		await _context.SaveChangesAsync();

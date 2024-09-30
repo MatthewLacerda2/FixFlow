@@ -9,10 +9,10 @@ class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
   @override
-  _CalendarScreenState createState() => _CalendarScreenState();
+  CalendarScreenState createState() => CalendarScreenState();
 }
 
-class _CalendarScreenState extends State<CalendarScreen> {
+class CalendarScreenState extends State<CalendarScreen> {
   Map<int, List<String>> schedules = <int, List<String>>{
     3: <String>['9:00 AM - Schedule 1', '1:00 PM - Schedule 2'],
     7: <String>['Appointment at 10:00 AM'],
