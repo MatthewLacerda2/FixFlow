@@ -53,7 +53,7 @@ public class Business : IdentityUser {
 			DateTime start = new DateTime(DateTime.Now.Year, 1, 1, 8, 0, 0);
 			DateTime end = new DateTime(DateTime.Now.Year, 1, 1, 18, 0, 0);
 
-			BusinessDays[i] = new BusinessDay(i, start, end);
+			BusinessDays[i] = new BusinessDay(start, end);
 		}
 
 		IsActive = true;

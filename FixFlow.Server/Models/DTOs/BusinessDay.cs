@@ -10,7 +10,7 @@ public class BusinessDay {
 		Finish = new DateTime(DateTime.Now.Year, 1, 1, 18, 0, 0);
 	}
 
-	public BusinessDay(int dayOfTheWeek, DateTime start, DateTime end) {
+	public BusinessDay(DateTime start, DateTime end) {
 		this.Start = start;
 		this.Finish = end;
 	}
