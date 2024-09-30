@@ -41,7 +41,7 @@ public class Client : IdentityUser {
 	public static explicit operator Client(ClientCreate clientCreate) {
 		return new Client
 		(
-			clientCreate.businessId,
+			clientCreate.BusinessId,
 			clientCreate.PhoneNumber,
 			clientCreate.FullName,
 			clientCreate.Email,

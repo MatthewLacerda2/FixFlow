@@ -35,12 +35,13 @@ public class ClientDTO {
 	[EmailAddress]
 	public string? Email { get; set; }
 
-	public ClientDTO(string _Id, string fullname, string _phoneNumber, string? _email, string? additionalNote) {
+	public ClientDTO(string _Id, string fullname, string _phoneNumber, string? _email, string? additionalNote, string? cpf) {
 		Id = _Id;
 		FullName = fullname;
 		PhoneNumber = _phoneNumber;
 		AdditionalNote = additionalNote;
 		Email = _email;
+		CPF = cpf;
 	}
 
 	public static explicit operator ClientDTO(Client client) {
@@ -50,7 +51,8 @@ public class ClientDTO {
 			client.FullName,
 			client.PhoneNumber!,
 			client.Email,
-			client.AdditionalNote
+			client.AdditionalNote,
+			client.CPF
 		);
 	}
 }

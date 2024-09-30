@@ -99,4 +99,92 @@ public class ClientControllerTests {
 		Assert.Single(clientsArray);
 		Assert.Equal(clients[3].PhoneNumber, clientsArray[0].PhoneNumber);
 	}
+
+	[Fact]
+	public async Task CreateClient_ValidClient_ReturnsCreated() {
+		// Arrange
+		var business = new Business("lenda", "lenda@gmail.com", "123.4567.789-0001", "98988263255");
+		var clientCreate = new ClientCreate(business.Id, "John Doe", "789.456.123-90", null, "1234567890", "client@gmail.com");
+
+		_mockUserManager.Setup(x => x.CreateAsync(It.IsAny<Client>())).ReturnsAsync(IdentityResult.Success);
+
+		_context.Business.Add(business);
+		_context.SaveChanges();
+
+		// Act
+		var result = await _controller.CreateClient(clientCreate);
+
+		// Assert
+		var createdResult = Assert.IsType<CreatedAtActionResult>(result);
+		var clientDto = Assert.IsType<ClientDTO>(createdResult.Value);
+		Assert.Equal(clientCreate.PhoneNumber, clientDto.PhoneNumber);
+		Assert.Equal(clientCreate.FullName, clientDto.FullName);
+		Assert.Equal(clientCreate.Email, clientDto.Email);
+		Assert.Equal(clientCreate.CPF, clientDto.CPF);
+	}
+
+	[Fact]
+	public async Task CreateClient_PhoneNumberAlreadyExists_ReturnsBadRequest() {
+		// Arrange
+		var clientCreate = new ClientCreate("business-id", "John Doe", "789.456.123-90", null, "1234567890", "client@gmail.com");
+		var business = new Business("lenda", "lenda@gmail.com", "123.4567.789-0001", "98988263255");
+
+		_mockUserManager.Setup(x => x.CreateAsync(It.IsAny<Client>())).ReturnsAsync(IdentityResult.Success);
+
+		_context.Business.Add(business);
+		_context.Clients.Add((Client)clientCreate);
+		_context.SaveChanges();
+
+		// Act
+		var result = await _controller.CreateClient(clientCreate);
+
+		// Assert
+		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+		Assert.Equal(AlreadyRegisteredErrors.PhoneNumber, badRequestResult.Value);
+	}
+	/*
+		[Fact]
+		public async Task CreateClient_EmailAlreadyExists_ReturnsBadRequest() {
+			// Arrange
+			var clientCreate = new ClientCreate {
+				businessId = "business-id",
+				PhoneNumber = "1234567890",
+				FullName = "John Doe",
+				Email = "john.doe@example.com",
+				CPF = "123.456.789-00"
+			};
+
+			_context.Clients.Add(new Client(clientCreate.businessId, "0987654321", "Existing Client", clientCreate.Email, null, null));
+			await _context.SaveChangesAsync();
+
+			// Act
+			var result = await _controller.CreateClient(clientCreate);
+
+			// Assert
+			var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+			Assert.Equal(AlreadyRegisteredErrors.Email, badRequestResult.Value);
+		}
+
+		[Fact]
+		public async Task CreateClient_CPFAlreadyExists_ReturnsBadRequest() {
+			// Arrange
+			var clientCreate = new ClientCreate {
+				businessId = "business-id",
+				PhoneNumber = "1234567890",
+				FullName = "John Doe",
+				Email = "john.doe@example.com",
+				CPF = "123.456.789-00"
+			};
+
+			_context.Clients.Add(new Client(clientCreate.businessId, "0987654321", "Existing Client", null, clientCreate.CPF, null));
+			await _context.SaveChangesAsync();
+
+			// Act
+			var result = await _controller.CreateClient(clientCreate);
+
+			// Assert
+			var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+			Assert.Equal(AlreadyRegisteredErrors.CPF, badRequestResult.Value);
+		}
+	*/
 }

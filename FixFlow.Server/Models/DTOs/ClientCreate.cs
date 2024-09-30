@@ -8,7 +8,7 @@ public class ClientCreate {
 	/// The business from which the Client is a customer
 	/// </summary>
 	[Required]
-	public string businessId { get; set; } = string.Empty;
+	public string BusinessId { get; set; } = string.Empty;
 
 	[Required]
 	[MinLength(5)]
@@ -34,4 +34,13 @@ public class ClientCreate {
 
 	[EmailAddress]
 	public string? Email { get; set; }
+
+	public ClientCreate(string businessId, string fullName, string? cpf, string? additionalNote, string phoneNumber, string? email) {
+		BusinessId = businessId;
+		FullName = fullName;
+		CPF = cpf;
+		PhoneNumber = phoneNumber;
+		Email = email;
+		this.additionalNote = additionalNote;
+	}
 }

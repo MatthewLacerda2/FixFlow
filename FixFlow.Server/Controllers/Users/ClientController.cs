@@ -95,27 +95,27 @@ public class ClientController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateClient([FromBody] ClientCreate clientCreate) {
 
-		bool phoneTaken = _context.Clients.Where(x => x.BusinessId == clientCreate.businessId).Any(x => x.PhoneNumber == clientCreate.PhoneNumber);
+		bool phoneTaken = _context.Clients.Where(x => x.BusinessId == clientCreate.BusinessId).Any(x => x.PhoneNumber == clientCreate.PhoneNumber);
 		if (phoneTaken) {
 			return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
 		}
 
 		if (clientCreate.CPF == null) {
-			bool cpfTaken = _context.Clients.Where(x => x.BusinessId == clientCreate.businessId).Any(x => x.CPF == clientCreate.CPF);
+			bool cpfTaken = _context.Clients.Where(x => x.BusinessId == clientCreate.BusinessId).Any(x => x.CPF == clientCreate.CPF);
 			if (cpfTaken) {
 				return BadRequest(AlreadyRegisteredErrors.CPF);
 			}
 		}
 
 		if (clientCreate.Email != null) {
-
-			bool emailTaken = _context.Clients.Where(x => x.BusinessId == clientCreate.businessId).Any(x => x.Email == clientCreate.Email);
+			bool emailTaken = _context.Clients.Where(x => x.BusinessId == clientCreate.BusinessId).Any(x => x.Email == clientCreate.Email);
 			if (emailTaken) {
 				return BadRequest(AlreadyRegisteredErrors.Email);
 			}
 		}
 
 		Client client = (Client)clientCreate;
+		client.CPF = clientCreate.CPF;
 
 		IdentityResult userCreationResult = await _userManager.CreateAsync(client);
 		if (!userCreationResult.Succeeded) {
