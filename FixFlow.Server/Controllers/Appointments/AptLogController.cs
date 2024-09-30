@@ -50,21 +50,21 @@ public class AptLogController : ControllerBase {
 			logsQuery = logsQuery.Where(x => x.service != null && x.service.Contains(filter.service!));
 		}
 
-		logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
-		logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
+		logsQuery = logsQuery.Where(x => x.Price >= filter.minPrice);
+		logsQuery = logsQuery.Where(x => x.Price <= filter.maxPrice);
 
 		logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.Date);
 		logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.Date);
 
 		switch (filter.sort) {
 			case LogSort.Client:
-				logsQuery = logsQuery.OrderBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.price).ThenBy(s => s.Id);
+				logsQuery = logsQuery.OrderBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.Price).ThenBy(s => s.Id);
 				break;
 			case LogSort.Date:
-				logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+				logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
 				break;
 			case LogSort.Price:
-				logsQuery = logsQuery.OrderByDescending(s => s.price).ThenBy(s => s.dateTime).ThenBy(s => s.Id);
+				logsQuery = logsQuery.OrderByDescending(s => s.Price).ThenBy(s => s.dateTime).ThenBy(s => s.Id);
 				break;
 		}
 
@@ -74,10 +74,10 @@ public class AptLogController : ControllerBase {
 					logsQuery = logsQuery.OrderByDescending(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
 					break;
 				case LogSort.Date:
-					logsQuery = logsQuery.OrderBy(s => s.dateTime).ThenBy(s => s.price).ThenBy(s => s.Id);
+					logsQuery = logsQuery.OrderBy(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
 					break;
 				case LogSort.Price:
-					logsQuery = logsQuery.OrderBy(s => s.price).ThenBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+					logsQuery = logsQuery.OrderBy(s => s.Price).ThenBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
 					break;
 			}
 		}
@@ -151,7 +151,7 @@ public class AptLogController : ControllerBase {
 		}
 
 		var existingBusiness = _context.Business.Find(existingLog.BusinessId);
-		if (existingBusiness!.allowListedServicesOnly) {
+		if (upLog.Service != null && existingBusiness!.allowListedServicesOnly) {
 			if (!existingBusiness.services.Contains(upLog.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
@@ -167,7 +167,7 @@ public class AptLogController : ControllerBase {
 		existingLog.scheduleId = upLog.ScheduleId;
 		existingLog.dateTime = upLog.dateTime;
 		existingLog.service = upLog.Service;
-		existingLog.price = upLog.Price;
+		existingLog.Price = upLog.Price;
 		existingLog.description = upLog.Description;
 
 		await _context.SaveChangesAsync();

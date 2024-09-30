@@ -185,7 +185,7 @@ public class FlowSeeder {
 
 		.RuleFor(x => x.Id, f => f.Random.Guid().ToString())
 		.RuleFor(x => x.dateTime, f => f.Date.Between(Jan1st2024, Jan1st2024.AddDays(5)))
-		.RuleFor(x => x.price, f => f.Random.Int(30, 300))
+		.RuleFor(x => x.Price, f => f.Random.Int(30, 300))
 		.RuleFor(x => x.description, f => f.Random.Bool(0.1f) ? f.Random.Words() : null);
 
 		return faker_logs;

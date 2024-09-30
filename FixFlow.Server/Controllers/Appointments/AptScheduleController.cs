@@ -102,9 +102,23 @@ public class AptScheduleController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (existingBusiness.allowListedServicesOnly) {
+		if (newAppointment.service != null && existingBusiness.allowListedServicesOnly) {
 			if (!existingBusiness.services.Contains(newAppointment.service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
+			}
+		}
+
+		foreach (var businessDay in existingBusiness.BusinessDays) {
+			var appointmentTime = newAppointment.dateTime.TimeOfDay;
+			if (appointmentTime < businessDay.Start.TimeOfDay || appointmentTime > businessDay.Finish.TimeOfDay) {
+				return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
+			}
+		}
+
+		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == newAppointment.BusinessId).ToArray();
+		foreach (IdlePeriod idp in idps) {
+			if (idp.start <= newAppointment.dateTime && idp.finish >= newAppointment.dateTime) {
+				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
 			}
 		}
 
@@ -113,13 +127,6 @@ public class AptScheduleController : ControllerBase {
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
 		newAppointment.wasContacted = contact != null;
-
-		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == newAppointment.BusinessId).ToArray();
-		foreach (IdlePeriod idp in idps) {
-			if (idp.start <= newAppointment.dateTime && idp.finish >= newAppointment.dateTime) {
-				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
-			}
-		}
 
 		_context.Schedules.Add(newAppointment);
 		await _context.SaveChangesAsync();
@@ -133,24 +140,46 @@ public class AptScheduleController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPut]
-	public async Task<IActionResult> UpdateSchedule([FromBody] AptSchedule upAppointment) {
+	public async Task<IActionResult> UpdateSchedule([FromBody] AptSchedule upSchedule) {
 
-		var existingAppointment = _context.Schedules.Find(upAppointment.Id);
+		var existingAppointment = _context.Schedules.Find(upSchedule.Id);
 		if (existingAppointment == null) {
 			return BadRequest(NotExistErrors.AptSchedule);
 		}
 
-		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == upAppointment.BusinessId).ToArray();
+		var existingBusiness = _context.Business.Find(upSchedule.BusinessId);
+		if (upSchedule.service != null && existingBusiness!.allowListedServicesOnly) {
+			if (!existingBusiness.services.Contains(upSchedule.service)) {
+				return BadRequest(ValidatorErrors.UnlistedService);
+			}
+		}
+
+		if (upSchedule.dateTime >= DateTime.Now) {
+			foreach (var businessDay in existingBusiness!.BusinessDays) {
+				var appointmentTime = upSchedule.dateTime.TimeOfDay;
+				if (appointmentTime < businessDay.Start.TimeOfDay || appointmentTime > businessDay.Finish.TimeOfDay) {
+					return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
+				}
+			}
+		}
+
+		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == upSchedule.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
-			if (idp.start <= upAppointment.dateTime && idp.finish >= upAppointment.dateTime) {
+			if (idp.start <= upSchedule.dateTime && idp.finish >= upSchedule.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
 			}
 		}
 
-		_context.Schedules.Update(upAppointment);
+		AptContact contact = _context.Contacts.Where(x => x.ClientId == upSchedule.ClientId)
+								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
+								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
+
+		upSchedule.wasContacted = contact != null;
+
+		_context.Schedules.Update(upSchedule);
 		await _context.SaveChangesAsync();
 
-		return Ok(upAppointment);
+		return Ok(upSchedule);
 	}
 
 	/// <summary>
@@ -167,6 +196,13 @@ public class AptScheduleController : ControllerBase {
 		}
 
 		_context.Schedules.Remove(scheduleToDelete);
+
+		AptLog[] logs = _context.Logs.Where(x => x.scheduleId == Id).ToArray();
+		foreach (AptLog log in logs) {
+			log.scheduleId = null;
+		}
+		_context.Logs.UpdateRange(logs);
+
 		await _context.SaveChangesAsync();
 		return NoContent();
 	}

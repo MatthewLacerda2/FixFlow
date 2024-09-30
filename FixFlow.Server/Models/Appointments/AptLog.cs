@@ -42,7 +42,7 @@ public class AptLog {
 
 	public string? service { get; set; }
 
-	public float price { get; set; }
+	public float Price { get; set; }
 
 	public string? description { get; set; }
 
@@ -61,7 +61,7 @@ public class AptLog {
 		service = newLog.service;
 
 		this.dateTime = newLog.dateTime;
-		this.price = newLog.price;
+		this.Price = newLog.price;
 		this.description = newLog.description;
 		Client = null!;
 	}

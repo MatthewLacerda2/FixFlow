@@ -4,9 +4,9 @@ using Server.Models.Erros;
 
 namespace Server.Validators.Appointments;
 
-public class AptLogValidator : AbstractValidator<AptLog> {
+public class UpdateAptLogValidator : AbstractValidator<UpdateAptLog> {
 
-	public AptLogValidator() {
+	public UpdateAptLogValidator() {
 		RuleFor(x => x.Price)
 			.GreaterThanOrEqualTo(0)
 			.WithMessage(ValidatorErrors.PriceMustBeNaturalNumber);
