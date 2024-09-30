@@ -78,12 +78,7 @@ public class FlowSeeder {
 			}
 
 			bogusContacts[0].aptLogId = "";
-			bogusSchedules[0].contactId = "";
 			bogusLogs[0].scheduleId = "";
-
-			for (int i = 1; i < numAptsPerClient; i++) {
-				bogusSchedules[i].contactId = bogusContacts[i - 1].Id;
-			}
 
 			Array.Copy(bogusContacts, 0, aptContacts, index, numAptsPerClient);
 			Array.Copy(bogusSchedules, 0, aptSchedules, index, numAptsPerClient);
@@ -94,7 +89,6 @@ public class FlowSeeder {
 		}
 
 		aptContacts = aptContacts.Where(c => c.aptLogId != "" || c.aptLogId != null).ToArray();
-		aptSchedules = aptSchedules.Where(c => c.contactId != "" || c.contactId != null).ToArray();
 		aptLogs = aptLogs.Where(c => c.scheduleId != "" || c.scheduleId != null).ToArray();
 	}
 
@@ -171,7 +165,6 @@ public class FlowSeeder {
 
 		.RuleFor(s => s.ClientId, clientId)
 		.RuleFor(s => s.BusinessId, businessId)
-		.RuleFor(s => s.contactId, contactId)
 
 		.RuleFor(s => s.Id, f => f.Random.Guid().ToString())
 		.RuleFor(s => s.dateTime, f => f.Date.Between(Jan1st2024, Jan1st2024.AddDays(5)))

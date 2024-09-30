@@ -112,9 +112,7 @@ public class AptScheduleController : ControllerBase {
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
-		if (contact != null) {
-			newAppointment.contactId = contact.Id;
-		}
+		newAppointment.wasContacted = contact != null;
 
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == newAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {

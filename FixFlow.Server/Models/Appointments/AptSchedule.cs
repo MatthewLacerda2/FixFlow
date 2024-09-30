@@ -29,11 +29,7 @@ public class AptSchedule {
 	[ForeignKey(nameof(Business))]
 	public string BusinessId { get; set; }
 
-	/// <summary>
-	/// The Id of the Contact that precedes this Schedule, if any
-	/// </summary>
-	[ForeignKey(nameof(AptContact))]
-	public string? contactId { get; set; }
+	public bool wasContacted { get; set; }
 
 	/// <summary>
 	/// The scheduled DateTime of the Appointment
