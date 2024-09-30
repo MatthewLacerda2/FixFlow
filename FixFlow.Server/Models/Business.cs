@@ -29,15 +29,7 @@ public class Business : IdentityUser {
 	public bool allowListedServicesOnly { get; set; }
 	public bool openOnHolidays { get; set; }
 
-	public Business() {
-		CreatedDate = DateTime.Now;
-		LastLogin = DateTime.Now;
-
-		Name = string.Empty;
-		CNPJ = string.Empty;
-
-		IsActive = true;
-	}
+	public Business() : this(string.Empty, string.Empty, string.Empty, string.Empty) { }
 
 	public Business(string name, string email, string cnpj, string phoneNumber) {
 		CreatedDate = DateTime.Now;

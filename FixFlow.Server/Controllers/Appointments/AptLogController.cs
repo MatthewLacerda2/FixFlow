@@ -46,6 +46,10 @@ public class AptLogController : ControllerBase {
 			logsQuery = logsQuery.Where(x => x.Client.FullName.Contains(filter.client!));
 		}
 
+		if (!string.IsNullOrWhiteSpace(filter.service)) {
+			logsQuery = logsQuery.Where(x => x.service != null && x.service.Contains(filter.service!));
+		}
+
 		logsQuery = logsQuery.Where(x => x.price >= filter.minPrice);
 		logsQuery = logsQuery.Where(x => x.price <= filter.maxPrice);
 

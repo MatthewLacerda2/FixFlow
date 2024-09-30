@@ -39,7 +39,7 @@ public class CreateAptLog {
 	/// </summary>
 	public DateTime whenShouldClientComeBack { get; set; }
 
-	public CreateAptLog(string clientId, string businessId, string? scheduleId, DateTime dateTime, float price, string? service, string? description) {
+	public CreateAptLog(string clientId, string businessId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
 		ClientId = clientId;
 		BusinessId = businessId;
 		this.scheduleId = scheduleId;
@@ -47,5 +47,6 @@ public class CreateAptLog {
 		this.price = price;
 		this.service = service;
 		this.description = description;
+		whenShouldClientComeBack = whenComeBack;
 	}
 }

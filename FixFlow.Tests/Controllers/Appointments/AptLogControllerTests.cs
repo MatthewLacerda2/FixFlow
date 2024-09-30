@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Server.Controllers;
 using Server.Data;
 using Server.Models;
+using Server.Models.Appointments;
+using Server.Models.Erros;
+using Server.Models.Filters;
 
 namespace FixFlow.Tests.Controllers;
 
@@ -26,4 +30,142 @@ public class AptLogControllerTests {
 		_controller = new AptLogController(_context, _mockUserManager.Object, _mockClientManager.Object);
 	}
 
+	[Fact]
+	public async Task ReadLogs_ReturnsFilteredLogs() {
+		var client1Name = "fulano da silva";
+
+		var business1 = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788");
+		var business2 = new Business("b-2", "b-2@gmail.com", "123.4567.789-0001", "98988263255");
+		var client1 = new Client(business1.Id, "789456123", client1Name, null, null, null);
+		var client2 = new Client(business2.Id, "123456789", "ciclano da silva", null, null, null);
+		var client3 = new Client(business1.Id, "123456789", "beltrano da silva", null, null, null);
+
+		_context.Business.AddRange(business1, business2);
+		_context.Clients.AddRange(client1, client2, client3);
+
+		// Arrange
+		var logs = new List<AptLog>();
+		for (int i = 0; i < 10; i++) {
+			logs.Add(new AptLog {
+				Id = Guid.NewGuid().ToString(),
+				BusinessId = business1.Id,
+				ClientId = client1.Id,
+				dateTime = DateTime.Now.AddDays(-i),
+				price = i * 10,
+				service = $"Option {i}"
+			});
+		}
+
+		logs[0].BusinessId = business2.Id;
+		logs[0].ClientId = client2.Id;
+
+		logs[1] = logs[5];
+		logs[1].price = 40;
+
+		_context.Logs.AddRange(logs);
+		_context.SaveChanges();
+
+		var filter = new AptLogFilter {
+			businessId = business1.Id,
+			client = "fulano ",
+			minPrice = 30,
+			maxPrice = 80,
+			minDateTime = DateTime.Now.AddDays(-7),
+			maxDateTime = DateTime.Now.AddDays(-3),
+			sort = LogSort.Price,
+			descending = true,
+			offset = 1,
+			limit = 1
+		};
+
+		// Act
+		var result = await _controller.ReadLogs(filter) as OkObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(200, result!.StatusCode);
+		var filteredLogs = result.Value as IEnumerable<AptLog>;
+		Assert.Single(filteredLogs);
+
+		Assert.Equal(client1Name, filteredLogs!.First().Client.FullName);
+		Assert.Equal(40, filteredLogs!.First().price);
+		Assert.Equal(DateTime.Now.AddDays(-4).Date, filteredLogs!.First().dateTime.Date);
+		Assert.Equal("Option 4", filteredLogs!.First().service);
+	}
+
+	[Fact]
+	public async Task CreateLog_ClientDoesNotExist_ReturnsBadRequest() {
+		// Arrange
+		var createLog = new CreateAptLog("client-id", "business-id", null, DateTime.Now, 100, null, null, DateTime.Now.AddDays(30));
+
+		_context.Business.Add(new Business("business", "business@example.com", "123456789", "1234567890"));
+		_context.SaveChanges();
+
+		// Act
+		var result = await _controller.CreateLog(createLog) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(NotExistErrors.Client, result.Value);
+	}
+
+	[Fact]
+	public async Task CreateLog_UnlistedService_ReturnsBadRequest() {
+		// Arrange
+		var business = new Business("power busy", "business@example.com", "123456789", "1234567890") {
+			allowListedServicesOnly = true,
+			services = ["Service 1", "Service 2"]
+		};
+		var client = new Client(business.Id, "98988263255", "Client Name", null, null, null);
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.SaveChanges();
+
+		var createLog = new CreateAptLog(client.Id, business.Id, null, DateTime.Now, 100, "UnlistedService", null, DateTime.Now.AddDays(30));
+
+		// Act
+		var result = await _controller.CreateLog(createLog) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(ValidatorErrors.UnlistedService, result.Value);
+	}
+
+	[Fact]
+	public async Task CreateLog_Successful_ReturnsCreated() {
+		// Arrange
+		var business = new Business("power busy", "business@example.com", "123456789", "1234567890") {
+			allowListedServicesOnly = true,
+			services = ["Service 1", "Service 2"]
+		};
+		var client = new Client(business.Id, "98988263255", "Client Name", null, null, null);
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now, 100);
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.Schedules.Add(schedule);
+		_context.SaveChanges();
+
+		var createLog = new CreateAptLog(client.Id, business.Id, schedule.Id, DateTime.Now, 100, "Service 2", null, DateTime.Now.AddDays(30));
+
+		// Act
+		var result = await _controller.CreateLog(createLog) as CreatedAtActionResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(201, result!.StatusCode);
+		var createdLog = result.Value as AptLog;
+		Assert.NotNull(createdLog);
+		Assert.Equal(createLog.ClientId, createdLog!.ClientId);
+		Assert.Equal(createLog.BusinessId, createdLog.BusinessId);
+		Assert.Equal(createLog.service, createdLog.service);
+		Assert.Equal(createLog.price, createdLog.price);
+		Assert.Equal(createLog.dateTime, createdLog.dateTime);
+
+		var contact = _context.Contacts.Where(x => x.aptLogId == createdLog.Id).FirstOrDefault();
+
+		Assert.NotNull(contact);
+		Assert.Equal(contact!.dateTime, createLog.whenShouldClientComeBack);
+	}
 }
