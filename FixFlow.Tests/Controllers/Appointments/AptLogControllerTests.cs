@@ -286,4 +286,53 @@ public class AptLogControllerTests {
 		Assert.Equal(upLog.Price, updatedLog.price);
 		Assert.Equal(upLog.Description, updatedLog.description);
 	}
+
+	[Fact]
+	public async Task DeleteLog_LogDoesNotExist_ReturnsBadRequest() {
+		// Arrange
+		var logId = "non-existent-log-id";
+
+		// Act
+		var result = await _controller.DeleteLog(logId) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(NotExistErrors.AptLog, result.Value);
+	}
+
+	[Fact]
+	public async Task DeleteLog_LogExists_ReturnsNoContent() {
+		// Arrange
+		var business = new Business("business-id", "business@example.com", "123456789", "1234567890");
+		var client = new Client(business.Id, "123456789", "Client Name", null, null, null);
+		var log = new AptLog {
+			Id = "log-id",
+			ClientId = client.Id,
+			BusinessId = business.Id,
+			dateTime = DateTime.Now,
+			price = 100,
+			service = "Service 1"
+		};
+		var contact = new AptContact(log, DateTime.Now.AddDays(-30));
+
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.Logs.Add(log);
+		_context.Contacts.Add(contact);
+		_context.SaveChanges();
+
+		// Act
+		var result = await _controller.DeleteLog(log.Id) as NoContentResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(204, result!.StatusCode);
+
+		var deletedLog = _context.Logs.Find(log.Id);
+		Assert.Null(deletedLog);
+
+		var deletedContact = _context.Contacts.Where(x => x.aptLogId == log.Id).FirstOrDefault();
+		Assert.Null(deletedContact);
+	}
 }

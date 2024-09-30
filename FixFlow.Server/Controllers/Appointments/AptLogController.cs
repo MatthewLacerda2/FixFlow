@@ -192,7 +192,7 @@ public class AptLogController : ControllerBase {
 
 		var contact = _context.Contacts.Where(x => x.aptLogId == Id).FirstOrDefault();
 
-		if (contact != null && contact.dateTime < DateTime.Now) {
+		if (contact != null) {
 			_context.Contacts.Remove(contact);
 		}
 
