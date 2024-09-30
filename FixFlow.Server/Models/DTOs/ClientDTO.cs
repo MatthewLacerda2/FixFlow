@@ -38,10 +38,10 @@ public class ClientDTO {
 	public ClientDTO(string _Id, string fullname, string _phoneNumber, string? _email, string? additionalNote, string? cpf) {
 		Id = _Id;
 		FullName = fullname;
-		PhoneNumber = _phoneNumber;
-		AdditionalNote = additionalNote;
-		Email = _email;
 		CPF = cpf;
+		AdditionalNote = additionalNote;
+		PhoneNumber = _phoneNumber;
+		Email = _email;
 	}
 
 	public static explicit operator ClientDTO(Client client) {

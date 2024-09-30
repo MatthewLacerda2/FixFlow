@@ -100,7 +100,7 @@ public class ClientController : ControllerBase {
 			return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
 		}
 
-		if (clientCreate.CPF == null) {
+		if (clientCreate.CPF != null) {
 			bool cpfTaken = _context.Clients.Where(x => x.BusinessId == clientCreate.BusinessId).Any(x => x.CPF == clientCreate.CPF);
 			if (cpfTaken) {
 				return BadRequest(AlreadyRegisteredErrors.CPF);
@@ -115,7 +115,6 @@ public class ClientController : ControllerBase {
 		}
 
 		Client client = (Client)clientCreate;
-		client.CPF = clientCreate.CPF;
 
 		IdentityResult userCreationResult = await _userManager.CreateAsync(client);
 		if (!userCreationResult.Succeeded) {
