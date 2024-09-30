@@ -131,7 +131,7 @@ public class AptLogControllerTests {
 		_context.Clients.Add(client);
 		_context.SaveChanges();
 
-		var createLog = new CreateAptLog(client.Id, business.Id, null, DateTime.Now, 100, "UnlistedService", null, DateTime.Now.AddDays(30));
+		var createLog = new CreateAptLog(client.Id, business.Id, null, DateTime.Now, 100, null, null, DateTime.Now.AddDays(30));
 
 		// Act
 		var result = await _controller.CreateLog(createLog) as BadRequestObjectResult;
@@ -168,7 +168,7 @@ public class AptLogControllerTests {
 		Assert.NotNull(createdLog);
 		Assert.Equal(createLog.ClientId, createdLog!.ClientId);
 		Assert.Equal(createLog.BusinessId, createdLog.BusinessId);
-		Assert.Equal(createLog.service, createdLog.Service);
+		Assert.Equal(createLog.Service, createdLog.Service);
 		Assert.Equal(createLog.price, createdLog.Price);
 		Assert.Equal(createLog.dateTime, createdLog.dateTime);
 

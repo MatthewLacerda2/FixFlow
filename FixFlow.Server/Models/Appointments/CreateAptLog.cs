@@ -29,7 +29,7 @@ public class CreateAptLog {
 
 	public float price { get; set; }
 
-	public string? service { get; set; }
+	public string? Service { get; set; }
 
 	public string? description { get; set; }
 
@@ -45,7 +45,7 @@ public class CreateAptLog {
 		this.scheduleId = scheduleId;
 		this.dateTime = dateTime;
 		this.price = price;
-		this.service = service;
+		this.Service = service;
 		this.description = description;
 		whenShouldClientComeBack = whenComeBack;
 	}

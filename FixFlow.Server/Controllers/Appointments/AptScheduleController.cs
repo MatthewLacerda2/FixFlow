@@ -90,32 +90,24 @@ public class AptScheduleController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AptSchedule))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPost]
-	public async Task<IActionResult> CreateSchedule([FromBody] AptSchedule newAppointment) {
+	public async Task<IActionResult> CreateSchedule([FromBody] CreateAptSchedule newAppointment) {
 
 		var existingClient = _context.Clients.Find(newAppointment.ClientId);
 		if (existingClient == null) {
 			return BadRequest(NotExistErrors.Client);
 		}
 
-		var existingBusiness = _context.Business.Find(newAppointment.BusinessId);
-		if (existingBusiness == null) {
-			return BadRequest(NotExistErrors.Business);
-		}
+		var existingBusiness = _context.Business.Find(existingClient.BusinessId);
 
-		if (newAppointment.Service != null && existingBusiness.allowListedServicesOnly) {
-			if (!existingBusiness.services.Contains(newAppointment.Service)) {
+		if (existingBusiness!.allowListedServicesOnly) {
+			if (newAppointment.Service == null || !existingBusiness.services.Contains(newAppointment.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
 
-		foreach (var businessDay in existingBusiness.BusinessDays) {
-			var appointmentTime = newAppointment.dateTime.TimeOfDay;
-			if (appointmentTime < businessDay.Start.TimeOfDay || appointmentTime > businessDay.Finish.TimeOfDay) {
-				return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
-			}
-		}
+		//TODO:validate businessday
 
-		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == newAppointment.BusinessId).ToArray();
+		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingBusiness.Id).ToArray();
 		foreach (IdlePeriod idp in idps) {
 			if (idp.start <= newAppointment.dateTime && idp.finish >= newAppointment.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
@@ -126,9 +118,7 @@ public class AptScheduleController : ControllerBase {
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
-		newAppointment.WasContacted = contact != null;
-
-		_context.Schedules.Add(newAppointment);
+		_context.Schedules.Add(new AptSchedule(newAppointment, existingBusiness.Id, contact != null));
 		await _context.SaveChangesAsync();
 
 		return CreatedAtAction(nameof(CreateSchedule), newAppointment);
@@ -147,23 +137,16 @@ public class AptScheduleController : ControllerBase {
 			return BadRequest(NotExistErrors.AptSchedule);
 		}
 
-		var existingBusiness = _context.Business.Find(upSchedule.BusinessId);
+		var existingBusiness = _context.Business.Find(existingAppointment.BusinessId);
 		if (upSchedule.Service != null && existingBusiness!.allowListedServicesOnly) {
 			if (!existingBusiness.services.Contains(upSchedule.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
 
-		if (upSchedule.dateTime >= DateTime.Now) {
-			foreach (var businessDay in existingBusiness!.BusinessDays) {
-				var appointmentTime = upSchedule.dateTime.TimeOfDay;
-				if (appointmentTime < businessDay.Start.TimeOfDay || appointmentTime > businessDay.Finish.TimeOfDay) {
-					return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
-				}
-			}
-		}
+		//TODO:validate businessday
 
-		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == upSchedule.BusinessId).ToArray();
+		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
 			if (idp.start <= upSchedule.dateTime && idp.finish >= upSchedule.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);

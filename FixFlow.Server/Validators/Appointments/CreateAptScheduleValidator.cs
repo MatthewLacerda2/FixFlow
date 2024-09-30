@@ -4,9 +4,9 @@ using Server.Models.Erros;
 
 namespace Server.Validators.Appointments;
 
-public class AptScheduleValidator : AbstractValidator<AptSchedule> {
+public class CreateAptScheduleValidator : AbstractValidator<CreateAptSchedule> {
 
-	public AptScheduleValidator() {
+	public CreateAptScheduleValidator() {
 
 		RuleFor(x => x.dateTime).GreaterThanOrEqualTo(DateTime.Now).WithMessage(ValidatorErrors.DateMustBeInTheFuture);
 		RuleFor(x => x.dateTime).LessThanOrEqualTo(DateTime.Now.AddMonths(7)).WithMessage(ValidatorErrors.DateIsTooFarInFuture);

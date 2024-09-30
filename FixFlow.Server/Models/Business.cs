@@ -5,10 +5,10 @@ namespace Server.Models;
 
 public class Business : IdentityUser {
 
-	public DateTime CreatedDate { get; set; }
+	public DateTime CreatedDate { get; set; } = DateTime.Now;
 	public DateTime LastLogin { get; set; }
 
-	public bool IsActive { get; set; }
+	public bool IsActive { get; set; } = true;
 
 	/// <summary>
 	/// The Name of the Business or Business owner
@@ -26,14 +26,13 @@ public class Business : IdentityUser {
 	public List<BusinessDay> BusinessDays { get; set; } = new List<BusinessDay>();
 
 	public string[] services = Array.Empty<string>();
-	public bool allowListedServicesOnly { get; set; }
-	public bool openOnHolidays { get; set; }
+	public bool allowListedServicesOnly { get; set; } = false;
+	public bool openOnHolidays { get; set; } = false;
 
 	public Business() : this(string.Empty, string.Empty, string.Empty, string.Empty) { }
 
 	public Business(string name, string email, string cnpj, string phoneNumber) {
 		Id = Guid.NewGuid().ToString();
-		CreatedDate = DateTime.Now;
 		LastLogin = DateTime.Now;
 
 		Name = name;
@@ -43,7 +42,6 @@ public class Business : IdentityUser {
 
 		BusinessDays = new List<BusinessDay>(7);
 
-		IsActive = true;
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {

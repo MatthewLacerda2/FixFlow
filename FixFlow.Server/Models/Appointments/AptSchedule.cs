@@ -53,4 +53,15 @@ public class AptSchedule {
 		this.Service = service;
 		Client = null!;
 	}
+
+	public AptSchedule(CreateAptSchedule createSchedule, string businessId, bool wasContacted) {
+		Id = Guid.NewGuid().ToString();
+		BusinessId = businessId;
+		ClientId = createSchedule.ClientId;
+		this.dateTime = createSchedule.dateTime;
+		this.Service = createSchedule.Service;
+		this.Price = createSchedule.Price;
+		WasContacted = wasContacted;
+		Client = null!;
+	}
 }

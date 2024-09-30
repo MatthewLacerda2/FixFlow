@@ -58,7 +58,7 @@ public class AptLog {
 		ClientId = newLog.ClientId;
 		BusinessId = newLog.BusinessId;
 		scheduleId = newLog.scheduleId;
-		Service = newLog.service;
+		Service = newLog.Service;
 
 		this.dateTime = newLog.dateTime;
 		this.Price = newLog.price;

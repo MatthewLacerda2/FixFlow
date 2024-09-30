@@ -106,13 +106,10 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.Client);
 		}
 
-		var existingBusiness = _context.Business.Find(createLog.BusinessId);
-		if (existingBusiness == null) {
-			return BadRequest(NotExistErrors.Business);
-		}
+		var existingBusiness = _context.Business.Find(existingClient.BusinessId);
 
-		if (existingBusiness.allowListedServicesOnly) {
-			if (!existingBusiness.services.Contains(createLog.service)) {
+		if (existingBusiness!.allowListedServicesOnly) {
+			if (createLog.Service == null || !existingBusiness.services.Contains(createLog.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -123,15 +120,13 @@ public class AptLogController : ControllerBase {
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
-		if (aptSchedule != null) {
-			newLog.scheduleId = aptSchedule.Id;
-		}
+		newLog.scheduleId = aptSchedule.Id;
+
+		AptContact contact = new AptContact(newLog, createLog.whenShouldClientComeBack);
 
 		_context.Logs.Add(newLog);
 
-		AptContact contact = new AptContact(newLog, createLog.whenShouldClientComeBack);
 		_context.Contacts.Add(contact);
-
 		await _context.SaveChangesAsync();
 
 		return CreatedAtAction(nameof(CreateLog), newLog);
