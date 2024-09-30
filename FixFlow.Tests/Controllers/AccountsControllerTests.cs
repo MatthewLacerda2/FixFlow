@@ -8,6 +8,8 @@ using Server.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
+namespace FixFlow.Tests.Controllers;
+
 public class AccountsControllerTests {
 
 	private readonly Mock<UserManager<Business>> _mockUserManager;

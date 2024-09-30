@@ -155,7 +155,7 @@ public class ClientController : ControllerBase {
 				return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
 			}
 			else {
-				await _userManager.SetPhoneNumberAsync(existingClient, upClient.PhoneNumber);
+				existingClient.PhoneNumber = upClient.PhoneNumber;
 			}
 		}
 
@@ -165,10 +165,11 @@ public class ClientController : ControllerBase {
 				return BadRequest(AlreadyRegisteredErrors.Email);
 			}
 			else {
-				await _userManager.SetEmailAsync(existingClient, upClient.Email);
+				existingClient.Email = upClient.Email;
 			}
 		}
 
+		existingClient.FullName = upClient.FullName;
 		existingClient.AdditionalNote = upClient.AdditionalNote;
 
 		await _context.SaveChangesAsync();
