@@ -8,7 +8,6 @@ public static class StringChecker {
 	static Regex lowercaseRegex = new Regex(@"[a-z]");
 	static Regex numberRegex = new Regex(@"[0-9]");
 	static Regex specialCharRegex = new Regex(@"[^A-Za-z0-9]");
-	static Regex noLetterOrSpaceRegex = new Regex(@"^[^A-Za-z\s]+$");
 
 	public static bool IsPasswordStrong(string password) {
 

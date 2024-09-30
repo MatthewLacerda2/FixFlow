@@ -42,12 +42,6 @@ public class Business : IdentityUser {
 		PhoneNumber = phoneNumber;
 
 		BusinessDays = new List<BusinessDay>(7);
-		for (int i = 0; i < BusinessDays.Count; i++) {
-			DateTime start = new DateTime(DateTime.Now.Year, 1, 1, 8, 0, 0);
-			DateTime end = new DateTime(DateTime.Now.Year, 1, 1, 18, 0, 0);
-
-			BusinessDays[i] = new BusinessDay(start, end);
-		}
 
 		IsActive = true;
 	}

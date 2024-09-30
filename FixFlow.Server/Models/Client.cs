@@ -24,10 +24,7 @@ public class Client : IdentityUser {
 
 	public string? AdditionalNote { get; set; }
 
-	public Client() {
-		FullName = string.Empty;
-		BusinessId = string.Empty;
-	}
+	public Client() : this(string.Empty, string.Empty, string.Empty, null, null, null) { }
 
 	public Client(string businessId, string phoneNumber, string fullName, string? email, string? cpf, string? additionalNote) {
 		Id = Guid.NewGuid().ToString();
