@@ -110,7 +110,7 @@ public class AptScheduleController : ControllerBase {
 
 		AptContact contact = _context.Contacts.Where(x => x.ClientId == newAppointment.ClientId)
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
-								.OrderByDescending(x => x.dateTime).First();
+								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
 		if (contact != null) {
 			newAppointment.contactId = contact.Id;

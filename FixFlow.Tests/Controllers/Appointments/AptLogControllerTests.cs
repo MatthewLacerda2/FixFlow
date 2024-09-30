@@ -168,4 +168,122 @@ public class AptLogControllerTests {
 		Assert.NotNull(contact);
 		Assert.Equal(contact!.dateTime, createLog.whenShouldClientComeBack);
 	}
+
+	[Fact]
+	public async Task UpdateLog_AptLogDoesNotExist_ReturnsBadRequest() {
+		// Arrange
+		var upLog = new UpdateAptLog("non-exist-log", null, DateTime.Now, null, 200, null);
+
+		// Act
+		var result = await _controller.UpdateLog(upLog) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(NotExistErrors.AptLog, result.Value);
+	}
+
+	[Fact]
+	public async Task UpdateLog_UnlistedService_ReturnsBadRequest() {
+		// Arrange
+		var business = new Business("business-id", "business@example.com", "123456789", "1234567890") {
+			allowListedServicesOnly = true,
+			services = ["Service 1", "Service 2"]
+		};
+		var client = new Client(business.Id, "123456789", "Client Name", null, null, null);
+		var log = new AptLog {
+			ClientId = client.Id,
+			BusinessId = business.Id,
+			dateTime = DateTime.Now,
+			price = 100,
+			service = "Service 2"
+		};
+
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.Logs.Add(log);
+		_context.SaveChanges();
+
+		var upLog = new UpdateAptLog(log.Id, null, DateTime.Now, "UnlistedService", 100, null);
+
+		// Act
+		var result = await _controller.UpdateLog(upLog) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(ValidatorErrors.UnlistedService, result.Value);
+	}
+
+	[Fact]
+	public async Task UpdateLog_ScheduleDoesNotExist_ReturnsBadRequest() {
+		// Arrange
+		var business = new Business("business-id", "business@example.com", "123456789", "1234567890") {
+			allowListedServicesOnly = true,
+			services = ["Service 1", "Service 2"]
+		};
+		var client = new Client(business.Id, "123456789", "Client Name", null, null, null);
+		var log = new AptLog {
+			ClientId = client.Id,
+			BusinessId = business.Id,
+			dateTime = DateTime.Now,
+			price = 100,
+			service = "Service 2"
+		};
+
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.Logs.Add(log);
+		_context.SaveChanges();
+
+		var upLog = new UpdateAptLog(log.Id, "non-exist-schedule-id", DateTime.Now, "Service 2", 100, null);
+
+		// Act
+		var result = await _controller.UpdateLog(upLog) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(NotExistErrors.AptSchedule, result.Value);
+	}
+
+	[Fact]
+	public async Task UpdateLog_Successful_ReturnsOk() {
+		// Arrange
+		var business = new Business("business-id", "business@example.com", "123456789", "1234567890") {
+			allowListedServicesOnly = true,
+			services = ["Service 1", "Service 2"]
+		};
+		var client = new Client(business.Id, "123456789", "Client Name", null, null, null);
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddHours(-1), 100);
+		var log = new AptLog {
+			ClientId = client.Id,
+			BusinessId = business.Id,
+			scheduleId = null,
+			dateTime = DateTime.Now.AddHours(-1),
+			price = 100,
+			service = "Service 1"
+		};
+
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.Schedules.Add(schedule);
+		_context.Logs.Add(log);
+		_context.SaveChanges();
+
+		var upLog = new UpdateAptLog(log.Id, schedule.Id, DateTime.Now, "Service 2", 200, "description");
+
+		// Act
+		var result = await _controller.UpdateLog(upLog) as OkObjectResult;
+
+		// Assert
+		Assert.Equal(200, result!.StatusCode);
+		Assert.NotNull(result);
+		var updatedLog = Assert.IsType<AptLog>(result.Value);
+		Assert.Equal(upLog.ScheduleId, updatedLog.scheduleId);
+		Assert.Equal(upLog.dateTime, updatedLog.dateTime);
+		Assert.Equal(upLog.Service, updatedLog.service);
+		Assert.Equal(upLog.Price, updatedLog.price);
+		Assert.Equal(upLog.Description, updatedLog.description);
+	}
 }

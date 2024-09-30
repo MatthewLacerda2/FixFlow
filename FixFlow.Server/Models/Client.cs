@@ -30,6 +30,7 @@ public class Client : IdentityUser {
 	}
 
 	public Client(string businessId, string phoneNumber, string fullName, string? email, string? cpf, string? additionalNote) {
+		Id = Guid.NewGuid().ToString();
 		BusinessId = businessId;
 		PhoneNumber = phoneNumber;
 		FullName = fullName;

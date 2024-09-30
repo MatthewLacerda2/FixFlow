@@ -32,6 +32,7 @@ public class Business : IdentityUser {
 	public Business() : this(string.Empty, string.Empty, string.Empty, string.Empty) { }
 
 	public Business(string name, string email, string cnpj, string phoneNumber) {
+		Id = Guid.NewGuid().ToString();
 		CreatedDate = DateTime.Now;
 		LastLogin = DateTime.Now;
 

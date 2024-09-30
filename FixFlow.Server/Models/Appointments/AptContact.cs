@@ -37,6 +37,12 @@ public class AptContact {
 	public string aptLogId { get; set; }
 
 	/// <summary>
+	/// Navigation Property of the AptLog
+	/// </summary>
+	[JsonIgnore]
+	public AptLog aptLog { get; set; }
+
+	/// <summary>
 	/// The Date to Contact the Client
 	/// The Time is used because, chances are, there is a better Time of the day to contact the Client
 	/// </summary>
@@ -48,6 +54,7 @@ public class AptContact {
 		aptLogId = string.Empty;
 		businessId = string.Empty;
 		Client = null!;
+		aptLog = null!;
 	}
 
 	public AptContact(AptLog log, DateTime dateTime) {
@@ -57,5 +64,6 @@ public class AptContact {
 		this.aptLogId = log.Id;
 		this.dateTime = dateTime;
 		Client = null!;
+		aptLog = log;
 	}
 }

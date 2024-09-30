@@ -121,7 +121,7 @@ public class AptLogController : ControllerBase {
 
 		AptSchedule aptSchedule = _context.Schedules.Where(x => x.ClientId == createLog.ClientId)
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
-								.OrderByDescending(x => x.dateTime).First();
+								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
 		if (aptSchedule != null) {
 			newLog.scheduleId = aptSchedule.Id;
@@ -142,36 +142,37 @@ public class AptLogController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpPatch]
-	public async Task<IActionResult> UpdateLog([FromBody] AptLog upLog) {
-
-		var existingClient = _context.Clients.Find(upLog.ClientId);
-		if (existingClient == null) {
-			return BadRequest(NotExistErrors.Client);
-		}
-
-		var existingBusiness = _context.Business.Find(upLog.BusinessId);
-		if (existingBusiness == null) {
-			return BadRequest(NotExistErrors.Business);
-		}
-
-		if (!string.IsNullOrWhiteSpace(upLog.scheduleId)) {
-			var existingSchedule = _context.Schedules.Find(upLog.scheduleId);
-
-			if (existingSchedule == null) {
-				return BadRequest(NotExistErrors.AptSchedule);
-			}
-		}
+	[HttpPut]
+	public async Task<IActionResult> UpdateLog([FromBody] UpdateAptLog upLog) {
 
 		var existingLog = _context.Logs.Find(upLog.Id);
 		if (existingLog == null) {
 			return BadRequest(NotExistErrors.AptLog);
 		}
 
-		_context.Logs.Update(upLog);
+		var existingBusiness = _context.Business.Find(existingLog.BusinessId);
+		if (existingBusiness!.allowListedServicesOnly) {
+			if (!existingBusiness.services.Contains(upLog.Service)) {
+				return BadRequest(ValidatorErrors.UnlistedService);
+			}
+		}
+
+		if (!string.IsNullOrWhiteSpace(upLog.ScheduleId)) {
+			var existingSchedule = _context.Schedules.Find(upLog.ScheduleId);
+			if (existingSchedule == null) {
+				return BadRequest(NotExistErrors.AptSchedule);
+			}
+		}
+
+		existingLog.scheduleId = upLog.ScheduleId;
+		existingLog.dateTime = upLog.dateTime;
+		existingLog.service = upLog.Service;
+		existingLog.price = upLog.Price;
+		existingLog.description = upLog.Description;
+
 		await _context.SaveChangesAsync();
 
-		return Ok(upLog);
+		return Ok(existingLog);
 	}
 
 	/// <summary>
@@ -189,7 +190,7 @@ public class AptLogController : ControllerBase {
 
 		_context.Logs.Remove(logToDelete);
 
-		var contact = _context.Contacts.Where(x => x.aptLogId == Id).First();
+		var contact = _context.Contacts.Where(x => x.aptLogId == Id).FirstOrDefault();
 
 		if (contact != null && contact.dateTime < DateTime.Now) {
 			_context.Contacts.Remove(contact);
