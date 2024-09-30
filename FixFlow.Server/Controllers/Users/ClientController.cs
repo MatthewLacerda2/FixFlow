@@ -32,28 +32,32 @@ public class ClientController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientRecord))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetClientRecord(string id) {
+	public async Task<IActionResult> GetClientRecord(string clientId) {
 
-		var client = await _userManager.FindByIdAsync(id);
+		var client = await _userManager.FindByIdAsync(clientId);
 		if (client == null) {
 			return BadRequest(NotExistErrors.Client);
 		}
 
 		var clientRecord = (ClientRecord)client;
 
-		var firstLog = _context.Logs.Where(x => x.ClientId == id).OrderBy(x => x.dateTime).FirstOrDefault();
+		var firstLog = _context.Logs.Where(x => x.ClientId == clientId).OrderBy(x => x.dateTime).FirstOrDefault();
 		if (firstLog != null) {
 			clientRecord.firstLog = firstLog.dateTime;
 		}
 
-		var lastLog = _context.Logs.Where(x => x.ClientId == id).OrderByDescending(x => x.dateTime).First();
+		var lastLog = _context.Logs.Where(x => x.ClientId == clientId).OrderByDescending(x => x.dateTime).FirstOrDefault();
 		if (lastLog != null) {
 			clientRecord.firstLog = lastLog.dateTime;
 		}
 
-		clientRecord.logs = _context.Logs.Where(x => x.ClientId == id).ToArray();
+		clientRecord.logs = _context.Logs.Where(x => x.ClientId == clientId).ToArray();
 
-		clientRecord.numSchedules = _context.Schedules.Where(x => x.ClientId == id).Count();
+		clientRecord.numSchedules = _context.Schedules.Where(x => x.ClientId == clientId).Count();
+
+		for (int i = 0; i < clientRecord.logs.Length - 1; i++) {
+			clientRecord.avgTimeBetweenSchedules += (int)(clientRecord.logs[i + 1].dateTime - clientRecord.logs[i].dateTime).TotalDays;
+		}
 
 		return Ok(clientRecord);
 	}

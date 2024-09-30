@@ -1,8 +1,5 @@
-using FixFlow.Server.Controllers;
 using FixFlow.Server.Controllers.Users;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Models;
 

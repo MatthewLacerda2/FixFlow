@@ -36,6 +36,8 @@ public class ClientRecord {
 
 	public int numSchedules { get; set; }
 
+	public int avgTimeBetweenSchedules { get; set; }
+
 	public static explicit operator ClientRecord(Client client) {
 		return new ClientRecord {
 			FullName = client.FullName,
