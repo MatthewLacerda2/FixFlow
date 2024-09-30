@@ -32,8 +32,8 @@ public class ServerContext : IdentityDbContext {
 			   .IsUnique();
 
 		builder.Entity<Client>()
-				.HasIndex(c => c.CPF)
-				.IsUnique();
+			.Property(c => c.PhoneNumber)
+			.IsRequired();
 
 		builder.Entity<IdlePeriod>()
 				.HasIndex(c => c.Id)
