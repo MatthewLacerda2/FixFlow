@@ -157,6 +157,7 @@ public class AptLogControllerTests {
 		_context.SaveChanges();
 
 		var createLog = new CreateAptLog(client.Id, business.Id, schedule.Id, DateTime.Now, 100, "Service 2", null, DateTime.Now.AddDays(30));
+		createLog.dateTime.AddDays(-(int)createLog.dateTime.DayOfWeek);
 
 		// Act
 		var result = await _controller.CreateLog(createLog) as CreatedAtActionResult;
@@ -176,6 +177,8 @@ public class AptLogControllerTests {
 
 		Assert.NotNull(contact);
 		Assert.Equal(contact!.dateTime, createLog.whenShouldClientComeBack);
+		Assert.NotEqual(DayOfWeek.Saturday, contact!.dateTime.DayOfWeek);
+		Assert.NotEqual(DayOfWeek.Sunday, contact!.dateTime.DayOfWeek);
 	}
 
 	[Fact]

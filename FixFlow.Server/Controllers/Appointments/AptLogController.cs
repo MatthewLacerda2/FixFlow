@@ -125,6 +125,12 @@ public class AptLogController : ControllerBase {
 		newLog.ScheduleId = aptSchedule.Id;
 
 		AptContact contact = new AptContact(newLog, createLog.whenShouldClientComeBack);
+		if (contact.dateTime.DayOfWeek == DayOfWeek.Saturday) {
+			contact.dateTime = contact.dateTime.AddDays(2);
+		}
+		else if (contact.dateTime.DayOfWeek == DayOfWeek.Sunday) {
+			contact.dateTime = contact.dateTime.AddDays(1);
+		}
 
 		_context.Logs.Add(newLog);
 
