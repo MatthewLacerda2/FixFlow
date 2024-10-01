@@ -268,7 +268,7 @@ public class AptLogControllerTests {
 		var log = new AptLog {
 			ClientId = client.Id,
 			BusinessId = business.Id,
-			scheduleId = null,
+			ScheduleId = null,
 			dateTime = DateTime.Now.AddHours(-1),
 			Price = 100,
 			Service = "Service 1"
@@ -289,7 +289,7 @@ public class AptLogControllerTests {
 		Assert.Equal(200, result!.StatusCode);
 		Assert.NotNull(result);
 		var updatedLog = Assert.IsType<AptLog>(result.Value);
-		Assert.Equal(upLog.ScheduleId, updatedLog.scheduleId);
+		Assert.Equal(upLog.ScheduleId, updatedLog.ScheduleId);
 		Assert.Equal(upLog.dateTime, updatedLog.dateTime);
 		Assert.Equal(upLog.Service, updatedLog.Service);
 		Assert.Equal(upLog.Price, updatedLog.Price);

@@ -73,12 +73,12 @@ public class FlowSeeder {
 
 				bogusSchedules[i].dateTime = bogusSchedules[i].dateTime.AddMonths(monthSpan * i);
 
-				bogusLogs[i].scheduleId = bogusSchedules[i].Id;
+				bogusLogs[i].ScheduleId = bogusSchedules[i].Id;
 
 			}
 
 			bogusContacts[0].aptLogId = "";
-			bogusLogs[0].scheduleId = "";
+			bogusLogs[0].ScheduleId = "";
 
 			Array.Copy(bogusContacts, 0, aptContacts, index, numAptsPerClient);
 			Array.Copy(bogusSchedules, 0, aptSchedules, index, numAptsPerClient);
@@ -89,7 +89,7 @@ public class FlowSeeder {
 		}
 
 		aptContacts = aptContacts.Where(c => c.aptLogId != "" || c.aptLogId != null).ToArray();
-		aptLogs = aptLogs.Where(c => c.scheduleId != "" || c.scheduleId != null).ToArray();
+		aptLogs = aptLogs.Where(c => c.ScheduleId != "" || c.ScheduleId != null).ToArray();
 	}
 
 	Business[] GenerateBusinesses(int amount) {
@@ -181,7 +181,7 @@ public class FlowSeeder {
 
 		.RuleFor(x => x.ClientId, clientId)
 		.RuleFor(x => x.BusinessId, businessId)
-		.RuleFor(x => x.scheduleId, scheduleId)
+		.RuleFor(x => x.ScheduleId, scheduleId)
 
 		.RuleFor(x => x.Id, f => f.Random.Guid().ToString())
 		.RuleFor(x => x.dateTime, f => f.Date.Between(Jan1st2024, Jan1st2024.AddDays(5)))

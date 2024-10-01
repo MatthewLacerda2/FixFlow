@@ -140,6 +140,7 @@ public class AptScheduleController : ControllerBase {
 		}
 
 		var existingBusiness = _context.Business.Find(existingAppointment.BusinessId);
+
 		if (upSchedule.Service != null && existingBusiness!.allowListedServicesOnly) {
 			if (!existingBusiness.services.Contains(upSchedule.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
@@ -182,9 +183,9 @@ public class AptScheduleController : ControllerBase {
 
 		_context.Schedules.Remove(scheduleToDelete);
 
-		AptLog[] logs = _context.Logs.Where(x => x.scheduleId == Id).ToArray();
+		AptLog[] logs = _context.Logs.Where(x => x.ScheduleId == Id).ToArray();
 		foreach (AptLog log in logs) {
-			log.scheduleId = null;
+			log.ScheduleId = null;
 		}
 		_context.Logs.UpdateRange(logs);
 

@@ -208,4 +208,48 @@ public class AptScheduleControllerTests {
 		Assert.Equal(newAppointment.Service, createdSchedule.Service);
 		Assert.Equal(newAppointment.Observation, createdSchedule.observation);
 	}
+
+	//TODO: Update tests
+
+	[Fact]
+	public async Task DeleteSchedule_ReturnsBadRequest_WhenScheduleDoesNotExist() {
+		// Arrange
+		var nonExistentScheduleId = "non-existent-id";
+
+		// Act
+		var result = await _controller.DeleteSchedule(nonExistentScheduleId) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(NotExistErrors.AptSchedule, result.Value);
+	}
+
+	[Fact]
+	public async Task DeleteSchedule_ReturnsNoContent_WhenDeletionIsSuccessful() {
+		// Arrange
+		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
+			allowListedServicesOnly = false
+		};
+		var client = new Client(business.Id, "789456123", "fulano da silva", null, null, null);
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(1), 100, "Service 1");
+		var log = new AptLog(new CreateAptLog(client.Id, business.Id, schedule.Id, DateTime.Now, 30, null, null, DateTime.Now.AddDays(30)));
+
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.Schedules.Add(schedule);
+		_context.Logs.Add(log);
+		_context.SaveChanges();
+
+		// Act
+		var result = await _controller.DeleteSchedule(schedule.Id) as NoContentResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(204, result!.StatusCode);
+		Assert.Null(_context.Schedules.Find(schedule.Id));
+
+		var logsReferencingSchedule = _context.Logs.FirstOrDefault(x => x.ScheduleId == schedule.Id);
+		Assert.Null(logsReferencingSchedule);
+	}
 }

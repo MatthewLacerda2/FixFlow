@@ -33,7 +33,7 @@ public class AptLog {
 	/// The Id of the Schedule that precedes this Log, if any
 	/// </summary>
 	[ForeignKey(nameof(AptSchedule))]
-	public string? scheduleId { get; set; }
+	public string? ScheduleId { get; set; }
 
 	/// <summary>
 	/// The DateTime when the Log was registered
@@ -57,7 +57,7 @@ public class AptLog {
 		Id = Guid.NewGuid().ToString();
 		ClientId = newLog.ClientId;
 		BusinessId = newLog.BusinessId;
-		scheduleId = newLog.scheduleId;
+		ScheduleId = newLog.scheduleId;
 		Service = newLog.Service;
 
 		this.dateTime = newLog.dateTime;

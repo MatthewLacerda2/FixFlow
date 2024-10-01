@@ -120,7 +120,7 @@ public class AptLogController : ControllerBase {
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
-		newLog.scheduleId = aptSchedule.Id;
+		newLog.ScheduleId = aptSchedule.Id;
 
 		AptContact contact = new AptContact(newLog, createLog.whenShouldClientComeBack);
 
@@ -159,7 +159,7 @@ public class AptLogController : ControllerBase {
 			}
 		}
 
-		existingLog.scheduleId = upLog.ScheduleId;
+		existingLog.ScheduleId = upLog.ScheduleId;
 		existingLog.dateTime = upLog.dateTime;
 		existingLog.Service = upLog.Service;
 		existingLog.Price = upLog.Price;
