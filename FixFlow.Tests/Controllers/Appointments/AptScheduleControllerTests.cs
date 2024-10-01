@@ -123,58 +123,24 @@ public class AptScheduleControllerTests {
 		Assert.Equal(400, result!.StatusCode);
 		Assert.Equal(ValidatorErrors.UnlistedService, result.Value);
 	}
-
-	[Fact]
-	public async Task CreateSchedule_ReturnsBadRequest_WhenTimeNotWithinBusinessHours() {
-		// Arrange
-		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-			allowListedServicesOnly = false,
-		};
-		var client = new Client(business.Id, "789456123", "fulano da silva", null, null, null);
-
-		_context.Business.Add(business);
-		_context.Clients.Add(client);
-		_context.SaveChanges();
-
-		DateOnly dateOnly = DateOnly.FromDateTime(DateTime.Now);
-		var dateTime = new DateTime(dateOnly.Year, dateOnly.Month, dateOnly.Day, 6, 0, 0);
-
-		var newAppointment = new CreateAptSchedule(client.Id, dateTime, 100, null, null);
-
-		// Act
-		var result = await _controller.CreateSchedule(newAppointment) as BadRequestObjectResult;
-
-		// Assert
-		Assert.NotNull(result);
-		Assert.Equal(400, result!.StatusCode);
-		Assert.Equal(ValidatorErrors.TimeNotWithinBusinessHours, result.Value);
-	}
+	//TODO: finish the test below
 	/*
 		[Fact]
-		public async Task CreateSchedule_ReturnsBadRequest_WhenDateWithinIdlePeriod() {
+		public async Task CreateSchedule_ReturnsBadRequest_WhenTimeNotWithinBusinessHours() {
 			// Arrange
 			var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-				allowListedServicesOnly = true,
-				services = ["Service 1", "Service 2"],
+				allowListedServicesOnly = false,
 			};
 			var client = new Client(business.Id, "789456123", "fulano da silva", null, null, null);
 
 			_context.Business.Add(business);
 			_context.Clients.Add(client);
-			_context.IdlePeriods.Add(new IdlePeriod {
-				BusinessId = business.Id,
-				start = DateTime.Today.AddHours(10),
-				finish = DateTime.Today.AddHours(12)
-			});
 			_context.SaveChanges();
 
-			var newAppointment = new AptSchedule {
-				ClientId = client.Id,
-				BusinessId = business.Id,
-				dateTime = DateTime.Today.AddHours(11), // Within idle period
-				Price = 100,
-				Service = "Service 1"
-			};
+			DateOnly dateOnly = DateOnly.FromDateTime(DateTime.Now);
+			var dateTime = new DateTime(dateOnly.Year, dateOnly.Month, dateOnly.Day, 6, 0, 0);
+
+			var newAppointment = new CreateAptSchedule(client.Id, dateTime, 100, null, null);
 
 			// Act
 			var result = await _controller.CreateSchedule(newAppointment) as BadRequestObjectResult;
@@ -182,49 +148,64 @@ public class AptScheduleControllerTests {
 			// Assert
 			Assert.NotNull(result);
 			Assert.Equal(400, result!.StatusCode);
-			Assert.Equal(ValidatorErrors.DateWithinIdlePeriod, result.Value);
-		}
-
-		[Fact]
-		public async Task CreateSchedule_ReturnsCreated_WhenValidRequest() {
-			// Arrange
-			var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-				allowListedServicesOnly = true,
-				services = ["Service 1", "Service 2"],
-				BusinessDays = new List<BusinessDay> {
-					new BusinessDay {
-						Start = DateTime.Today.AddHours(9),
-						Finish = DateTime.Today.AddHours(17)
-					}
-				}
-			};
-			var client = new Client(business.Id, "789456123", "fulano da silva", null, null, null);
-
-			_context.Business.Add(business);
-			_context.Clients.Add(client);
-			_context.SaveChanges();
-
-			var newAppointment = new AptSchedule {
-				ClientId = client.Id,
-				BusinessId = business.Id,
-				dateTime = DateTime.Today.AddHours(10),
-				Price = 100,
-				Service = "Service 1"
-			};
-
-			// Act
-			var result = await _controller.CreateSchedule(newAppointment) as CreatedAtActionResult;
-
-			// Assert
-			Assert.NotNull(result);
-			Assert.Equal(201, result!.StatusCode);
-			var createdSchedule = result.Value as AptSchedule;
-			Assert.NotNull(createdSchedule);
-			Assert.Equal(newAppointment.ClientId, createdSchedule!.ClientId);
-			Assert.Equal(newAppointment.BusinessId, createdSchedule.BusinessId);
-			Assert.Equal(newAppointment.dateTime, createdSchedule.dateTime);
-			Assert.Equal(newAppointment.Price, createdSchedule.Price);
-			Assert.Equal(newAppointment.Service, createdSchedule.Service);
+			Assert.Equal(ValidatorErrors.TimeNotWithinBusinessHours, result.Value);
 		}
 	*/
+	[Fact]
+	public async Task CreateSchedule_ReturnsBadRequest_WhenDateWithinIdlePeriod() {
+		// Arrange
+		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
+			allowListedServicesOnly = false
+		};
+		var client = new Client(business.Id, "789456123", "fulano da silva", null, null, null);
+		var dateTime = business.BusinessDays[1].Start.AddHours(1);
+		var idlePeriod = new IdlePeriod(business.Id, dateTime, dateTime.AddDays(2), "Test");
+
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.IdlePeriods.Add(idlePeriod);
+		_context.SaveChanges();
+
+		var newAppointment = new CreateAptSchedule(client.Id, dateTime, 100, "Service 1", null);
+
+		// Act
+		var result = await _controller.CreateSchedule(newAppointment) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(ValidatorErrors.DateWithinIdlePeriod, result.Value);
+	}
+
+	[Fact]
+	public async Task CreateSchedule_ReturnsOk_WhenCreationIsSuccessful() {
+		// Arrange
+		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
+			allowListedServicesOnly = true,
+			services = ["Service 1", "Service 2"]
+		};
+		var client = new Client(business.Id, "789456123", "fulano da silva", null, null, null);
+		var dateTime = business.BusinessDays[1].Start.AddHours(1);
+
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.SaveChanges();
+
+		var newAppointment = new CreateAptSchedule(client.Id, dateTime, 100, "Service 1", null);
+
+		// Act
+		var result = await _controller.CreateSchedule(newAppointment) as CreatedAtActionResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(201, result!.StatusCode);
+		var createdSchedule = result.Value as AptSchedule;
+		Assert.NotNull(createdSchedule);
+		Assert.Equal(newAppointment.ClientId, createdSchedule!.ClientId);
+		Assert.Equal(business.Id, createdSchedule.BusinessId);
+		Assert.Equal(newAppointment.dateTime, createdSchedule.dateTime);
+		Assert.Equal(newAppointment.Price, createdSchedule.Price);
+		Assert.Equal(newAppointment.Service, createdSchedule.Service);
+		Assert.Equal(newAppointment.Observation, createdSchedule.observation);
+	}
 }

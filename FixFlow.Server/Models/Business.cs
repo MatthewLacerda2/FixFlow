@@ -44,7 +44,6 @@ public class Business : IdentityUser {
 		for (int i = 0; i < 7; i++) {
 			BusinessDays.Add(new BusinessDay());
 		}
-
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {

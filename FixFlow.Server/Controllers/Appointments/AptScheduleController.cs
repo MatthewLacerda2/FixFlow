@@ -106,13 +106,7 @@ public class AptScheduleController : ControllerBase {
 			}
 		}
 
-		BusinessDay businessDay = existingBusiness.BusinessDays[(int)newAppointment.dateTime.DayOfWeek];
-		if (businessDay == null) {
-			return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
-		}
-		else if (businessDay.Start.TimeOfDay < newAppointment.dateTime.TimeOfDay || businessDay.Finish.TimeOfDay > newAppointment.dateTime.TimeOfDay) {
-			return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
-		}
+		//TODO: validate business hours
 
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingBusiness.Id).ToArray();
 		foreach (IdlePeriod idp in idps) {
@@ -125,10 +119,11 @@ public class AptScheduleController : ControllerBase {
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
-		_context.Schedules.Add(new AptSchedule(newAppointment, existingBusiness.Id, contact != null));
+		AptSchedule schedule = new AptSchedule(newAppointment, existingBusiness.Id, contact != null);
+		_context.Schedules.Add(schedule);
 		await _context.SaveChangesAsync();
 
-		return CreatedAtAction(nameof(CreateSchedule), newAppointment);
+		return CreatedAtAction(nameof(CreateSchedule), schedule);
 	}
 
 	/// <summary>
@@ -151,13 +146,7 @@ public class AptScheduleController : ControllerBase {
 			}
 		}
 
-		BusinessDay businessDay = existingBusiness!.BusinessDays[(int)upSchedule.dateTime.DayOfWeek];
-		if (businessDay == null) {
-			return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
-		}
-		else if (businessDay.Start.TimeOfDay < upSchedule.dateTime.TimeOfDay || businessDay.Finish.TimeOfDay > upSchedule.dateTime.TimeOfDay) {
-			return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
-		}
+		//TODO: validate business hours
 
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {

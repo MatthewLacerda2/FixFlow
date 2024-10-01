@@ -70,7 +70,7 @@ public class IdlePeriodControllerTests {
 		Assert.Equal(idlePeriod.BusinessId, createdIdlePeriod.BusinessId);
 		Assert.Equal(idlePeriod.start, createdIdlePeriod.start);
 		Assert.Equal(idlePeriod.finish, createdIdlePeriod.finish);
-		Assert.Equal(idlePeriod.Description, createdIdlePeriod.Description);
+		Assert.Equal(idlePeriod.Name, createdIdlePeriod.Name);
 	}
 
 	[Fact]
