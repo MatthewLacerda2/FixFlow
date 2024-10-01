@@ -23,7 +23,7 @@ public class Business : IdentityUser {
 	/// <summary>
 	/// The DateTimes of the week where the business is open
 	/// </summary>
-	public List<BusinessDay> BusinessDays { get; set; } = new List<BusinessDay>();
+	public List<BusinessDay> BusinessDays { get; set; }
 
 	public string[] services = Array.Empty<string>();
 	public bool allowListedServicesOnly { get; set; } = false;
@@ -41,6 +41,9 @@ public class Business : IdentityUser {
 		PhoneNumber = phoneNumber;
 
 		BusinessDays = new List<BusinessDay>(7);
+		for (int i = 0; i < 7; i++) {
+			BusinessDays.Add(new BusinessDay());
+		}
 
 	}
 

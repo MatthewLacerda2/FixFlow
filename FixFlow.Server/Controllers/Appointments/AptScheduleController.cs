@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
+using Server.Models.DTO;
 using Server.Models.Erros;
 using Server.Models.Filters;
 using Server.Models.Utils;
@@ -105,7 +106,13 @@ public class AptScheduleController : ControllerBase {
 			}
 		}
 
-		//TODO:validate businessday
+		BusinessDay businessDay = existingBusiness.BusinessDays[(int)newAppointment.dateTime.DayOfWeek];
+		if (businessDay == null) {
+			return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
+		}
+		else if (businessDay.Start.TimeOfDay < newAppointment.dateTime.TimeOfDay || businessDay.Finish.TimeOfDay > newAppointment.dateTime.TimeOfDay) {
+			return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
+		}
 
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingBusiness.Id).ToArray();
 		foreach (IdlePeriod idp in idps) {
@@ -144,7 +151,13 @@ public class AptScheduleController : ControllerBase {
 			}
 		}
 
-		//TODO:validate businessday
+		BusinessDay businessDay = existingBusiness!.BusinessDays[(int)upSchedule.dateTime.DayOfWeek];
+		if (businessDay == null) {
+			return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
+		}
+		else if (businessDay.Start.TimeOfDay < upSchedule.dateTime.TimeOfDay || businessDay.Finish.TimeOfDay > upSchedule.dateTime.TimeOfDay) {
+			return BadRequest(ValidatorErrors.TimeNotWithinBusinessHours);
+		}
 
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
