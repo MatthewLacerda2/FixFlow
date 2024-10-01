@@ -7,12 +7,6 @@ namespace Server.Validators.DTOs;
 
 public class BusinessRegisterRequestValidator : AbstractValidator<BusinessRegisterRequest> {
 	public BusinessRegisterRequestValidator() {
-		RuleFor(x => x.Name).Custom((name, context) => {
-			if (StringChecker.IsFullNameValid(name) == false) {
-				context.AddFailure(ValidatorErrors.FullName);
-			}
-		});
-
 		RuleFor(x => x.Password).Custom((currentPassword, context) => {
 			if (currentPassword.Length < 7) {
 				context.AddFailure(ValidatorErrors.ShortPassword);

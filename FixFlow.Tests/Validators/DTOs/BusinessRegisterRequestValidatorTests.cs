@@ -11,13 +11,6 @@ namespace FixFlow.Tests.Validators.DTOs {
 		}
 
 		[Fact]
-		public void Should_Not_Have_Error_When_Name_Is_Valid() {
-			var model = new BusinessRegisterRequest("Valid Name", "lenda@gmail.com", "789.4561.123/0001-80", "98999344788", "@Str0ng", "@Str0ng", "123456");
-			var result = _validator.TestValidate(model);
-			result.ShouldNotHaveValidationErrorFor(x => x.Name);
-		}
-
-		[Fact]
 		public void Should_Have_Error_When_Password_Is_Short() {
 			var model = new BusinessRegisterRequest("", "lenda@gmail.com", "789.4561.123/0001-80", "98999344788", "@Sh0rt", "@Short", "123456");
 			var result = _validator.TestValidate(model);
