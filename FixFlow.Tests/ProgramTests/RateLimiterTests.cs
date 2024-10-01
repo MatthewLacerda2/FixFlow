@@ -7,13 +7,14 @@ using Server.Models.Utils;
 namespace FixFlow.Tests.ProgramTests;
 
 public class RateLimiterTests : IClassFixture<WebApplicationFactory<Program>> {
+	/*
 	private readonly WebApplicationFactory<Program> _factory;
-
+	//TODO: finish this
+	
 	public RateLimiterTests(WebApplicationFactory<Program> factory) {
 		_factory = factory;
 	}
-	//TODO: finish this
-	/*
+	
 		[Fact]
 		public async Task RateLimiter_AllowsRequestsWithinLimit() {
 			// Arrange
