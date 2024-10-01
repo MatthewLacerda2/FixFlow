@@ -6,7 +6,7 @@ public static class StringChecker {
 
 	static Regex uppercaseRegex = new Regex(@"[A-Z]");
 	static Regex lowercaseRegex = new Regex(@"[a-z]");
-	static Regex lettersAndSpacesRegex = new Regex(@"^[A-Za-z\s]+$");
+	static Regex fullNameRegex = new Regex(@"^[A-Za-z]+(\s[A-Za-z]+)+$");
 	static Regex numberRegex = new Regex(@"[0-9]");
 	static Regex specialCharRegex = new Regex(@"[^A-Za-z0-9]");
 
@@ -25,8 +25,6 @@ public static class StringChecker {
 	}
 
 	public static bool IsFullNameValid(string entry) {
-		Regex fullNameRegex = new Regex(@"^[A-Za-z]+(\s[A-Za-z]+)+$");
-
 		bool hasLength = entry.Length >= 5;
 		bool isValid = fullNameRegex.IsMatch(entry);
 
@@ -50,10 +48,8 @@ public static class StringChecker {
 					return false;
 				}
 			}
-			else {
-				if (!char.IsDigit(entry[i])) {
-					return false;
-				}
+			else if (!char.IsDigit(entry[i])) {
+				return false;
 			}
 		}
 
