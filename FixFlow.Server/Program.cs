@@ -18,8 +18,7 @@ public class Program {
 		var verifiedIssuerSigningKey = secretKey != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
 			: throw new InvalidOperationException("JWT secret key is missing in configuration.");
 
-		builder.Services.AddIdentity<Client, IdentityRole>()
-			.AddRoles<IdentityRole>()
+		builder.Services.AddIdentityCore<Business>()
 			.AddEntityFrameworkStores<ServerContext>()
 			.AddDefaultTokenProviders();
 
@@ -28,7 +27,14 @@ public class Program {
 		builder.Services.AddDbContext<ServerContext>(options =>
 			options.UseNpgsql(connectionString));
 
-		builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+		builder.Services.AddCors(options => {
+			options.AddPolicy("AllowAnyOrigin",
+				builder => {
+					builder.AllowAnyOrigin()
+						.AllowAnyMethod()
+						.AllowAnyHeader();
+				});
+		});
 
 		builder.Services.AddAuthorization();
 
@@ -57,14 +63,7 @@ public class Program {
 			.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 		});
 
-		builder.Services.AddCors(options => {
-			options.AddPolicy("AllowAnyOrigin",
-				builder => {
-					builder.AllowAnyOrigin()
-						.AllowAnyMethod()
-						.AllowAnyHeader();
-				});
-		});
+		builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
 		builder.Services.AddControllersWithViews();
 
