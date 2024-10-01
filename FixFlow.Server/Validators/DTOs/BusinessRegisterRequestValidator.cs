@@ -5,8 +5,8 @@ using Server.Models.Utils;
 
 namespace Server.Validators.DTOs;
 
-public class BusinessRegisterValidator : AbstractValidator<BusinessRegisterRequest> {
-	public BusinessRegisterValidator() {
+public class BusinessRegisterRequestValidator : AbstractValidator<BusinessRegisterRequest> {
+	public BusinessRegisterRequestValidator() {
 		RuleFor(x => x.Name).Custom((name, context) => {
 			if (string.IsNullOrWhiteSpace(name)) {
 				context.AddFailure(ValidatorErrors.UsernameIsEmpty);

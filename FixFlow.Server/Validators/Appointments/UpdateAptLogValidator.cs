@@ -16,6 +16,6 @@ public class UpdateAptLogValidator : AbstractValidator<UpdateAptLog> {
 			.WithMessage(ValidatorErrors.DateMustBe2024orForward);
 		RuleFor(x => x.dateTime)
 			.LessThanOrEqualTo(DateTime.Now)
-			.WithMessage(ValidatorErrors.DateHasntPassedYet);
+			.WithMessage(ValidatorErrors.DateMustNotBeInTheFuture);
 	}
 }

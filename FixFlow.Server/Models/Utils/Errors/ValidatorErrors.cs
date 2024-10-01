@@ -9,11 +9,12 @@ public struct ValidatorErrors {
 
 	public static readonly string UnlistedService = "The Business only allows listed services.";
 	public static readonly string BusinessDayCountMustBe7 = "There must be exactly 7 business days";
+	public static readonly string BusinessDayStartMustBeLessThanFinish = "All Business Days start time must be less than End time.";
 	public static readonly string TimeNotWithinBusinessHours = "Time is not within Business Hours";
 
 	public static readonly string DateMustBe2024orForward = "Date must be from 2024 and earlier.";
 	public static readonly string DateIsTooFarInFuture = "Date is too far in the future.";
-	public static readonly string DateHasntPassedYet = "Date hasn't even passed yet!";
+	public static readonly string DateMustNotBeInTheFuture = "Date hasn't even passed yet!";
 	public static readonly string DateMustBeInTheFuture = "Date must be in the future.";
 	public static readonly string MinDateMustBeOlder = "MinDate must be older than MaxDate.";
 	public static readonly string MinDateIsGreaterThanMaxDate = "MinDate must be less than MaxDate.";

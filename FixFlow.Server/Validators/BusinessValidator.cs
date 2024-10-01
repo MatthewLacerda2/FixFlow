@@ -10,6 +10,6 @@ public class BusinessValidator : AbstractValidator<Business> {
 
 		RuleForEach(x => x.BusinessDays)
 			.Must(x => x.Start < x.Finish)
-			.WithMessage("All Business Days start time must be less than End time.");
+			.WithMessage(ValidatorErrors.BusinessDayStartMustBeLessThanFinish);
 	}
 }

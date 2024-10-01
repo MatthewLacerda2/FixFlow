@@ -16,7 +16,7 @@ public class CreateAptLogValidator : AbstractValidator<CreateAptLog> {
 			.WithMessage(ValidatorErrors.DateMustBe2024orForward);
 		RuleFor(x => x.dateTime)
 			.LessThanOrEqualTo(DateTime.Now)
-			.WithMessage(ValidatorErrors.DateHasntPassedYet);
+			.WithMessage(ValidatorErrors.DateMustNotBeInTheFuture);
 
 		RuleFor(x => x.whenShouldClientComeBack)
 			.GreaterThan(DateTime.Now.Date)
