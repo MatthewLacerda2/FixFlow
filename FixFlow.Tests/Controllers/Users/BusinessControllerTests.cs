@@ -250,7 +250,11 @@ public class BusinessControllerTests {
 		AptLog log = new AptLog(createAptLog);
 		AptContact contact = new AptContact(log, DateTime.Now);
 
-		_context.AddRange(client, contact, schedule, log);
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.Schedules.Add(schedule);
+		_context.Logs.Add(log);
+		_context.Contacts.Add(contact);
 		_context.SaveChanges();
 
 		// Act

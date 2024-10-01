@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace Server.Controllers;
 /// </remarks>
 [ApiController]
 [Route(Common.api_v1 + "logs")]
+[Authorize]
 [Produces("application/json")]
 public class AptLogController : ControllerBase {
 

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
@@ -17,6 +18,7 @@ namespace Server.Controllers;
 /// </remarks>
 [ApiController]
 [Route(Common.api_v1 + "schedules")]
+[Authorize]
 [Produces("application/json")]
 public class AptScheduleController : ControllerBase {
 

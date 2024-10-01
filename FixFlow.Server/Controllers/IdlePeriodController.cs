@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
@@ -12,6 +13,7 @@ namespace FixFlow.Server.Controllers.Users;
 /// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(IdlePeriod))]
+[Authorize]
 [Produces("application/json")]
 public class IdlePeriodController : ControllerBase {
 

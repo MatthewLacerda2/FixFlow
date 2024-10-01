@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Data;
 using Server.Models.DTO;
@@ -8,6 +9,7 @@ namespace Server.Controllers;
 
 [ApiController]
 [Route(Common.api_v1 + nameof(BusinessCalendarDay))]
+[Authorize]
 [Produces("application/json")]
 public class BusinessCalendarDayController : ControllerBase {
 

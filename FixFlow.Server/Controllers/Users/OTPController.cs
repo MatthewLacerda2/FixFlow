@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Server.Data;
 using Server.Models;
 using Server.Models.Utils;
-
+//TODO: check if the phonenumber is valid
 namespace FixFlow.Server.Controllers;
 
 /// <summary>
@@ -25,12 +25,12 @@ public class OTPController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[HttpPost]
 	public async Task<IActionResult> CreateBusinessOTP([FromBody] string phoneNumber) {
-
 		OTP otp = new OTP(phoneNumber);
 
-		_context.Add(otp);
+		_context.OTPs.Add(otp);
 		await _context.SaveChangesAsync();
 
 		return Ok();
 	}
+
 }

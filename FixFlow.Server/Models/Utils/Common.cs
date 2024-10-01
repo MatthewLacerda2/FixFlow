@@ -8,4 +8,6 @@ public static class Common {
 
 	public const int otpExpirationTimeInMinutes = 5;
 
+	public const int requestPerSecondLimit = 10;
+
 }
