@@ -8,13 +8,13 @@ namespace Server.Validators.DTOs;
 public class BusinessRegisterRequestValidator : AbstractValidator<BusinessRegisterRequest> {
 	public BusinessRegisterRequestValidator() {
 		RuleFor(x => x.Name).Custom((name, context) => {
-			if (string.IsNullOrWhiteSpace(name)) {
-				context.AddFailure(ValidatorErrors.UsernameIsEmpty);
+			if (StringChecker.IsFullNameValid(name) == false) {
+				context.AddFailure(ValidatorErrors.FullName);
 			}
 		});
 
 		RuleFor(x => x.Password).Custom((currentPassword, context) => {
-			if (currentPassword.Length < 8) {
+			if (currentPassword.Length < 7) {
 				context.AddFailure(ValidatorErrors.ShortPassword);
 			}
 
@@ -24,7 +24,5 @@ public class BusinessRegisterRequestValidator : AbstractValidator<BusinessRegist
 		});
 
 		RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithErrorCode(ValidatorErrors.ConfirmPassword);
-
-		RuleFor(x => x.CNPJ).Matches(@"^\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}$").WithMessage(ValidatorErrors.CNPJisInvalid);
 	}
 }

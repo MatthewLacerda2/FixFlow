@@ -11,5 +11,9 @@ public class BusinessValidator : AbstractValidator<Business> {
 		RuleForEach(x => x.BusinessDays)
 			.Must(x => x.Start < x.Finish)
 			.WithMessage(ValidatorErrors.BusinessDayStartMustBeLessThanFinish);
+
+		RuleFor(x => x.BusinessDays)
+			.Must(days => days.Any(day => day.IsOpen))
+			.WithMessage(ValidatorErrors.NoOpenBusinessDay);
 	}
 }

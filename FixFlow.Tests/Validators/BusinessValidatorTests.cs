@@ -45,17 +45,38 @@ namespace FixFlow.Tests.Validators {
 		}
 
 		[Fact]
-		public void Should_Not_Have_Error_When_BusinessDays_Are_Valid() {
+		public void Should_Have_Error_When_No_BusinessDay_Is_Open() {
 			var business = new Business {
 				BusinessDays = new List<BusinessDay>
 				{
-					new BusinessDay(),
-					new BusinessDay(),
-					new BusinessDay(),
-					new BusinessDay(),
-					new BusinessDay(),
-					new BusinessDay(),
-					new BusinessDay()
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = false }
+				}
+			};
+
+			var result = _validator.Validate(business);
+
+			Assert.False(result.IsValid);
+			Assert.Contains(result.Errors, e => e.ErrorMessage == ValidatorErrors.NoOpenBusinessDay);
+		}
+
+		[Fact]
+		public void Should_Not_Have_Error_When_At_Least_One_BusinessDay_Is_Open() {
+			var business = new Business {
+				BusinessDays = new List<BusinessDay>
+				{
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = true },
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = false },
+					new BusinessDay { IsOpen = false }
 				}
 			};
 

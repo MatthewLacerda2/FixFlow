@@ -6,12 +6,13 @@ public static class StringChecker {
 
 	static Regex uppercaseRegex = new Regex(@"[A-Z]");
 	static Regex lowercaseRegex = new Regex(@"[a-z]");
+	static Regex lettersAndSpacesRegex = new Regex(@"^[A-Za-z\s]+$");
 	static Regex numberRegex = new Regex(@"[0-9]");
 	static Regex specialCharRegex = new Regex(@"[^A-Za-z0-9]");
 
 	public static bool IsPasswordStrong(string password) {
 
-		if (password.Length < 8) {
+		if (password.Length < 7) {
 			return false;
 		}
 
@@ -24,20 +25,38 @@ public static class StringChecker {
 	}
 
 	public static bool IsFullNameValid(string entry) {
-		bool containsSpace = entry.Contains(" ");
-		bool hasLength = entry.Length >= 5;
-		bool lettersAndSpacesOnly = uppercaseRegex.IsMatch(entry) || lowercaseRegex.IsMatch(entry);
-		bool noNumbers = numberRegex.IsMatch(entry) == false;
-		bool noSpecialCharRegex = specialCharRegex.IsMatch(entry) == false;
+		Regex fullNameRegex = new Regex(@"^[A-Za-z]+(\s[A-Za-z]+)+$");
 
-		return containsSpace && hasLength && lettersAndSpacesOnly && noNumbers && noSpecialCharRegex;
+		bool hasLength = entry.Length >= 5;
+		bool isValid = fullNameRegex.IsMatch(entry);
+
+		return hasLength && isValid;
 	}
 
-	public static bool isCPFvalid(string entry) {
-		bool containsSpace = entry.Contains(" ") == false;
-		bool hasLength = entry.Length == 14;
-		bool noLetters = uppercaseRegex.IsMatch(entry) == false && lowercaseRegex.IsMatch(entry) == false;
 
-		return containsSpace && hasLength && noLetters;
+	public static bool isCPFvalid(string entry) {
+		if (entry.Length != 14) {
+			return false;
+		}
+
+		for (int i = 0; i < entry.Length; i++) {
+			if (i == 3 || i == 7) {
+				if (entry[i] != '.') {
+					return false;
+				}
+			}
+			else if (i == 11) {
+				if (entry[i] != '-') {
+					return false;
+				}
+			}
+			else {
+				if (!char.IsDigit(entry[i])) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 }
