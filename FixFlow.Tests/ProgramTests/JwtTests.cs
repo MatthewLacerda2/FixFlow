@@ -44,7 +44,7 @@ public class JwtTests : IClassFixture<WebApplicationFactory<Program>> {
 	}
 
 	private string GenerateJwtToken() {
-		var key = Encoding.UTF32.GetBytes("xpvista7810");
+		var key = Encoding.UTF8.GetBytes("VeryLongSecretKey123456789012345678901234567890123456789012345678901234567890");
 
 		var claims = new List<Claim> {
 			new Claim(ClaimTypes.Name, "Test Business"),
@@ -57,7 +57,7 @@ public class JwtTests : IClassFixture<WebApplicationFactory<Program>> {
 			Expires = DateTime.UtcNow.AddMinutes(Common.tokenExpirationTimeInMinutes),
 			Issuer = "Flow",
 			Audience = "user",
-			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
 		};
 
 		var tokenHandler = new JwtSecurityTokenHandler();

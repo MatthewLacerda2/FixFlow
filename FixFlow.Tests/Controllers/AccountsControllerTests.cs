@@ -77,7 +77,7 @@ public class AccountsControllerTests {
 		_mockUserManager.Setup(x => x.FindByEmailAsync(loginRequest.email)).ReturnsAsync(business);
 		_mockSignInManager.Setup(x => x.PasswordSignInAsync(business, loginRequest.password, true, false))
 			.ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
-		_mockConfiguration.Setup(x => x["Jwt:SecretKey"]).Returns("VerySecretKey");
+		_mockConfiguration.Setup(x => x["Jwt:SecretKey"]).Returns("VeryLongSecretKey123456789012345678901234567890123456789012345678901234567890");
 
 		// Act
 		var result = await _controller.Login(loginRequest);

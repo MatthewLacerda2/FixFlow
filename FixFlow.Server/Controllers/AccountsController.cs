@@ -65,11 +65,11 @@ public class AccountsController : ControllerBase {
 			new Claim(ClaimTypes.Email, business.Email!),
 			new Claim("businessId", business.Id)
 		};
-		var key = Encoding.UTF32.GetBytes(_configuration["Jwt:SecretKey"]!);
+		var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!);
 		var tokenDescriptor = new SecurityTokenDescriptor {
 			Subject = new ClaimsIdentity(claims),
 			Expires = DateTime.UtcNow.AddMinutes(Common.tokenExpirationTimeInMinutes),
-			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
 		};
 
 		var tokenHandler = new JwtSecurityTokenHandler();
