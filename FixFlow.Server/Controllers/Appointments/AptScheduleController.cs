@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
-using Server.Models.DTO;
 using Server.Models.Erros;
 using Server.Models.Filters;
 using Server.Models.Utils;
@@ -131,7 +130,7 @@ public class AptScheduleController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpPut]
+	[HttpPatch]
 	public async Task<IActionResult> UpdateSchedule([FromBody] AptSchedule upSchedule) {
 
 		var existingAppointment = _context.Schedules.Find(upSchedule.Id);
@@ -160,9 +159,11 @@ public class AptScheduleController : ControllerBase {
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
-		upSchedule.WasContacted = contact != null;
+		existingAppointment.WasContacted = contact != null;
+		existingAppointment.dateTime = upSchedule.dateTime;
+		existingAppointment.Service = upSchedule.Service;
+		existingAppointment.observation = upSchedule.observation;
 
-		_context.Schedules.Update(upSchedule);
 		await _context.SaveChangesAsync();
 
 		return Ok(upSchedule);

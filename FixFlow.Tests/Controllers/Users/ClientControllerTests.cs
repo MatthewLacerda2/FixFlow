@@ -4,7 +4,6 @@ using Moq;
 using Server.Controllers;
 using Server.Data;
 using Server.Models;
-using Server.Models.Appointments;
 using Server.Models.DTO;
 using Server.Models.Erros;
 

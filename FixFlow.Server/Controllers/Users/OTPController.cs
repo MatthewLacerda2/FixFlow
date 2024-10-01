@@ -21,9 +21,9 @@ public class OTPController : ControllerBase {
 
 	/// <summary>
 	/// Creates an OTP for when creating a Business
-	/// </summary>
-	[HttpPost]
+	/// </summary>	
 	[ProducesResponseType(StatusCodes.Status200OK)]
+	[HttpPost]
 	public async Task<IActionResult> CreateBusinessOTP([FromBody] string phoneNumber) {
 
 		OTP otp = new OTP(phoneNumber);

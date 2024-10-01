@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
@@ -25,8 +24,8 @@ public class IdlePeriodController : ControllerBase {
 	/// <summary>
 	/// Returns all Idle Periods that contain the given date
 	/// </summary>
-	[HttpGet]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod[]))]
+	[HttpGet]
 	public async Task<IActionResult> GetIdlePeriodsAtDate([FromBody] BusinessIdlePeriodsRequest period) {
 
 		var business = _context.Business.Find(period.BusinessId);
@@ -47,9 +46,9 @@ public class IdlePeriodController : ControllerBase {
 	/// <remarks>
 	/// Idle Periods are allowed to overlap
 	/// </remarks>
-	[HttpPost]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+	[HttpPost]
 	public async Task<IActionResult> CreateIdlePeriod([FromBody] IdlePeriod idlePeriod) {
 
 		if (_context.Business.Find(idlePeriod.BusinessId) == null) {
@@ -71,9 +70,9 @@ public class IdlePeriodController : ControllerBase {
 	/// <summary>
 	/// Removes Idle days
 	/// </summary>
-	[HttpDelete]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+	[HttpDelete]
 	public async Task<IActionResult> RemoveIdlePeriod([FromBody] string idlePeriodId) {
 
 		var idlePeriod = _context.IdlePeriods.Find(idlePeriodId);

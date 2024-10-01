@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using Server.Models.Appointments;
-using Server.Models.DTO;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext {

@@ -137,7 +137,7 @@ public class AptLogController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpPut]
+	[HttpPatch]
 	public async Task<IActionResult> UpdateLog([FromBody] UpdateAptLog upLog) {
 
 		var existingLog = _context.Logs.Find(upLog.Id);

@@ -1,11 +1,8 @@
-using Bogus.DataSets;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
 using Server.Controllers;
 using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
-using Server.Models.DTO;
 using Server.Models.Erros;
 using Server.Models.Filters;
 
@@ -209,7 +206,107 @@ public class AptScheduleControllerTests {
 		Assert.Equal(newAppointment.Observation, createdSchedule.observation);
 	}
 
-	//TODO: Update tests
+	[Fact]
+	public async Task UpdateSchedule_ReturnsBadRequest_WhenScheduleDoesNotExist() {
+		// Arrange
+		var upSchedule = new AptSchedule("client-id", "business-id", DateTime.Now.AddDays(1), 100, null);
+
+		// Act
+		var result = await _controller.UpdateSchedule(upSchedule) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(NotExistErrors.AptSchedule, result.Value);
+	}
+
+	[Fact]
+	public async Task UpdateSchedule_ReturnsBadRequest_WhenServiceIsUnlisted() {
+		// Arrange
+		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
+			allowListedServicesOnly = true,
+			services = ["Service 1", "Service 2"]
+		};
+		var client = new Client(business.Id, "789456123", "fulano da silva", null, null, null);
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(1), 100, "Service 1");
+
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.Schedules.Add(schedule);
+		_context.SaveChanges();
+
+		var upSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(2), 100, "Option 3");
+		upSchedule.Id = schedule.Id;
+
+		// Act
+		var result = await _controller.UpdateSchedule(upSchedule) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(ValidatorErrors.UnlistedService, result.Value);
+	}
+
+	[Fact]
+	public async Task UpdateSchedule_ReturnsBadRequest_WhenDateWithinIdlePeriod() {
+		// Arrange
+		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
+			allowListedServicesOnly = false
+		};
+		var client = new Client(business.Id, "789456123", "fulano da silva", null, null, null);
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(1), 100, "Service 1");
+		var idlePeriod = new IdlePeriod(business.Id, DateTime.Now, DateTime.Now.AddDays(2), "Test");
+
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.Schedules.Add(schedule);
+		_context.IdlePeriods.Add(idlePeriod);
+		_context.SaveChanges();
+
+		var upSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddHours(1), 150, "Service 2");
+		upSchedule.Id = schedule.Id;
+
+		// Act
+		var result = await _controller.UpdateSchedule(upSchedule) as BadRequestObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(400, result!.StatusCode);
+		Assert.Equal(ValidatorErrors.DateWithinIdlePeriod, result.Value);
+	}
+
+	[Fact]
+	public async Task UpdateSchedule_ReturnsOk_WhenUpdateIsSuccessful() {
+		// Arrange
+		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
+			allowListedServicesOnly = true,
+			services = ["Service 1", "Service 2"]
+		};
+		var client = new Client(business.Id, "789456123", "fulano da silva", null, null, null);
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(1), 100, "Service 1");
+
+		_context.Business.Add(business);
+		_context.Clients.Add(client);
+		_context.Schedules.Add(schedule);
+		_context.SaveChanges();
+
+		var upSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(2), 150, "Service 2");
+		upSchedule.Id = schedule.Id;
+
+		// Act
+		var result = await _controller.UpdateSchedule(upSchedule) as OkObjectResult;
+
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(200, result!.StatusCode);
+		var updatedSchedule = result.Value as AptSchedule;
+		Assert.NotNull(updatedSchedule);
+		Assert.Equal(upSchedule.ClientId, updatedSchedule!.ClientId);
+		Assert.Equal(upSchedule.BusinessId, updatedSchedule.BusinessId);
+		Assert.Equal(upSchedule.dateTime, updatedSchedule.dateTime);
+		Assert.Equal(upSchedule.Price, updatedSchedule.Price);
+		Assert.Equal(upSchedule.Service, updatedSchedule.Service);
+	}
 
 	[Fact]
 	public async Task DeleteSchedule_ReturnsBadRequest_WhenScheduleDoesNotExist() {
