@@ -26,11 +26,11 @@ public static class StringChecker {
 
 	public static bool IsFullNameValid(string entry) {
 		bool hasLength = entry.Length >= 5;
+		bool hasSpace = entry.Contains(" ");
 		bool isValid = fullNameRegex.IsMatch(entry);
 
 		return hasLength && isValid;
 	}
-
 
 	public static bool isCPFvalid(string entry) {
 		if (entry.Length != 14) {
