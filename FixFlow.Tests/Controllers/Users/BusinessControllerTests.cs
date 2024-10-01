@@ -27,6 +27,20 @@ public class BusinessControllerTests {
 	}
 
 	[Fact]
+	public async Task GetBusiness_ReturnsBadRequest_WhenBusinessDoesNotExist() {
+		// Arrange
+		var businessId = "non-existent-business-id";
+		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync((Business)null!);
+
+		// Act
+		var result = await _controller.GetBusiness(businessId);
+
+		// Assert
+		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+	}
+
+	[Fact]
 	public async Task GetBusiness_ReturnsOkResult_WhenBusinessExists() {
 		// Arrange
 		var businessId = "test-business-id";
