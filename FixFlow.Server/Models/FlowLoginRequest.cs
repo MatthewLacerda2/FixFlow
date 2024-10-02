@@ -4,24 +4,18 @@ namespace Server.Models;
 
 public class FlowLoginRequest {
 
-	public string UserName { get; set; }
-
+	[Required]
 	[EmailAddress]
-	public string Email { get; set; } = string.Empty;
+	public string email { get; set; }
 
 	[Required]
 	[MinLength(7)]
 	public string password { get; set; }
 
-	public FlowLoginRequest(string _username, string _password) {
-		UserName = _username;
-		password = _password;
-	}
+	public FlowLoginRequest() : this(string.Empty, string.Empty) { }
 
-	public FlowLoginRequest(string _username, string _email, string _password, string _newPassword) {
-		UserName = _username;
-		Email = _email;
-		password = _password;
+	public FlowLoginRequest(string email, string password) {
+		this.email = email;
+		this.password = password;
 	}
-
 }

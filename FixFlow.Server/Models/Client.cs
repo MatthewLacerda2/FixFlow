@@ -1,55 +1,50 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Server.Models.DTO;
-//TODO: considerar quando o cliente é outra empresa
+
 namespace Server.Models;
 
 public class Client : IdentityUser {
-	public DateTime CreatedDate { get; set; }
-	public DateTime LastLogin { get; set; }
-	public string FullName { get; set; }
-	public string? CPF { get; set; }
-
-	public string? additionalNote { get; set; }
 
 	/// <summary>
-	/// Whether or not the Account was registered by a Client
-	/// 
-	/// If not, this value is false,
-	/// thus Client didn't insert a password and this account is not supposed to be logged in
+	/// The business from which the Client is a customer
 	/// </summary>
-	public bool signedUp { get; set; }
+	[Required]
+	public string BusinessId { get; set; }
 
-	public Client() {
-		CreatedDate = DateTime.Now;
-		LastLogin = DateTime.Now;
+	[Required]
+	[MinLength(5)]
+	public string FullName { get; set; }
 
-		FullName = string.Empty;
-	}
+	/// <summary>
+	/// CPF. Must be on format XXX.XXX.XXX-XX
+	/// </summary>
+	[Length(14, 14)]
+	public string? CPF { get; set; }
 
-	public Client(string fullname, string cpf, string _additionalNote, string _phoneNumber, string _email, bool _signedup) {
-		CreatedDate = DateTime.Now;
-		LastLogin = DateTime.Now;
+	public string? AdditionalNote { get; set; }
 
-		FullName = fullname;
+	public Client() : this(string.Empty, string.Empty, string.Empty, null, null, null) { }
+
+	public Client(string businessId, string phoneNumber, string fullName, string? email, string? cpf, string? additionalNote) {
+		Id = Guid.NewGuid().ToString();
+		BusinessId = businessId;
+		PhoneNumber = phoneNumber;
+		FullName = fullName;
+		Email = email;
 		CPF = cpf;
-		additionalNote = _additionalNote;
-
-		PhoneNumber = _phoneNumber;
-		Email = _email;
-
-		signedUp = _signedup;
+		AdditionalNote = additionalNote;
 	}
 
-	public Client(ClientRegister register) {
-		CreatedDate = DateTime.Now;
-		LastLogin = DateTime.Now;
-
-		FullName = register.FullName;
-		CPF = register.CPF;
-		additionalNote = register.additionalNote;
-
-		signedUp = register.signedUp;
-		PhoneNumber = register.PhoneNumber;
-		signedUp = register.signedUp;
+	public static explicit operator Client(ClientCreate clientCreate) {
+		return new Client
+		(
+			clientCreate.BusinessId,
+			clientCreate.PhoneNumber,
+			clientCreate.FullName,
+			clientCreate.Email,
+			clientCreate.CPF,
+			clientCreate.additionalNote
+		);
 	}
 }

@@ -2,12 +2,12 @@ namespace Server.Models.Utils;
 
 public static class Common {
 
-	public const string Client_Token = "Client_Token";
-	public const string Business_Token = "Business_Token";
+	public const string api_v1 = "api/v1/";
 
-	public const string Client_Role = "Client_Role";
-	public const string Business_Role = "Business_Role";
+	public const int tokenExpirationTimeInMinutes = 90;
 
-	public const string api_route = "api/v1/";
+	public const int otpExpirationTimeInMinutes = 5;
+
+	public const int requestPerSecondLimit = 10;
 
 }

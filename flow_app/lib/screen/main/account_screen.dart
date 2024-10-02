@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../AppConfig/account_option.dart';
 import '../AppConfig/create_idle_period_screen.dart';
+import '../AppConfig/option_item.dart';
 import '../intro/introduction_screen.dart';
 import 'account/about_screen.dart';
 import 'account/app_config_screen.dart';
@@ -38,10 +38,8 @@ class AccountScreen extends StatelessWidget {
               'email@example.com',
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
-            const SizedBox(height: 12),
-            const Divider(),
-            const SizedBox(height: 6),
-            AccountOption(
+            const SizedBox(height: 14),
+            OptionItem(
               title: 'Configurações da Conta',
               onTap: () {
                 Navigator.push(
@@ -52,7 +50,7 @@ class AccountScreen extends StatelessWidget {
                 );
               },
             ),
-            AccountOption(
+            OptionItem(
               title: 'Instruções do app',
               onTap: () {
                 Navigator.push(
@@ -63,7 +61,7 @@ class AccountScreen extends StatelessWidget {
                 );
               },
             ),
-            AccountOption(
+            OptionItem(
               title: 'Contato',
               onTap: () {
                 Navigator.push(
@@ -73,7 +71,7 @@ class AccountScreen extends StatelessWidget {
                 );
               },
             ),
-            AccountOption(
+            OptionItem(
               title: 'Criar período ocioso',
               titleStyle: const TextStyle(
                   color: Colors.green, fontWeight: FontWeight.bold),

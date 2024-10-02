@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 namespace Server.Models.Appointments;
 
 public class AptContact {
+
 	[Required]
 	public string Id { get; set; }
 
@@ -13,7 +14,7 @@ public class AptContact {
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Models.Client))]
-	public string clientId { get; set; }
+	public string ClientId { get; set; }
 
 	/// <summary>
 	/// Navigation Property of the Client
@@ -25,14 +26,8 @@ public class AptContact {
 	/// The Id of the Business who owns this Contact
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Models.Business))]
+	[ForeignKey(nameof(Business))]
 	public string businessId { get; set; }
-
-	/// <summary>
-	/// Navigation Property of the Business
-	/// </summary>
-	[JsonIgnore]
-	public Business Business { get; set; }
 
 	/// <summary>
 	/// The Id of the Log that precedes this Contact
@@ -42,7 +37,7 @@ public class AptContact {
 	public string aptLogId { get; set; }
 
 	/// <summary>
-	/// Navigation Property of the Log
+	/// Navigation Property of the AptLog
 	/// </summary>
 	[JsonIgnore]
 	public AptLog aptLog { get; set; }
@@ -51,26 +46,24 @@ public class AptContact {
 	/// The Date to Contact the Client
 	/// The Time is used because, chances are, there is a better Time of the day to contact the Client
 	/// </summary>
-	public DateTime dateTime { get; set; } = DateTime.Now;
+	public DateTime dateTime { get; set; }
 
 	public AptContact() {
 		Id = Guid.NewGuid().ToString();
-		clientId = string.Empty;
-		Client = null!;
+		ClientId = string.Empty;
 		aptLogId = string.Empty;
-		aptLog = null!;
 		businessId = string.Empty;
-		Business = null!;
+		Client = null!;
+		aptLog = null!;
 	}
 
-	public AptContact(string _clientId, string _businessId, string _prevAppoint, DateTime _dateTime) {
+	public AptContact(AptLog log, DateTime dateTime) {
 		Id = Guid.NewGuid().ToString();
-		clientId = _clientId;
-		businessId = _businessId;
-		aptLogId = _prevAppoint;
+		ClientId = log.ClientId;
+		businessId = log.BusinessId;
+		aptLogId = log.Id;
+		this.dateTime = dateTime;
 		Client = null!;
-		Business = null!;
-		aptLog = null!;
-		dateTime = _dateTime;
+		aptLog = log;
 	}
 }

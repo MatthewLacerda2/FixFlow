@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../Overview/Clients/clients_screen.dart';
+import '../Overview/calendar_screen.dart';
 import '../Overview/notifications_screen.dart';
 
 class OverviewScreen extends StatelessWidget {
@@ -127,11 +128,17 @@ class OverviewScreen extends StatelessWidget {
                   backgroundColor: Colors.blueAccent,
                   width: 130,
                   onPressed: () {
-                    // TODO: Navigate to Estatísticas Screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const CalendarScreen(),
+                      ),
+                    );
                   },
                 ),
                 const SizedBox(height: 22),
-                const Text('Ver todos',
+                const Text('Informações',
                     style:
                         TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),

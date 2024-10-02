@@ -4,7 +4,6 @@ import '../../../components/Buttons/colored_border_text_button.dart';
 import '../../../components/logs_list.dart';
 import '../../apts/log_screen.dart';
 
-//TODO:Expanded area doesn't scroll the page
 class ClientScreen extends StatelessWidget {
   const ClientScreen({super.key});
 
@@ -49,12 +48,12 @@ class ClientScreen extends StatelessWidget {
               'Anotação: Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
               style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
             Container(
               height: 10,
               color: Colors.grey.shade800,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             const Text(
               'Agendamentos: 10',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -64,11 +63,27 @@ class ClientScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 2),
+            const Row(
+              children: <Widget>[
+                Text(
+                  'Total gasto: ',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'R\$1510',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue),
+                )
+              ],
+            ),
+            const SizedBox(height: 2),
             const Text(
               'Tempo médio de retorno: 90 dias',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 24),
             Container(
               height: 1,
               color: Colors.grey,

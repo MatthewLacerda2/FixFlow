@@ -33,7 +33,7 @@ class ContactScreenState extends State<ContactScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contato'),
+        title: const Text('Editar Lembrete'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../components/Inputs/CPF_input_field.dart';
 import '../components/Inputs/check_input_field.dart';
 import '../components/Inputs/cnpj_input_field.dart';
-import '../components/Inputs/cpf_input_field.dart';
 import '../components/Inputs/date_picker_rectangle.dart';
 import '../components/Inputs/email_input_field.dart';
 import '../components/Inputs/name_input_field.dart';

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 namespace Server.Models.Appointments;
 
 public class AptLog {
+
 	[Required]
 	public string Id { get; set; }
 
@@ -13,7 +14,7 @@ public class AptLog {
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Models.Client))]
-	public string clientId { get; set; }
+	public string ClientId { get; set; }
 
 	/// <summary>
 	/// Navigation Property of the Client
@@ -25,54 +26,43 @@ public class AptLog {
 	/// The Id of the Business who owns this Contact
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Models.Business))]
-	public string businessId { get; set; }
-
-	/// <summary>
-	/// Navigation Property of the Business
-	/// </summary>
-	[JsonIgnore]
-	public Business Business { get; set; }
+	[ForeignKey(nameof(Business))]
+	public string BusinessId { get; set; }
 
 	/// <summary>
 	/// The Id of the Schedule that precedes this Log, if any
 	/// </summary>
 	[ForeignKey(nameof(AptSchedule))]
-	public string? scheduleId { get; set; }
-
-	/// <summary>
-	/// Navigation Property of the Schedule
-	/// </summary>
-	[JsonIgnore]
-	public AptSchedule? Schedule { get; set; }
+	public string? ScheduleId { get; set; }
 
 	/// <summary>
 	/// The DateTime when the Log was registered
 	/// </summary>
 	public DateTime dateTime { get; set; } = DateTime.Now;
 
-	public float price { get; set; }
+	public string? Service { get; set; }
 
-	/// <summary>
-	/// Special information about the Appointment, if applicable
-	/// </summary>
-	/// <value></value>
-	public string? observation { get; set; }
+	public float Price { get; set; }
+
+	public string? description { get; set; }
 
 	public AptLog() {
 		Id = Guid.NewGuid().ToString();
-		clientId = string.Empty;
+		ClientId = string.Empty;
+		BusinessId = string.Empty;
 		Client = null!;
-		businessId = string.Empty;
-		Business = null!;
 	}
 
-	public AptLog(string _clientId, string _businessId, float _price) {
+	public AptLog(CreateAptLog newLog) {
 		Id = Guid.NewGuid().ToString();
-		clientId = _clientId;
-		businessId = _businessId;
+		ClientId = newLog.ClientId;
+		BusinessId = newLog.BusinessId;
+		ScheduleId = newLog.scheduleId;
+		Service = newLog.Service;
+
+		this.dateTime = newLog.dateTime;
+		this.Price = newLog.price;
+		this.description = newLog.description;
 		Client = null!;
-		Business = null!;
-		price = _price;
 	}
 }

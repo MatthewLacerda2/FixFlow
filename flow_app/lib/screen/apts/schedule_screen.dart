@@ -71,7 +71,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Agendamento'),
+        title: const Text('Editar Agendamento'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -102,23 +102,27 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             ),
             const SizedBox(height: 24),
             Row(
-              children: <Widget>[
-                Expanded(
-                  child: DatePickerRectangle(
-                    initialDate: widget.dia,
-                    onDateSelected: (DateTime date) {
-                      _toggleEdit();
-                    },
-                  ),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[                
+                const Text(
+                  'Dia:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: TimePickerRectangle(
-                    initialTime: widget.horario,
-                    onTimeSelected: (TimeOfDay time) {
-                      _toggleEdit();
-                    },
-                  ),
+                DatePickerRectangle(
+                  initialDate: widget.dia,
+                  onDateSelected: (DateTime date) {
+                    _toggleEdit();
+                  },
+                ),
+                const Text(
+                  'Hora:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                TimePickerRectangle(
+                  initialTime: widget.horario,
+                  onTimeSelected: (TimeOfDay time) {
+                    _toggleEdit();
+                  },
                 ),
               ],
             ),

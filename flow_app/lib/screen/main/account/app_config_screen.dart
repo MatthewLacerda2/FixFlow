@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../components/Buttons/colored_border_text_button.dart';
 import '../../../components/Buttons/custom_button.dart';
 import '../../../components/Inputs/check_input_field.dart';
 import '../../../components/Inputs/enum_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
 import '../../../components/warning_modal.dart';
-import '../../AppConfig/change_password/change_password_screen.dart';
 import '../../AppConfig/change_phone/change_phone_screen.dart';
 import '../../AppConfig/deactivate_account/deactivate_account_screen.dart';
 import '../../AppConfig/delete_account/delete_warning_screen.dart';
+import '../../AppConfig/option_item.dart';
 import '../../auth/initial_screen.dart';
 
 //TODO: gotta load the account configs
@@ -23,7 +22,7 @@ class AppConfigScreen extends StatelessWidget {
         title: const Text('Configurações da Conta'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,6 +49,7 @@ class AppConfigScreen extends StatelessWidget {
                 height: 10,
                 color: Colors.grey.shade800,
               ),
+              
               const SizedBox(height: 32),
               const Text(
                 'Opções de Serviços',
@@ -79,14 +79,6 @@ class AppConfigScreen extends StatelessWidget {
                 initialValue: false,
                 onChanged: (bool isChecked) {
                   print('Atende aos feriados: $isChecked');
-                },
-              ),
-              const SizedBox(height: 16),
-              CheckInputField(
-                label: 'Atende a domicílio?',
-                initialValue: false,
-                onChanged: (bool isChecked) {
-                  print('Atende a domicílio: $isChecked');
                 },
               ),
               // TODO: handle google calendar, simultaneous appointments
@@ -124,35 +116,33 @@ class AppConfigScreen extends StatelessWidget {
                   print('Notificar novos atendimentos: $isChecked');
                 },
               ),
-              const SizedBox(height: 24),
-              ColoredBorderTextButton(
-                text: 'Trocar telefone',
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              const ChangePhoneScreen()));
-                },
-                textColor: Colors.green,
+              const SizedBox(height: 32),
+              Container(
+                height: 10,
+                color: Colors.grey.shade800,
               ),
-              const SizedBox(height: 16),
-              ColoredBorderTextButton(
-                text: 'Trocar senha',
-                onPressed: () {
+              OptionItem(
+                title: 'Trocar telefone',
+                titleStyle: const TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
                         builder: (BuildContext context) =>
-                            const ChangePasswordScreen()),
+                            const ChangePhoneScreen()),
                   );
                 },
-                textColor: Colors.blue,
               ),
-              const SizedBox(height: 16),
-              ColoredBorderTextButton(
-                text: 'Desativar conta',
-                onPressed: () {
+              OptionItem(
+                title: 'Desativar conta',
+                titleStyle: TextStyle(
+                    color: Colors.grey[850]!,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
@@ -160,26 +150,29 @@ class AppConfigScreen extends StatelessWidget {
                             const DeactivateAccountScreen()),
                   );
                 },
-                textColor: Colors.grey[850]!,
               ),
-              const SizedBox(height: 16),
-              ColoredBorderTextButton(
-                text: 'Deletar conta',
-                onPressed: () {
+              OptionItem(
+                title: 'Deletar conta',
+                titleStyle: TextStyle(
+                    color: Colors.red[900]!,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          const DeleteWarningScreen(),
-                    ),
+                        builder: (BuildContext context) =>
+                            const DeleteWarningScreen()),
                   );
                 },
-                textColor: Colors.red[900]!,
               ),
-              const SizedBox(height: 16),
-              ColoredBorderTextButton(
-                text: 'Sair',
-                onPressed: () {
+              OptionItem(
+                title: 'Sair',
+                titleStyle: TextStyle(
+                    color: Colors.red[900]!,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+                onTap: () {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -213,9 +206,8 @@ class AppConfigScreen extends StatelessWidget {
                     },
                   );
                 },
-                textColor: Colors.red[500]!,
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 48),
             ],
           ),
         ),

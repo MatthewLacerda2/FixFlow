@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 namespace Server.Models.Appointments;
 
 public class AptSchedule {
+
 	[Required]
 	public string Id { get; set; }
 
@@ -13,7 +14,7 @@ public class AptSchedule {
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Models.Client))]
-	public string clientId { get; set; }
+	public string ClientId { get; set; }
 
 	/// <summary>
 	/// Navigation Property of the Client
@@ -25,50 +26,42 @@ public class AptSchedule {
 	/// The Id of the Business who owns this Contact
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Models.Business))]
-	public string businessId { get; set; }
+	[ForeignKey(nameof(Business))]
+	public string BusinessId { get; set; }
 
-	/// <summary>
-	/// Navigation Property of the Business
-	/// </summary>
-	[JsonIgnore]
-	public Business Business { get; set; }
-
-	/// <summary>
-	/// The Id of the Contact that precedes this Schedule, if any
-	/// </summary>
-	[ForeignKey(nameof(AptContact))]
-	public string? contactId { get; set; }
-
-	/// <summary>
-	/// Navigation Property of the Contact
-	/// </summary>
-	[JsonIgnore]
-	public AptContact? Contact { get; set; }
+	public bool WasContacted { get; set; }
 
 	/// <summary>
 	/// The scheduled DateTime of the Appointment
 	/// </summary>
 	public DateTime dateTime { get; set; }
 
+	public string? Service { get; set; }
+
 	public string? observation { get; set; }
 
-	public AptSchedule() {
+	public float Price { get; set; }
+
+	public AptSchedule() : this(string.Empty, string.Empty, DateTime.Now, 0, null) { }
+
+	public AptSchedule(string clientId, string businessId, DateTime dateTime, float price, string? service) {
 		Id = Guid.NewGuid().ToString();
-		clientId = string.Empty;
+		ClientId = clientId;
+		BusinessId = businessId;
+		this.dateTime = dateTime;
+		this.Price = price;
+		this.Service = service;
 		Client = null!;
-		Contact = null!;
-		businessId = string.Empty;
-		Business = null!;
 	}
 
-	public AptSchedule(string _clientId, string _businessId, DateTime _dateTime) {
+	public AptSchedule(CreateAptSchedule createSchedule, string businessId, bool wasContacted) {
 		Id = Guid.NewGuid().ToString();
-		clientId = _clientId;
-		businessId = _businessId;
+		BusinessId = businessId;
+		ClientId = createSchedule.ClientId;
+		this.dateTime = createSchedule.dateTime;
+		this.Service = createSchedule.Service;
+		this.Price = createSchedule.Price;
+		WasContacted = wasContacted;
 		Client = null!;
-		Contact = null!;
-		dateTime = _dateTime;
-		Business = null!;
 	}
 }
