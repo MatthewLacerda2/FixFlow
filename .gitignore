@@ -48,10 +48,6 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-# React specific rules
-/frontend/build/
-/frontend/node_modules/
-
 # .NET WebAPI specific rules
 /FixFlow.Server/Migrations/
 /FixFlow.Server/bin/

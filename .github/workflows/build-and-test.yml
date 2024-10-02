@@ -6,7 +6,6 @@ on:
     paths:
       - "**/*.cs"
       - "**/*.csproj"
-      - "fixflow.client/**"
       - "flow_app/**"
 
 jobs:
