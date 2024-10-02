@@ -46,7 +46,7 @@ public class AptContact {
 	/// The Date to Contact the Client
 	/// The Time is used because, chances are, there is a better Time of the day to contact the Client
 	/// </summary>
-	public DateTime dateTime { get; set; } = DateTime.Now;
+	public DateTime dateTime { get; set; }
 
 	public AptContact() {
 		Id = Guid.NewGuid().ToString();
@@ -59,9 +59,9 @@ public class AptContact {
 
 	public AptContact(AptLog log, DateTime dateTime) {
 		Id = Guid.NewGuid().ToString();
-		this.ClientId = log.ClientId;
-		this.businessId = log.BusinessId;
-		this.aptLogId = log.Id;
+		ClientId = log.ClientId;
+		businessId = log.BusinessId;
+		aptLogId = log.Id;
 		this.dateTime = dateTime;
 		Client = null!;
 		aptLog = log;

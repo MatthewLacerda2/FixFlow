@@ -29,7 +29,7 @@ public static class StringChecker {
 		bool hasSpace = entry.Contains(" ");
 		bool isValid = fullNameRegex.IsMatch(entry);
 
-		return hasLength && isValid;
+		return hasLength && isValid && hasSpace;
 	}
 
 	public static bool isCPFvalid(string entry) {

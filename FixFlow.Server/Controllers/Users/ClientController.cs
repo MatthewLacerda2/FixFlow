@@ -53,7 +53,7 @@ public class ClientController : ControllerBase {
 			clientRecord.firstLog = lastLog.dateTime;
 		}
 
-		clientRecord.logs = _context.Logs.Where(x => x.ClientId == clientId).ToArray();
+		clientRecord.logs = _context.Logs.Where(x => x.ClientId == clientId).OrderBy(x => x.dateTime).ToArray();
 
 		clientRecord.numSchedules = _context.Schedules.Where(x => x.ClientId == clientId).Count();
 
