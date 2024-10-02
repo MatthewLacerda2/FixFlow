@@ -3,7 +3,7 @@ using Server.Data;
 using Server.Models;
 using Server.Models.Erros;
 using Server.Models.Utils;
-//TODO: check if the phonenumber is valid
+
 namespace FixFlow.Server.Controllers;
 
 /// <summary>
@@ -39,5 +39,4 @@ public class OTPController : ControllerBase {
 
 		return Ok();
 	}
-
 }

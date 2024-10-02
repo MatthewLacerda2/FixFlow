@@ -87,5 +87,4 @@ public class AccountsControllerTests {
 		Assert.NotNull(okResult.Value); // Assuming GenerateToken() returns a string token.
 		Assert.IsType<string>(okResult.Value);
 	}
-
 }

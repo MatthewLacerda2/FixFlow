@@ -78,9 +78,6 @@ public class AccountsController : ControllerBase {
 		return tokenHandler.WriteToken(token);
 	}
 
-	/// <summary>
-	/// Logout method
-	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[Authorize]

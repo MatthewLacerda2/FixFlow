@@ -119,12 +119,15 @@ public class AptLogController : ControllerBase {
 		AptLog newLog = new AptLog(createLog);
 
 		AptSchedule aptSchedule = _context.Schedules.Where(x => x.ClientId == createLog.ClientId)
-								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
+								.Where(x => x.dateTime.Date == DateTime.Now.Date)
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
 		newLog.ScheduleId = aptSchedule.Id;
 
 		AptContact contact = new AptContact(newLog, createLog.whenShouldClientComeBack);
+		if (contact.dateTime.TimeOfDay > new TimeSpan(18, 0, 0)) {
+			contact.dateTime = contact.dateTime.Date.AddHours(12);
+		}
 		if (contact.dateTime.DayOfWeek == DayOfWeek.Saturday) {
 			contact.dateTime = contact.dateTime.AddDays(2);
 		}
@@ -133,7 +136,6 @@ public class AptLogController : ControllerBase {
 		}
 
 		_context.Logs.Add(newLog);
-
 		_context.Contacts.Add(contact);
 		await _context.SaveChangesAsync();
 

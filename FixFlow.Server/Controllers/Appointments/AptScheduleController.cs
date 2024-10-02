@@ -157,11 +157,6 @@ public class AptScheduleController : ControllerBase {
 			}
 		}
 
-		AptContact contact = _context.Contacts.Where(x => x.ClientId == upSchedule.ClientId)
-								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
-								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
-
-		existingAppointment.WasContacted = contact != null;
 		existingAppointment.dateTime = upSchedule.dateTime;
 		existingAppointment.Service = upSchedule.Service;
 		existingAppointment.observation = upSchedule.observation;
