@@ -23,12 +23,12 @@ Removes Idle days
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getIdlePeriodApi();
-final String body = body_example; // String | 
+final api_instance = IdlePeriodApi();
+final body = String(); // String | 
 
 try {
-    api.apiV1IdlePeriodDelete(body);
-} catch on DioException (e) {
+    api_instance.apiV1IdlePeriodDelete(body);
+} catch (e) {
     print('Exception when calling IdlePeriodApi->apiV1IdlePeriodDelete: $e\n');
 }
 ```
@@ -55,7 +55,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1IdlePeriodGet**
-> BuiltList<IdlePeriod> apiV1IdlePeriodGet(businessIdlePeriodsRequest)
+> List<IdlePeriod> apiV1IdlePeriodGet(businessIdlePeriodsRequest)
 
 Returns all Idle Periods that contain the given date
 
@@ -63,13 +63,13 @@ Returns all Idle Periods that contain the given date
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getIdlePeriodApi();
-final BusinessIdlePeriodsRequest businessIdlePeriodsRequest = ; // BusinessIdlePeriodsRequest | 
+final api_instance = IdlePeriodApi();
+final businessIdlePeriodsRequest = BusinessIdlePeriodsRequest(); // BusinessIdlePeriodsRequest | 
 
 try {
-    final response = api.apiV1IdlePeriodGet(businessIdlePeriodsRequest);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1IdlePeriodGet(businessIdlePeriodsRequest);
+    print(result);
+} catch (e) {
     print('Exception when calling IdlePeriodApi->apiV1IdlePeriodGet: $e\n');
 }
 ```
@@ -82,7 +82,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;IdlePeriod&gt;**](IdlePeriod.md)
+[**List<IdlePeriod>**](IdlePeriod.md)
 
 ### Authorization
 
@@ -106,13 +106,13 @@ Idle Periods are allowed to overlap
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getIdlePeriodApi();
-final IdlePeriod idlePeriod = ; // IdlePeriod | 
+final api_instance = IdlePeriodApi();
+final idlePeriod = IdlePeriod(); // IdlePeriod | 
 
 try {
-    final response = api.apiV1IdlePeriodPost(idlePeriod);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1IdlePeriodPost(idlePeriod);
+    print(result);
+} catch (e) {
     print('Exception when calling IdlePeriodApi->apiV1IdlePeriodPost: $e\n');
 }
 ```

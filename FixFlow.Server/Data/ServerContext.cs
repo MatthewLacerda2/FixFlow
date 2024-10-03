@@ -6,7 +6,7 @@ namespace Server.Data;
 
 public class ServerContext : IdentityDbContext {
 
-	public DbSet<Client> Clients { get; set; } = default!;
+	public DbSet<Customer> Customers { get; set; } = default!;
 	public DbSet<Business> Business { get; set; } = default!;
 
 	public DbSet<AptLog> Logs { get; set; } = default!;
@@ -30,7 +30,7 @@ public class ServerContext : IdentityDbContext {
 			   .HasIndex(b => b.CNPJ)
 			   .IsUnique();
 
-		builder.Entity<Client>()
+		builder.Entity<Customer>()
 			.Property(c => c.PhoneNumber)
 			.IsRequired();
 

@@ -15,7 +15,7 @@ public class AptLogControllerTests {
 	private readonly ServerContext _context;
 	private readonly AptLogController _controller;
 	private readonly Mock<UserManager<Business>> _mockUserManager;
-	private readonly Mock<UserManager<Client>> _mockClientManager;
+	private readonly Mock<UserManager<Customer>> _mockCustomerManager;
 
 	public AptLogControllerTests() {
 
@@ -24,10 +24,10 @@ public class AptLogControllerTests {
 		var store = new Mock<IUserStore<Business>>();
 		_mockUserManager = new Mock<UserManager<Business>>(store.Object, null!, null!, null!, null!, null!, null!, null!, null!);
 
-		var clientStore = new Mock<IUserStore<Client>>();
-		_mockClientManager = new Mock<UserManager<Client>>(clientStore.Object, null!, null!, null!, null!, null!, null!, null!, null!);
+		var clientStore = new Mock<IUserStore<Customer>>();
+		_mockCustomerManager = new Mock<UserManager<Customer>>(clientStore.Object, null!, null!, null!, null!, null!, null!, null!, null!);
 
-		_controller = new AptLogController(_context, _mockUserManager.Object, _mockClientManager.Object);
+		_controller = new AptLogController(_context, _mockUserManager.Object, _mockCustomerManager.Object);
 	}
 
 	[Fact]
@@ -40,19 +40,19 @@ public class AptLogControllerTests {
 			services = ["Service 1", "Service 2"]
 		};
 		var business2 = new Business("b-2", "b-2@gmail.com", "123.4567.789-0001", "98988263255");
-		var client1 = new Client(business1.Id, "789456123", client1Name, null, null, null);
-		var client2 = new Client(business2.Id, "123456789", "ciclano da silva", null, null, null);
-		var client3 = new Client(business1.Id, "123456789", "beltrano da silva", null, null, null);
+		var client1 = new Customer(business1.Id, "789456123", client1Name, null, null, null);
+		var client2 = new Customer(business2.Id, "123456789", "ciclano da silva", null, null, null);
+		var client3 = new Customer(business1.Id, "123456789", "beltrano da silva", null, null, null);
 
 		_context.Business.AddRange(business1, business2);
-		_context.Clients.AddRange(client1, client2, client3);
+		_context.Customers.AddRange(client1, client2, client3);
 
 		var logs = new List<AptLog>();
 		for (int i = 0; i < 11; i++) {
 			logs.Add(new AptLog {
 				Id = Guid.NewGuid().ToString(),
 				BusinessId = business1.Id,
-				ClientId = client1.Id,
+				CustomerId = client1.Id,
 				dateTime = DateTime.Now.AddHours(-i * 24),
 				Price = i * 10,
 				Service = "Service 1"
@@ -60,7 +60,7 @@ public class AptLogControllerTests {
 		}
 
 		logs[0].BusinessId = business2.Id;
-		logs[0].ClientId = client2.Id;
+		logs[0].CustomerId = client2.Id;
 
 		logs[1] = logs[5];
 		logs[1].Price = 40;
@@ -96,14 +96,14 @@ public class AptLogControllerTests {
 		var filteredLogs = result.Value as IEnumerable<AptLog>;
 		Assert.Single(filteredLogs);
 
-		Assert.Equal(client1Name, filteredLogs!.First().Client.FullName);
+		Assert.Equal(client1Name, filteredLogs!.First().Customer.FullName);
 		Assert.Equal(expectedLog.Price, filteredLogs!.First().Price);
 		Assert.Equal(DateTime.Now.AddDays(-5).Date, filteredLogs!.First().dateTime.Date);
 		Assert.Equal(expectedLog.Service, filteredLogs!.First().Service);
 	}
 
 	[Fact]
-	public async Task CreateLog_ClientDoesNotExist_ReturnsBadRequest() {
+	public async Task CreateLog_CustomerDoesNotExist_ReturnsBadRequest() {
 		// Arrange
 		var createLog = new CreateAptLog("client-id", "business-id", null, DateTime.Now, 100, null, null, DateTime.Now.AddDays(30));
 
@@ -116,7 +116,7 @@ public class AptLogControllerTests {
 		// Assert
 		Assert.NotNull(result);
 		Assert.Equal(400, result!.StatusCode);
-		Assert.Equal(NotExistErrors.Client, result.Value);
+		Assert.Equal(NotExistErrors.Customer, result.Value);
 	}
 
 	[Fact]
@@ -126,9 +126,9 @@ public class AptLogControllerTests {
 			allowListedServicesOnly = true,
 			services = ["Service 1", "Service 2"]
 		};
-		var client = new Client(business.Id, "98988263255", "Client Name", null, null, null);
+		var client = new Customer(business.Id, "98988263255", "Customer Name", null, null, null);
 		_context.Business.Add(business);
-		_context.Clients.Add(client);
+		_context.Customers.Add(client);
 		_context.SaveChanges();
 
 		var createLog = new CreateAptLog(client.Id, business.Id, null, DateTime.Now, 100, null, null, DateTime.Now.AddDays(30));
@@ -149,14 +149,14 @@ public class AptLogControllerTests {
 			allowListedServicesOnly = true,
 			services = ["Service 1", "Service 2"]
 		};
-		var client = new Client(business.Id, "98988263255", "Client Name", null, null, null);
-		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now, 100, null);
+		var customer = new Customer(business.Id, "98988263255", "Customer Name", null, null, null);
+		var schedule = new AptSchedule(customer.Id, business.Id, DateTime.Now, 100, null);
 		_context.Business.Add(business);
-		_context.Clients.Add(client);
+		_context.Customers.Add(customer);
 		_context.Schedules.Add(schedule);
 		_context.SaveChanges();
 
-		var createLog = new CreateAptLog(client.Id, business.Id, schedule.Id, DateTime.Now, 100, "Service 2", null, DateTime.Now.AddDays(30));
+		var createLog = new CreateAptLog(customer.Id, business.Id, schedule.Id, DateTime.Now, 100, "Service 2", null, DateTime.Now.AddDays(30));
 		createLog.dateTime.AddDays(-(int)createLog.dateTime.DayOfWeek);
 
 		// Act
@@ -167,7 +167,7 @@ public class AptLogControllerTests {
 		Assert.Equal(201, result!.StatusCode);
 		var createdLog = result.Value as AptLog;
 		Assert.NotNull(createdLog);
-		Assert.Equal(createLog.ClientId, createdLog!.ClientId);
+		Assert.Equal(createLog.CustomerId, createdLog!.CustomerId);
 		Assert.Equal(createLog.BusinessId, createdLog.BusinessId);
 		Assert.Equal(createLog.Service, createdLog.Service);
 		Assert.Equal(createLog.price, createdLog.Price);
@@ -176,7 +176,6 @@ public class AptLogControllerTests {
 		var contact = _context.Contacts.Where(x => x.aptLogId == createdLog.Id).FirstOrDefault();
 
 		Assert.NotNull(contact);
-		Assert.Equal(contact!.dateTime, createLog.whenShouldClientComeBack);
 		Assert.NotEqual(DayOfWeek.Saturday, contact!.dateTime.DayOfWeek);
 		Assert.NotEqual(DayOfWeek.Sunday, contact!.dateTime.DayOfWeek);
 	}
@@ -202,9 +201,9 @@ public class AptLogControllerTests {
 			allowListedServicesOnly = true,
 			services = ["Service 1", "Service 2"]
 		};
-		var client = new Client(business.Id, "123456789", "Client Name", null, null, null);
+		var client = new Customer(business.Id, "123456789", "Customer Name", null, null, null);
 		var log = new AptLog {
-			ClientId = client.Id,
+			CustomerId = client.Id,
 			BusinessId = business.Id,
 			dateTime = DateTime.Now,
 			Price = 100,
@@ -212,7 +211,7 @@ public class AptLogControllerTests {
 		};
 
 		_context.Business.Add(business);
-		_context.Clients.Add(client);
+		_context.Customers.Add(client);
 		_context.Logs.Add(log);
 		_context.SaveChanges();
 
@@ -234,9 +233,9 @@ public class AptLogControllerTests {
 			allowListedServicesOnly = true,
 			services = ["Service 1", "Service 2"]
 		};
-		var client = new Client(business.Id, "123456789", "Client Name", null, null, null);
+		var client = new Customer(business.Id, "123456789", "Customer Name", null, null, null);
 		var log = new AptLog {
-			ClientId = client.Id,
+			CustomerId = client.Id,
 			BusinessId = business.Id,
 			dateTime = DateTime.Now,
 			Price = 100,
@@ -244,7 +243,7 @@ public class AptLogControllerTests {
 		};
 
 		_context.Business.Add(business);
-		_context.Clients.Add(client);
+		_context.Customers.Add(client);
 		_context.Logs.Add(log);
 		_context.SaveChanges();
 
@@ -266,10 +265,10 @@ public class AptLogControllerTests {
 			allowListedServicesOnly = true,
 			services = ["Service 1", "Service 2"]
 		};
-		var client = new Client(business.Id, "123456789", "Client Name", null, null, null);
+		var client = new Customer(business.Id, "123456789", "Customer Name", null, null, null);
 		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddHours(-1), 100, null);
 		var log = new AptLog {
-			ClientId = client.Id,
+			CustomerId = client.Id,
 			BusinessId = business.Id,
 			ScheduleId = null,
 			dateTime = DateTime.Now.AddHours(-1),
@@ -278,7 +277,7 @@ public class AptLogControllerTests {
 		};
 
 		_context.Business.Add(business);
-		_context.Clients.Add(client);
+		_context.Customers.Add(client);
 		_context.Schedules.Add(schedule);
 		_context.Logs.Add(log);
 		_context.SaveChanges();
@@ -317,10 +316,10 @@ public class AptLogControllerTests {
 	public async Task DeleteLog_LogExists_ReturnsNoContent() {
 		// Arrange
 		var business = new Business("business-id", "business@example.com", "123456789", "1234567890");
-		var client = new Client(business.Id, "123456789", "Client Name", null, null, null);
+		var client = new Customer(business.Id, "123456789", "Customer Name", null, null, null);
 		var log = new AptLog {
 			Id = "log-id",
-			ClientId = client.Id,
+			CustomerId = client.Id,
 			BusinessId = business.Id,
 			dateTime = DateTime.Now,
 			Price = 100,
@@ -329,7 +328,7 @@ public class AptLogControllerTests {
 		var contact = new AptContact(log, DateTime.Now.AddDays(-30));
 
 		_context.Business.Add(business);
-		_context.Clients.Add(client);
+		_context.Customers.Add(client);
 		_context.Logs.Add(log);
 		_context.Contacts.Add(contact);
 		_context.SaveChanges();

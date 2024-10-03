@@ -7,11 +7,11 @@ namespace Server.Models.Appointments;
 public class CreateAptSchedule {
 
 	/// <summary>
-	/// The Id of the Client who made the Schedule
+	/// The Id of the Customer who made the Schedule
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Client))]
-	public string ClientId { get; set; }
+	[ForeignKey(nameof(Customer))]
+	public string customerId { get; set; }
 
 	/// <summary>
 	/// The scheduled DateTime of the Appointment
@@ -27,7 +27,7 @@ public class CreateAptSchedule {
 	public CreateAptSchedule() : this(string.Empty, DateTime.Now, 0, null, null) { }
 
 	public CreateAptSchedule(string clientId, DateTime _dateTime, float price, string? service, string? observation) {
-		ClientId = clientId;
+		customerId = clientId;
 		dateTime = _dateTime;
 		Price = price;
 		Service = service;

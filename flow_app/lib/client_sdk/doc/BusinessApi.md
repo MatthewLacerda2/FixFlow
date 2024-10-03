@@ -10,7 +10,7 @@ All URIs are relative to *http://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**apiV1BusinessDeactivatePatch**](BusinessApi.md#apiv1businessdeactivatepatch) | **PATCH** /api/v1/Business/deactivate | Deactivates the Business Account with the given Id.  That freezes the subscription, and stops notifications
-[**apiV1BusinessDelete**](BusinessApi.md#apiv1businessdelete) | **DELETE** /api/v1/Business | Deletes the Business with the given Id and all it&#39;s data owned by it
+[**apiV1BusinessDelete**](BusinessApi.md#apiv1businessdelete) | **DELETE** /api/v1/Business | Deletes the Business with the given Id and all it's data owned by it
 [**apiV1BusinessGet**](BusinessApi.md#apiv1businessget) | **GET** /api/v1/Business | Gets the Business with the given Id.  Used when the User logs-in or opens the app
 [**apiV1BusinessPatch**](BusinessApi.md#apiv1businesspatch) | **PATCH** /api/v1/Business | Updates the Business with the given Id
 [**apiV1BusinessPost**](BusinessApi.md#apiv1businesspost) | **POST** /api/v1/Business | Creates a Business User
@@ -25,12 +25,12 @@ Deactivates the Business Account with the given Id.  That freezes the subscripti
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getBusinessApi();
-final String body = body_example; // String | 
+final api_instance = BusinessApi();
+final body = String(); // String | 
 
 try {
-    api.apiV1BusinessDeactivatePatch(body);
-} catch on DioException (e) {
+    api_instance.apiV1BusinessDeactivatePatch(body);
+} catch (e) {
     print('Exception when calling BusinessApi->apiV1BusinessDeactivatePatch: $e\n');
 }
 ```
@@ -65,12 +65,12 @@ Deletes the Business with the given Id and all it's data owned by it
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getBusinessApi();
-final String body = body_example; // String | 
+final api_instance = BusinessApi();
+final body = String(); // String | 
 
 try {
-    api.apiV1BusinessDelete(body);
-} catch on DioException (e) {
+    api_instance.apiV1BusinessDelete(body);
+} catch (e) {
     print('Exception when calling BusinessApi->apiV1BusinessDelete: $e\n');
 }
 ```
@@ -105,13 +105,13 @@ Gets the Business with the given Id.  Used when the User logs-in or opens the ap
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getBusinessApi();
-final String body = body_example; // String | 
+final api_instance = BusinessApi();
+final body = String(); // String | 
 
 try {
-    final response = api.apiV1BusinessGet(body);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1BusinessGet(body);
+    print(result);
+} catch (e) {
     print('Exception when calling BusinessApi->apiV1BusinessGet: $e\n');
 }
 ```
@@ -146,13 +146,13 @@ Updates the Business with the given Id
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getBusinessApi();
-final Business business = ; // Business | 
+final api_instance = BusinessApi();
+final business = Business(); // Business | 
 
 try {
-    final response = api.apiV1BusinessPatch(business);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1BusinessPatch(business);
+    print(result);
+} catch (e) {
     print('Exception when calling BusinessApi->apiV1BusinessPatch: $e\n');
 }
 ```
@@ -187,13 +187,13 @@ Creates a Business User
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getBusinessApi();
-final BusinessRegisterRequest businessRegisterRequest = ; // BusinessRegisterRequest | 
+final api_instance = BusinessApi();
+final businessRegisterRequest = BusinessRegisterRequest(); // BusinessRegisterRequest | 
 
 try {
-    final response = api.apiV1BusinessPost(businessRegisterRequest);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1BusinessPost(businessRegisterRequest);
+    print(result);
+} catch (e) {
     print('Exception when calling BusinessApi->apiV1BusinessPost: $e\n');
 }
 ```

@@ -39,7 +39,7 @@ public class AptScheduleController : ControllerBase {
 		schedulesQuery = _context.Schedules.Where(x => x.BusinessId == filter.businessId);
 
 		if (!string.IsNullOrWhiteSpace(filter.client)) {
-			schedulesQuery = schedulesQuery.Where(x => x.Client.FullName.Contains(filter.client));
+			schedulesQuery = schedulesQuery.Where(x => x.Customer.FullName.Contains(filter.client));
 		}
 
 		if (!string.IsNullOrWhiteSpace(filter.service)) {
@@ -53,11 +53,11 @@ public class AptScheduleController : ControllerBase {
 		schedulesQuery = schedulesQuery.Where(x => x.Price <= filter.maxPrice);
 
 		switch (filter.sort) {
-			case ScheduleSort.Client:
-				schedulesQuery = schedulesQuery.OrderBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
+			case ScheduleSort.Customer:
+				schedulesQuery = schedulesQuery.OrderBy(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
 				break;
 			case ScheduleSort.Price:
-				schedulesQuery = schedulesQuery.OrderBy(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.Id);
+				schedulesQuery = schedulesQuery.OrderBy(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Customer.FullName).ThenBy(s => s.Id);
 				break;
 			case ScheduleSort.Date:
 				schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
@@ -66,14 +66,14 @@ public class AptScheduleController : ControllerBase {
 
 		if (filter.descending) {
 			switch (filter.sort) {
-				case ScheduleSort.Client:
-					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
+				case ScheduleSort.Customer:
+					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
 					break;
 				case ScheduleSort.Price:
-					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.Id);
+					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Customer.FullName).ThenBy(s => s.Id);
 					break;
 				case ScheduleSort.Date:
-					schedulesQuery = schedulesQuery.OrderBy(s => s.dateTime).ThenBy(s => s.Client.FullName).ThenBy(s => s.Price).ThenBy(s => s.Id);
+					schedulesQuery = schedulesQuery.OrderBy(s => s.dateTime).ThenBy(s => s.Customer.FullName).ThenBy(s => s.Price).ThenBy(s => s.Id);
 					break;
 			}
 		}
@@ -94,12 +94,12 @@ public class AptScheduleController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateSchedule([FromBody] CreateAptSchedule newAppointment) {
 
-		var existingClient = _context.Clients.Find(newAppointment.ClientId);
-		if (existingClient == null) {
-			return BadRequest(NotExistErrors.Client);
+		var existingCustomer = _context.Customers.Find(newAppointment.customerId);
+		if (existingCustomer == null) {
+			return BadRequest(NotExistErrors.Customer);
 		}
 
-		var existingBusiness = _context.Business.Find(existingClient.BusinessId);
+		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
 
 		if (existingBusiness!.allowListedServicesOnly) {
 			if (newAppointment.Service == null || !existingBusiness.services.Contains(newAppointment.Service)) {
@@ -116,7 +116,7 @@ public class AptScheduleController : ControllerBase {
 			}
 		}
 
-		AptContact contact = _context.Contacts.Where(x => x.ClientId == newAppointment.ClientId)
+		AptContact contact = _context.Contacts.Where(x => x.CustomerId == newAppointment.customerId)
 								.Where(x => x.dateTime <= DateTime.Now).Where(x => x.dateTime >= DateTime.Now.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 

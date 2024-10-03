@@ -8,7 +8,7 @@ import 'package:openapi/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**clientId** | **String** | The Id of the Client who made the Schedule | 
+**customerId** | **String** | The Id of the Customer who made the Schedule | 
 **dateTime** | [**DateTime**](DateTime.md) | The scheduled DateTime of the Appointment | [optional] 
 **service** | **String** |  | [optional] 
 **observation** | **String** |  | [optional] 

@@ -22,11 +22,11 @@ Method | HTTP request | Description
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getAccountsApi();
+final api_instance = AccountsApi();
 
 try {
-    api.apiV1AccountsLogoutPost();
-} catch on DioException (e) {
+    api_instance.apiV1AccountsLogoutPost();
+} catch (e) {
     print('Exception when calling AccountsApi->apiV1AccountsLogoutPost: $e\n');
 }
 ```
@@ -58,13 +58,13 @@ Login with an email and password
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getAccountsApi();
-final FlowLoginRequest flowLoginRequest = ; // FlowLoginRequest | 
+final api_instance = AccountsApi();
+final flowLoginRequest = FlowLoginRequest(); // FlowLoginRequest | 
 
 try {
-    final response = api.apiV1AccountsPost(flowLoginRequest);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1AccountsPost(flowLoginRequest);
+    print(result);
+} catch (e) {
     print('Exception when calling AccountsApi->apiV1AccountsPost: $e\n');
 }
 ```

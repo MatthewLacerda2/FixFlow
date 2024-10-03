@@ -24,12 +24,12 @@ Deletes the Appointment Schedule with the given Id
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getAptScheduleApi();
-final String body = body_example; // String | 
+final api_instance = AptScheduleApi();
+final body = String(); // String | 
 
 try {
-    api.apiV1SchedulesDelete(body);
-} catch on DioException (e) {
+    api_instance.apiV1SchedulesDelete(body);
+} catch (e) {
     print('Exception when calling AptScheduleApi->apiV1SchedulesDelete: $e\n');
 }
 ```
@@ -56,7 +56,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1SchedulesGet**
-> BuiltList<BuiltList<AptSchedule>> apiV1SchedulesGet(body)
+> List<List<AptSchedule>> apiV1SchedulesGet(body)
 
 Gets a number of filtered Schedules
 
@@ -64,13 +64,13 @@ Gets a number of filtered Schedules
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getAptScheduleApi();
-final JsonObject body = Object; // JsonObject | 
+final api_instance = AptScheduleApi();
+final body = Object(); // Object | 
 
 try {
-    final response = api.apiV1SchedulesGet(body);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1SchedulesGet(body);
+    print(result);
+} catch (e) {
     print('Exception when calling AptScheduleApi->apiV1SchedulesGet: $e\n');
 }
 ```
@@ -79,11 +79,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **JsonObject**|  | [optional] 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
-[**BuiltList&lt;BuiltList&lt;AptSchedule&gt;&gt;**](BuiltList.md)
+[**List<List<AptSchedule>>**](List.md)
 
 ### Authorization
 
@@ -105,13 +105,13 @@ Update the Appointment Schedule with the given Id
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getAptScheduleApi();
-final AptSchedule aptSchedule = ; // AptSchedule | 
+final api_instance = AptScheduleApi();
+final aptSchedule = AptSchedule(); // AptSchedule | 
 
 try {
-    final response = api.apiV1SchedulesPatch(aptSchedule);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1SchedulesPatch(aptSchedule);
+    print(result);
+} catch (e) {
     print('Exception when calling AptScheduleApi->apiV1SchedulesPatch: $e\n');
 }
 ```
@@ -146,13 +146,13 @@ Creates an Appointment Schedule
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getAptScheduleApi();
-final CreateAptSchedule createAptSchedule = ; // CreateAptSchedule | 
+final api_instance = AptScheduleApi();
+final createAptSchedule = CreateAptSchedule(); // CreateAptSchedule | 
 
 try {
-    final response = api.apiV1SchedulesPost(createAptSchedule);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1SchedulesPost(createAptSchedule);
+    print(result);
+} catch (e) {
     print('Exception when calling AptScheduleApi->apiV1SchedulesPost: $e\n');
 }
 ```

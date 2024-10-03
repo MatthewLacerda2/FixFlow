@@ -21,12 +21,12 @@ Creates an OTP for when creating a Business
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getOTPApi();
-final String body = body_example; // String | 
+final api_instance = OTPApi();
+final body = String(); // String | 
 
 try {
-    api.apiV1OTPPost(body);
-} catch on DioException (e) {
+    api_instance.apiV1OTPPost(body);
+} catch (e) {
     print('Exception when calling OTPApi->apiV1OTPPost: $e\n');
 }
 ```

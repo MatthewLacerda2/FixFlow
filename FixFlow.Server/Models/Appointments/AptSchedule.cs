@@ -10,17 +10,17 @@ public class AptSchedule {
 	public string Id { get; set; }
 
 	/// <summary>
-	/// The Id of the Client who made the Schedule
+	/// The Id of the Customer who made the Schedule
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Models.Client))]
-	public string ClientId { get; set; }
+	[ForeignKey(nameof(Models.Customer))]
+	public string CustomerId { get; set; }
 
 	/// <summary>
-	/// Navigation Property of the Client
+	/// Navigation Property of the Customer
 	/// </summary>
 	[JsonIgnore]
-	public Client Client { get; set; }
+	public Customer Customer { get; set; }
 
 	/// <summary>
 	/// The Id of the Business who owns this Contact
@@ -46,22 +46,22 @@ public class AptSchedule {
 
 	public AptSchedule(string clientId, string businessId, DateTime dateTime, float price, string? service) {
 		Id = Guid.NewGuid().ToString();
-		ClientId = clientId;
+		CustomerId = clientId;
 		BusinessId = businessId;
 		this.dateTime = dateTime;
 		this.Price = price;
 		this.Service = service;
-		Client = null!;
+		Customer = null!;
 	}
 
 	public AptSchedule(CreateAptSchedule createSchedule, string businessId, bool wasContacted) {
 		Id = Guid.NewGuid().ToString();
 		BusinessId = businessId;
-		ClientId = createSchedule.ClientId;
+		CustomerId = createSchedule.customerId;
 		this.dateTime = createSchedule.dateTime;
 		this.Service = createSchedule.Service;
 		this.Price = createSchedule.Price;
 		WasContacted = wasContacted;
-		Client = null!;
+		Customer = null!;
 	}
 }

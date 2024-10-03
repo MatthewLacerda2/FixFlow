@@ -28,7 +28,7 @@ Name | Type | Description | Notes
 **isActive** | **bool** |  | [optional] 
 **name** | **String** | The Name of the Business or Business owner | [optional] 
 **cnpj** | **String** | CNPJ. Must be on format XX.XXX.XXX/XXXX-XX | [optional] 
-**businessDays** | [**BuiltList&lt;BusinessDay&gt;**](BusinessDay.md) | The DateTimes of the week where the business is open | [optional] 
+**businessDays** | [**List<BusinessDay>**](BusinessDay.md) | The DateTimes of the week where the business is open | [optional] [default to const []]
 **allowListedServicesOnly** | **bool** |  | [optional] 
 **openOnHolidays** | **bool** |  | [optional] 
 

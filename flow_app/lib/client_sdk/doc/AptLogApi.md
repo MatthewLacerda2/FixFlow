@@ -24,12 +24,12 @@ Deletes the Appointment Log with the given Id
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getAptLogApi();
-final String body = body_example; // String | 
+final api_instance = AptLogApi();
+final body = String(); // String | 
 
 try {
-    api.apiV1LogsDelete(body);
-} catch on DioException (e) {
+    api_instance.apiV1LogsDelete(body);
+} catch (e) {
     print('Exception when calling AptLogApi->apiV1LogsDelete: $e\n');
 }
 ```
@@ -56,7 +56,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1LogsGet**
-> BuiltList<BuiltList<AptLog>> apiV1LogsGet(body)
+> List<List<AptLog>> apiV1LogsGet(body)
 
 Gets a number of filtered Logs
 
@@ -64,13 +64,13 @@ Gets a number of filtered Logs
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getAptLogApi();
-final JsonObject body = Object; // JsonObject | 
+final api_instance = AptLogApi();
+final body = Object(); // Object | 
 
 try {
-    final response = api.apiV1LogsGet(body);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1LogsGet(body);
+    print(result);
+} catch (e) {
     print('Exception when calling AptLogApi->apiV1LogsGet: $e\n');
 }
 ```
@@ -79,11 +79,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **JsonObject**|  | [optional] 
+ **body** | **Object**|  | [optional] 
 
 ### Return type
 
-[**BuiltList&lt;BuiltList&lt;AptLog&gt;&gt;**](BuiltList.md)
+[**List<List<AptLog>>**](List.md)
 
 ### Authorization
 
@@ -105,13 +105,13 @@ Update the Appointment Log with the given Id
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getAptLogApi();
-final UpdateAptLog updateAptLog = ; // UpdateAptLog | 
+final api_instance = AptLogApi();
+final updateAptLog = UpdateAptLog(); // UpdateAptLog | 
 
 try {
-    final response = api.apiV1LogsPatch(updateAptLog);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1LogsPatch(updateAptLog);
+    print(result);
+} catch (e) {
     print('Exception when calling AptLogApi->apiV1LogsPatch: $e\n');
 }
 ```
@@ -148,13 +148,13 @@ Generates a Contact
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getAptLogApi();
-final CreateAptLog createAptLog = ; // CreateAptLog | 
+final api_instance = AptLogApi();
+final createAptLog = CreateAptLog(); // CreateAptLog | 
 
 try {
-    final response = api.apiV1LogsPost(createAptLog);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1LogsPost(createAptLog);
+    print(result);
+} catch (e) {
     print('Exception when calling AptLogApi->apiV1LogsPost: $e\n');
 }
 ```

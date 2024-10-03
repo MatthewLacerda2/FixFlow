@@ -18,5 +18,5 @@ cd flow_app\lib
 flutter pub get
 flutter upgrade
 flutter build apk
-openapi-generator-cli generate -i ..\..\FixFlow.Server\swagger.json -g dart-dio -o ./client_sdk
+openapi-generator-cli generate -i ..\..\FixFlow.Server\swagger.json -g dart -o ./client_sdk
 flutter build (this motherfucker takes some minutes)

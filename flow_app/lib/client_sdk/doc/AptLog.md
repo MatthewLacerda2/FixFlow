@@ -9,8 +9,8 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
-**clientId** | **String** | The Id of the Client who took the Appointment | 
-**client** | [**Client**](Client.md) |  | [optional] 
+**customerId** | **String** | The Id of the Customer who took the Appointment | 
+**customer** | [**Customer**](Customer.md) |  | [optional] 
 **businessId** | **String** | The Id of the Business who owns this Contact | 
 **scheduleId** | **String** | The Id of the Schedule that precedes this Log, if any | [optional] 
 **dateTime** | [**DateTime**](DateTime.md) | The DateTime when the Log was registered | [optional] 

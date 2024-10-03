@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **apiV1BusinessCalendarDayGet**
-> BuiltList<BusinessCalendarDay> apiV1BusinessCalendarDayGet(body)
+> List<BusinessCalendarDay> apiV1BusinessCalendarDayGet(body)
 
 Login with an email and password
 
@@ -21,13 +21,13 @@ Login with an email and password
 ```dart
 import 'package:openapi/api.dart';
 
-final api = Openapi().getBusinessCalendarDayApi();
-final String body = body_example; // String | 
+final api_instance = BusinessCalendarDayApi();
+final body = String(); // String | 
 
 try {
-    final response = api.apiV1BusinessCalendarDayGet(body);
-    print(response);
-} catch on DioException (e) {
+    final result = api_instance.apiV1BusinessCalendarDayGet(body);
+    print(result);
+} catch (e) {
     print('Exception when calling BusinessCalendarDayApi->apiV1BusinessCalendarDayGet: $e\n');
 }
 ```
@@ -40,7 +40,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;BusinessCalendarDay&gt;**](BusinessCalendarDay.md)
+[**List<BusinessCalendarDay>**](BusinessCalendarDay.md)
 
 ### Authorization
 
