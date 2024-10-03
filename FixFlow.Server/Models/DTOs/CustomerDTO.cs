@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 namespace Server.Models.DTO;
 
 /// <summary>
-/// Brief information about the Client
+/// Brief information about the Customer
 /// </summary>
-public class ClientDTO {
+public class CustomerDTO {
 
 	[Required]
 	public string Id { get; set; }
@@ -21,7 +21,7 @@ public class ClientDTO {
 	public string? CPF { get; set; }
 
 	/// <summary>
-	/// Special information about the Client, if applicable
+	/// Special information about the Customer, if applicable
 	/// </summary>
 	public string? AdditionalNote { get; set; }
 
@@ -35,7 +35,7 @@ public class ClientDTO {
 	[EmailAddress]
 	public string? Email { get; set; }
 
-	public ClientDTO(string _Id, string fullname, string _phoneNumber, string? _email, string? additionalNote, string? cpf) {
+	public CustomerDTO(string _Id, string fullname, string _phoneNumber, string? _email, string? additionalNote, string? cpf) {
 		Id = _Id;
 		FullName = fullname;
 		CPF = cpf;
@@ -44,15 +44,15 @@ public class ClientDTO {
 		Email = _email;
 	}
 
-	public static explicit operator ClientDTO(Client client) {
-		return new ClientDTO
+	public static explicit operator CustomerDTO(Customer customer) {
+		return new CustomerDTO
 		(
-			client.Id,
-			client.FullName,
-			client.PhoneNumber!,
-			client.Email,
-			client.AdditionalNote,
-			client.CPF
+			customer.Id,
+			customer.FullName,
+			customer.PhoneNumber!,
+			customer.Email,
+			customer.AdditionalNote,
+			customer.CPF
 		);
 	}
 }

@@ -244,14 +244,14 @@ public class BusinessControllerTests {
 		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync(business);
 		_mockUserManager.Setup(x => x.DeleteAsync(business)).ReturnsAsync(IdentityResult.Success);
 
-		Client client = new Client(businessId, "98912345678", "fulano da silva bezerra", null, null, null);
+		Customer client = new Customer(businessId, "98912345678", "fulano da silva bezerra", null, null, null);
 		AptSchedule schedule = new AptSchedule(client.Id, businessId, DateTime.Now.AddDays(-1), 100f, null);
 		CreateAptLog createAptLog = new CreateAptLog(client.Id, businessId, schedule.Id, DateTime.Now, 100f, null, null, DateTime.Now.AddDays(90));
 		AptLog log = new AptLog(createAptLog);
 		AptContact contact = new AptContact(log, DateTime.Now);
 
 		_context.Business.Add(business);
-		_context.Clients.Add(client);
+		_context.Customers.Add(client);
 		_context.Schedules.Add(schedule);
 		_context.Logs.Add(log);
 		_context.Contacts.Add(contact);
@@ -263,7 +263,7 @@ public class BusinessControllerTests {
 		// Assert
 		var okResult = Assert.IsType<NoContentResult>(result);
 
-		Assert.Empty(_context.Clients.Where(x => x.BusinessId == businessId));
+		Assert.Empty(_context.Customers.Where(x => x.BusinessId == businessId));
 		Assert.Empty(_context.Contacts.Where(x => x.businessId == businessId));
 		Assert.Empty(_context.Schedules.Where(x => x.BusinessId == businessId));
 		Assert.Empty(_context.Logs.Where(x => x.BusinessId == businessId));

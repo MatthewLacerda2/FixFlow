@@ -2,10 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models.DTO;
 
-public class ClientCreate {
+public class CustomerCreate {
 
 	/// <summary>
-	/// The business from which the Client is a customer
+	/// The business from which the Customer is a customer
 	/// </summary>
 	[Required]
 	public string BusinessId { get; set; } = string.Empty;
@@ -21,7 +21,7 @@ public class ClientCreate {
 	public string? CPF { get; set; }
 
 	/// <summary>
-	/// Special information about the Client, if applicable
+	/// Special information about the Customer, if applicable
 	/// </summary>
 	public string? additionalNote { get; set; }
 
@@ -35,7 +35,7 @@ public class ClientCreate {
 	[EmailAddress]
 	public string? Email { get; set; }
 
-	public ClientCreate(string businessId, string fullName, string? cpf, string? additionalNote, string phoneNumber, string? email) {
+	public CustomerCreate(string businessId, string fullName, string? cpf, string? additionalNote, string phoneNumber, string? email) {
 		BusinessId = businessId;
 		FullName = fullName;
 		CPF = cpf;

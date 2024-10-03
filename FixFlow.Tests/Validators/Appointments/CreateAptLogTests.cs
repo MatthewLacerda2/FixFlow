@@ -43,17 +43,17 @@ namespace FixFlow.Tests.Validators.Appointments {
 		}
 
 		[Fact]
-		public void Should_Have_Error_When_WhenShouldClientComeBack_Is_Not_In_The_Future() {
+		public void Should_Have_Error_When_WhenShouldCustomerComeBack_Is_Not_In_The_Future() {
 			var model = new CreateAptLog("clientId", "businessId", null, DateTime.Now, 10, null, null, DateTime.Now.Date);
 			var result = _validator.TestValidate(model);
-			result.ShouldHaveValidationErrorFor(x => x.whenShouldClientComeBack);
+			result.ShouldHaveValidationErrorFor(x => x.whenShouldCustomerComeBack);
 		}
 
 		[Fact]
-		public void Should_Not_Have_Error_When_WhenShouldClientComeBack_Is_In_The_Future() {
+		public void Should_Not_Have_Error_When_WhenShouldCustomerComeBack_Is_In_The_Future() {
 			var model = new CreateAptLog("clientId", "businessId", null, DateTime.Now, 10, null, null, DateTime.Now.AddDays(1));
 			var result = _validator.TestValidate(model);
-			result.ShouldNotHaveValidationErrorFor(x => x.whenShouldClientComeBack);
+			result.ShouldNotHaveValidationErrorFor(x => x.whenShouldCustomerComeBack);
 		}
 	}
 }

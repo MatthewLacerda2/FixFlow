@@ -21,5 +21,5 @@ public class AptLogFilter {
 }
 
 public enum LogSort {
-	Client, Price, Date
+	Customer, Price, Date
 }

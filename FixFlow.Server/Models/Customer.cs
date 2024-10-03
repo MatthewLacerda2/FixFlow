@@ -4,10 +4,10 @@ using Server.Models.DTO;
 
 namespace Server.Models;
 
-public class Client : IdentityUser {
+public class Customer : IdentityUser {
 
 	/// <summary>
-	/// The business from which the Client is a customer
+	/// The business from which the Customer is a customer
 	/// </summary>
 	[Required]
 	public string BusinessId { get; set; }
@@ -24,9 +24,9 @@ public class Client : IdentityUser {
 
 	public string? AdditionalNote { get; set; }
 
-	public Client() : this(string.Empty, string.Empty, string.Empty, null, null, null) { }
+	public Customer() : this(string.Empty, string.Empty, string.Empty, null, null, null) { }
 
-	public Client(string businessId, string phoneNumber, string fullName, string? email, string? cpf, string? additionalNote) {
+	public Customer(string businessId, string phoneNumber, string fullName, string? email, string? cpf, string? additionalNote) {
 		Id = Guid.NewGuid().ToString();
 		BusinessId = businessId;
 		PhoneNumber = phoneNumber;
@@ -36,15 +36,15 @@ public class Client : IdentityUser {
 		AdditionalNote = additionalNote;
 	}
 
-	public static explicit operator Client(ClientCreate clientCreate) {
-		return new Client
+	public static explicit operator Customer(CustomerCreate customerCreate) {
+		return new Customer
 		(
-			clientCreate.BusinessId,
-			clientCreate.PhoneNumber,
-			clientCreate.FullName,
-			clientCreate.Email,
-			clientCreate.CPF,
-			clientCreate.additionalNote
+			customerCreate.BusinessId,
+			customerCreate.PhoneNumber,
+			customerCreate.FullName,
+			customerCreate.Email,
+			customerCreate.CPF,
+			customerCreate.additionalNote
 		);
 	}
 }

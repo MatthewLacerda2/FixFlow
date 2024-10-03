@@ -21,5 +21,5 @@ public class AptScheduleFilter {
 }
 
 public enum ScheduleSort {
-	Client, Price, Date
+	Customer, Price, Date
 }

@@ -6,10 +6,10 @@ namespace Server.Models.Appointments;
 public class CreateAptLog {
 
 	/// <summary>
-	/// The Id of the Client who took the Appointment
+	/// The Id of the Customer who took the Appointment
 	/// </summary>
 	[Required]
-	public string ClientId { get; set; } = string.Empty;
+	public string CustomerId { get; set; } = string.Empty;
 
 	/// <summary>
 	/// The Id of the Business who owns this Contact
@@ -34,19 +34,19 @@ public class CreateAptLog {
 	public string? description { get; set; }
 
 	/// <summary>
-	/// The Date when we expect the Client to schedule another appointment.
+	/// The Date when we expect the Customer to schedule another appointment.
 	/// We are leaving as DateTime for simplicity but we only need the Date from this class
 	/// </summary>
-	public DateTime whenShouldClientComeBack { get; set; }
+	public DateTime whenShouldCustomerComeBack { get; set; }
 
-	public CreateAptLog(string clientId, string businessId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
-		ClientId = clientId;
+	public CreateAptLog(string customerId, string businessId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
+		CustomerId = customerId;
 		BusinessId = businessId;
 		this.scheduleId = scheduleId;
 		this.dateTime = dateTime;
 		this.price = price;
 		this.Service = service;
 		this.description = description;
-		whenShouldClientComeBack = whenComeBack;
+		whenShouldCustomerComeBack = whenComeBack;
 	}
 }

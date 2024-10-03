@@ -10,17 +10,17 @@ public class AptLog {
 	public string Id { get; set; }
 
 	/// <summary>
-	/// The Id of the Client who took the Appointment
+	/// The Id of the Customer who took the Appointment
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Models.Client))]
-	public string ClientId { get; set; }
+	[ForeignKey(nameof(Models.Customer))]
+	public string CustomerId { get; set; }
 
 	/// <summary>
-	/// Navigation Property of the Client
+	/// Navigation Property of the Customer
 	/// </summary>
 	[JsonIgnore]
-	public Client Client { get; set; }
+	public Customer Customer { get; set; }
 
 	/// <summary>
 	/// The Id of the Business who owns this Contact
@@ -48,14 +48,14 @@ public class AptLog {
 
 	public AptLog() {
 		Id = Guid.NewGuid().ToString();
-		ClientId = string.Empty;
+		CustomerId = string.Empty;
 		BusinessId = string.Empty;
-		Client = null!;
+		Customer = null!;
 	}
 
 	public AptLog(CreateAptLog newLog) {
 		Id = Guid.NewGuid().ToString();
-		ClientId = newLog.ClientId;
+		CustomerId = newLog.CustomerId;
 		BusinessId = newLog.BusinessId;
 		ScheduleId = newLog.scheduleId;
 		Service = newLog.Service;
@@ -63,6 +63,6 @@ public class AptLog {
 		this.dateTime = newLog.dateTime;
 		this.Price = newLog.price;
 		this.description = newLog.description;
-		Client = null!;
+		Customer = null!;
 	}
 }

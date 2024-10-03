@@ -4,9 +4,9 @@ using Server.Models.Appointments;
 namespace Server.Models.DTO;
 
 /// <summary>
-/// Client history in the business
+/// Customer history in the business
 /// </summary>
-public class ClientRecord {
+public class CustomerRecord {
 
 	[Required]
 	[MinLength(5)]
@@ -25,7 +25,7 @@ public class ClientRecord {
 	public string? CPF { get; set; }
 
 	/// <summary>
-	/// Special information about the Client, if applicable
+	/// Special information about the Customer, if applicable
 	/// </summary>
 	public string? AdditionalNote { get; set; }
 
@@ -38,13 +38,13 @@ public class ClientRecord {
 
 	public int avgTimeBetweenSchedules { get; set; }
 
-	public static explicit operator ClientRecord(Client client) {
-		return new ClientRecord {
-			FullName = client.FullName,
-			PhoneNumber = client.PhoneNumber!,
-			Email = client.Email,
-			CPF = client.CPF,
-			AdditionalNote = client.AdditionalNote,
+	public static explicit operator CustomerRecord(Customer customer) {
+		return new CustomerRecord {
+			FullName = customer.FullName,
+			PhoneNumber = customer.PhoneNumber!,
+			Email = customer.Email,
+			CPF = customer.CPF,
+			AdditionalNote = customer.AdditionalNote,
 		};
 	}
 

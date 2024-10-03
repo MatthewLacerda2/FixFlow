@@ -25,9 +25,9 @@ public class AptLogController : ControllerBase {
 
 	private readonly ServerContext _context;
 	private readonly UserManager<Business> _userManager;
-	private readonly UserManager<Client> _clientManager;
+	private readonly UserManager<Customer> _clientManager;
 
-	public AptLogController(ServerContext context, UserManager<Business> userManager, UserManager<Client> clientManager) {
+	public AptLogController(ServerContext context, UserManager<Business> userManager, UserManager<Customer> clientManager) {
 		_context = context;
 		_userManager = userManager;
 		_clientManager = clientManager;
@@ -45,7 +45,7 @@ public class AptLogController : ControllerBase {
 		logsQuery = logsQuery.Where(x => x.BusinessId == filter.businessId);
 
 		if (!string.IsNullOrWhiteSpace(filter.client)) {
-			logsQuery = logsQuery.Where(x => x.Client.FullName.Contains(filter.client!));
+			logsQuery = logsQuery.Where(x => x.Customer.FullName.Contains(filter.client!));
 		}
 
 		if (!string.IsNullOrWhiteSpace(filter.service)) {
@@ -59,8 +59,8 @@ public class AptLogController : ControllerBase {
 		logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.Date);
 
 		switch (filter.sort) {
-			case LogSort.Client:
-				logsQuery = logsQuery.OrderBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.Price).ThenBy(s => s.Id);
+			case LogSort.Customer:
+				logsQuery = logsQuery.OrderBy(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.Price).ThenBy(s => s.Id);
 				break;
 			case LogSort.Date:
 				logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
@@ -72,14 +72,14 @@ public class AptLogController : ControllerBase {
 
 		if (filter.descending) {
 			switch (filter.sort) {
-				case LogSort.Client:
-					logsQuery = logsQuery.OrderByDescending(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+				case LogSort.Customer:
+					logsQuery = logsQuery.OrderByDescending(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
 					break;
 				case LogSort.Date:
 					logsQuery = logsQuery.OrderBy(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
 					break;
 				case LogSort.Price:
-					logsQuery = logsQuery.OrderBy(s => s.Price).ThenBy(s => s.Client.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
+					logsQuery = logsQuery.OrderBy(s => s.Price).ThenBy(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
 					break;
 			}
 		}
@@ -103,12 +103,12 @@ public class AptLogController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateLog([FromBody] CreateAptLog createLog) {
 
-		var existingClient = _context.Clients.Find(createLog.ClientId);
-		if (existingClient == null) {
-			return BadRequest(NotExistErrors.Client);
+		var existingCustomer = _context.Customers.Find(createLog.CustomerId);
+		if (existingCustomer == null) {
+			return BadRequest(NotExistErrors.Customer);
 		}
 
-		var existingBusiness = _context.Business.Find(existingClient.BusinessId);
+		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
 
 		if (existingBusiness!.allowListedServicesOnly) {
 			if (createLog.Service == null || !existingBusiness.services.Contains(createLog.Service)) {
@@ -118,13 +118,13 @@ public class AptLogController : ControllerBase {
 
 		AptLog newLog = new AptLog(createLog);
 
-		AptSchedule aptSchedule = _context.Schedules.Where(x => x.ClientId == createLog.ClientId)
+		AptSchedule aptSchedule = _context.Schedules.Where(x => x.CustomerId == createLog.CustomerId)
 								.Where(x => x.dateTime.Date == DateTime.Now.Date)
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
 		newLog.ScheduleId = aptSchedule.Id;
 
-		AptContact contact = new AptContact(newLog, createLog.whenShouldClientComeBack);
+		AptContact contact = new AptContact(newLog, createLog.whenShouldCustomerComeBack);
 		if (contact.dateTime.TimeOfDay > new TimeSpan(18, 0, 0)) {
 			contact.dateTime = contact.dateTime.Date.AddHours(12);
 		}

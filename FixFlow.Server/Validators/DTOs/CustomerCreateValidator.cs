@@ -5,9 +5,9 @@ using Server.Models.Utils;
 
 namespace Server.Validators.DTOs;
 
-public class ClientRegisterValidator : AbstractValidator<ClientCreate> {
+public class CustomerRegisterValidator : AbstractValidator<CustomerCreate> {
 
-	public ClientRegisterValidator() {
+	public CustomerRegisterValidator() {
 
 		RuleFor(x => x.FullName).Custom((fullname, context) => {
 			if (StringChecker.IsFullNameValid(fullname) == false) {
