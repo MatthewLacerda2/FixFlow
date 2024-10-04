@@ -33,7 +33,7 @@ public class BusinessController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpGet]
-	public async Task<IActionResult> GetBusiness([FromBody] string businessId) {
+	public async Task<IActionResult> GetBusiness(string businessId) {
 
 		var business = await _userManager.FindByIdAsync(businessId);
 		if (business == null) {

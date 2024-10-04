@@ -67,8 +67,10 @@ public class AccountsController : ControllerBase {
 		};
 		var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!);
 		var tokenDescriptor = new SecurityTokenDescriptor {
-			Subject = new ClaimsIdentity(claims),
+			Issuer = _configuration["Jwt:Issuer"],
+			Audience = _configuration["Jwt:Audience"],
 			Expires = DateTime.UtcNow.AddMinutes(Common.tokenExpirationTimeInMinutes),
+			Subject = new ClaimsIdentity(claims),
 			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
 		};
 
@@ -77,6 +79,7 @@ public class AccountsController : ControllerBase {
 
 		return tokenHandler.WriteToken(token);
 	}
+
 
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]

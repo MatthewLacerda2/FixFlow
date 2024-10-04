@@ -25,7 +25,7 @@ public class Business : IdentityUser {
 	/// </summary>
 	public List<BusinessDay> BusinessDays { get; set; }
 
-	public string[] services = Array.Empty<string>();
+	public string[] services { get; set; } = Array.Empty<string>();
 	public bool allowListedServicesOnly { get; set; } = false;
 	public bool openOnHolidays { get; set; } = false;
 

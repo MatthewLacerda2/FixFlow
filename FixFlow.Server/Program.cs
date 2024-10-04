@@ -14,11 +14,7 @@ public class Program {
 	public static void Main(string[] args) {
 		var builder = WebApplication.CreateBuilder(args);
 
-		var secretKey = builder.Configuration["Jwt:SecretKey"];
-		var verifiedIssuerSigningKey = secretKey != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-			: throw new InvalidOperationException("JWT secret key is missing in configuration.");
-
-		builder.Services.AddIdentityCore<Business>()
+		builder.Services.AddIdentity<Business, IdentityRole>()
 			.AddEntityFrameworkStores<ServerContext>()
 			.AddDefaultTokenProviders();
 
@@ -38,6 +34,10 @@ public class Program {
 
 		builder.Services.AddAuthorization();
 
+		var secretKey = builder.Configuration["Jwt:SecretKey"];
+		var verifiedIssuerSigningKey = secretKey != null ? new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+			: throw new InvalidOperationException("JWT secret key is missing in configuration.");
+
 		builder.Services.AddAuthentication(options => {
 			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,14 +49,22 @@ public class Program {
 				ValidateIssuerSigningKey = true,
 				ValidIssuer = builder.Configuration["Jwt:Issuer"],
 				ValidAudience = builder.Configuration["Jwt:Audience"],
-				IssuerSigningKey = verifiedIssuerSigningKey
+				IssuerSigningKey = verifiedIssuerSigningKey,
+			};
+
+			options.Events = new JwtBearerEvents {
+				OnAuthenticationFailed = context => {
+					var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+					logger.LogError("Token failed: {Exception}", context.Exception.Message);
+					return Task.CompletedTask;
+				}
 			};
 		});
 
 		builder.Services.AddRateLimiter(rate => {
 			rate.AddFixedWindowLimiter(policyName: "fixed", options => {
 				options.PermitLimit = Common.requestPerSecondLimit;
-				options.Window = TimeSpan.FromSeconds(5);
+				options.Window = TimeSpan.FromSeconds(1);
 				options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
 				options.QueueLimit = 0;
 			})
