@@ -51,7 +51,7 @@ public class AccountsController : ControllerBase {
 
 		var token = GenerateToken(userExists);
 
-		userExists.LastLogin = DateTime.Now;
+		userExists.LastLogin = DateTime.UtcNow;
 		userExists.IsActive = true;
 		await _context.SaveChangesAsync();
 

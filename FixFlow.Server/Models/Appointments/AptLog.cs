@@ -38,7 +38,7 @@ public class AptLog {
 	/// <summary>
 	/// The DateTime when the Log was registered
 	/// </summary>
-	public DateTime dateTime { get; set; } = DateTime.Now;
+	public DateTime dateTime { get; set; } = DateTime.UtcNow;
 
 	public string? Service { get; set; }
 

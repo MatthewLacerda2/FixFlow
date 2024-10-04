@@ -119,7 +119,7 @@ public class AptLogController : ControllerBase {
 		AptLog newLog = new AptLog(createLog);
 
 		AptSchedule aptSchedule = _context.Schedules.Where(x => x.CustomerId == createLog.CustomerId)
-								.Where(x => x.dateTime.Date == DateTime.Now.Date)
+								.Where(x => x.dateTime.Date == DateTime.UtcNow.Date)
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
 		newLog.ScheduleId = aptSchedule.Id;

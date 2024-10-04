@@ -31,7 +31,7 @@ public class BusinessRegisterRequest {
 	public string OTPCode { get; set; } = string.Empty;
 
 	[MinLength(7)]
-	public string Password = string.Empty;
+	public string Password { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Must be identical to 'password'

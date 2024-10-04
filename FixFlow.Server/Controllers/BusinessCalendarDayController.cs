@@ -32,12 +32,12 @@ public class BusinessCalendarDayController : ControllerBase {
 			return NotFound(NotExistErrors.Business);
 		}
 
-		int daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+		int daysInMonth = DateTime.DaysInMonth(DateTime.UtcNow.Year, DateTime.UtcNow.Month);
 		BusinessCalendarDay[] businessCalendarDays = new BusinessCalendarDay[daysInMonth];
 
 		for (int i = 0; i < daysInMonth; i++) {
 			BusinessCalendarDay aux = new BusinessCalendarDay();
-			aux.date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, i + 1);
+			aux.date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, i + 1);
 
 			aux.schedules = _context.Schedules.Where(x => x.BusinessId == businessId)
 							.Where(x => x.dateTime == aux.date)

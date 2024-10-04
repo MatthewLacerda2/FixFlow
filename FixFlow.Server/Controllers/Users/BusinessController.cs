@@ -49,12 +49,13 @@ public class BusinessController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+	[AllowAnonymous]
 	[HttpPost]
 	public async Task<IActionResult> CreateBusiness([FromBody] BusinessRegisterRequest businessRegister) {
 
 		OTP otp = _context.OTPs.Where(o => o.Code == businessRegister.OTPCode)
 								.Where(o => o.PhoneNumber == businessRegister.PhoneNumber)
-								.Where(o => o.ExpiryTime >= DateTime.Now)
+								.Where(o => o.ExpiryTime >= DateTime.UtcNow)
 								.Where(o => o.IsUsed == false)
 								.FirstOrDefault()!;
 		if (otp == null) {
@@ -80,8 +81,11 @@ public class BusinessController : ControllerBase {
 		business.Id = Guid.NewGuid().ToString();
 
 		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.ConfirmPassword);
+
 		if (!userCreationResult.Succeeded) {
-			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful");
+			var errorList = userCreationResult.Errors.Select(e => new { e.Code, e.Description }).ToList();
+			var errorJson = System.Text.Json.JsonSerializer.Serialize(errorList);
+			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful.\n\n" + errorJson);
 		}
 
 		otp.IsUsed = true;
