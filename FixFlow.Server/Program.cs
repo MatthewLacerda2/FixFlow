@@ -14,14 +14,16 @@ public class Program {
 	public static void Main(string[] args) {
 		var builder = WebApplication.CreateBuilder(args);
 
-		builder.Services.AddIdentity<Business, IdentityRole>()
-			.AddEntityFrameworkStores<ServerContext>()
-			.AddDefaultTokenProviders();
-
 		string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 		builder.Services.AddDbContext<ServerContext>(options =>
 			options.UseNpgsql(connectionString));
+
+		builder.Services.AddIdentity<Business, IdentityRole>()
+			.AddEntityFrameworkStores<ServerContext>()
+			.AddDefaultTokenProviders();
+
+		builder.Services.AddIdentityCore<Customer>().AddEntityFrameworkStores<ServerContext>();
 
 		builder.Services.AddCors(options => {
 			options.AddPolicy("AllowAnyOrigin",

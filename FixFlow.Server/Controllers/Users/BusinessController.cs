@@ -78,7 +78,6 @@ public class BusinessController : ControllerBase {
 		//TODO:validate CNPJ
 
 		Business business = (Business)businessRegister;
-		business.Id = Guid.NewGuid().ToString();
 
 		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.ConfirmPassword);
 

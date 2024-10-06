@@ -35,6 +35,8 @@ public class CustomerDTO {
 	[EmailAddress]
 	public string? Email { get; set; }
 
+	public CustomerDTO() : this(string.Empty, string.Empty, string.Empty, null, null, null) { }
+
 	public CustomerDTO(string _Id, string fullname, string _phoneNumber, string? _email, string? additionalNote, string? cpf) {
 		Id = _Id;
 		FullName = fullname;
