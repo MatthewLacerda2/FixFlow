@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +14,7 @@ namespace Server.Controllers;
 /// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(Customer))]
-[Authorize]
+//[Authorize]
 [Produces("application/json")]
 public class CustomerController : ControllerBase {
 

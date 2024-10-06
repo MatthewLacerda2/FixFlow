@@ -84,7 +84,7 @@ public class AccountsControllerTests {
 
 		// Assert
 		var okResult = Assert.IsType<OkObjectResult>(result);
-		Assert.NotNull(okResult.Value); // Assuming GenerateToken() returns a string token.
+		Assert.NotNull(okResult.Value);
 		Assert.IsType<string>(okResult.Value);
 	}
 }

@@ -14,7 +14,7 @@ namespace Server.Controllers;
 /// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(Business))]
-[Authorize]
+//[Authorize]
 [Produces("application/json")]
 public class BusinessController : ControllerBase {
 
@@ -30,7 +30,7 @@ public class BusinessController : ControllerBase {
 	/// Gets the Business with the given Id.
 	/// Used when the User logs-in or opens the app
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpGet]
 	public async Task<IActionResult> GetBusiness(string businessId) {
@@ -40,7 +40,7 @@ public class BusinessController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		return Ok(business);
+		return Ok(new BusinessDTO(business));
 	}
 
 	/// <summary>
@@ -97,10 +97,10 @@ public class BusinessController : ControllerBase {
 	/// <summary>
 	/// Updates the Business with the given Id
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
-	public async Task<IActionResult> UpdateBusiness([FromBody] Business upBusiness) {
+	public async Task<IActionResult> UpdateBusiness([FromBody] BusinessDTO upBusiness) {
 
 		var businessExists = await _userManager.FindByIdAsync(upBusiness.Id);
 		if (businessExists == null) {
@@ -108,15 +108,14 @@ public class BusinessController : ControllerBase {
 		}
 
 		businessExists.Name = upBusiness.Name;
-		businessExists.Email = upBusiness.Email;
 		businessExists.BusinessDays = upBusiness.BusinessDays;
-		businessExists.services = upBusiness.services;
-		businessExists.allowListedServicesOnly = upBusiness.allowListedServicesOnly;
-		businessExists.openOnHolidays = upBusiness.openOnHolidays;
+		businessExists.services = upBusiness.Services;
+		businessExists.allowListedServicesOnly = upBusiness.AllowListedServicesOnly;
+		businessExists.openOnHolidays = upBusiness.OpenOnHolidays;
 
 		await _context.SaveChangesAsync();
 
-		return Ok(upBusiness);
+		return Ok(new BusinessDTO(businessExists));
 	}
 
 	/// <summary>
