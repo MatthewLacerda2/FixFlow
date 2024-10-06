@@ -15,8 +15,8 @@ namespace FixFlow.Tests.Validators {
 		[Fact]
 		public void Should_Have_Error_When_Start_Is_Greater_Than_Finish() {
 			var idlePeriod = new IdlePeriod {
-				start = DateTime.Now.AddDays(1),
-				finish = DateTime.Now
+				start = DateTime.UtcNow.AddDays(1),
+				finish = DateTime.UtcNow
 			};
 
 			var result = _validator.TestValidate(idlePeriod);
@@ -26,8 +26,8 @@ namespace FixFlow.Tests.Validators {
 		[Fact]
 		public void Should_Not_Have_Error_When_Start_Is_Less_Than_Finish() {
 			var idlePeriod = new IdlePeriod {
-				start = DateTime.Now,
-				finish = DateTime.Now.AddDays(1)
+				start = DateTime.UtcNow,
+				finish = DateTime.UtcNow.AddDays(1)
 			};
 
 			var result = _validator.TestValidate(idlePeriod);

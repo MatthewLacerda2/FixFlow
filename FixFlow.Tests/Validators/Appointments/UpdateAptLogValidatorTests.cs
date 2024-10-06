@@ -12,14 +12,14 @@ namespace FixFlow.Tests.Validators.Appointments {
 
 		[Fact]
 		public void Should_Have_Error_When_Price_Is_Negative() {
-			var model = new UpdateAptLog("1", null, DateTime.Now, null, -1, null);
+			var model = new UpdateAptLog("1", null, DateTime.UtcNow, null, -1, null);
 			var result = _validator.TestValidate(model);
 			result.ShouldHaveValidationErrorFor(x => x.Price);
 		}
 
 		[Fact]
 		public void Should_Not_Have_Error_When_Price_Is_Zero_Or_Positive() {
-			var model = new UpdateAptLog("1", null, DateTime.Now, null, 0, null);
+			var model = new UpdateAptLog("1", null, DateTime.UtcNow, null, 0, null);
 			var result = _validator.TestValidate(model);
 			result.ShouldNotHaveValidationErrorFor(x => x.Price);
 		}
@@ -40,14 +40,14 @@ namespace FixFlow.Tests.Validators.Appointments {
 
 		[Fact]
 		public void Should_Have_Error_When_DateTime_Is_In_The_Future() {
-			var model = new UpdateAptLog("1", null, DateTime.Now.AddDays(1), null, 0, null);
+			var model = new UpdateAptLog("1", null, DateTime.UtcNow.AddDays(1), null, 0, null);
 			var result = _validator.TestValidate(model);
 			result.ShouldHaveValidationErrorFor(x => x.dateTime);
 		}
 
 		[Fact]
 		public void Should_Not_Have_Error_When_DateTime_Is_Not_In_The_Future() {
-			var model = new UpdateAptLog("1", null, DateTime.Now.AddDays(-1), null, 0, null);
+			var model = new UpdateAptLog("1", null, DateTime.UtcNow.AddDays(-1), null, 0, null);
 			var result = _validator.TestValidate(model);
 			result.ShouldNotHaveValidationErrorFor(x => x.dateTime);
 		}

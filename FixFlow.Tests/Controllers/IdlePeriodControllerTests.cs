@@ -24,14 +24,14 @@ public class IdlePeriodControllerTests {
 		var badBusiness = new Business("lenda", "lenda@gmail.com", "123.4567.789-8901", "98988263255");
 		_context.Business.AddRange(business, badBusiness);
 
-		var idlePeriod = new IdlePeriod(business.Id, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1), "Test");
-		var badDatePeriod = new IdlePeriod(business.Id, DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "Test");
-		var badBiPeriod = new IdlePeriod(badBusiness.Id, DateTime.Now.AddDays(-1), DateTime.Now.AddDays(1), "Test");
+		var idlePeriod = new IdlePeriod(business.Id, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1), "Test");
+		var badDatePeriod = new IdlePeriod(business.Id, DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(2), "Test");
+		var badBiPeriod = new IdlePeriod(badBusiness.Id, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1), "Test");
 
 		_context.IdlePeriods.AddRange(idlePeriod, badDatePeriod, badBiPeriod);
 		await _context.SaveChangesAsync();
 
-		var request = new BusinessIdlePeriodsRequest(business.Id, DateTime.Now);
+		var request = new BusinessIdlePeriodsRequest(business.Id, DateTime.UtcNow);
 
 		// Act
 		var result = await _controller.GetIdlePeriodsAtDate(request) as OkObjectResult;
@@ -45,7 +45,7 @@ public class IdlePeriodControllerTests {
 	[Fact]
 	public async Task GetIdlePeriodsAtDate_BusinessNotFound_ReturnsBadRequest() {
 		// Arrange
-		var request = new BusinessIdlePeriodsRequest("666", DateTime.Now);
+		var request = new BusinessIdlePeriodsRequest("666", DateTime.UtcNow);
 		// Act
 		var result = await _controller.GetIdlePeriodsAtDate(request);
 		// Assert
@@ -59,7 +59,7 @@ public class IdlePeriodControllerTests {
 		_context.Business.Add(business);
 		await _context.SaveChangesAsync();
 
-		var idlePeriod = new IdlePeriod(business.Id, DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "Test");
+		var idlePeriod = new IdlePeriod(business.Id, DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(2), "Test");
 
 		// Act
 		var result = await _controller.CreateIdlePeriod(idlePeriod) as OkObjectResult;
@@ -76,7 +76,7 @@ public class IdlePeriodControllerTests {
 	[Fact]
 	public async Task CreateIdlePeriod_BusinessNotFound_ReturnsBadRequest() {
 		// Arrange
-		var idlePeriod = new IdlePeriod("666", DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "Test");
+		var idlePeriod = new IdlePeriod("666", DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(2), "Test");
 		// Act
 		var result = await _controller.CreateIdlePeriod(idlePeriod);
 		// Assert
@@ -87,7 +87,7 @@ public class IdlePeriodControllerTests {
 	public async Task CreateIdlePeriod_IdlePeriodHasPassed_ReturnsBadRequest() {
 		// Arrange
 		var business = new Business("lenda", "lenda@gmail.com", "987.6543.321-8901", "98988263255");
-		var idlePeriod = new IdlePeriod(business.Id, DateTime.Now.AddDays(-2), DateTime.Now.AddDays(-1), "Test");
+		var idlePeriod = new IdlePeriod(business.Id, DateTime.UtcNow.AddDays(-2), DateTime.UtcNow.AddDays(-1), "Test");
 		_context.Business.Add(business);
 		await _context.SaveChangesAsync();
 		// Act
@@ -103,7 +103,7 @@ public class IdlePeriodControllerTests {
 		_context.Business.Add(business);
 		await _context.SaveChangesAsync();
 
-		var idlePeriod = new IdlePeriod(business.Id, DateTime.Now.AddDays(1), DateTime.Now.AddDays(2), "Test");
+		var idlePeriod = new IdlePeriod(business.Id, DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(2), "Test");
 		_context.IdlePeriods.Add(idlePeriod);
 		await _context.SaveChangesAsync();
 

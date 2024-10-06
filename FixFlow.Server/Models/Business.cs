@@ -5,8 +5,8 @@ namespace Server.Models;
 
 public class Business : IdentityUser {
 
-	public DateTime CreatedDate { get; set; } = DateTime.Now;
-	public DateTime LastLogin { get; set; }
+	public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+	public DateTime LastLogin { get; set; } = DateTime.UtcNow;
 
 	public bool IsActive { get; set; } = true;
 
@@ -25,7 +25,7 @@ public class Business : IdentityUser {
 	/// </summary>
 	public List<BusinessDay> BusinessDays { get; set; }
 
-	public string[] services = Array.Empty<string>();
+	public string[] services { get; set; } = Array.Empty<string>();
 	public bool allowListedServicesOnly { get; set; } = false;
 	public bool openOnHolidays { get; set; } = false;
 
@@ -33,8 +33,10 @@ public class Business : IdentityUser {
 
 	public Business(string name, string email, string cnpj, string phoneNumber) {
 		Id = Guid.NewGuid().ToString();
-		LastLogin = DateTime.Now;
+		CreatedDate = DateTime.UtcNow;
+		LastLogin = DateTime.UtcNow;
 
+		UserName = email;
 		Name = name;
 		Email = email;
 		CNPJ = cnpj;

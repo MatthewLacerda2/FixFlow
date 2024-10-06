@@ -57,7 +57,7 @@ public class IdlePeriodController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (idlePeriod.finish <= DateTime.Now) {
+		if (idlePeriod.finish <= DateTime.UtcNow) {
 			return BadRequest(ValidatorErrors.IdlePeriodHasPassed);
 		}
 

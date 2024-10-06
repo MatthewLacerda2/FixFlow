@@ -10,7 +10,7 @@ public class IdlePeriod {
 	public DateTime start { get; set; }
 	public DateTime finish { get; set; }
 
-	public IdlePeriod() : this(string.Empty, DateTime.Now, DateTime.Now.AddDays(1), null!) { }
+	public IdlePeriod() : this(string.Empty, DateTime.UtcNow, DateTime.UtcNow.AddDays(1), null!) { }
 
 	public IdlePeriod(string businessId, DateTime start, DateTime finish, string name) {
 		Id = Guid.NewGuid().ToString();

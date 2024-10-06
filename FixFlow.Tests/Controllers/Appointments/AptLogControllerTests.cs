@@ -53,7 +53,7 @@ public class AptLogControllerTests {
 				Id = Guid.NewGuid().ToString(),
 				BusinessId = business1.Id,
 				CustomerId = client1.Id,
-				dateTime = DateTime.Now.AddHours(-i * 24),
+				dateTime = DateTime.UtcNow.AddHours(-i * 24),
 				Price = i * 10,
 				Service = "Service 1"
 			});
@@ -76,8 +76,8 @@ public class AptLogControllerTests {
 			client = "fulano ",
 			minPrice = 30,
 			maxPrice = 80,
-			minDateTime = DateTime.Now.AddDays(-7),
-			maxDateTime = DateTime.Now.AddDays(-3),
+			minDateTime = DateTime.UtcNow.AddDays(-7),
+			maxDateTime = DateTime.UtcNow.AddDays(-3),
 			service = "Service 1",
 			sort = LogSort.Price,
 			descending = true,
@@ -98,14 +98,14 @@ public class AptLogControllerTests {
 
 		Assert.Equal(client1Name, filteredLogs!.First().Customer.FullName);
 		Assert.Equal(expectedLog.Price, filteredLogs!.First().Price);
-		Assert.Equal(DateTime.Now.AddDays(-5).Date, filteredLogs!.First().dateTime.Date);
+		Assert.Equal(DateTime.UtcNow.AddDays(-5).Date, filteredLogs!.First().dateTime.Date);
 		Assert.Equal(expectedLog.Service, filteredLogs!.First().Service);
 	}
 
 	[Fact]
 	public async Task CreateLog_CustomerDoesNotExist_ReturnsBadRequest() {
 		// Arrange
-		var createLog = new CreateAptLog("client-id", "business-id", null, DateTime.Now, 100, null, null, DateTime.Now.AddDays(30));
+		var createLog = new CreateAptLog("client-id", "business-id", null, DateTime.UtcNow, 100, null, null, DateTime.UtcNow.AddDays(30));
 
 		_context.Business.Add(new Business("business", "business@example.com", "123456789", "1234567890"));
 		_context.SaveChanges();
@@ -131,7 +131,7 @@ public class AptLogControllerTests {
 		_context.Customers.Add(client);
 		_context.SaveChanges();
 
-		var createLog = new CreateAptLog(client.Id, business.Id, null, DateTime.Now, 100, null, null, DateTime.Now.AddDays(30));
+		var createLog = new CreateAptLog(client.Id, business.Id, null, DateTime.UtcNow, 100, null, null, DateTime.UtcNow.AddDays(30));
 
 		// Act
 		var result = await _controller.CreateLog(createLog) as BadRequestObjectResult;
@@ -150,13 +150,13 @@ public class AptLogControllerTests {
 			services = ["Service 1", "Service 2"]
 		};
 		var customer = new Customer(business.Id, "98988263255", "Customer Name", null, null, null);
-		var schedule = new AptSchedule(customer.Id, business.Id, DateTime.Now, 100, null);
+		var schedule = new AptSchedule(customer.Id, business.Id, DateTime.UtcNow, 100, null);
 		_context.Business.Add(business);
 		_context.Customers.Add(customer);
 		_context.Schedules.Add(schedule);
 		_context.SaveChanges();
 
-		var createLog = new CreateAptLog(customer.Id, business.Id, schedule.Id, DateTime.Now, 100, "Service 2", null, DateTime.Now.AddDays(30));
+		var createLog = new CreateAptLog(customer.Id, business.Id, schedule.Id, DateTime.UtcNow, 100, "Service 2", null, DateTime.UtcNow.AddDays(30));
 		createLog.dateTime.AddDays(-(int)createLog.dateTime.DayOfWeek);
 
 		// Act
@@ -183,7 +183,7 @@ public class AptLogControllerTests {
 	[Fact]
 	public async Task UpdateLog_AptLogDoesNotExist_ReturnsBadRequest() {
 		// Arrange
-		var upLog = new UpdateAptLog("non-exist-log", null, DateTime.Now, null, 200, null);
+		var upLog = new UpdateAptLog("non-exist-log", null, DateTime.UtcNow, null, 200, null);
 
 		// Act
 		var result = await _controller.UpdateLog(upLog) as BadRequestObjectResult;
@@ -205,7 +205,7 @@ public class AptLogControllerTests {
 		var log = new AptLog {
 			CustomerId = client.Id,
 			BusinessId = business.Id,
-			dateTime = DateTime.Now,
+			dateTime = DateTime.UtcNow,
 			Price = 100,
 			Service = "Service 2"
 		};
@@ -215,7 +215,7 @@ public class AptLogControllerTests {
 		_context.Logs.Add(log);
 		_context.SaveChanges();
 
-		var upLog = new UpdateAptLog(log.Id, null, DateTime.Now, "UnlistedService", 100, null);
+		var upLog = new UpdateAptLog(log.Id, null, DateTime.UtcNow, "UnlistedService", 100, null);
 
 		// Act
 		var result = await _controller.UpdateLog(upLog) as BadRequestObjectResult;
@@ -237,7 +237,7 @@ public class AptLogControllerTests {
 		var log = new AptLog {
 			CustomerId = client.Id,
 			BusinessId = business.Id,
-			dateTime = DateTime.Now,
+			dateTime = DateTime.UtcNow,
 			Price = 100,
 			Service = "Service 2"
 		};
@@ -247,7 +247,7 @@ public class AptLogControllerTests {
 		_context.Logs.Add(log);
 		_context.SaveChanges();
 
-		var upLog = new UpdateAptLog(log.Id, "non-exist-schedule-id", DateTime.Now, "Service 2", 100, null);
+		var upLog = new UpdateAptLog(log.Id, "non-exist-schedule-id", DateTime.UtcNow, "Service 2", 100, null);
 
 		// Act
 		var result = await _controller.UpdateLog(upLog) as BadRequestObjectResult;
@@ -266,12 +266,12 @@ public class AptLogControllerTests {
 			services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "123456789", "Customer Name", null, null, null);
-		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddHours(-1), 100, null);
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddHours(-1), 100, null);
 		var log = new AptLog {
 			CustomerId = client.Id,
 			BusinessId = business.Id,
 			ScheduleId = null,
-			dateTime = DateTime.Now.AddHours(-1),
+			dateTime = DateTime.UtcNow.AddHours(-1),
 			Price = 100,
 			Service = "Service 1"
 		};
@@ -282,7 +282,7 @@ public class AptLogControllerTests {
 		_context.Logs.Add(log);
 		_context.SaveChanges();
 
-		var upLog = new UpdateAptLog(log.Id, schedule.Id, DateTime.Now, "Service 2", 200, "description");
+		var upLog = new UpdateAptLog(log.Id, schedule.Id, DateTime.UtcNow, "Service 2", 200, "description");
 
 		// Act
 		var result = await _controller.UpdateLog(upLog) as OkObjectResult;
@@ -321,11 +321,11 @@ public class AptLogControllerTests {
 			Id = "log-id",
 			CustomerId = client.Id,
 			BusinessId = business.Id,
-			dateTime = DateTime.Now,
+			dateTime = DateTime.UtcNow,
 			Price = 100,
 			Service = "Service 1"
 		};
-		var contact = new AptContact(log, DateTime.Now.AddDays(-30));
+		var contact = new AptContact(log, DateTime.UtcNow.AddDays(-30));
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);

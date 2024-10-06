@@ -52,7 +52,16 @@ public class BusinessControllerTests {
 
 		// Assert
 		var okResult = Assert.IsType<OkObjectResult>(result);
-		Assert.Equal(business, okResult.Value);
+		var okResultValue = Assert.IsType<BusinessDTO>(okResult.Value);
+		Assert.Equal(business.Id, okResultValue.Id);
+		Assert.Equal(business.Name, okResultValue.Name);
+		Assert.Equal(business.Email, okResultValue.Email);
+		Assert.Equal(business.CNPJ, okResultValue.CNPJ);
+		Assert.Equal(business.PhoneNumber, okResultValue.PhoneNumber);
+		Assert.Equal(business.BusinessDays, okResultValue.BusinessDays);
+		Assert.Equal(business.services, okResultValue.Services);
+		Assert.Equal(business.allowListedServicesOnly, okResultValue.AllowListedServicesOnly);
+		Assert.Equal(business.openOnHolidays, okResultValue.OpenOnHolidays);
 	}
 
 	[Fact]
@@ -176,22 +185,22 @@ public class BusinessControllerTests {
 		// Arrange
 		var businessId = "test-business-id";
 		var business = new Business("lenda", "lenda@gmail.com", "123.4567.789-0001", "98999344788") { Id = businessId };
-		var updatedBusiness = new Business("updatedName", "updated@gmail.com", "123.4567.789-0001", "98999344788") { Id = businessId };
+		var upBusiness = new Business("updatedName", "updated@gmail.com", "123.4567.789-0001", "98999344788") { Id = businessId };
+		var upBusinessDTO = new BusinessDTO(upBusiness);
 
 		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync(business);
 
 		// Act
-		var result = await _controller.UpdateBusiness(updatedBusiness);
+		var result = await _controller.UpdateBusiness(upBusinessDTO);
 
 		// Assert
 		var okResult = Assert.IsType<OkObjectResult>(result);
-		Assert.Equal(updatedBusiness, okResult.Value);
+		var okResultValue = Assert.IsType<BusinessDTO>(okResult.Value);
 
-		Assert.Equal(business.Name, updatedBusiness.Name);
-		Assert.Equal(business.Email, updatedBusiness.Email);
-		Assert.Equal(business.BusinessDays, updatedBusiness.BusinessDays);
-		Assert.Equal(business.allowListedServicesOnly, updatedBusiness.allowListedServicesOnly);
-		Assert.Equal(business.openOnHolidays, updatedBusiness.openOnHolidays);
+		Assert.Equal(business.BusinessDays, upBusiness.BusinessDays);
+		Assert.Equal(business.services, upBusiness.services);
+		Assert.Equal(business.allowListedServicesOnly, upBusiness.allowListedServicesOnly);
+		Assert.Equal(business.openOnHolidays, upBusiness.openOnHolidays);
 	}
 
 	[Fact]
@@ -201,7 +210,7 @@ public class BusinessControllerTests {
 		var updatedBusiness = new Business("updatedName", "updated@gmail.com", "123.4567.789-0001", "98999344788") { Id = businessId };
 
 		// Act
-		var result = await _controller.UpdateBusiness(updatedBusiness);
+		var result = await _controller.UpdateBusiness(new BusinessDTO(updatedBusiness));
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -245,10 +254,10 @@ public class BusinessControllerTests {
 		_mockUserManager.Setup(x => x.DeleteAsync(business)).ReturnsAsync(IdentityResult.Success);
 
 		Customer client = new Customer(businessId, "98912345678", "fulano da silva bezerra", null, null, null);
-		AptSchedule schedule = new AptSchedule(client.Id, businessId, DateTime.Now.AddDays(-1), 100f, null);
-		CreateAptLog createAptLog = new CreateAptLog(client.Id, businessId, schedule.Id, DateTime.Now, 100f, null, null, DateTime.Now.AddDays(90));
+		AptSchedule schedule = new AptSchedule(client.Id, businessId, DateTime.UtcNow.AddDays(-1), 100f, null);
+		CreateAptLog createAptLog = new CreateAptLog(client.Id, businessId, schedule.Id, DateTime.UtcNow, 100f, null, null, DateTime.UtcNow.AddDays(90));
 		AptLog log = new AptLog(createAptLog);
-		AptContact contact = new AptContact(log, DateTime.Now);
+		AptContact contact = new AptContact(log, DateTime.UtcNow);
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);

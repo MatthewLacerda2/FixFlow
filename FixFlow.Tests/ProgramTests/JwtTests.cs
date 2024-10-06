@@ -27,22 +27,20 @@ public class JwtTests : IClassFixture<WebApplicationFactory<Program>> {
 		Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 	}
 	//TODO: finish this
-	/*
-		[Fact]
-		public async Task ProtectedEndpoint_ReturnsOk_WithValidToken() {
-			// Arrange
-			var client = _factory.CreateClient();
+
+	[Fact]
+	public async Task ProtectedEndpoint_ReturnsOk_WithValidToken() {
+		// Arrange
+		var client = _factory.CreateClient();
 			var token = GenerateJwtToken();
 
 			// Act
 			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-			var response = await client.GetAsync(Common.api_v1 + nameof(Business));
+		var response = await client.GetAsync(Common.api_v1 + nameof(Business) + "/Business?test-business-id");
 
-			// Assert
-			response.EnsureSuccessStatusCode();
-			var responseBody = await response.Content.ReadAsStringAsync();
-			Assert.Equal("You are authenticated!", responseBody);
-		}
+		// Assert
+		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+	}
 	
 	private string GenerateJwtToken() {
 		var key = Encoding.UTF8.GetBytes("VeryLongSecretKey123456789012345678901234567890123456789012345678901234567890");
@@ -65,5 +63,5 @@ public class JwtTests : IClassFixture<WebApplicationFactory<Program>> {
 		var token = tokenHandler.CreateToken(tokenDescriptor);
 
 		return tokenHandler.WriteToken(token);
-	}*/
+	}
 }

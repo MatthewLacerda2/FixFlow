@@ -15,11 +15,11 @@ public class CreateAptLogValidator : AbstractValidator<CreateAptLog> {
 			.GreaterThanOrEqualTo(new DateTime(2024, 1, 1))
 			.WithMessage(ValidatorErrors.DateMustBe2024orForward);
 		RuleFor(x => x.dateTime)
-			.LessThanOrEqualTo(DateTime.Now)
+			.LessThanOrEqualTo(DateTime.UtcNow)
 			.WithMessage(ValidatorErrors.DateMustNotBeInTheFuture);
 
 		RuleFor(x => x.whenShouldCustomerComeBack)
-			.GreaterThan(DateTime.Now.Date)
+			.GreaterThan(DateTime.UtcNow.Date)
 			.WithMessage(ValidatorErrors.DateMustBeInTheFuture);
 	}
 }

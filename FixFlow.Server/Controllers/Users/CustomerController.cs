@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +14,7 @@ namespace Server.Controllers;
 /// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(Customer))]
-[Authorize]
+//[Authorize]
 [Produces("application/json")]
 public class CustomerController : ControllerBase {
 
@@ -120,12 +119,14 @@ public class CustomerController : ControllerBase {
 
 		IdentityResult userCreationResult = await _userManager.CreateAsync(customer);
 		if (!userCreationResult.Succeeded) {
-			return StatusCode(500, "Internal Server Error: Register Customer Unsuccessful");
+			var errorList = userCreationResult.Errors.Select(e => new { e.Code, e.Description }).ToList();
+			var errorJson = System.Text.Json.JsonSerializer.Serialize(errorList);
+			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful.\n\n" + errorJson);
 		}
 
 		await _context.SaveChangesAsync();
 
-		return CreatedAtAction(nameof(CreateCustomer), (CustomerDTO)customer);
+		return CreatedAtAction(nameof(CreateCustomer), customer);
 	}
 
 	/// <summary>
