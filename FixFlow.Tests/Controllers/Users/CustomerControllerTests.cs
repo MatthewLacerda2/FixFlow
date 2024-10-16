@@ -114,7 +114,7 @@ public class CustomerControllerTests {
 
 		// Assert
 		var createdResult = Assert.IsType<CreatedAtActionResult>(result);
-		var customerDto = Assert.IsType<CustomerDTO>(createdResult.Value);
+		var customerDto = Assert.IsType<Customer>(createdResult.Value);
 		Assert.Equal(customerCreate.PhoneNumber, customerDto.PhoneNumber);
 		Assert.Equal(customerCreate.FullName, customerDto.FullName);
 		Assert.Equal(customerCreate.Email, customerDto.Email);

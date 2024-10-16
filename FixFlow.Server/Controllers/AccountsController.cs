@@ -82,7 +82,7 @@ public class AccountsController : ControllerBase {
 
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-	[Authorize]
+	//[Authorize]
 	[HttpPost("logout")]
 	public async Task<IActionResult> Logout() {
 		try {

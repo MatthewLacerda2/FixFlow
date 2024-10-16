@@ -22,11 +22,11 @@ public class JwtTests : IClassFixture<WebApplicationFactory<Program>> {
 		// Arrange
 		var client = _factory.CreateClient();
 		// Act
-		var response = await client.GetAsync(Common.api_v1 + nameof(Business));
+		var response = await client.GetAsync($"{Common.api_v1}{nameof(Business)}?businessId=test-business-id");
 		// Assert
 		Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 	}
-	//TODO: finish this
+
 
 	[Fact]
 	public async Task ProtectedEndpoint_ReturnsOk_WithValidToken() {

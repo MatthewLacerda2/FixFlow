@@ -116,7 +116,8 @@ public class BusinessControllerTests {
 		_context.Business.Add((Business)businessRegister);
 		_context.SaveChanges();
 
-		businessRegister.Email = "bezerra@hotmail.com";
+		businessRegister.Email = "outroemail@gmail.com";
+		businessRegister.PhoneNumber = "981199344788";
 
 		// Act
 		var result = await _controller.CreateBusiness(businessRegister);

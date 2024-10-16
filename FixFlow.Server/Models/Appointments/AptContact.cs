@@ -13,7 +13,7 @@ public class AptContact {
 	/// The Id of the Customer to Contact
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Models.Customer))]
+	[ForeignKey(nameof(Customer))]
 	public string CustomerId { get; set; }
 
 	/// <summary>
