@@ -12,7 +12,7 @@ using Server.Models.Utils;
 namespace Server.Controllers;
 
 [ApiController]
-[Route("api/v1/accounts")]
+[Route(Common.api_v1 + "accounts")]
 [Produces("application/json")]
 public class AccountsController : ControllerBase {
 
@@ -51,7 +51,6 @@ public class AccountsController : ControllerBase {
 
 		var token = GenerateToken(userExists);
 
-		userExists.LastLogin = DateTime.UtcNow;
 		userExists.IsActive = true;
 		await _context.SaveChangesAsync();
 

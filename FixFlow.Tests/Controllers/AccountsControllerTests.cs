@@ -1,12 +1,12 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Server.Controllers;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Server.Data;
 using Server.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace FixFlow.Tests.Controllers;
 

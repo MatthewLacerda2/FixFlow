@@ -6,8 +6,6 @@ public static class Common {
 
 	public const int tokenExpirationTimeInMinutes = 60 * 10;
 
-	public const int otpExpirationTimeInMinutes = 7;
-
 	public const int requestPerSecondLimit = 5;
 
 }

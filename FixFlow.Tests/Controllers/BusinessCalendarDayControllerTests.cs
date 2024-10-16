@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers;
 using Server.Data;
+using Server.Models;
 using Server.Models.DTO;
 using Server.Models.Erros;
-using Server.Models;
 
 namespace FixFlow.Tests.Controllers;
 

@@ -1,6 +1,6 @@
 using System;
-using FluentValidation.TestHelper;
 using FixFlow.Server.Validators;
+using FluentValidation.TestHelper;
 using Server.Models;
 using Xunit;
 

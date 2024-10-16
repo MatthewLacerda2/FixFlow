@@ -2,8 +2,6 @@ namespace Server.Models.Erros;
 
 public struct ValidatorErrors {
 
-	public static readonly string InvalidOTP = "Código OTP inválido";
-
 	public static readonly string TokenNotHaveBusinessId = "Your token does not have a BusinessId.";
 	public static readonly string NullBusinessId = "Your token's BusinessId value is null.";
 	public static readonly string NoOpenBusinessDay = "There must be at least one open Business Day.";

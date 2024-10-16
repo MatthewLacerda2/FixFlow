@@ -5,6 +5,7 @@ using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
 using Server.Models.Filters;
+using Server.Utils;
 
 namespace FixFlow.Tests.Controllers;
 
@@ -151,19 +152,20 @@ public class AptScheduleControllerTests {
 	[Fact]
 	public async Task CreateSchedule_ReturnsBadRequest_WhenDateWithinIdlePeriod() {
 		// Arrange
+		//IUASHISDAYUH
 		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
 			allowListedServicesOnly = false
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
-		var dateTime = business.BusinessDays[1].Start.AddHours(1);
-		var idlePeriod = new IdlePeriod(business.Id, dateTime, dateTime.AddDays(2), "Test");
+		var dateAndTime = TimeSpoil.GetNextDayOfWeekWithTime(DayOfWeek.Sunday, DateTime.Now.TimeOfDay);
+		var idlePeriod = new IdlePeriod(business.Id, dateAndTime, dateAndTime.AddDays(2), "Test");
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);
 		_context.IdlePeriods.Add(idlePeriod);
 		_context.SaveChanges();
 
-		var newAppointment = new CreateAptSchedule(client.Id, dateTime, 100, "Service 1", null);
+		var newAppointment = new CreateAptSchedule(client.Id, dateAndTime, 100, "Service 1", null);
 
 		// Act
 		var result = await _controller.CreateSchedule(newAppointment) as BadRequestObjectResult;
@@ -182,13 +184,13 @@ public class AptScheduleControllerTests {
 			services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
-		var dateTime = business.BusinessDays[1].Start.AddHours(1);
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);
 		_context.SaveChanges();
 
-		var newAppointment = new CreateAptSchedule(client.Id, dateTime, 100, "Service 1", null);
+		var dateAndTime = TimeSpoil.GetNextDayOfWeekWithTime(DayOfWeek.Sunday, DateTime.Now.TimeOfDay);
+		var newAppointment = new CreateAptSchedule(client.Id, dateAndTime, 100, "Service 1", null);
 
 		// Act
 		var result = await _controller.CreateSchedule(newAppointment) as CreatedAtActionResult;

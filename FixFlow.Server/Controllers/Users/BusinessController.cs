@@ -53,15 +53,6 @@ public class BusinessController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateBusiness([FromBody] BusinessRegisterRequest businessRegister) {
 
-		OTP otp = _context.OTPs.Where(o => o.Code == businessRegister.OTPCode)
-								.Where(o => o.PhoneNumber == businessRegister.PhoneNumber)
-								.Where(o => o.ExpiryTime >= DateTime.UtcNow)
-								.Where(o => o.IsUsed == false)
-								.FirstOrDefault()!;
-		if (otp == null) {
-			return BadRequest(ValidatorErrors.InvalidOTP);
-		}
-
 		var existingEmail = await _userManager.FindByEmailAsync(businessRegister.Email);
 		if (existingEmail != null) {
 			return BadRequest(AlreadyRegisteredErrors.Email);
@@ -87,7 +78,6 @@ public class BusinessController : ControllerBase {
 			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful.\n\n" + errorJson);
 		}
 
-		otp.IsUsed = true;
 		await _context.SaveChangesAsync();
 
 		return CreatedAtAction(nameof(CreateBusiness), business);
@@ -107,7 +97,7 @@ public class BusinessController : ControllerBase {
 		}
 
 		businessExists.Name = upBusiness.Name;
-		businessExists.BusinessDays = upBusiness.BusinessDays;
+		businessExists.BusinessWeek = upBusiness.BusinessWeek;
 		businessExists.services = upBusiness.Services;
 		businessExists.allowListedServicesOnly = upBusiness.AllowListedServicesOnly;
 		businessExists.openOnHolidays = upBusiness.OpenOnHolidays;

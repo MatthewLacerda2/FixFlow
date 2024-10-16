@@ -73,3 +73,4 @@ build/
 .android/
 .ios/
 .lib/flow_api
+.fake

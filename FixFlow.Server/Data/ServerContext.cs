@@ -6,16 +6,14 @@ namespace Server.Data;
 
 public class ServerContext : IdentityDbContext {
 
-	public DbSet<Customer> Customers { get; set; } = default!;
 	public DbSet<Business> Business { get; set; } = default!;
-
-	public DbSet<AptLog> Logs { get; set; } = default!;
-	public DbSet<AptContact> Contacts { get; set; } = default!;
-	public DbSet<AptSchedule> Schedules { get; set; } = default!;
+	public DbSet<Customer> Customers { get; set; } = default!;
 
 	public DbSet<IdlePeriod> IdlePeriods { get; set; } = default!;
 
-	public DbSet<OTP> OTPs { get; set; } = default!;
+	public DbSet<AptSchedule> Schedules { get; set; } = default!;
+	public DbSet<AptLog> Logs { get; set; } = default!;
+	public DbSet<AptContact> Contacts { get; set; } = default!;
 
 	public ServerContext(DbContextOptions<ServerContext> options)
 		: base(options) {
@@ -42,9 +40,6 @@ public class ServerContext : IdentityDbContext {
 				.HasOne<Business>()
 				.WithMany()
 				.HasForeignKey(i => i.BusinessId);
-
-		builder.Entity<Business>()
-		   .OwnsMany(b => b.BusinessDays);
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {

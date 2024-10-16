@@ -58,28 +58,10 @@ public class BusinessControllerTests {
 		Assert.Equal(business.Email, okResultValue.Email);
 		Assert.Equal(business.CNPJ, okResultValue.CNPJ);
 		Assert.Equal(business.PhoneNumber, okResultValue.PhoneNumber);
-		Assert.Equal(business.BusinessDays, okResultValue.BusinessDays);
+		Assert.Equal(business.BusinessWeek, okResultValue.BusinessWeek);
 		Assert.Equal(business.services, okResultValue.Services);
 		Assert.Equal(business.allowListedServicesOnly, okResultValue.AllowListedServicesOnly);
 		Assert.Equal(business.openOnHolidays, okResultValue.OpenOnHolidays);
-	}
-
-	[Fact]
-	public async Task CreateBusiness_ReturnsBadRequest_WhenOTPIsInvalid() {
-		// Arrange
-		var phoneNumber = "98999344788";
-		var password = "@Password123!";
-		var businessRegister = new BusinessRegisterRequest("lenda", "lenda@gmail.com", "123.4567.789-0001", phoneNumber, password, password, "XXXXXX");
-
-		_context.OTPs.Add(new OTP(phoneNumber));
-		_context.SaveChanges();
-
-		// Act
-		var result = await _controller.CreateBusiness(businessRegister);
-
-		// Assert
-		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-		Assert.Equal(ValidatorErrors.InvalidOTP, badRequestResult.Value);
 	}
 
 	[Fact]
@@ -87,12 +69,10 @@ public class BusinessControllerTests {
 		// Arrange
 		var phoneNumber = "98999344788";
 		var password = "@Password123!";
-		OTP otp = new OTP(phoneNumber);
-		var businessRegister = new BusinessRegisterRequest("lenda", "lenda@gmail.com", "123.4567.789-0001", phoneNumber, password, password, otp.Code);
+		var businessRegister = new BusinessRegisterRequest("lenda", "lenda@gmail.com", "123.4567.789-0001", phoneNumber, password, password);
 
 		_mockUserManager.Setup(x => x.FindByEmailAsync(businessRegister.Email)).ReturnsAsync((Business)businessRegister);
 
-		_context.OTPs.Add(otp);
 		_context.SaveChanges();
 
 		// Act
@@ -108,13 +88,11 @@ public class BusinessControllerTests {
 		// Arrange
 		var phoneNumber = "98999344788";
 		var password = "@Password123!";
-		OTP otp = new OTP(phoneNumber);
-		var businessRegister = new BusinessRegisterRequest("lenda", "lenda@gmail.com", "123.4567.789-0001", phoneNumber, password, password, otp.Code);
+		var businessRegister = new BusinessRegisterRequest("lenda", "lenda@gmail.com", "123.4567.789-0001", phoneNumber, password, password);
 
 		_mockUserManager.Setup(x => x.FindByEmailAsync(businessRegister.Email)).ReturnsAsync((Business)businessRegister);
 
 		_context.Business.Add((Business)businessRegister);
-		_context.OTPs.Add(otp);
 		_context.SaveChanges();
 
 		businessRegister.Email = "bezerra@hotmail.com";
@@ -130,19 +108,15 @@ public class BusinessControllerTests {
 	[Fact]
 	public async Task CreateBusiness_ReturnsBadRequest_WhenCNPJAlreadyExists() {
 		// Arrange
-		var phoneNumber = "98999344788";
 		var password = "@Password123!";
-		OTP otp = new OTP(phoneNumber);
-		var businessRegister = new BusinessRegisterRequest("lenda", "lenda@gmail.com", "123.4567.789-0001", "98988263255", password, password, otp.Code);
+		var businessRegister = new BusinessRegisterRequest("lenda", "lenda@gmail.com", "123.4567.789-0001", "98988263255", password, password);
 
 		_mockUserManager.Setup(x => x.FindByEmailAsync(businessRegister.Email)).ReturnsAsync((Business)businessRegister);
 
 		_context.Business.Add((Business)businessRegister);
-		_context.OTPs.Add(otp);
 		_context.SaveChanges();
 
 		businessRegister.Email = "bezerra@hotmail.com";
-		businessRegister.PhoneNumber = otp.PhoneNumber;
 
 		// Act
 		var result = await _controller.CreateBusiness(businessRegister);
@@ -157,13 +131,11 @@ public class BusinessControllerTests {
 		// Arrange
 		var phoneNumber = "98999344788";
 		var password = "@Password123!";
-		OTP otp = new OTP(phoneNumber);
-		var businessRegister = new BusinessRegisterRequest("lenda", "lenda@gmail.com", "123.4567.789-0001", phoneNumber, password, password, otp.Code);
+		var businessRegister = new BusinessRegisterRequest("lenda", "lenda@gmail.com", "123.4567.789-0001", phoneNumber, password, password);
 
 		_mockUserManager.Setup(x => x.FindByEmailAsync(businessRegister.Email)).ReturnsAsync((Business)null!);
 		_mockUserManager.Setup(x => x.CreateAsync(It.IsAny<Business>(), businessRegister.ConfirmPassword)).ReturnsAsync(IdentityResult.Success);
 
-		_context.OTPs.Add(otp);
 		_context.SaveChanges();
 
 		// Act
@@ -197,7 +169,7 @@ public class BusinessControllerTests {
 		var okResult = Assert.IsType<OkObjectResult>(result);
 		var okResultValue = Assert.IsType<BusinessDTO>(okResult.Value);
 
-		Assert.Equal(business.BusinessDays, upBusiness.BusinessDays);
+		Assert.Equal(business.BusinessWeek, upBusiness.BusinessWeek);
 		Assert.Equal(business.services, upBusiness.services);
 		Assert.Equal(business.allowListedServicesOnly, upBusiness.allowListedServicesOnly);
 		Assert.Equal(business.openOnHolidays, upBusiness.openOnHolidays);

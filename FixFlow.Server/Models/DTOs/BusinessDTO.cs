@@ -4,7 +4,7 @@ public class BusinessDTO {
 
 	public string Id { get; set; } = string.Empty;
 
-	public List<BusinessDay> BusinessDays { get; set; }
+	public BusinessWeek BusinessWeek { get; set; }
 	public string[] Services { get; set; } = Array.Empty<string>();
 	public bool AllowListedServicesOnly { get; set; }
 	public bool OpenOnHolidays { get; set; }
@@ -16,15 +16,12 @@ public class BusinessDTO {
 
 	public BusinessDTO() {
 		Id = Guid.NewGuid().ToString();
-		BusinessDays = new List<BusinessDay>(7);
-		for (int i = 0; i < 7; i++) {
-			BusinessDays.Add(new BusinessDay());
-		}
+		BusinessWeek = new BusinessWeek();
 	}
 
 	public BusinessDTO(Business business) {
 		Id = business.Id;
-		BusinessDays = business.BusinessDays;
+		BusinessWeek = business.BusinessWeek;
 		Services = business.services;
 		AllowListedServicesOnly = business.allowListedServicesOnly;
 		OpenOnHolidays = business.openOnHolidays;

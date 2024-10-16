@@ -21,7 +21,7 @@ public class RateLimiterTests : IClassFixture<WebApplicationFactory<Program>> {
 		HttpContent content = new StringContent("\"98999344788\"", Encoding.UTF8, "application/json");
 
 		// Act
-		var response1 = await client.PostAsync(Common.api_v1 + nameof(OTP), content);
+		var response1 = await client.PostAsync(Common.api_v1 + "accounts", content);
 
 		// Assert
 		Assert.Equal(HttpStatusCode.OK, response1.StatusCode);

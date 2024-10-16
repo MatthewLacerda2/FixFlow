@@ -32,16 +32,16 @@ public class JwtTests : IClassFixture<WebApplicationFactory<Program>> {
 	public async Task ProtectedEndpoint_ReturnsOk_WithValidToken() {
 		// Arrange
 		var client = _factory.CreateClient();
-			var token = GenerateJwtToken();
+		var token = GenerateJwtToken();
 
-			// Act
-			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+		// Act
+		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 		var response = await client.GetAsync(Common.api_v1 + nameof(Business) + "/Business?test-business-id");
 
 		// Assert
 		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 	}
-	
+
 	private string GenerateJwtToken() {
 		var key = Encoding.UTF8.GetBytes("VeryLongSecretKey123456789012345678901234567890123456789012345678901234567890");
 
