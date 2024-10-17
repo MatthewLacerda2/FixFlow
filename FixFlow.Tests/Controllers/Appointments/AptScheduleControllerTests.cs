@@ -53,19 +53,13 @@ public class AptScheduleControllerTests {
 		_context.Schedules.AddRange(schedules);
 		_context.SaveChanges();
 
-		var filter = new AptScheduleFilter {
-			businessId = business1.Id,
-			client = "fulano ",
-			minPrice = 20,
-			maxPrice = 90,
-			minDateTime = DateTime.UtcNow.AddDays(3),
-			maxDateTime = DateTime.UtcNow.AddDays(8),
-			service = "Service 1",
-			sort = ScheduleSort.Price,
-			descending = true,
-			offset = 1,
-			limit = 1
-		};
+		var filter = new AptScheduleFilter(business1.Id, ScheduleSort.Price, DateTime.UtcNow.AddDays(3), DateTime.UtcNow.AddDays(8));
+		filter.client = "fulano ";
+		filter.minPrice = 20;
+		filter.maxPrice = 90;
+		filter.service = "Service 1";
+		filter.offset = 1;
+		filter.limit = 1;
 
 		var expectedSchedule = schedules[7];
 

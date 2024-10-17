@@ -23,7 +23,8 @@ public struct ValidatorErrors {
 
 	public static readonly string PriceMustBeNaturalNumber = "Price must be Greater Than or Equal to 0.";
 	public static readonly string MinPriceIsGreaterThanMaxPrice = "MinPrice must be less than or equal to MaxPrice.";
-	public static readonly string OffsetMustBeNaturalNumber = "Offset must be Greater Than or Equal to 0.";
+	public static readonly string OffsetMustBeNaturalNumber = "Offset must bea natural number Greater Than or Equal to 0.";
+	public static readonly string LimitMustBeNaturalNumberGreaterThanZero = "Limit must be a natural number greater than 0.";
 
 	public static readonly string CPFisInvalid = "CPF is invalid.";
 	public static readonly string CNPJisInvalid = "CNPJ is invalid.";

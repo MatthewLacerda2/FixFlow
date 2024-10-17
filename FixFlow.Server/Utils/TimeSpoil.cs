@@ -5,10 +5,6 @@ namespace Server.Utils;
 /// </summary>
 public class TimeSpoil {
 
-	public static DateTime FromDateToDateTime(DateOnly date) {
-		return date.ToDateTime(new TimeOnly(0, 0, 0));
-	}
-
 	public static DateTime GetNextDayOfWeekWithTime(DayOfWeek dayOfWeek, TimeSpan timeOfDay) {
 		DateTime now = DateTime.Now;
 		int currentDayOfWeek = (int)now.DayOfWeek;

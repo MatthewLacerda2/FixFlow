@@ -71,19 +71,13 @@ public class AptLogControllerTests {
 		_context.Logs.AddRange(logs);
 		_context.SaveChanges();
 
-		var filter = new AptLogFilter {
-			businessId = business1.Id,
-			client = "fulano ",
-			minPrice = 30,
-			maxPrice = 80,
-			minDateTime = DateTime.UtcNow.AddDays(-7),
-			maxDateTime = DateTime.UtcNow.AddDays(-3),
-			service = "Service 1",
-			sort = LogSort.Price,
-			descending = true,
-			offset = 1,
-			limit = 1
-		};
+		var filter = new AptLogFilter(business1.Id, LogSort.Price, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow.AddDays(-3));
+		filter.client = "fulano ";
+		filter.minPrice = 30;
+		filter.maxPrice = 80;
+		filter.service = "Service 1";
+		filter.offset = 1;
+		filter.limit = 1;
 
 		var expectedLog = logs[5];
 

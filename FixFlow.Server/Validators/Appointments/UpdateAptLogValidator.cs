@@ -17,5 +17,9 @@ public class UpdateAptLogValidator : AbstractValidator<UpdateAptLog> {
 		RuleFor(x => x.dateTime)
 			.LessThanOrEqualTo(DateTime.UtcNow)
 			.WithMessage(ValidatorErrors.DateMustNotBeInTheFuture);
+
+		RuleFor(x => x.Price)
+			.GreaterThanOrEqualTo(0)
+			.WithMessage(ValidatorErrors.PriceMustBeNaturalNumber);
 	}
 }

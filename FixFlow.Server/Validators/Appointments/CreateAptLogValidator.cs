@@ -21,5 +21,9 @@ public class CreateAptLogValidator : AbstractValidator<CreateAptLog> {
 		RuleFor(x => x.whenShouldCustomerComeBack)
 			.GreaterThan(DateTime.UtcNow.Date)
 			.WithMessage(ValidatorErrors.DateMustBeInTheFuture);
+
+		RuleFor(x => x.price)
+			.GreaterThanOrEqualTo(0)
+			.WithMessage(ValidatorErrors.PriceMustBeNaturalNumber);
 	}
 }

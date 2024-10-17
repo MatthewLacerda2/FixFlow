@@ -46,13 +46,21 @@ namespace FixFlow.Tests.Validators.Filters {
 		}
 
 		[Fact]
+		public void Should_Have_Error_When_Limit_Is_Less_Than_One() {
+			var model = new AptLogFilter { limit = 0 };
+			var result = _validator.TestValidate(model);
+			result.ShouldHaveValidationErrorFor(x => x.limit);
+		}
+
+		[Fact]
 		public void Should_Not_Have_Error_When_Model_Is_Valid() {
 			var model = new AptLogFilter {
 				minPrice = 10,
 				maxPrice = 100,
 				minDateTime = new DateTime(2024, 1, 1),
 				maxDateTime = new DateTime(2024, 12, 31),
-				offset = 0
+				offset = 0,
+				limit = 1
 			};
 			var result = _validator.TestValidate(model);
 			result.ShouldNotHaveAnyValidationErrors();

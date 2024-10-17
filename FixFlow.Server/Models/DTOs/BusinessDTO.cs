@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Server.Models.DTO;
 
 public class BusinessDTO {
@@ -10,9 +12,14 @@ public class BusinessDTO {
 	public bool OpenOnHolidays { get; set; }
 
 	public string Name { get; set; } = string.Empty;
-	public string Email { get; set; } = string.Empty;
+
+	[EmailAddress]
+	public string? Email { get; set; }
+
 	public string CNPJ { get; set; } = string.Empty;
-	public string PhoneNumber { get; set; } = string.Empty;
+
+	[Phone]
+	public string? PhoneNumber { get; set; }
 
 	public BusinessDTO() : this(new Business()) { }
 

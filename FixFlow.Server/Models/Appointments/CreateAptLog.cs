@@ -39,10 +39,6 @@ public class CreateAptLog {
 	/// </summary>
 	public DateTime whenShouldCustomerComeBack { get; set; }
 
-	public CreateAptLog() {
-		whenShouldCustomerComeBack = DateTime.UtcNow.AddMonths(1);
-	}
-
 	public CreateAptLog(string customerId, string businessId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
 		CustomerId = customerId;
 		BusinessId = businessId;
