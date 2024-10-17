@@ -152,7 +152,6 @@ public class AptScheduleControllerTests {
 	[Fact]
 	public async Task CreateSchedule_ReturnsBadRequest_WhenDateWithinIdlePeriod() {
 		// Arrange
-		//IUASHISDAYUH
 		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
 			allowListedServicesOnly = false
 		};

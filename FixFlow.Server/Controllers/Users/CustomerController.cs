@@ -33,7 +33,7 @@ public class CustomerController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerRecord))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpGet("{id}")]
+	[HttpGet("record")]
 	public async Task<IActionResult> GetCustomerRecord(string customerId) {
 
 		var client = await _userManager.FindByIdAsync(customerId);

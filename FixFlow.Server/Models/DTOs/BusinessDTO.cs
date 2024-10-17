@@ -14,6 +14,8 @@ public class BusinessDTO {
 	public string CNPJ { get; set; } = string.Empty;
 	public string PhoneNumber { get; set; } = string.Empty;
 
+	public BusinessDTO() : this(new Business()) { }
+
 	public BusinessDTO(Business business) {
 		Id = business.Id;
 		BusinessWeek = business.BusinessWeek;
