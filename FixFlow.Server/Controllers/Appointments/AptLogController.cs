@@ -38,7 +38,7 @@ public class AptLogController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
 	[HttpGet]
-	public async Task<IActionResult> ReadLogs(AptLogFilter filter) {
+	public async Task<IActionResult> ReadLogs([FromQuery] AptLogFilter filter) {
 
 		var logsQuery = _context.Logs.AsQueryable();
 
@@ -173,7 +173,7 @@ public class AptLogController : ControllerBase {
 		existingLog.dateTime = upLog.dateTime;
 		existingLog.Service = upLog.Service;
 		existingLog.Price = upLog.Price;
-		existingLog.Description = upLog.Description;
+		existingLog.description = upLog.Description;
 
 		await _context.SaveChangesAsync();
 

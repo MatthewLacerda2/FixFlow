@@ -4,20 +4,37 @@ public class AptLogFilter {
 
 	public string businessId = string.Empty;
 
-	public string? client;
-	public string? service;
+	public string? client { get; set; }
+	public string? service { get; set; }
 
-	public float minPrice;
-	public float maxPrice;
+	public float minPrice { get; set; }
+	public float maxPrice { get; set; }
 
-	public DateTime minDateTime;
-	public DateTime maxDateTime;
+	public DateTime minDateTime { get; set; }
+	public DateTime maxDateTime { get; set; }
 
 	public LogSort sort = LogSort.Date;
 
 	public bool descending = false;
-	public int offset = 0;
-	public int limit = 10;
+	public int offset { get; set; }
+	public int limit { get; set; }
+
+	public AptLogFilter() {
+		minPrice = 0;
+		maxPrice = 1000;
+		descending = true;
+	}
+
+	public AptLogFilter(string businessId, LogSort sort, DateTime minDateTime, DateTime maxDateTime) {
+		this.businessId = businessId;
+		this.sort = sort;
+		this.minDateTime = minDateTime;
+		this.maxDateTime = maxDateTime;
+
+		minPrice = 0;
+		maxPrice = 1000;
+		descending = true;
+	}
 }
 
 public enum LogSort {

@@ -172,7 +172,7 @@ public class AptLogControllerTests {
 		Assert.Equal(createLog.Service, createdLog.Service);
 		Assert.Equal(createLog.price, createdLog.Price);
 		Assert.Equal(createLog.dateTime, createdLog.dateTime);
-		Assert.Equal(createLog.Description, createdLog.Description);
+		Assert.Equal(createLog.description, createdLog.description);
 
 
 		var contact = _context.Contacts.Where(x => x.aptLogId == createdLog.Id).FirstOrDefault();
@@ -297,7 +297,7 @@ public class AptLogControllerTests {
 		Assert.Equal(upLog.dateTime, updatedLog.dateTime);
 		Assert.Equal(upLog.Service, updatedLog.Service);
 		Assert.Equal(upLog.Price, updatedLog.Price);
-		Assert.Equal(upLog.Description, updatedLog.Description);
+		Assert.Equal(upLog.Description, updatedLog.description);
 	}
 
 	[Fact]

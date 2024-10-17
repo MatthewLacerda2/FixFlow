@@ -31,7 +31,7 @@ public class CreateAptLog {
 
 	public string? Service { get; set; }
 
-	public string? Description { get; set; }
+	public string? description { get; set; }
 
 	/// <summary>
 	/// The Date when we expect the Customer to schedule another appointment.
@@ -39,14 +39,18 @@ public class CreateAptLog {
 	/// </summary>
 	public DateTime whenShouldCustomerComeBack { get; set; }
 
+	public CreateAptLog() {
+		whenShouldCustomerComeBack = DateTime.UtcNow.AddMonths(1);
+	}
+
 	public CreateAptLog(string customerId, string businessId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
 		CustomerId = customerId;
 		BusinessId = businessId;
 		this.scheduleId = scheduleId;
 		this.dateTime = dateTime;
 		this.price = price;
-		this.Service = service;
-		this.Description = description;
+		this.description = description;
+		Service = service;
 		whenShouldCustomerComeBack = whenComeBack;
 	}
 }

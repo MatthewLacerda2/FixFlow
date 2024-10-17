@@ -1,45 +1,42 @@
-namespace Server.Models.Filters {
-	public class AptScheduleFilter {
-		public string businessId { get; set; } = string.Empty;
+namespace Server.Models.Filters;
 
-		public string? client { get; set; }
-		public string? service { get; set; }
+public class AptScheduleFilter {
 
-		public float minPrice { get; set; }
-		public float maxPrice { get; set; }
+	public string businessId { get; set; } = string.Empty;
 
-		public DateTime minDateTime { get; set; }
-		public DateTime maxDateTime { get; set; }
+	public string? client { get; set; }
+	public string? service { get; set; }
 
-		public ScheduleSort sort { get; set; }
+	public float minPrice { get; set; }
+	public float maxPrice { get; set; }
 
-		public bool descending { get; set; }
-		public int offset { get; set; }
-		public int limit { get; set; }
+	public DateTime minDateTime { get; set; }
+	public DateTime maxDateTime { get; set; }
 
-		// Parameterless constructor
-		public AptScheduleFilter() {
-			minPrice = 0;
-			maxPrice = 1000;
-			descending = true;
-		}
+	public ScheduleSort sort { get; set; }
 
-		// Constructor with businessId, sort, minDateTime, and maxDateTime
-		public AptScheduleFilter(string businessId, ScheduleSort sort, DateTime minDateTime, DateTime maxDateTime) {
-			this.businessId = businessId;
-			this.sort = sort;
-			this.minDateTime = minDateTime;
-			this.maxDateTime = maxDateTime;
+	public bool descending { get; set; }
+	public int offset { get; set; }
+	public int limit { get; set; }
 
-			minPrice = 0;
-			maxPrice = 1000;
-			descending = true;
-		}
+	public AptScheduleFilter() {
+		minPrice = 0;
+		maxPrice = 1000;
+		descending = true;
 	}
 
-	public enum ScheduleSort {
-		Customer,
-		Price,
-		Date
+	public AptScheduleFilter(string businessId, ScheduleSort sort, DateTime minDateTime, DateTime maxDateTime) {
+		this.businessId = businessId;
+		this.sort = sort;
+		this.minDateTime = minDateTime;
+		this.maxDateTime = maxDateTime;
+
+		minPrice = 0;
+		maxPrice = 1000;
+		descending = true;
 	}
+}
+
+public enum ScheduleSort {
+	Customer, Price, Date
 }
