@@ -61,6 +61,7 @@ public class AptSchedule {
 		this.dateTime = createSchedule.dateTime;
 		this.Service = createSchedule.Service;
 		this.Price = createSchedule.Price;
+		this.observation = createSchedule.Observation;
 		WasContacted = wasContacted;
 		Customer = null!;
 	}

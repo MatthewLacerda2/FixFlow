@@ -33,7 +33,7 @@ public class AptScheduleController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptSchedule[]>))]
 	[HttpGet]
-	public async Task<IActionResult> ReadSchedules([FromBody] AptScheduleFilter filter) {
+	public async Task<IActionResult> ReadSchedules([FromQuery] AptScheduleFilter filter) {
 		var schedulesQuery = _context.Schedules.AsQueryable();
 
 		schedulesQuery = _context.Schedules.Where(x => x.BusinessId == filter.businessId);
@@ -160,6 +160,7 @@ public class AptScheduleController : ControllerBase {
 		existingAppointment.dateTime = upSchedule.dateTime;
 		existingAppointment.Service = upSchedule.Service;
 		existingAppointment.observation = upSchedule.observation;
+		existingAppointment.Price = upSchedule.Price;
 
 		await _context.SaveChangesAsync();
 

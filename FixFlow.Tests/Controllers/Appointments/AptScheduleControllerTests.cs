@@ -307,6 +307,7 @@ public class AptScheduleControllerTests {
 		Assert.Equal(upSchedule.dateTime, updatedSchedule.dateTime);
 		Assert.Equal(upSchedule.Price, updatedSchedule.Price);
 		Assert.Equal(upSchedule.Service, updatedSchedule.Service);
+		Assert.Equal(upSchedule.observation, updatedSchedule.observation);
 	}
 
 	[Fact]

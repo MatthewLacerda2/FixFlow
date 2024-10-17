@@ -1,25 +1,45 @@
-namespace Server.Models.Filters;
+namespace Server.Models.Filters {
+	public class AptScheduleFilter {
+		public string businessId { get; set; } = string.Empty;
 
-public class AptScheduleFilter {
+		public string? client { get; set; }
+		public string? service { get; set; }
 
-	public string businessId = string.Empty;
+		public float minPrice { get; set; }
+		public float maxPrice { get; set; }
 
-	public string? client;
-	public string? service;
+		public DateTime minDateTime { get; set; }
+		public DateTime maxDateTime { get; set; }
 
-	public float minPrice;
-	public float maxPrice;
+		public ScheduleSort sort { get; set; }
 
-	public DateTime minDateTime;
-	public DateTime maxDateTime;
+		public bool descending { get; set; }
+		public int offset { get; set; }
+		public int limit { get; set; }
 
-	public ScheduleSort sort = ScheduleSort.Date;
+		// Parameterless constructor
+		public AptScheduleFilter() {
+			minPrice = 0;
+			maxPrice = 1000;
+			descending = true;
+		}
 
-	public bool descending = false;
-	public int offset = 0;
-	public int limit = 10;
-}
+		// Constructor with businessId, sort, minDateTime, and maxDateTime
+		public AptScheduleFilter(string businessId, ScheduleSort sort, DateTime minDateTime, DateTime maxDateTime) {
+			this.businessId = businessId;
+			this.sort = sort;
+			this.minDateTime = minDateTime;
+			this.maxDateTime = maxDateTime;
 
-public enum ScheduleSort {
-	Customer, Price, Date
+			minPrice = 0;
+			maxPrice = 1000;
+			descending = true;
+		}
+	}
+
+	public enum ScheduleSort {
+		Customer,
+		Price,
+		Date
+	}
 }

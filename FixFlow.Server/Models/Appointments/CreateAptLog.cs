@@ -31,7 +31,7 @@ public class CreateAptLog {
 
 	public string? Service { get; set; }
 
-	public string? description { get; set; }
+	public string? Description { get; set; }
 
 	/// <summary>
 	/// The Date when we expect the Customer to schedule another appointment.
@@ -46,7 +46,7 @@ public class CreateAptLog {
 		this.dateTime = dateTime;
 		this.price = price;
 		this.Service = service;
-		this.description = description;
+		this.Description = description;
 		whenShouldCustomerComeBack = whenComeBack;
 	}
 }
