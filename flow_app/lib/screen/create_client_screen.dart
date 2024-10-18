@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../components/Buttons/custom_button.dart';
-import '../components/Inputs/CPF_input_field.dart';
+import '../components/Inputs/cpf_input_field.dart';
 import '../components/Inputs/email_input_field.dart';
 import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';

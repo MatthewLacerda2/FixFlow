@@ -33,7 +33,7 @@ public class CustomerController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerRecord))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-	[HttpGet("{id}")]
+	[HttpGet("record")]
 	public async Task<IActionResult> GetCustomerRecord(string customerId) {
 
 		var client = await _userManager.FindByIdAsync(customerId);
@@ -120,12 +120,14 @@ public class CustomerController : ControllerBase {
 
 		IdentityResult userCreationResult = await _userManager.CreateAsync(customer);
 		if (!userCreationResult.Succeeded) {
-			return StatusCode(500, "Internal Server Error: Register Customer Unsuccessful");
+			var errorList = userCreationResult.Errors.Select(e => new { e.Code, e.Description }).ToList();
+			var errorJson = System.Text.Json.JsonSerializer.Serialize(errorList);
+			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful.\n\n" + errorJson);
 		}
 
 		await _context.SaveChangesAsync();
 
-		return CreatedAtAction(nameof(CreateCustomer), (CustomerDTO)customer);
+		return CreatedAtAction(nameof(CreateCustomer), customer);
 	}
 
 	/// <summary>

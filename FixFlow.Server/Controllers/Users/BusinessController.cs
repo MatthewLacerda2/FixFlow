@@ -30,17 +30,17 @@ public class BusinessController : ControllerBase {
 	/// Gets the Business with the given Id.
 	/// Used when the User logs-in or opens the app
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpGet]
-	public async Task<IActionResult> GetBusiness([FromBody] string businessId) {
+	public async Task<IActionResult> GetBusiness(string businessId) {
 
 		var business = await _userManager.FindByIdAsync(businessId);
 		if (business == null) {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		return Ok(business);
+		return Ok(new BusinessDTO(business));
 	}
 
 	/// <summary>
@@ -49,17 +49,9 @@ public class BusinessController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(string))]
+	[AllowAnonymous]
 	[HttpPost]
 	public async Task<IActionResult> CreateBusiness([FromBody] BusinessRegisterRequest businessRegister) {
-
-		OTP otp = _context.OTPs.Where(o => o.Code == businessRegister.OTPCode)
-								.Where(o => o.PhoneNumber == businessRegister.PhoneNumber)
-								.Where(o => o.ExpiryTime >= DateTime.Now)
-								.Where(o => o.IsUsed == false)
-								.FirstOrDefault()!;
-		if (otp == null) {
-			return BadRequest(ValidatorErrors.InvalidOTP);
-		}
 
 		var existingEmail = await _userManager.FindByEmailAsync(businessRegister.Email);
 		if (existingEmail != null) {
@@ -77,14 +69,15 @@ public class BusinessController : ControllerBase {
 		//TODO:validate CNPJ
 
 		Business business = (Business)businessRegister;
-		business.Id = Guid.NewGuid().ToString();
 
 		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.ConfirmPassword);
+
 		if (!userCreationResult.Succeeded) {
-			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful");
+			var errorList = userCreationResult.Errors.Select(e => new { e.Code, e.Description }).ToList();
+			var errorJson = System.Text.Json.JsonSerializer.Serialize(errorList);
+			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful.\n\n" + errorJson);
 		}
 
-		otp.IsUsed = true;
 		await _context.SaveChangesAsync();
 
 		return CreatedAtAction(nameof(CreateBusiness), business);
@@ -93,10 +86,10 @@ public class BusinessController : ControllerBase {
 	/// <summary>
 	/// Updates the Business with the given Id
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Business))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
-	public async Task<IActionResult> UpdateBusiness([FromBody] Business upBusiness) {
+	public async Task<IActionResult> UpdateBusiness([FromBody] BusinessDTO upBusiness) {
 
 		var businessExists = await _userManager.FindByIdAsync(upBusiness.Id);
 		if (businessExists == null) {
@@ -104,15 +97,14 @@ public class BusinessController : ControllerBase {
 		}
 
 		businessExists.Name = upBusiness.Name;
-		businessExists.Email = upBusiness.Email;
-		businessExists.BusinessDays = upBusiness.BusinessDays;
-		businessExists.services = upBusiness.services;
-		businessExists.allowListedServicesOnly = upBusiness.allowListedServicesOnly;
-		businessExists.openOnHolidays = upBusiness.openOnHolidays;
+		businessExists.BusinessWeek = upBusiness.BusinessWeek;
+		businessExists.services = upBusiness.Services;
+		businessExists.allowListedServicesOnly = upBusiness.AllowListedServicesOnly;
+		businessExists.openOnHolidays = upBusiness.OpenOnHolidays;
 
 		await _context.SaveChangesAsync();
 
-		return Ok(upBusiness);
+		return Ok(new BusinessDTO(businessExists));
 	}
 
 	/// <summary>

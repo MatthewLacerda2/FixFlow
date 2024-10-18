@@ -24,7 +24,7 @@ public class CreateAptSchedule {
 
 	public float Price { get; set; }
 
-	public CreateAptSchedule() : this(string.Empty, DateTime.Now, 0, null, null) { }
+	public CreateAptSchedule() : this(string.Empty, DateTime.UtcNow, 0, null, null) { }
 
 	public CreateAptSchedule(string clientId, DateTime _dateTime, float price, string? service, string? observation) {
 		customerId = clientId;

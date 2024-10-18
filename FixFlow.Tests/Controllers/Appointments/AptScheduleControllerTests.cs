@@ -5,6 +5,7 @@ using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
 using Server.Models.Filters;
+using Server.Utils;
 
 namespace FixFlow.Tests.Controllers;
 
@@ -36,7 +37,7 @@ public class AptScheduleControllerTests {
 
 		var schedules = new List<AptSchedule>();
 		for (int i = 0; i < 11; i++) {
-			schedules.Add(new AptSchedule(client1.Id, business1.Id, DateTime.Now.AddDays(i), i * 10, "Service 1"));
+			schedules.Add(new AptSchedule(client1.Id, business1.Id, DateTime.UtcNow.AddDays(i), i * 10, "Service 1"));
 		}
 
 		schedules[0].BusinessId = business2.Id;
@@ -52,19 +53,13 @@ public class AptScheduleControllerTests {
 		_context.Schedules.AddRange(schedules);
 		_context.SaveChanges();
 
-		var filter = new AptScheduleFilter {
-			businessId = business1.Id,
-			client = "fulano ",
-			minPrice = 20,
-			maxPrice = 90,
-			minDateTime = DateTime.Now.AddDays(3),
-			maxDateTime = DateTime.Now.AddDays(8),
-			service = "Service 1",
-			sort = ScheduleSort.Price,
-			descending = true,
-			offset = 1,
-			limit = 1
-		};
+		var filter = new AptScheduleFilter(business1.Id, ScheduleSort.Price, DateTime.UtcNow.AddDays(3), DateTime.UtcNow.AddDays(8));
+		filter.client = "fulano ";
+		filter.minPrice = 20;
+		filter.maxPrice = 90;
+		filter.service = "Service 1";
+		filter.offset = 1;
+		filter.limit = 1;
 
 		var expectedSchedule = schedules[7];
 
@@ -79,14 +74,14 @@ public class AptScheduleControllerTests {
 
 		Assert.Equal(client1Name, filteredLogs!.First().Customer.FullName);
 		Assert.Equal(expectedSchedule.Price, filteredLogs!.First().Price);
-		Assert.Equal(DateTime.Now.AddDays(7).Date, filteredLogs!.First().dateTime.Date);
+		Assert.Equal(DateTime.UtcNow.AddDays(7).Date, filteredLogs!.First().dateTime.Date);
 		Assert.Equal(expectedSchedule.Service, filteredLogs!.First().Service);
 	}
 
 	[Fact]
 	public async Task CreateSchedule_ReturnsBadRequest_WhenCustomerDoesNotExist() {
 		// Arrange
-		var newAppointment = new CreateAptSchedule("non-exist-client", DateTime.Now.AddDays(1), 100, "Service 1", null);
+		var newAppointment = new CreateAptSchedule("non-exist-client", DateTime.UtcNow.AddDays(1), 100, "Service 1", null);
 
 		// Act
 		var result = await _controller.CreateSchedule(newAppointment) as BadRequestObjectResult;
@@ -110,7 +105,7 @@ public class AptScheduleControllerTests {
 		_context.Customers.Add(client);
 		_context.SaveChanges();
 
-		var newAppointment = new CreateAptSchedule(client.Id, DateTime.Now.AddDays(1), 100, "Service 3", null);
+		var newAppointment = new CreateAptSchedule(client.Id, DateTime.UtcNow.AddDays(1), 100, "Service 3", null);
 
 		// Act
 		var result = await _controller.CreateSchedule(newAppointment) as BadRequestObjectResult;
@@ -134,7 +129,7 @@ public class AptScheduleControllerTests {
 			_context.Customers.Add(client);
 			_context.SaveChanges();
 
-			DateOnly dateOnly = DateOnly.FromDateTime(DateTime.Now);
+			DateOnly dateOnly = DateOnly.FromDateTime(DateTime.UtcNow);
 			var dateTime = new DateTime(dateOnly.Year, dateOnly.Month, dateOnly.Day, 6, 0, 0);
 
 			var newAppointment = new CreateAptSchedule(client.Id, dateTime, 100, null, null);
@@ -155,15 +150,15 @@ public class AptScheduleControllerTests {
 			allowListedServicesOnly = false
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
-		var dateTime = business.BusinessDays[1].Start.AddHours(1);
-		var idlePeriod = new IdlePeriod(business.Id, dateTime, dateTime.AddDays(2), "Test");
+		var dateAndTime = TimeSpoil.GetNextDayOfWeekWithTime(DayOfWeek.Sunday, DateTime.Now.TimeOfDay);
+		var idlePeriod = new IdlePeriod(business.Id, dateAndTime, dateAndTime.AddDays(2), "Test");
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);
 		_context.IdlePeriods.Add(idlePeriod);
 		_context.SaveChanges();
 
-		var newAppointment = new CreateAptSchedule(client.Id, dateTime, 100, "Service 1", null);
+		var newAppointment = new CreateAptSchedule(client.Id, dateAndTime, 100, "Service 1", null);
 
 		// Act
 		var result = await _controller.CreateSchedule(newAppointment) as BadRequestObjectResult;
@@ -182,13 +177,13 @@ public class AptScheduleControllerTests {
 			services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
-		var dateTime = business.BusinessDays[1].Start.AddHours(1);
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);
 		_context.SaveChanges();
 
-		var newAppointment = new CreateAptSchedule(client.Id, dateTime, 100, "Service 1", null);
+		var dateAndTime = TimeSpoil.GetNextDayOfWeekWithTime(DayOfWeek.Sunday, DateTime.Now.TimeOfDay);
+		var newAppointment = new CreateAptSchedule(client.Id, dateAndTime, 100, "Service 1", null);
 
 		// Act
 		var result = await _controller.CreateSchedule(newAppointment) as CreatedAtActionResult;
@@ -209,7 +204,7 @@ public class AptScheduleControllerTests {
 	[Fact]
 	public async Task UpdateSchedule_ReturnsBadRequest_WhenScheduleDoesNotExist() {
 		// Arrange
-		var upSchedule = new AptSchedule("client-id", "business-id", DateTime.Now.AddDays(1), 100, null);
+		var upSchedule = new AptSchedule("client-id", "business-id", DateTime.UtcNow.AddDays(1), 100, null);
 
 		// Act
 		var result = await _controller.UpdateSchedule(upSchedule) as BadRequestObjectResult;
@@ -228,14 +223,14 @@ public class AptScheduleControllerTests {
 			services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
-		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(1), 100, "Service 1");
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(1), 100, "Service 1");
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);
 		_context.Schedules.Add(schedule);
 		_context.SaveChanges();
 
-		var upSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(2), 100, "Option 3");
+		var upSchedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(2), 100, "Option 3");
 		upSchedule.Id = schedule.Id;
 
 		// Act
@@ -254,8 +249,8 @@ public class AptScheduleControllerTests {
 			allowListedServicesOnly = false
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
-		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(1), 100, "Service 1");
-		var idlePeriod = new IdlePeriod(business.Id, DateTime.Now, DateTime.Now.AddDays(2), "Test");
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(1), 100, "Service 1");
+		var idlePeriod = new IdlePeriod(business.Id, DateTime.UtcNow, DateTime.UtcNow.AddDays(2), "Test");
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);
@@ -263,7 +258,7 @@ public class AptScheduleControllerTests {
 		_context.IdlePeriods.Add(idlePeriod);
 		_context.SaveChanges();
 
-		var upSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddHours(1), 150, "Service 2");
+		var upSchedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddHours(1), 150, "Service 2");
 		upSchedule.Id = schedule.Id;
 
 		// Act
@@ -283,14 +278,14 @@ public class AptScheduleControllerTests {
 			services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
-		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(1), 100, "Service 1");
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(1), 100, "Service 1");
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);
 		_context.Schedules.Add(schedule);
 		_context.SaveChanges();
 
-		var upSchedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(2), 150, "Service 2");
+		var upSchedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(2), 150, "Service 2");
 		upSchedule.Id = schedule.Id;
 
 		// Act
@@ -306,6 +301,7 @@ public class AptScheduleControllerTests {
 		Assert.Equal(upSchedule.dateTime, updatedSchedule.dateTime);
 		Assert.Equal(upSchedule.Price, updatedSchedule.Price);
 		Assert.Equal(upSchedule.Service, updatedSchedule.Service);
+		Assert.Equal(upSchedule.observation, updatedSchedule.observation);
 	}
 
 	[Fact]
@@ -329,8 +325,8 @@ public class AptScheduleControllerTests {
 			allowListedServicesOnly = false
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
-		var schedule = new AptSchedule(client.Id, business.Id, DateTime.Now.AddDays(1), 100, "Service 1");
-		var log = new AptLog(new CreateAptLog(client.Id, business.Id, schedule.Id, DateTime.Now, 30, null, null, DateTime.Now.AddDays(30)));
+		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(1), 100, "Service 1");
+		var log = new AptLog(new CreateAptLog(client.Id, business.Id, schedule.Id, DateTime.UtcNow, 30, null, null, DateTime.UtcNow.AddDays(30)));
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);

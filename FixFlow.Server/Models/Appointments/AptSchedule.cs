@@ -42,7 +42,7 @@ public class AptSchedule {
 
 	public float Price { get; set; }
 
-	public AptSchedule() : this(string.Empty, string.Empty, DateTime.Now, 0, null) { }
+	public AptSchedule() : this(string.Empty, string.Empty, DateTime.UtcNow, 0, null) { }
 
 	public AptSchedule(string clientId, string businessId, DateTime dateTime, float price, string? service) {
 		Id = Guid.NewGuid().ToString();
@@ -61,6 +61,7 @@ public class AptSchedule {
 		this.dateTime = createSchedule.dateTime;
 		this.Service = createSchedule.Service;
 		this.Price = createSchedule.Price;
+		this.observation = createSchedule.Observation;
 		WasContacted = wasContacted;
 		Customer = null!;
 	}

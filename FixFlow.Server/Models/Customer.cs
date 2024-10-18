@@ -34,6 +34,8 @@ public class Customer : IdentityUser {
 		Email = email;
 		CPF = cpf;
 		AdditionalNote = additionalNote;
+
+		UserName = GenerateUserName(fullName, Id);
 	}
 
 	public static explicit operator Customer(CustomerCreate customerCreate) {
@@ -46,5 +48,11 @@ public class Customer : IdentityUser {
 			customerCreate.CPF,
 			customerCreate.additionalNote
 		);
+	}
+
+	private string GenerateUserName(string fullName, string id) {
+		var firstName = fullName.Split(' ')[0];
+		var guidPrefix = id.Substring(0, 8);
+		return $"{firstName}-{guidPrefix}";
 	}
 }

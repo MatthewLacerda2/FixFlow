@@ -20,35 +20,36 @@ public class BusinessCalendarDayController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Login with an email and password
+	/// Gets all the events for this month
 	/// </summary>
+	//Todo: change it to get all the events for a specific month
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessCalendarDay[]))]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[HttpGet]
-	public async Task<IActionResult> GetBusinessCalendar([FromBody] string businessId) {
+	public async Task<IActionResult> GetBusinessCalendar(string businessId) {
 
 		bool businessExists = await _context.Business.FindAsync(businessId) != null;
 		if (!businessExists) {
 			return NotFound(NotExistErrors.Business);
 		}
 
-		int daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+		int daysInMonth = DateTime.DaysInMonth(DateTime.UtcNow.Year, DateTime.UtcNow.Month);
 		BusinessCalendarDay[] businessCalendarDays = new BusinessCalendarDay[daysInMonth];
 
 		for (int i = 0; i < daysInMonth; i++) {
 			BusinessCalendarDay aux = new BusinessCalendarDay();
-			aux.date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, i + 1);
+			aux.date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, i + 1, 0, 0, 0, DateTimeKind.Utc);
 
 			aux.schedules = _context.Schedules.Where(x => x.BusinessId == businessId)
-							.Where(x => x.dateTime == aux.date)
-							.ToArray();
+								.Where(x => x.dateTime == aux.date)
+								.ToArray();
 
 			aux.logs = _context.Logs.Where(x => x.BusinessId == businessId)
-							.Where(x => x.dateTime == aux.date)
-							.ToArray();
+								.Where(x => x.dateTime == aux.date)
+								.ToArray();
 
 			aux.idlePeriods = _context.IdlePeriods.Where(x => x.BusinessId == businessId)
-							.Where(x => x.start <= aux.date && x.finish >= aux.date).ToArray();
+								.Where(x => x.start <= aux.date && x.finish >= aux.date).ToArray();
 
 			businessCalendarDays[i] = aux;
 		}

@@ -25,7 +25,7 @@ public class CreateAptLog {
 	/// <summary>
 	/// The DateTime when the Log was registered
 	/// </summary>
-	public DateTime dateTime { get; set; } = DateTime.Now;
+	public DateTime dateTime { get; set; } = DateTime.UtcNow;
 
 	public float price { get; set; }
 
@@ -45,8 +45,8 @@ public class CreateAptLog {
 		this.scheduleId = scheduleId;
 		this.dateTime = dateTime;
 		this.price = price;
-		this.Service = service;
 		this.description = description;
+		Service = service;
 		whenShouldCustomerComeBack = whenComeBack;
 	}
 }

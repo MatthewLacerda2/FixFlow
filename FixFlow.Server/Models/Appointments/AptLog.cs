@@ -38,7 +38,7 @@ public class AptLog {
 	/// <summary>
 	/// The DateTime when the Log was registered
 	/// </summary>
-	public DateTime dateTime { get; set; } = DateTime.Now;
+	public DateTime dateTime { get; set; } = DateTime.UtcNow;
 
 	public string? Service { get; set; }
 
@@ -59,10 +59,10 @@ public class AptLog {
 		BusinessId = newLog.BusinessId;
 		ScheduleId = newLog.scheduleId;
 		Service = newLog.Service;
+		description = newLog.description;
 
 		this.dateTime = newLog.dateTime;
 		this.Price = newLog.price;
-		this.description = newLog.description;
 		Customer = null!;
 	}
 }

@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -12,7 +11,7 @@ using Server.Models.Utils;
 namespace Server.Controllers;
 
 [ApiController]
-[Route("api/v1/accounts")]
+[Route(Common.api_v1 + "accounts")]
 [Produces("application/json")]
 public class AccountsController : ControllerBase {
 
@@ -51,7 +50,6 @@ public class AccountsController : ControllerBase {
 
 		var token = GenerateToken(userExists);
 
-		userExists.LastLogin = DateTime.Now;
 		userExists.IsActive = true;
 		await _context.SaveChangesAsync();
 
@@ -60,15 +58,20 @@ public class AccountsController : ControllerBase {
 
 	private string GenerateToken(Business business) {
 
+		var expirationDate = DateTime.UtcNow.AddMinutes(Common.tokenExpirationTimeInMinutes);
+
 		var claims = new List<Claim>{
 			new Claim(ClaimTypes.Name, business.Name),
 			new Claim(ClaimTypes.Email, business.Email!),
+			new Claim("ExpirationDate", expirationDate.ToString()),
 			new Claim("businessId", business.Id)
 		};
 		var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!);
 		var tokenDescriptor = new SecurityTokenDescriptor {
+			Issuer = _configuration["Jwt:Issuer"],
+			Audience = _configuration["Jwt:Audience"],
+			Expires = expirationDate,
 			Subject = new ClaimsIdentity(claims),
-			Expires = DateTime.UtcNow.AddMinutes(Common.tokenExpirationTimeInMinutes),
 			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
 		};
 
@@ -78,9 +81,10 @@ public class AccountsController : ControllerBase {
 		return tokenHandler.WriteToken(token);
 	}
 
+
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-	[Authorize]
+	//[Authorize]
 	[HttpPost("logout")]
 	public async Task<IActionResult> Logout() {
 		try {

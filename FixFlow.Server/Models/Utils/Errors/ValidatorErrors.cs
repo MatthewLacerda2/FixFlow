@@ -2,15 +2,13 @@ namespace Server.Models.Erros;
 
 public struct ValidatorErrors {
 
-	public static readonly string InvalidOTP = "Código OTP inválido";
-
 	public static readonly string TokenNotHaveBusinessId = "Your token does not have a BusinessId.";
 	public static readonly string NullBusinessId = "Your token's BusinessId value is null.";
 	public static readonly string NoOpenBusinessDay = "There must be at least one open Business Day.";
 
 	public static readonly string UnlistedService = "The Business only allows listed services.";
 	public static readonly string BusinessDayCountMustBe7 = "There must be exactly 7 business days";
-	public static readonly string BusinessDayStartMustBeLessThanFinish = "All Business Days start time must be less than End time.";
+	public static readonly string BusinessDayStartMustBeLessThanFinish = "Business Day start time must be less than finish time.";
 	public static readonly string TimeNotWithinBusinessHours = "Time is not within Business Hours";
 
 	public static readonly string DateMustBe2024orForward = "Date must be from 2024 and earlier.";
@@ -25,7 +23,8 @@ public struct ValidatorErrors {
 
 	public static readonly string PriceMustBeNaturalNumber = "Price must be Greater Than or Equal to 0.";
 	public static readonly string MinPriceIsGreaterThanMaxPrice = "MinPrice must be less than or equal to MaxPrice.";
-	public static readonly string OffsetMustBeNaturalNumber = "Offset must be Greater Than or Equal to 0.";
+	public static readonly string OffsetMustBeNaturalNumber = "Offset must bea natural number Greater Than or Equal to 0.";
+	public static readonly string LimitMustBeNaturalNumberGreaterThanZero = "Limit must be a natural number greater than 0.";
 
 	public static readonly string CPFisInvalid = "CPF is invalid.";
 	public static readonly string CNPJisInvalid = "CNPJ is invalid.";

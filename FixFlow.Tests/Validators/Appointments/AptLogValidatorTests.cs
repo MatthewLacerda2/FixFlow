@@ -3,7 +3,7 @@ using Server.Models.Appointments;
 using Server.Models.Erros;
 using Server.Validators.Appointments;
 
-namespace FixFlow.Tests.Validators.Appointments;
+namespace FixFlow.Tests.Validators;
 
 public class AptLogValidatorTests {
 
@@ -40,7 +40,7 @@ public class AptLogValidatorTests {
 	[Fact]
 	public void Should_HaveError_When_DateTimeIsInTheFuture() {
 		// Arrange
-		var futureDate = DateTime.Now.AddDays(1);
+		var futureDate = DateTime.UtcNow.AddDays(1);
 		var aptLog = new AptLog(new CreateAptLog("clientId", "businessId", null, futureDate, 100, null, null, futureDate.AddDays(90)));
 
 		// Act & Assert
@@ -52,7 +52,7 @@ public class AptLogValidatorTests {
 	[Fact]
 	public void Should_NotHaveError_When_ValidAptLog() {
 		// Arrange
-		var dateTime = DateTime.Now.AddDays(-1);
+		var dateTime = DateTime.UtcNow.AddDays(-1);
 		var validAptLog = new AptLog(new CreateAptLog("clientId", "businessId", null, dateTime, 100, null, null, dateTime.AddDays(90)));
 
 		// Act & Assert

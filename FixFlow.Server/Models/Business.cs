@@ -5,8 +5,7 @@ namespace Server.Models;
 
 public class Business : IdentityUser {
 
-	public DateTime CreatedDate { get; set; } = DateTime.Now;
-	public DateTime LastLogin { get; set; }
+	public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
 	public bool IsActive { get; set; } = true;
 
@@ -23,9 +22,9 @@ public class Business : IdentityUser {
 	/// <summary>
 	/// The DateTimes of the week where the business is open
 	/// </summary>
-	public List<BusinessDay> BusinessDays { get; set; }
+	public BusinessWeek BusinessWeek { get; set; }
 
-	public string[] services = Array.Empty<string>();
+	public string[] services { get; set; } = Array.Empty<string>();
 	public bool allowListedServicesOnly { get; set; } = false;
 	public bool openOnHolidays { get; set; } = false;
 
@@ -33,17 +32,15 @@ public class Business : IdentityUser {
 
 	public Business(string name, string email, string cnpj, string phoneNumber) {
 		Id = Guid.NewGuid().ToString();
-		LastLogin = DateTime.Now;
+		CreatedDate = DateTime.UtcNow;
 
+		UserName = email;
 		Name = name;
 		Email = email;
 		CNPJ = cnpj;
 		PhoneNumber = phoneNumber;
 
-		BusinessDays = new List<BusinessDay>(7);
-		for (int i = 0; i < 7; i++) {
-			BusinessDays.Add(new BusinessDay());
-		}
+		BusinessWeek = new BusinessWeek();
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {

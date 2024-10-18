@@ -2,9 +2,10 @@ using FluentValidation.TestHelper;
 using Server.Models.DTO;
 using Server.Validators.DTOs;
 
-namespace FixFlow.Tests.Validators.DTOs;
+namespace FixFlow.Tests.Validators;
 
 public class CustomerCreateValidatorTests {
+
 	private readonly CustomerRegisterValidator _validator;
 
 	public CustomerCreateValidatorTests() {

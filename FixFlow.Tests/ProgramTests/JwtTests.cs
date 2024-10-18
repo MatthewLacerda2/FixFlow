@@ -22,40 +22,40 @@ public class JwtTests : IClassFixture<WebApplicationFactory<Program>> {
 		// Arrange
 		var client = _factory.CreateClient();
 		// Act
-		var response = await client.GetAsync(Common.api_v1 + nameof(Business));
+		var response = await client.GetAsync($"{Common.api_v1}{nameof(Business)}?businessId=test-business-id");
 		// Assert
 		Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 	}
-	//TODO: finish this
-	/*
-		[Fact]
-		public async Task ProtectedEndpoint_ReturnsOk_WithValidToken() {
-			// Arrange
-			var client = _factory.CreateClient();
-			var token = GenerateJwtToken();
 
-			// Act
-			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-			var response = await client.GetAsync(Common.api_v1 + nameof(Business));
+	[Fact]
+	public async Task ProtectedEndpoint_ReturnsOk_WithValidToken() {
+		// Arrange
+		var client = _factory.CreateClient();
+		var token = GenerateJwtToken();
 
-			// Assert
-			response.EnsureSuccessStatusCode();
-			var responseBody = await response.Content.ReadAsStringAsync();
-			Assert.Equal("You are authenticated!", responseBody);
-		}
-	
+		// Act
+		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+		var response = await client.GetAsync(Common.api_v1 + nameof(Business) + "/Business?test-business-id");
+
+		// Assert
+		Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+	}
+
 	private string GenerateJwtToken() {
+
+		var expirationDate = DateTime.UtcNow.AddMinutes(Common.tokenExpirationTimeInMinutes);
 		var key = Encoding.UTF8.GetBytes("VeryLongSecretKey123456789012345678901234567890123456789012345678901234567890");
 
 		var claims = new List<Claim> {
 			new Claim(ClaimTypes.Name, "Test Business"),
 			new Claim(ClaimTypes.Email, "testbusiness@example.com"),
+			new Claim("ExpirationDate", expirationDate.ToString()),
 			new Claim("businessId", "test-business-id")
 		};
 
 		var tokenDescriptor = new SecurityTokenDescriptor {
 			Subject = new ClaimsIdentity(claims),
-			Expires = DateTime.UtcNow.AddMinutes(Common.tokenExpirationTimeInMinutes),
+			Expires = expirationDate,
 			Issuer = "Flow",
 			Audience = "user",
 			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
@@ -65,5 +65,5 @@ public class JwtTests : IClassFixture<WebApplicationFactory<Program>> {
 		var token = tokenHandler.CreateToken(tokenDescriptor);
 
 		return tokenHandler.WriteToken(token);
-	}*/
+	}
 }

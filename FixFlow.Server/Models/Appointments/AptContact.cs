@@ -13,7 +13,7 @@ public class AptContact {
 	/// The Id of the Customer to Contact
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Models.Customer))]
+	[ForeignKey(nameof(Customer))]
 	public string CustomerId { get; set; }
 
 	/// <summary>
@@ -48,14 +48,7 @@ public class AptContact {
 	/// </summary>
 	public DateTime dateTime { get; set; }
 
-	public AptContact() {
-		Id = Guid.NewGuid().ToString();
-		CustomerId = string.Empty;
-		aptLogId = string.Empty;
-		businessId = string.Empty;
-		customer = null!;
-		aptLog = null!;
-	}
+	public AptContact() : this(new AptLog(), DateTime.UtcNow) { }
 
 	public AptContact(AptLog log, DateTime dateTime) {
 		Id = Guid.NewGuid().ToString();

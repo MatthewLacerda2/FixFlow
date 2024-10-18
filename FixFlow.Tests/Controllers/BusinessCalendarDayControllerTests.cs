@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers;
 using Server.Data;
+using Server.Models;
 using Server.Models.DTO;
 using Server.Models.Erros;
-using Server.Models;
 
 namespace FixFlow.Tests.Controllers;
 
@@ -48,6 +48,6 @@ public class BusinessCalendarControllerTests {
 		var okResult = result as OkObjectResult;
 		Assert.IsType<BusinessCalendarDay[]>(okResult!.Value);
 		var businessCalendarDays = okResult.Value as BusinessCalendarDay[];
-		Assert.Equal(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month), businessCalendarDays!.Length);
+		Assert.Equal(DateTime.DaysInMonth(DateTime.UtcNow.Year, DateTime.UtcNow.Month), businessCalendarDays!.Length);
 	}
 }

@@ -26,5 +26,9 @@ public class AptLogFilterValidator : AbstractValidator<AptLogFilter> {
 		RuleFor(x => x.offset)
 			.GreaterThanOrEqualTo(0)
 			.WithMessage(ValidatorErrors.OffsetMustBeNaturalNumber);
+
+		RuleFor(x => x.limit)
+			.GreaterThan(0)
+			.WithMessage(ValidatorErrors.LimitMustBeNaturalNumberGreaterThanZero);
 	}
 }

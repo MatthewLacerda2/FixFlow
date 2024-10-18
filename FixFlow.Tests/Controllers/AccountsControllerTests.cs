@@ -1,12 +1,12 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Server.Controllers;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Server.Data;
 using Server.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace FixFlow.Tests.Controllers;
 
@@ -84,7 +84,7 @@ public class AccountsControllerTests {
 
 		// Assert
 		var okResult = Assert.IsType<OkObjectResult>(result);
-		Assert.NotNull(okResult.Value); // Assuming GenerateToken() returns a string token.
+		Assert.NotNull(okResult.Value);
 		Assert.IsType<string>(okResult.Value);
 	}
 }
