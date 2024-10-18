@@ -2,7 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Server.Models.Utils;
 
-namespace FixFlow.Tests.ProgramTests;
+namespace FixFlow.Tests.IntegrationTests;
 
 public class RateLimiterTests : IClassFixture<WebApplicationFactory<Program>> {
 
