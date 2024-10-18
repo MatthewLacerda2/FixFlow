@@ -110,8 +110,8 @@ public class AptLogController : ControllerBase {
 
 		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
 
-		if (existingBusiness!.allowListedServicesOnly) {
-			if (createLog.Service == null || !existingBusiness.services.Contains(createLog.Service)) {
+		if (existingBusiness!.AllowListedServicesOnly) {
+			if (createLog.Service == null || !existingBusiness.Services.Contains(createLog.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -156,8 +156,8 @@ public class AptLogController : ControllerBase {
 		}
 
 		var existingBusiness = _context.Business.Find(existingLog.BusinessId);
-		if (upLog.Service != null && existingBusiness!.allowListedServicesOnly) {
-			if (!existingBusiness.services.Contains(upLog.Service)) {
+		if (upLog.Service != null && existingBusiness!.AllowListedServicesOnly) {
+			if (!existingBusiness.Services.Contains(upLog.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -173,7 +173,7 @@ public class AptLogController : ControllerBase {
 		existingLog.dateTime = upLog.dateTime;
 		existingLog.Service = upLog.Service;
 		existingLog.Price = upLog.Price;
-		existingLog.description = upLog.Description;
+		existingLog.Description = upLog.Description;
 
 		await _context.SaveChangesAsync();
 
@@ -195,7 +195,7 @@ public class AptLogController : ControllerBase {
 
 		_context.Logs.Remove(logToDelete);
 
-		var contact = _context.Contacts.Where(x => x.aptLogId == Id).FirstOrDefault();
+		var contact = _context.Contacts.Where(x => x.AptLogId == Id).FirstOrDefault();
 
 		if (contact != null) {
 			_context.Contacts.Remove(contact);

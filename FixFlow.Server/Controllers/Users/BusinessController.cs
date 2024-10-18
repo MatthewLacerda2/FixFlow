@@ -98,9 +98,9 @@ public class BusinessController : ControllerBase {
 
 		businessExists.Name = upBusiness.Name;
 		businessExists.BusinessWeek = upBusiness.BusinessWeek;
-		businessExists.services = upBusiness.Services;
-		businessExists.allowListedServicesOnly = upBusiness.AllowListedServicesOnly;
-		businessExists.openOnHolidays = upBusiness.OpenOnHolidays;
+		businessExists.Services = upBusiness.Services;
+		businessExists.AllowListedServicesOnly = upBusiness.AllowListedServicesOnly;
+		businessExists.OpenOnHolidays = upBusiness.OpenOnHolidays;
 
 		await _context.SaveChangesAsync();
 
@@ -141,7 +141,7 @@ public class BusinessController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.businessId == Id));
+		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.BusinessId == Id));
 		_context.Schedules.RemoveRange(_context.Schedules.Where(x => x.BusinessId == Id));
 		_context.Logs.RemoveRange(_context.Logs.Where(x => x.BusinessId == Id));
 

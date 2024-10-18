@@ -7,8 +7,8 @@ public class IdlePeriod {
 	public string Name { get; set; }
 
 	public string BusinessId { get; set; }
-	public DateTime start { get; set; }
-	public DateTime finish { get; set; }
+	public DateTime Start { get; set; }
+	public DateTime Finish { get; set; }
 
 	public IdlePeriod() : this(string.Empty, DateTime.UtcNow, DateTime.UtcNow.AddDays(1), null!) { }
 
@@ -16,7 +16,7 @@ public class IdlePeriod {
 		Id = Guid.NewGuid().ToString();
 		Name = name;
 		BusinessId = businessId;
-		this.start = start;
-		this.finish = finish;
+		this.Start = start;
+		this.Finish = finish;
 	}
 }

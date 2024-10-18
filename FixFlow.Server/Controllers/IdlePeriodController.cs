@@ -36,7 +36,7 @@ public class IdlePeriodController : ControllerBase {
 		}
 
 		var idlePeriods = await _context.IdlePeriods.Where(x => x.BusinessId == period.BusinessId)
-								.Where(x => x.start <= period.Date && x.finish >= period.Date)
+								.Where(x => x.Start <= period.Date && x.Finish >= period.Date)
 								.ToArrayAsync();
 
 		return Ok(idlePeriods);
@@ -57,7 +57,7 @@ public class IdlePeriodController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (idlePeriod.finish <= DateTime.UtcNow) {
+		if (idlePeriod.Finish <= DateTime.UtcNow) {
 			return BadRequest(ValidatorErrors.IdlePeriodHasPassed);
 		}
 

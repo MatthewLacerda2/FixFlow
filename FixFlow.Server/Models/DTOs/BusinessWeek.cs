@@ -4,49 +4,51 @@ public class BusinessWeek {
 
 	public string Id { get; set; }
 
-	public BusinessTimeSpan sunday { get; set; }
+	public BusinessTimeSpan Sunday { get; set; }
 
-	public BusinessTimeSpan monday { get; set; }
-	public BusinessTimeSpan tuesday { get; set; }
-	public BusinessTimeSpan wednesday { get; set; }
-	public BusinessTimeSpan thursday { get; set; }
-	public BusinessTimeSpan friday { get; set; }
+	public BusinessTimeSpan Monday { get; set; }
+	public BusinessTimeSpan Tuesday { get; set; }
+	public BusinessTimeSpan Wednesday { get; set; }
+	public BusinessTimeSpan Thursday { get; set; }
+	public BusinessTimeSpan Friday { get; set; }
 
-	public BusinessTimeSpan saturday { get; set; }
+	public BusinessTimeSpan Saturday { get; set; }
 
 	public BusinessWeek() {
 
 		Id = Guid.NewGuid().ToString();
 
-		sunday = new BusinessTimeSpan();
+		Sunday = new BusinessTimeSpan();
+		Sunday.IsActive = false;
 
-		monday = new BusinessTimeSpan();
-		tuesday = new BusinessTimeSpan();
-		wednesday = new BusinessTimeSpan();
-		thursday = new BusinessTimeSpan();
-		friday = new BusinessTimeSpan();
+		Monday = new BusinessTimeSpan();
+		Tuesday = new BusinessTimeSpan();
+		Wednesday = new BusinessTimeSpan();
+		Thursday = new BusinessTimeSpan();
+		Friday = new BusinessTimeSpan();
 
-		saturday = new BusinessTimeSpan();
+		Saturday = new BusinessTimeSpan();
+		Saturday.Finish = new TimeSpan(12, 0, 0);
 
 	}
 
 	public BusinessTimeSpan GetTimeForDayOfWeek(DayOfWeek dayOfWeek) {
 		switch (dayOfWeek) {
 			case DayOfWeek.Sunday:
-				return sunday;
+				return Sunday;
 			case DayOfWeek.Monday:
-				return monday;
+				return Monday;
 			case DayOfWeek.Tuesday:
-				return tuesday;
+				return Tuesday;
 			case DayOfWeek.Wednesday:
-				return wednesday;
+				return Wednesday;
 			case DayOfWeek.Thursday:
-				return thursday;
+				return Thursday;
 			case DayOfWeek.Friday:
-				return friday;
+				return Friday;
 			case DayOfWeek.Saturday:
-				return saturday;
+				return Saturday;
 		}
-		return sunday;
+		return Sunday;
 	}
 }

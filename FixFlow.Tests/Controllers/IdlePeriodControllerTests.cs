@@ -68,8 +68,8 @@ public class IdlePeriodControllerTests {
 		Assert.NotNull(result);
 		var createdIdlePeriod = Assert.IsType<IdlePeriod>(result!.Value);
 		Assert.Equal(idlePeriod.BusinessId, createdIdlePeriod.BusinessId);
-		Assert.Equal(idlePeriod.start, createdIdlePeriod.start);
-		Assert.Equal(idlePeriod.finish, createdIdlePeriod.finish);
+		Assert.Equal(idlePeriod.Start, createdIdlePeriod.Start);
+		Assert.Equal(idlePeriod.Finish, createdIdlePeriod.Finish);
 		Assert.Equal(idlePeriod.Name, createdIdlePeriod.Name);
 	}
 
