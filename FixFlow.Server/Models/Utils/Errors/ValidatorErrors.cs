@@ -8,7 +8,7 @@ public struct ValidatorErrors {
 
 	public static readonly string UnlistedService = "The Business only allows listed services.";
 	public static readonly string BusinessDayCountMustBe7 = "There must be exactly 7 business days";
-	public static readonly string BusinessDayStartMustBeLessThanFinish = "All Business Days start time must be less than End time.";
+	public static readonly string BusinessDayStartMustBeLessThanFinish = "Business Day start time must be less than finish time.";
 	public static readonly string TimeNotWithinBusinessHours = "Time is not within Business Hours";
 
 	public static readonly string DateMustBe2024orForward = "Date must be from 2024 and earlier.";

@@ -3,7 +3,7 @@ using Server.Models.Appointments;
 using Server.Models.Erros;
 using Server.Validators.Appointments;
 
-namespace FixFlow.Tests.Validators.Appointments;
+namespace FixFlow.Tests.Validators;
 
 public class AptLogValidatorTests {
 
