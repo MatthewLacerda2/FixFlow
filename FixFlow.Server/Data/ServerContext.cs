@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Server.Bogus;
 using Server.Models;
 using Server.Models.Appointments;
 namespace Server.Data;
@@ -22,7 +23,7 @@ public class ServerContext : IdentityDbContext {
 	protected override void OnModelCreating(ModelBuilder builder) {
 		base.OnModelCreating(builder);
 
-		//FlowSeeder flowSeeder = new FlowSeeder(builder, 617);
+		DBSeeder dbSeeder = new DBSeeder(builder, 617);
 
 		builder.Entity<Business>()
 			   .HasIndex(b => b.CNPJ)

@@ -7,14 +7,19 @@ namespace Server.Bogus;
 
 public class Generator {
 
+	public int seed = 224466;
+
 	DateTime jan1st2024 = new DateTime(2024, 1, 1, 8, 0, 0);
-	int seed = 224466;
+
+	public Generator(int _seed) {
+		seed = _seed;
+	}
 
 	public Business[] GetFakeBusiness(int count) {
 
 		Faker<Business> faker = new Faker<Business>()
 								.UseSeed(seed)
-								.StrictMode(true)
+								.StrictMode(false)
 								.UseDateTimeReference(jan1st2024)
 								.RuleFor(x => x.CreatedDate, jan1st2024)
 								.RuleFor(x => x.Name, f => f.Company.CompanyName())
@@ -35,7 +40,7 @@ public class Generator {
 
 		Faker<Customer> faker = new Faker<Customer>()
 								.UseSeed(seed)
-								.StrictMode(true)
+								.StrictMode(false)
 								.UseDateTimeReference(jan1st2024)
 								.RuleFor(x => x.BusinessId, businessId)
 								.RuleFor(x => x.FullName, f => f.Name.FullName())
@@ -44,8 +49,10 @@ public class Generator {
 
 								.RuleFor(x => x.Id, f => f.Random.Guid().ToString())
 								.RuleFor(x => x.UserName, (f, x) => GenerateUserName(x.FullName, x.Id))
+								.RuleFor(x => x.NormalizedUserName, (f, x) => x.UserName!.ToUpper())
 								.RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
-								.RuleFor(x => x.Email, (f, x) => f.Random.Bool(0.15f) ? f.Internet.Email() : null);
+								.RuleFor(x => x.Email, (f, x) => f.Random.Bool(0.15f) ? f.Internet.Email() : null)
+								.RuleFor(x => x.NormalizedEmail, (f, x) => x.Email != null ? x.Email.ToUpper() : null);
 
 		return faker.Generate(count).ToArray();
 
@@ -61,7 +68,7 @@ public class Generator {
 
 		Faker<AptSchedule> faker = new Faker<AptSchedule>()
 									.UseSeed(seed)
-									.StrictMode(true)
+									.StrictMode(false)
 									.UseDateTimeReference(jan1st2024)
 									.RuleFor(x => x.Id, f => f.Random.Guid().ToString())
 									.RuleFor(x => x.CustomerId, customerId)
@@ -89,5 +96,4 @@ public class Generator {
 		return faker.Generate(count).ToArray();
 
 	}
-
 }
