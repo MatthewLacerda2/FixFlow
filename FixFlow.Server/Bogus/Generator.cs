@@ -25,7 +25,6 @@ public class Generator {
 								.RuleFor(x => x.Name, f => f.Company.CompanyName())
 								.RuleFor(x => x.CNPJ, f => f.Company.Cnpj())
 
-								.RuleFor(x => x.Id, f => f.Random.Guid().ToString())
 								.RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 								.RuleFor(x => x.Email, f => f.Internet.Email())
 								.RuleFor(x => x.NormalizedEmail, (f, x) => x.Email!.ToUpper())
@@ -47,7 +46,6 @@ public class Generator {
 								.RuleFor(x => x.CPF, (f, x) => f.Random.Bool(0.05f) ? f.Person.Cpf() : null)
 								.RuleFor(x => x.AdditionalNote, (f, x) => f.Person.Random.Words())
 
-								.RuleFor(x => x.Id, f => f.Random.Guid().ToString())
 								.RuleFor(x => x.UserName, (f, x) => GenerateUserName(x.FullName, x.Id))
 								.RuleFor(x => x.NormalizedUserName, (f, x) => x.UserName!.ToUpper())
 								.RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
@@ -70,7 +68,6 @@ public class Generator {
 									.UseSeed(seed)
 									.StrictMode(false)
 									.UseDateTimeReference(jan1st2024)
-									.RuleFor(x => x.Id, f => f.Random.Guid().ToString())
 									.RuleFor(x => x.CustomerId, customerId)
 									.RuleFor(x => x.BusinessId, businessId)
 									.RuleFor(x => x.dateTime, jan1st2024)
@@ -86,7 +83,6 @@ public class Generator {
 		Faker<AptLog> faker = new Faker<AptLog>()
 								.UseSeed(seed)
 								.StrictMode(false)
-								.RuleFor(x => x.Id, f => f.Random.Guid().ToString())
 								.RuleFor(x => x.CustomerId, customerId)
 								.RuleFor(x => x.BusinessId, businessId)
 								.RuleFor(x => x.dateTime, jan1st2024)
