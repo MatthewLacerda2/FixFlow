@@ -58,7 +58,7 @@ public class BusinessControllerTests {
 		Assert.Equal(business.Email, okResultValue.Email);
 		Assert.Equal(business.CNPJ, okResultValue.CNPJ);
 		Assert.Equal(business.PhoneNumber, okResultValue.PhoneNumber);
-		Assert.Equal(business.BusinessWeek, okResultValue.BusinessWeek);
+		Assert.Equal(business.businessWeek, okResultValue.BusinessWeek);
 		Assert.Equal(business.Services, okResultValue.Services);
 		Assert.Equal(business.AllowListedServicesOnly, okResultValue.AllowListedServicesOnly);
 		Assert.Equal(business.OpenOnHolidays, okResultValue.OpenOnHolidays);
@@ -170,7 +170,7 @@ public class BusinessControllerTests {
 		var okResult = Assert.IsType<OkObjectResult>(result);
 		var okResultValue = Assert.IsType<BusinessDTO>(okResult.Value);
 
-		Assert.Equal(business.BusinessWeek, upBusiness.BusinessWeek);
+		Assert.Equal(business.businessWeek, upBusiness.businessWeek);
 		Assert.Equal(business.Services, upBusiness.Services);
 		Assert.Equal(business.AllowListedServicesOnly, upBusiness.AllowListedServicesOnly);
 		Assert.Equal(business.OpenOnHolidays, upBusiness.OpenOnHolidays);

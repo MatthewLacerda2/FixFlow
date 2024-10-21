@@ -22,7 +22,7 @@ public class Business : IdentityUser {
 	/// <summary>
 	/// The DateTimes of the week where the business is open
 	/// </summary>
-	public BusinessWeek BusinessWeek { get; set; }
+	public BusinessWeek businessWeek { get; set; }
 
 	public string[] Services { get; set; } = Array.Empty<string>();
 	public bool AllowListedServicesOnly { get; set; } = false;
@@ -40,7 +40,7 @@ public class Business : IdentityUser {
 		CNPJ = cnpj;
 		PhoneNumber = phoneNumber;
 
-		BusinessWeek = new BusinessWeek();
+		businessWeek = new BusinessWeek();
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {

@@ -25,7 +25,7 @@ public class BusinessDTO {
 
 	public BusinessDTO(Business business) {
 		Id = business.Id;
-		BusinessWeek = business.BusinessWeek;
+		BusinessWeek = business.businessWeek;
 		Services = business.Services;
 		AllowListedServicesOnly = business.AllowListedServicesOnly;
 		OpenOnHolidays = business.OpenOnHolidays;

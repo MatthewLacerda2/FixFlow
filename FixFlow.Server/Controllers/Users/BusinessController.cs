@@ -97,7 +97,7 @@ public class BusinessController : ControllerBase {
 		}
 
 		businessExists.Name = upBusiness.Name;
-		businessExists.BusinessWeek = upBusiness.BusinessWeek;
+		businessExists.businessWeek = upBusiness.BusinessWeek;
 		businessExists.Services = upBusiness.Services;
 		businessExists.AllowListedServicesOnly = upBusiness.AllowListedServicesOnly;
 		businessExists.OpenOnHolidays = upBusiness.OpenOnHolidays;
