@@ -35,15 +35,16 @@ part 'api/business_api.dart';
 part 'api/business_calendar_day_api.dart';
 part 'api/customer_api.dart';
 part 'api/idle_period_api.dart';
-part 'api/otp_api.dart';
 
 part 'model/apt_log.dart';
 part 'model/apt_schedule.dart';
 part 'model/business.dart';
 part 'model/business_calendar_day.dart';
-part 'model/business_day.dart';
+part 'model/business_dto.dart';
 part 'model/business_idle_periods_request.dart';
 part 'model/business_register_request.dart';
+part 'model/business_time_span.dart';
+part 'model/business_week.dart';
 part 'model/create_apt_log.dart';
 part 'model/create_apt_schedule.dart';
 part 'model/customer.dart';
@@ -53,6 +54,7 @@ part 'model/customer_record.dart';
 part 'model/flow_login_request.dart';
 part 'model/idle_period.dart';
 part 'model/problem_details.dart';
+part 'model/schedule_sort.dart';
 part 'model/update_apt_log.dart';
 
 

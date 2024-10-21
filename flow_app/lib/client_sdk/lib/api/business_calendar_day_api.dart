@@ -16,25 +16,29 @@ class BusinessCalendarDayApi {
 
   final ApiClient apiClient;
 
-  /// Login with an email and password
+  /// Gets all the events for this month
   ///
   /// Note: This method returns the HTTP [Response].
   ///
   /// Parameters:
   ///
-  /// * [String] body:
-  Future<Response> apiV1BusinessCalendarDayGetWithHttpInfo({ String? body, }) async {
+  /// * [String] businessId:
+  Future<Response> apiV1BusinessCalendarDayGetWithHttpInfo({ String? businessId, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/BusinessCalendarDay';
 
     // ignore: prefer_final_locals
-    Object? postBody = body;
+    Object? postBody;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+    if (businessId != null) {
+      queryParams.addAll(_queryParams('', 'businessId', businessId));
+    }
+
+    const contentTypes = <String>[];
 
 
     return apiClient.invokeAPI(
@@ -48,13 +52,13 @@ class BusinessCalendarDayApi {
     );
   }
 
-  /// Login with an email and password
+  /// Gets all the events for this month
   ///
   /// Parameters:
   ///
-  /// * [String] body:
-  Future<List<BusinessCalendarDay>?> apiV1BusinessCalendarDayGet({ String? body, }) async {
-    final response = await apiV1BusinessCalendarDayGetWithHttpInfo( body: body, );
+  /// * [String] businessId:
+  Future<List<BusinessCalendarDay>?> apiV1BusinessCalendarDayGet({ String? businessId, }) async {
+    final response = await apiV1BusinessCalendarDayGetWithHttpInfo( businessId: businessId, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

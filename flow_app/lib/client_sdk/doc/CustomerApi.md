@@ -10,9 +10,9 @@ All URIs are relative to *http://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**apiV1CustomerGet**](CustomerApi.md#apiv1customerget) | **GET** /api/v1/Customer | Gets a number of filtered Customers
-[**apiV1CustomerIdGet**](CustomerApi.md#apiv1customeridget) | **GET** /api/v1/Customer/{id} | Get Customer Record in the Business.  Credentials, but also schedules and logs history
 [**apiV1CustomerPatch**](CustomerApi.md#apiv1customerpatch) | **PATCH** /api/v1/Customer | Updates the Customer with the given Id
 [**apiV1CustomerPost**](CustomerApi.md#apiv1customerpost) | **POST** /api/v1/Customer | Create a Customer Account
+[**apiV1CustomerRecordGet**](CustomerApi.md#apiv1customerrecordget) | **GET** /api/v1/Customer/record | Get Customer Record in the Business.  Credentials, but also schedules and logs history
 
 
 # **apiV1CustomerGet**
@@ -50,49 +50,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**List<List<CustomerDTO>>**](List.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **apiV1CustomerIdGet**
-> CustomerRecord apiV1CustomerIdGet(id, customerId)
-
-Get Customer Record in the Business.  Credentials, but also schedules and logs history
-
-### Example
-```dart
-import 'package:openapi/api.dart';
-
-final api_instance = CustomerApi();
-final id = id_example; // String | 
-final customerId = customerId_example; // String | 
-
-try {
-    final result = api_instance.apiV1CustomerIdGet(id, customerId);
-    print(result);
-} catch (e) {
-    print('Exception when calling CustomerApi->apiV1CustomerIdGet: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  | 
- **customerId** | **String**|  | [optional] 
-
-### Return type
-
-[**CustomerRecord**](CustomerRecord.md)
 
 ### Authorization
 
@@ -183,6 +140,47 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json, text/json, application/*+json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **apiV1CustomerRecordGet**
+> CustomerRecord apiV1CustomerRecordGet(customerId)
+
+Get Customer Record in the Business.  Credentials, but also schedules and logs history
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api_instance = CustomerApi();
+final customerId = customerId_example; // String | 
+
+try {
+    final result = api_instance.apiV1CustomerRecordGet(customerId);
+    print(result);
+} catch (e) {
+    print('Exception when calling CustomerApi->apiV1CustomerRecordGet: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **customerId** | **String**|  | [optional] 
+
+### Return type
+
+[**CustomerRecord**](CustomerRecord.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

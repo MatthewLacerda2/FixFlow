@@ -56,7 +56,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1SchedulesGet**
-> List<List<AptSchedule>> apiV1SchedulesGet(body)
+> List<List<AptSchedule>> apiV1SchedulesGet(businessId, client, service, minPrice, maxPrice, minDateTime, maxDateTime, sort, descending, offset, limit)
 
 Gets a number of filtered Schedules
 
@@ -65,10 +65,20 @@ Gets a number of filtered Schedules
 import 'package:openapi/api.dart';
 
 final api_instance = AptScheduleApi();
-final body = Object(); // Object | 
+final businessId = businessId_example; // String | 
+final client = client_example; // String | 
+final service = service_example; // String | 
+final minPrice = 3.4; // double | 
+final maxPrice = 3.4; // double | 
+final minDateTime = 2013-10-20T19:20:30+01:00; // DateTime | 
+final maxDateTime = 2013-10-20T19:20:30+01:00; // DateTime | 
+final sort = ; // ScheduleSort | 
+final descending = true; // bool | 
+final offset = 56; // int | 
+final limit = 56; // int | 
 
 try {
-    final result = api_instance.apiV1SchedulesGet(body);
+    final result = api_instance.apiV1SchedulesGet(businessId, client, service, minPrice, maxPrice, minDateTime, maxDateTime, sort, descending, offset, limit);
     print(result);
 } catch (e) {
     print('Exception when calling AptScheduleApi->apiV1SchedulesGet: $e\n');
@@ -79,7 +89,17 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+ **businessId** | **String**|  | [optional] 
+ **client** | **String**|  | [optional] 
+ **service** | **String**|  | [optional] 
+ **minPrice** | **double**|  | [optional] 
+ **maxPrice** | **double**|  | [optional] 
+ **minDateTime** | **DateTime**|  | [optional] 
+ **maxDateTime** | **DateTime**|  | [optional] 
+ **sort** | [**ScheduleSort**](.md)|  | [optional] 
+ **descending** | **bool**|  | [optional] 
+ **offset** | **int**|  | [optional] 
+ **limit** | **int**|  | [optional] 
 
 ### Return type
 
@@ -91,7 +111,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, text/json, application/*+json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

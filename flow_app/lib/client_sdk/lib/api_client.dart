@@ -190,12 +190,16 @@ class ApiClient {
           return Business.fromJson(value);
         case 'BusinessCalendarDay':
           return BusinessCalendarDay.fromJson(value);
-        case 'BusinessDay':
-          return BusinessDay.fromJson(value);
+        case 'BusinessDTO':
+          return BusinessDTO.fromJson(value);
         case 'BusinessIdlePeriodsRequest':
           return BusinessIdlePeriodsRequest.fromJson(value);
         case 'BusinessRegisterRequest':
           return BusinessRegisterRequest.fromJson(value);
+        case 'BusinessTimeSpan':
+          return BusinessTimeSpan.fromJson(value);
+        case 'BusinessWeek':
+          return BusinessWeek.fromJson(value);
         case 'CreateAptLog':
           return CreateAptLog.fromJson(value);
         case 'CreateAptSchedule':
@@ -214,6 +218,8 @@ class ApiClient {
           return IdlePeriod.fromJson(value);
         case 'ProblemDetails':
           return ProblemDetails.fromJson(value);
+        case 'ScheduleSort':
+          return ScheduleSortTypeTransformer().decode(value);
         case 'UpdateAptLog':
           return UpdateAptLog.fromJson(value);
         default:

@@ -29,11 +29,11 @@ class Business {
     this.lockoutEnabled,
     this.accessFailedCount,
     this.createdDate,
-    this.lastLogin,
     this.isActive,
     this.name,
     this.cnpj,
-    this.businessDays = const [],
+    this.businessWeek,
+    this.services = const [],
     this.allowListedServicesOnly,
     this.openOnHolidays,
   });
@@ -112,14 +112,6 @@ class Business {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  DateTime? lastLogin;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
   bool? isActive;
 
   /// The Name of the Business or Business owner
@@ -128,8 +120,15 @@ class Business {
   /// CNPJ. Must be on format XX.XXX.XXX/XXXX-XX
   String? cnpj;
 
-  /// The DateTimes of the week where the business is open
-  List<BusinessDay>? businessDays;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  BusinessWeek? businessWeek;
+
+  List<String>? services;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -165,11 +164,11 @@ class Business {
     other.lockoutEnabled == lockoutEnabled &&
     other.accessFailedCount == accessFailedCount &&
     other.createdDate == createdDate &&
-    other.lastLogin == lastLogin &&
     other.isActive == isActive &&
     other.name == name &&
     other.cnpj == cnpj &&
-    _deepEquality.equals(other.businessDays, businessDays) &&
+    other.businessWeek == businessWeek &&
+    _deepEquality.equals(other.services, services) &&
     other.allowListedServicesOnly == allowListedServicesOnly &&
     other.openOnHolidays == openOnHolidays;
 
@@ -192,16 +191,16 @@ class Business {
     (lockoutEnabled == null ? 0 : lockoutEnabled!.hashCode) +
     (accessFailedCount == null ? 0 : accessFailedCount!.hashCode) +
     (createdDate == null ? 0 : createdDate!.hashCode) +
-    (lastLogin == null ? 0 : lastLogin!.hashCode) +
     (isActive == null ? 0 : isActive!.hashCode) +
     (name == null ? 0 : name!.hashCode) +
     (cnpj == null ? 0 : cnpj!.hashCode) +
-    (businessDays == null ? 0 : businessDays!.hashCode) +
+    (businessWeek == null ? 0 : businessWeek!.hashCode) +
+    (services == null ? 0 : services!.hashCode) +
     (allowListedServicesOnly == null ? 0 : allowListedServicesOnly!.hashCode) +
     (openOnHolidays == null ? 0 : openOnHolidays!.hashCode);
 
   @override
-  String toString() => 'Business[id=$id, userName=$userName, normalizedUserName=$normalizedUserName, email=$email, normalizedEmail=$normalizedEmail, emailConfirmed=$emailConfirmed, passwordHash=$passwordHash, securityStamp=$securityStamp, concurrencyStamp=$concurrencyStamp, phoneNumber=$phoneNumber, phoneNumberConfirmed=$phoneNumberConfirmed, twoFactorEnabled=$twoFactorEnabled, lockoutEnd=$lockoutEnd, lockoutEnabled=$lockoutEnabled, accessFailedCount=$accessFailedCount, createdDate=$createdDate, lastLogin=$lastLogin, isActive=$isActive, name=$name, cnpj=$cnpj, businessDays=$businessDays, allowListedServicesOnly=$allowListedServicesOnly, openOnHolidays=$openOnHolidays]';
+  String toString() => 'Business[id=$id, userName=$userName, normalizedUserName=$normalizedUserName, email=$email, normalizedEmail=$normalizedEmail, emailConfirmed=$emailConfirmed, passwordHash=$passwordHash, securityStamp=$securityStamp, concurrencyStamp=$concurrencyStamp, phoneNumber=$phoneNumber, phoneNumberConfirmed=$phoneNumberConfirmed, twoFactorEnabled=$twoFactorEnabled, lockoutEnd=$lockoutEnd, lockoutEnabled=$lockoutEnabled, accessFailedCount=$accessFailedCount, createdDate=$createdDate, isActive=$isActive, name=$name, cnpj=$cnpj, businessWeek=$businessWeek, services=$services, allowListedServicesOnly=$allowListedServicesOnly, openOnHolidays=$openOnHolidays]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -285,11 +284,6 @@ class Business {
     } else {
       json[r'createdDate'] = null;
     }
-    if (this.lastLogin != null) {
-      json[r'lastLogin'] = this.lastLogin!.toUtc().toIso8601String();
-    } else {
-      json[r'lastLogin'] = null;
-    }
     if (this.isActive != null) {
       json[r'isActive'] = this.isActive;
     } else {
@@ -305,10 +299,15 @@ class Business {
     } else {
       json[r'cnpj'] = null;
     }
-    if (this.businessDays != null) {
-      json[r'businessDays'] = this.businessDays;
+    if (this.businessWeek != null) {
+      json[r'businessWeek'] = this.businessWeek;
     } else {
-      json[r'businessDays'] = null;
+      json[r'businessWeek'] = null;
+    }
+    if (this.services != null) {
+      json[r'services'] = this.services;
+    } else {
+      json[r'services'] = null;
     }
     if (this.allowListedServicesOnly != null) {
       json[r'allowListedServicesOnly'] = this.allowListedServicesOnly;
@@ -358,11 +357,13 @@ class Business {
         lockoutEnabled: mapValueOfType<bool>(json, r'lockoutEnabled'),
         accessFailedCount: mapValueOfType<int>(json, r'accessFailedCount'),
         createdDate: mapDateTime(json, r'createdDate', r''),
-        lastLogin: mapDateTime(json, r'lastLogin', r''),
         isActive: mapValueOfType<bool>(json, r'isActive'),
         name: mapValueOfType<String>(json, r'name'),
         cnpj: mapValueOfType<String>(json, r'cnpj'),
-        businessDays: BusinessDay.listFromJson(json[r'businessDays']),
+        businessWeek: BusinessWeek.fromJson(json[r'businessWeek']),
+        services: json[r'services'] is Iterable
+            ? (json[r'services'] as Iterable).cast<String>().toList(growable: false)
+            : const [],
         allowListedServicesOnly: mapValueOfType<bool>(json, r'allowListedServicesOnly'),
         openOnHolidays: mapValueOfType<bool>(json, r'openOnHolidays'),
       );

@@ -24,11 +24,11 @@ Name | Type | Description | Notes
 **lockoutEnabled** | **bool** |  | [optional] 
 **accessFailedCount** | **int** |  | [optional] 
 **createdDate** | [**DateTime**](DateTime.md) |  | [optional] 
-**lastLogin** | [**DateTime**](DateTime.md) |  | [optional] 
 **isActive** | **bool** |  | [optional] 
 **name** | **String** | The Name of the Business or Business owner | [optional] 
 **cnpj** | **String** | CNPJ. Must be on format XX.XXX.XXX/XXXX-XX | [optional] 
-**businessDays** | [**List<BusinessDay>**](BusinessDay.md) | The DateTimes of the week where the business is open | [optional] [default to const []]
+**businessWeek** | [**BusinessWeek**](BusinessWeek.md) |  | [optional] 
+**services** | **List<String>** |  | [optional] [default to const []]
 **allowListedServicesOnly** | **bool** |  | [optional] 
 **openOnHolidays** | **bool** |  | [optional] 
 

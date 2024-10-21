@@ -97,7 +97,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1BusinessGet**
-> Business apiV1BusinessGet(body)
+> BusinessDTO apiV1BusinessGet(businessId)
 
 Gets the Business with the given Id.  Used when the User logs-in or opens the app
 
@@ -106,10 +106,10 @@ Gets the Business with the given Id.  Used when the User logs-in or opens the ap
 import 'package:openapi/api.dart';
 
 final api_instance = BusinessApi();
-final body = String(); // String | 
+final businessId = businessId_example; // String | 
 
 try {
-    final result = api_instance.apiV1BusinessGet(body);
+    final result = api_instance.apiV1BusinessGet(businessId);
     print(result);
 } catch (e) {
     print('Exception when calling BusinessApi->apiV1BusinessGet: $e\n');
@@ -120,11 +120,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **String**|  | [optional] 
+ **businessId** | **String**|  | [optional] 
 
 ### Return type
 
-[**Business**](Business.md)
+[**BusinessDTO**](BusinessDTO.md)
 
 ### Authorization
 
@@ -132,13 +132,13 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, text/json, application/*+json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1BusinessPatch**
-> Business apiV1BusinessPatch(business)
+> BusinessDTO apiV1BusinessPatch(businessDTO)
 
 Updates the Business with the given Id
 
@@ -147,10 +147,10 @@ Updates the Business with the given Id
 import 'package:openapi/api.dart';
 
 final api_instance = BusinessApi();
-final business = Business(); // Business | 
+final businessDTO = BusinessDTO(); // BusinessDTO | 
 
 try {
-    final result = api_instance.apiV1BusinessPatch(business);
+    final result = api_instance.apiV1BusinessPatch(businessDTO);
     print(result);
 } catch (e) {
     print('Exception when calling BusinessApi->apiV1BusinessPatch: $e\n');
@@ -161,11 +161,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **business** | [**Business**](Business.md)|  | [optional] 
+ **businessDTO** | [**BusinessDTO**](BusinessDTO.md)|  | [optional] 
 
 ### Return type
 
-[**Business**](Business.md)
+[**BusinessDTO**](BusinessDTO.md)
 
 ### Authorization
 

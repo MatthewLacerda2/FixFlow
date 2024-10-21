@@ -75,25 +75,85 @@ class AptScheduleApi {
   ///
   /// Parameters:
   ///
-  /// * [Object] body:
+  /// * [String] businessId:
+  ///
+  /// * [String] client:
+  ///
+  /// * [String] service:
+  ///
+  /// * [double] minPrice:
+  ///
+  /// * [double] maxPrice:
+  ///
+  /// * [DateTime] minDateTime:
+  ///
+  /// * [DateTime] maxDateTime:
+  ///
+  /// * [ScheduleSort] sort:
+  ///
+  /// * [bool] descending:
+  ///
+  /// * [int] offset:
+  ///
+  /// * [int] limit:
   Future<Response> apiV1SchedulesGetWithHttpInfo({
-    Object? body,
+    String? businessId,
+    String? client,
+    String? service,
+    double? minPrice,
+    double? maxPrice,
+    DateTime? minDateTime,
+    DateTime? maxDateTime,
+    ScheduleSort? sort,
+    bool? descending,
+    int? offset,
+    int? limit,
   }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/schedules';
 
     // ignore: prefer_final_locals
-    Object? postBody = body;
+    Object? postBody;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[
-      'application/json',
-      'text/json',
-      'application/*+json'
-    ];
+    if (businessId != null) {
+      queryParams.addAll(_queryParams('', 'businessId', businessId));
+    }
+    if (client != null) {
+      queryParams.addAll(_queryParams('', 'client', client));
+    }
+    if (service != null) {
+      queryParams.addAll(_queryParams('', 'service', service));
+    }
+    if (minPrice != null) {
+      queryParams.addAll(_queryParams('', 'minPrice', minPrice));
+    }
+    if (maxPrice != null) {
+      queryParams.addAll(_queryParams('', 'maxPrice', maxPrice));
+    }
+    if (minDateTime != null) {
+      queryParams.addAll(_queryParams('', 'minDateTime', minDateTime));
+    }
+    if (maxDateTime != null) {
+      queryParams.addAll(_queryParams('', 'maxDateTime', maxDateTime));
+    }
+    if (sort != null) {
+      queryParams.addAll(_queryParams('', 'sort', sort));
+    }
+    if (descending != null) {
+      queryParams.addAll(_queryParams('', 'descending', descending));
+    }
+    if (offset != null) {
+      queryParams.addAll(_queryParams('', 'offset', offset));
+    }
+    if (limit != null) {
+      queryParams.addAll(_queryParams('', 'limit', limit));
+    }
+
+    const contentTypes = <String>[];
 
     return apiClient.invokeAPI(
       path,
@@ -110,12 +170,52 @@ class AptScheduleApi {
   ///
   /// Parameters:
   ///
-  /// * [Object] body:
+  /// * [String] businessId:
+  ///
+  /// * [String] client:
+  ///
+  /// * [String] service:
+  ///
+  /// * [double] minPrice:
+  ///
+  /// * [double] maxPrice:
+  ///
+  /// * [DateTime] minDateTime:
+  ///
+  /// * [DateTime] maxDateTime:
+  ///
+  /// * [ScheduleSort] sort:
+  ///
+  /// * [bool] descending:
+  ///
+  /// * [int] offset:
+  ///
+  /// * [int] limit:
   Future<List<List<AptSchedule>>?> apiV1SchedulesGet({
-    Object? body,
+    String? businessId,
+    String? client,
+    String? service,
+    double? minPrice,
+    double? maxPrice,
+    DateTime? minDateTime,
+    DateTime? maxDateTime,
+    ScheduleSort? sort,
+    bool? descending,
+    int? offset,
+    int? limit,
   }) async {
     final response = await apiV1SchedulesGetWithHttpInfo(
-      body: body,
+      businessId: businessId,
+      client: client,
+      service: service,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      minDateTime: minDateTime,
+      maxDateTime: maxDateTime,
+      sort: sort,
+      descending: descending,
+      offset: offset,
+      limit: limit,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
