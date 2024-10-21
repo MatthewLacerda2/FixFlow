@@ -74,25 +74,67 @@ class AptLogApi {
   ///
   /// Parameters:
   ///
-  /// * [Object] body:
+  /// * [String] client:
+  ///
+  /// * [String] service:
+  ///
+  /// * [double] minPrice:
+  ///
+  /// * [double] maxPrice:
+  ///
+  /// * [DateTime] minDateTime:
+  ///
+  /// * [DateTime] maxDateTime:
+  ///
+  /// * [int] offset:
+  ///
+  /// * [int] limit:
   Future<Response> apiV1LogsGetWithHttpInfo({
-    Object? body,
+    String? client,
+    String? service,
+    double? minPrice,
+    double? maxPrice,
+    DateTime? minDateTime,
+    DateTime? maxDateTime,
+    int? offset,
+    int? limit,
   }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/logs';
 
     // ignore: prefer_final_locals
-    Object? postBody = body;
+    Object? postBody;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[
-      'application/json',
-      'text/json',
-      'application/*+json'
-    ];
+    if (client != null) {
+      queryParams.addAll(_queryParams('', 'client', client));
+    }
+    if (service != null) {
+      queryParams.addAll(_queryParams('', 'service', service));
+    }
+    if (minPrice != null) {
+      queryParams.addAll(_queryParams('', 'minPrice', minPrice));
+    }
+    if (maxPrice != null) {
+      queryParams.addAll(_queryParams('', 'maxPrice', maxPrice));
+    }
+    if (minDateTime != null) {
+      queryParams.addAll(_queryParams('', 'minDateTime', minDateTime));
+    }
+    if (maxDateTime != null) {
+      queryParams.addAll(_queryParams('', 'maxDateTime', maxDateTime));
+    }
+    if (offset != null) {
+      queryParams.addAll(_queryParams('', 'offset', offset));
+    }
+    if (limit != null) {
+      queryParams.addAll(_queryParams('', 'limit', limit));
+    }
+
+    const contentTypes = <String>[];
 
     return apiClient.invokeAPI(
       path,
@@ -109,12 +151,40 @@ class AptLogApi {
   ///
   /// Parameters:
   ///
-  /// * [Object] body:
+  /// * [String] client:
+  ///
+  /// * [String] service:
+  ///
+  /// * [double] minPrice:
+  ///
+  /// * [double] maxPrice:
+  ///
+  /// * [DateTime] minDateTime:
+  ///
+  /// * [DateTime] maxDateTime:
+  ///
+  /// * [int] offset:
+  ///
+  /// * [int] limit:
   Future<List<List>?> apiV1LogsGet({
-    Object? body,
+    String? client,
+    String? service,
+    double? minPrice,
+    double? maxPrice,
+    DateTime? minDateTime,
+    DateTime? maxDateTime,
+    int? offset,
+    int? limit,
   }) async {
     final response = await apiV1LogsGetWithHttpInfo(
-      body: body,
+      client: client,
+      service: service,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      minDateTime: minDateTime,
+      maxDateTime: maxDateTime,
+      offset: offset,
+      limit: limit,
     );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));

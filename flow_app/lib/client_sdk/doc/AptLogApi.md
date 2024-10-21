@@ -56,7 +56,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1LogsGet**
-> List<List<AptLog>> apiV1LogsGet(body)
+> List<List<AptLog>> apiV1LogsGet(client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit)
 
 Gets a number of filtered Logs
 
@@ -65,10 +65,17 @@ Gets a number of filtered Logs
 import 'package:openapi/api.dart';
 
 final api_instance = AptLogApi();
-final body = Object(); // Object | 
+final client = client_example; // String | 
+final service = service_example; // String | 
+final minPrice = 3.4; // double | 
+final maxPrice = 3.4; // double | 
+final minDateTime = 2013-10-20T19:20:30+01:00; // DateTime | 
+final maxDateTime = 2013-10-20T19:20:30+01:00; // DateTime | 
+final offset = 56; // int | 
+final limit = 56; // int | 
 
 try {
-    final result = api_instance.apiV1LogsGet(body);
+    final result = api_instance.apiV1LogsGet(client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit);
     print(result);
 } catch (e) {
     print('Exception when calling AptLogApi->apiV1LogsGet: $e\n');
@@ -79,7 +86,14 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | [optional] 
+ **client** | **String**|  | [optional] 
+ **service** | **String**|  | [optional] 
+ **minPrice** | **double**|  | [optional] 
+ **maxPrice** | **double**|  | [optional] 
+ **minDateTime** | **DateTime**|  | [optional] 
+ **maxDateTime** | **DateTime**|  | [optional] 
+ **offset** | **int**|  | [optional] 
+ **limit** | **int**|  | [optional] 
 
 ### Return type
 
@@ -91,7 +105,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, text/json, application/*+json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

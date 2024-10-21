@@ -12,9 +12,11 @@ doc/Business.md
 doc/BusinessApi.md
 doc/BusinessCalendarDay.md
 doc/BusinessCalendarDayApi.md
-doc/BusinessDay.md
+doc/BusinessDTO.md
 doc/BusinessIdlePeriodsRequest.md
 doc/BusinessRegisterRequest.md
+doc/BusinessTimeSpan.md
+doc/BusinessWeek.md
 doc/CreateAptLog.md
 doc/CreateAptSchedule.md
 doc/Customer.md
@@ -25,8 +27,8 @@ doc/CustomerRecord.md
 doc/FlowLoginRequest.md
 doc/IdlePeriod.md
 doc/IdlePeriodApi.md
-doc/OTPApi.md
 doc/ProblemDetails.md
+doc/ScheduleSort.md
 doc/UpdateAptLog.md
 git_push.sh
 lib/api.dart
@@ -37,7 +39,6 @@ lib/api/business_api.dart
 lib/api/business_calendar_day_api.dart
 lib/api/customer_api.dart
 lib/api/idle_period_api.dart
-lib/api/otp_api.dart
 lib/api_client.dart
 lib/api_exception.dart
 lib/api_helper.dart
@@ -50,9 +51,11 @@ lib/model/apt_log.dart
 lib/model/apt_schedule.dart
 lib/model/business.dart
 lib/model/business_calendar_day.dart
-lib/model/business_day.dart
+lib/model/business_dto.dart
 lib/model/business_idle_periods_request.dart
 lib/model/business_register_request.dart
+lib/model/business_time_span.dart
+lib/model/business_week.dart
 lib/model/create_apt_log.dart
 lib/model/create_apt_schedule.dart
 lib/model/customer.dart
@@ -62,6 +65,7 @@ lib/model/customer_record.dart
 lib/model/flow_login_request.dart
 lib/model/idle_period.dart
 lib/model/problem_details.dart
+lib/model/schedule_sort.dart
 lib/model/update_apt_log.dart
 pubspec.yaml
 test/accounts_api_test.dart
@@ -72,10 +76,12 @@ test/apt_schedule_test.dart
 test/business_api_test.dart
 test/business_calendar_day_api_test.dart
 test/business_calendar_day_test.dart
-test/business_day_test.dart
+test/business_dto_test.dart
 test/business_idle_periods_request_test.dart
 test/business_register_request_test.dart
 test/business_test.dart
+test/business_time_span_test.dart
+test/business_week_test.dart
 test/create_apt_log_test.dart
 test/create_apt_schedule_test.dart
 test/customer_api_test.dart
@@ -86,6 +92,6 @@ test/customer_test.dart
 test/flow_login_request_test.dart
 test/idle_period_api_test.dart
 test/idle_period_test.dart
-test/otp_api_test.dart
 test/problem_details_test.dart
+test/schedule_sort_test.dart
 test/update_apt_log_test.dart

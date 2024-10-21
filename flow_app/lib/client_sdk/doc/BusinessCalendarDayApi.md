@@ -9,23 +9,23 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**apiV1BusinessCalendarDayGet**](BusinessCalendarDayApi.md#apiv1businesscalendardayget) | **GET** /api/v1/BusinessCalendarDay | Login with an email and password
+[**apiV1BusinessCalendarDayGet**](BusinessCalendarDayApi.md#apiv1businesscalendardayget) | **GET** /api/v1/BusinessCalendarDay | Gets all the events for this month
 
 
 # **apiV1BusinessCalendarDayGet**
-> List<BusinessCalendarDay> apiV1BusinessCalendarDayGet(body)
+> List<BusinessCalendarDay> apiV1BusinessCalendarDayGet(businessId)
 
-Login with an email and password
+Gets all the events for this month
 
 ### Example
 ```dart
 import 'package:openapi/api.dart';
 
 final api_instance = BusinessCalendarDayApi();
-final body = String(); // String | 
+final businessId = businessId_example; // String | 
 
 try {
-    final result = api_instance.apiV1BusinessCalendarDayGet(body);
+    final result = api_instance.apiV1BusinessCalendarDayGet(businessId);
     print(result);
 } catch (e) {
     print('Exception when calling BusinessCalendarDayApi->apiV1BusinessCalendarDayGet: $e\n');
@@ -36,7 +36,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **String**|  | [optional] 
+ **businessId** | **String**|  | [optional] 
 
 ### Return type
 
@@ -48,7 +48,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, text/json, application/*+json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

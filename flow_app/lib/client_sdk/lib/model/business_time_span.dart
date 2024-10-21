@@ -10,13 +10,13 @@
 
 part of openapi.api;
 
-class BusinessDay {
-  /// Returns a new [BusinessDay] instance.
-  BusinessDay({
+class BusinessTimeSpan {
+  /// Returns a new [BusinessTimeSpan] instance.
+  BusinessTimeSpan({
     this.id,
+    this.isActive,
     this.start,
     this.finish,
-    this.isOpen,
   });
 
   String? id;
@@ -27,7 +27,7 @@ class BusinessDay {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  DateTime? start;
+  bool? isActive;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -35,7 +35,7 @@ class BusinessDay {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  DateTime? finish;
+  String? start;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -43,25 +43,25 @@ class BusinessDay {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? isOpen;
+  String? finish;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is BusinessDay &&
+  bool operator ==(Object other) => identical(this, other) || other is BusinessTimeSpan &&
     other.id == id &&
+    other.isActive == isActive &&
     other.start == start &&
-    other.finish == finish &&
-    other.isOpen == isOpen;
+    other.finish == finish;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (id == null ? 0 : id!.hashCode) +
+    (isActive == null ? 0 : isActive!.hashCode) +
     (start == null ? 0 : start!.hashCode) +
-    (finish == null ? 0 : finish!.hashCode) +
-    (isOpen == null ? 0 : isOpen!.hashCode);
+    (finish == null ? 0 : finish!.hashCode);
 
   @override
-  String toString() => 'BusinessDay[id=$id, start=$start, finish=$finish, isOpen=$isOpen]';
+  String toString() => 'BusinessTimeSpan[id=$id, isActive=$isActive, start=$start, finish=$finish]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -70,28 +70,28 @@ class BusinessDay {
     } else {
       json[r'id'] = null;
     }
+    if (this.isActive != null) {
+      json[r'isActive'] = this.isActive;
+    } else {
+      json[r'isActive'] = null;
+    }
     if (this.start != null) {
-      json[r'start'] = this.start!.toUtc().toIso8601String();
+      json[r'start'] = this.start;
     } else {
       json[r'start'] = null;
     }
     if (this.finish != null) {
-      json[r'finish'] = this.finish!.toUtc().toIso8601String();
+      json[r'finish'] = this.finish;
     } else {
       json[r'finish'] = null;
-    }
-    if (this.isOpen != null) {
-      json[r'isOpen'] = this.isOpen;
-    } else {
-      json[r'isOpen'] = null;
     }
     return json;
   }
 
-  /// Returns a new [BusinessDay] instance and imports its values from
+  /// Returns a new [BusinessTimeSpan] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static BusinessDay? fromJson(dynamic value) {
+  static BusinessTimeSpan? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -100,27 +100,27 @@ class BusinessDay {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "BusinessDay[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "BusinessDay[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "BusinessTimeSpan[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "BusinessTimeSpan[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return BusinessDay(
+      return BusinessTimeSpan(
         id: mapValueOfType<String>(json, r'id'),
-        start: mapDateTime(json, r'start', r''),
-        finish: mapDateTime(json, r'finish', r''),
-        isOpen: mapValueOfType<bool>(json, r'isOpen'),
+        isActive: mapValueOfType<bool>(json, r'isActive'),
+        start: mapValueOfType<String>(json, r'start'),
+        finish: mapValueOfType<String>(json, r'finish'),
       );
     }
     return null;
   }
 
-  static List<BusinessDay> listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <BusinessDay>[];
+  static List<BusinessTimeSpan> listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <BusinessTimeSpan>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = BusinessDay.fromJson(row);
+        final value = BusinessTimeSpan.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -129,12 +129,12 @@ class BusinessDay {
     return result.toList(growable: growable);
   }
 
-  static Map<String, BusinessDay> mapFromJson(dynamic json) {
-    final map = <String, BusinessDay>{};
+  static Map<String, BusinessTimeSpan> mapFromJson(dynamic json) {
+    final map = <String, BusinessTimeSpan>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = BusinessDay.fromJson(entry.value);
+        final value = BusinessTimeSpan.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -143,14 +143,14 @@ class BusinessDay {
     return map;
   }
 
-  // maps a json object with a list of BusinessDay-objects as value to a dart map
-  static Map<String, List<BusinessDay>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<BusinessDay>>{};
+  // maps a json object with a list of BusinessTimeSpan-objects as value to a dart map
+  static Map<String, List<BusinessTimeSpan>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<BusinessTimeSpan>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = BusinessDay.listFromJson(entry.value, growable: growable,);
+        map[entry.key] = BusinessTimeSpan.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;

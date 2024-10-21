@@ -111,77 +111,6 @@ class CustomerApi {
     return null;
   }
 
-  /// Get Customer Record in the Business.  Credentials, but also schedules and logs history
-  ///
-  /// Note: This method returns the HTTP [Response].
-  ///
-  /// Parameters:
-  ///
-  /// * [String] id (required):
-  ///
-  /// * [String] customerId:
-  Future<Response> apiV1CustomerIdGetWithHttpInfo(
-    String id, {
-    String? customerId,
-  }) async {
-    // ignore: prefer_const_declarations
-    final path = r'/api/v1/Customer/{id}'.replaceAll('{id}', id);
-
-    // ignore: prefer_final_locals
-    Object? postBody;
-
-    final queryParams = <QueryParam>[];
-    final headerParams = <String, String>{};
-    final formParams = <String, String>{};
-
-    if (customerId != null) {
-      queryParams.addAll(_queryParams('', 'customerId', customerId));
-    }
-
-    const contentTypes = <String>[];
-
-    return apiClient.invokeAPI(
-      path,
-      'GET',
-      queryParams,
-      postBody,
-      headerParams,
-      formParams,
-      contentTypes.isEmpty ? null : contentTypes.first,
-    );
-  }
-
-  /// Get Customer Record in the Business.  Credentials, but also schedules and logs history
-  ///
-  /// Parameters:
-  ///
-  /// * [String] id (required):
-  ///
-  /// * [String] customerId:
-  Future<CustomerRecord?> apiV1CustomerIdGet(
-    String id, {
-    String? customerId,
-  }) async {
-    final response = await apiV1CustomerIdGetWithHttpInfo(
-      id,
-      customerId: customerId,
-    );
-    if (response.statusCode >= HttpStatus.badRequest) {
-      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
-    }
-    // When a remote server returns no body with a status of 204, we shall not decode it.
-    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
-    // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'CustomerRecord',
-      ) as CustomerRecord;
-    }
-    return null;
-  }
-
   /// Updates the Customer with the given Id
   ///
   /// Note: This method returns the HTTP [Response].
@@ -306,6 +235,70 @@ class CustomerApi {
         await _decodeBodyBytes(response),
         'CustomerDTO',
       ) as CustomerDTO;
+    }
+    return null;
+  }
+
+  /// Get Customer Record in the Business.  Credentials, but also schedules and logs history
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [String] customerId:
+  Future<Response> apiV1CustomerRecordGetWithHttpInfo({
+    String? customerId,
+  }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/Customer/record';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (customerId != null) {
+      queryParams.addAll(_queryParams('', 'customerId', customerId));
+    }
+
+    const contentTypes = <String>[];
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Get Customer Record in the Business.  Credentials, but also schedules and logs history
+  ///
+  /// Parameters:
+  ///
+  /// * [String] customerId:
+  Future<CustomerRecord?> apiV1CustomerRecordGet({
+    String? customerId,
+  }) async {
+    final response = await apiV1CustomerRecordGetWithHttpInfo(
+      customerId: customerId,
+    );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty &&
+        response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(
+        await _decodeBodyBytes(response),
+        'CustomerRecord',
+      ) as CustomerRecord;
     }
     return null;
   }

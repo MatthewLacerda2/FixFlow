@@ -17,7 +17,7 @@ class BusinessRegisterRequest {
     this.email,
     this.cnpj,
     required this.phoneNumber,
-    this.otpCode,
+    this.password,
     this.confirmPassword,
   });
 
@@ -32,7 +32,7 @@ class BusinessRegisterRequest {
   /// Phone Number. Must contain only numbers and/or a '+'
   String phoneNumber;
 
-  String? otpCode;
+  String? password;
 
   /// Must be identical to 'password'
   String? confirmPassword;
@@ -43,7 +43,7 @@ class BusinessRegisterRequest {
     other.email == email &&
     other.cnpj == cnpj &&
     other.phoneNumber == phoneNumber &&
-    other.otpCode == otpCode &&
+    other.password == password &&
     other.confirmPassword == confirmPassword;
 
   @override
@@ -53,11 +53,11 @@ class BusinessRegisterRequest {
     (email == null ? 0 : email!.hashCode) +
     (cnpj == null ? 0 : cnpj!.hashCode) +
     (phoneNumber.hashCode) +
-    (otpCode == null ? 0 : otpCode!.hashCode) +
+    (password == null ? 0 : password!.hashCode) +
     (confirmPassword == null ? 0 : confirmPassword!.hashCode);
 
   @override
-  String toString() => 'BusinessRegisterRequest[name=$name, email=$email, cnpj=$cnpj, phoneNumber=$phoneNumber, otpCode=$otpCode, confirmPassword=$confirmPassword]';
+  String toString() => 'BusinessRegisterRequest[name=$name, email=$email, cnpj=$cnpj, phoneNumber=$phoneNumber, password=$password, confirmPassword=$confirmPassword]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -73,10 +73,10 @@ class BusinessRegisterRequest {
       json[r'cnpj'] = null;
     }
       json[r'phoneNumber'] = this.phoneNumber;
-    if (this.otpCode != null) {
-      json[r'otpCode'] = this.otpCode;
+    if (this.password != null) {
+      json[r'password'] = this.password;
     } else {
-      json[r'otpCode'] = null;
+      json[r'password'] = null;
     }
     if (this.confirmPassword != null) {
       json[r'confirmPassword'] = this.confirmPassword;
@@ -109,7 +109,7 @@ class BusinessRegisterRequest {
         email: mapValueOfType<String>(json, r'email'),
         cnpj: mapValueOfType<String>(json, r'cnpj'),
         phoneNumber: mapValueOfType<String>(json, r'phoneNumber')!,
-        otpCode: mapValueOfType<String>(json, r'otpCode'),
+        password: mapValueOfType<String>(json, r'password'),
         confirmPassword: mapValueOfType<String>(json, r'confirmPassword'),
       );
     }

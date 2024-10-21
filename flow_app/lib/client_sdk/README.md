@@ -72,15 +72,14 @@ Class | Method | HTTP request | Description
 *BusinessApi* | [**apiV1BusinessGet**](doc//BusinessApi.md#apiv1businessget) | **GET** /api/v1/Business | Gets the Business with the given Id.  Used when the User logs-in or opens the app
 *BusinessApi* | [**apiV1BusinessPatch**](doc//BusinessApi.md#apiv1businesspatch) | **PATCH** /api/v1/Business | Updates the Business with the given Id
 *BusinessApi* | [**apiV1BusinessPost**](doc//BusinessApi.md#apiv1businesspost) | **POST** /api/v1/Business | Creates a Business User
-*BusinessCalendarDayApi* | [**apiV1BusinessCalendarDayGet**](doc//BusinessCalendarDayApi.md#apiv1businesscalendardayget) | **GET** /api/v1/BusinessCalendarDay | Login with an email and password
+*BusinessCalendarDayApi* | [**apiV1BusinessCalendarDayGet**](doc//BusinessCalendarDayApi.md#apiv1businesscalendardayget) | **GET** /api/v1/BusinessCalendarDay | Gets all the events for this month
 *CustomerApi* | [**apiV1CustomerGet**](doc//CustomerApi.md#apiv1customerget) | **GET** /api/v1/Customer | Gets a number of filtered Customers
-*CustomerApi* | [**apiV1CustomerIdGet**](doc//CustomerApi.md#apiv1customeridget) | **GET** /api/v1/Customer/{id} | Get Customer Record in the Business.  Credentials, but also schedules and logs history
 *CustomerApi* | [**apiV1CustomerPatch**](doc//CustomerApi.md#apiv1customerpatch) | **PATCH** /api/v1/Customer | Updates the Customer with the given Id
 *CustomerApi* | [**apiV1CustomerPost**](doc//CustomerApi.md#apiv1customerpost) | **POST** /api/v1/Customer | Create a Customer Account
+*CustomerApi* | [**apiV1CustomerRecordGet**](doc//CustomerApi.md#apiv1customerrecordget) | **GET** /api/v1/Customer/record | Get Customer Record in the Business.  Credentials, but also schedules and logs history
 *IdlePeriodApi* | [**apiV1IdlePeriodDelete**](doc//IdlePeriodApi.md#apiv1idleperioddelete) | **DELETE** /api/v1/IdlePeriod | Removes Idle days
 *IdlePeriodApi* | [**apiV1IdlePeriodGet**](doc//IdlePeriodApi.md#apiv1idleperiodget) | **GET** /api/v1/IdlePeriod | Returns all Idle Periods that contain the given date
 *IdlePeriodApi* | [**apiV1IdlePeriodPost**](doc//IdlePeriodApi.md#apiv1idleperiodpost) | **POST** /api/v1/IdlePeriod | Creates an Idle period
-*OTPApi* | [**apiV1OTPPost**](doc//OTPApi.md#apiv1otppost) | **POST** /api/v1/OTP | Creates an OTP for when creating a Business
 
 
 ## Documentation For Models
@@ -89,9 +88,11 @@ Class | Method | HTTP request | Description
  - [AptSchedule](doc//AptSchedule.md)
  - [Business](doc//Business.md)
  - [BusinessCalendarDay](doc//BusinessCalendarDay.md)
- - [BusinessDay](doc//BusinessDay.md)
+ - [BusinessDTO](doc//BusinessDTO.md)
  - [BusinessIdlePeriodsRequest](doc//BusinessIdlePeriodsRequest.md)
  - [BusinessRegisterRequest](doc//BusinessRegisterRequest.md)
+ - [BusinessTimeSpan](doc//BusinessTimeSpan.md)
+ - [BusinessWeek](doc//BusinessWeek.md)
  - [CreateAptLog](doc//CreateAptLog.md)
  - [CreateAptSchedule](doc//CreateAptSchedule.md)
  - [Customer](doc//Customer.md)
@@ -101,6 +102,7 @@ Class | Method | HTTP request | Description
  - [FlowLoginRequest](doc//FlowLoginRequest.md)
  - [IdlePeriod](doc//IdlePeriod.md)
  - [ProblemDetails](doc//ProblemDetails.md)
+ - [ScheduleSort](doc//ScheduleSort.md)
  - [UpdateAptLog](doc//UpdateAptLog.md)
 
 

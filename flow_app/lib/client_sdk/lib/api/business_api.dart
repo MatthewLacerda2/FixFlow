@@ -110,19 +110,23 @@ class BusinessApi {
   ///
   /// Parameters:
   ///
-  /// * [String] body:
-  Future<Response> apiV1BusinessGetWithHttpInfo({ String? body, }) async {
+  /// * [String] businessId:
+  Future<Response> apiV1BusinessGetWithHttpInfo({ String? businessId, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/Business';
 
     // ignore: prefer_final_locals
-    Object? postBody = body;
+    Object? postBody;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+    if (businessId != null) {
+      queryParams.addAll(_queryParams('', 'businessId', businessId));
+    }
+
+    const contentTypes = <String>[];
 
 
     return apiClient.invokeAPI(
@@ -140,9 +144,9 @@ class BusinessApi {
   ///
   /// Parameters:
   ///
-  /// * [String] body:
-  Future<Business?> apiV1BusinessGet({ String? body, }) async {
-    final response = await apiV1BusinessGetWithHttpInfo( body: body, );
+  /// * [String] businessId:
+  Future<BusinessDTO?> apiV1BusinessGet({ String? businessId, }) async {
+    final response = await apiV1BusinessGetWithHttpInfo( businessId: businessId, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -150,7 +154,7 @@ class BusinessApi {
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Business',) as Business;
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'BusinessDTO',) as BusinessDTO;
     
     }
     return null;
@@ -162,13 +166,13 @@ class BusinessApi {
   ///
   /// Parameters:
   ///
-  /// * [Business] business:
-  Future<Response> apiV1BusinessPatchWithHttpInfo({ Business? business, }) async {
+  /// * [BusinessDTO] businessDTO:
+  Future<Response> apiV1BusinessPatchWithHttpInfo({ BusinessDTO? businessDTO, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/Business';
 
     // ignore: prefer_final_locals
-    Object? postBody = business;
+    Object? postBody = businessDTO;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
@@ -192,9 +196,9 @@ class BusinessApi {
   ///
   /// Parameters:
   ///
-  /// * [Business] business:
-  Future<Business?> apiV1BusinessPatch({ Business? business, }) async {
-    final response = await apiV1BusinessPatchWithHttpInfo( business: business, );
+  /// * [BusinessDTO] businessDTO:
+  Future<BusinessDTO?> apiV1BusinessPatch({ BusinessDTO? businessDTO, }) async {
+    final response = await apiV1BusinessPatchWithHttpInfo( businessDTO: businessDTO, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -202,7 +206,7 @@ class BusinessApi {
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Business',) as Business;
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'BusinessDTO',) as BusinessDTO;
     
     }
     return null;

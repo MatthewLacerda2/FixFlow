@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **email** | **String** |  | [optional] 
 **cnpj** | **String** | CNPJ. Must be on format XX.XXX.XXX/XXXX-XX | [optional] 
 **phoneNumber** | **String** | Phone Number. Must contain only numbers and/or a '+' | 
-**otpCode** | **String** |  | [optional] 
+**password** | **String** |  | [optional] 
 **confirmPassword** | **String** | Must be identical to 'password' | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
