@@ -23,8 +23,6 @@ public class ServerContext : IdentityDbContext {
 	protected override void OnModelCreating(ModelBuilder builder) {
 		base.OnModelCreating(builder);
 
-		DBSeeder dbSeeder = new DBSeeder(builder, 617);
-
 		builder.Entity<Business>()
 			   .HasIndex(b => b.CNPJ)
 			   .IsUnique();
@@ -32,6 +30,14 @@ public class ServerContext : IdentityDbContext {
 		builder.Entity<Customer>()
 			.Property(c => c.PhoneNumber)
 			.IsRequired();
+
+		builder.Entity<Customer>()
+			.HasIndex(c => c.PhoneNumber)
+			.IsUnique();
+
+		builder.Entity<Customer>()
+				.HasIndex(c => c.Id)
+				.IsUnique();
 
 		builder.Entity<IdlePeriod>()
 				.HasIndex(c => c.Id)
@@ -41,6 +47,8 @@ public class ServerContext : IdentityDbContext {
 				.HasOne<Business>()
 				.WithMany()
 				.HasForeignKey(i => i.BusinessId);
+
+		DBSeeder dbSeeder = new DBSeeder(builder, 617);
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
