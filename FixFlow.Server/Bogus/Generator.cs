@@ -2,6 +2,7 @@ using Bogus;
 using Bogus.Extensions.Brazil;
 using Server.Models;
 using Server.Models.Appointments;
+using Server.Models.DTO;
 
 namespace Server.Bogus;
 
@@ -25,6 +26,14 @@ public class Generator {
 								.RuleFor(x => x.Name, f => f.Company.CompanyName())
 								.RuleFor(x => x.CNPJ, f => f.Company.Cnpj())
 
+								//I just added these two lines and the two Faker<> functions below but still got this when running the migration:
+
+								//Unable to create a 'DbContext' of type ''
+								//The exception 'The seed entity for entity type 'Business' cannot be added because it has the navigation 'businessWeek' set.
+								//To seed relationships,  add the entity seed to 'Business' and specify the foreign key values {'businessWeekId'}.
+								.RuleFor(x => x.businessWeek, GetBusinessWeekFaker())
+								.RuleFor(x => x.businessWeekId, (f, x) => x.businessWeek.Id)
+
 								.RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber("###########"))
 								.RuleFor(x => x.Email, f => f.Internet.Email())
 								.RuleFor(x => x.NormalizedEmail, (f, x) => x.Email!.ToUpper())
@@ -33,6 +42,26 @@ public class Generator {
 
 		return faker.Generate(count).ToArray();
 
+	}
+
+	public Faker<BusinessWeek> GetBusinessWeekFaker() {
+		return new Faker<BusinessWeek>()
+			.RuleFor(bw => bw.Id, f => Guid.NewGuid().ToString())
+			.RuleFor(bw => bw.Sunday, f => GetBusinessTimeSpanFaker(false).Generate())
+			.RuleFor(bw => bw.Monday, f => GetBusinessTimeSpanFaker(true).Generate())
+			.RuleFor(bw => bw.Tuesday, f => GetBusinessTimeSpanFaker(true).Generate())
+			.RuleFor(bw => bw.Wednesday, f => GetBusinessTimeSpanFaker(true).Generate())
+			.RuleFor(bw => bw.Thursday, f => GetBusinessTimeSpanFaker(true).Generate())
+			.RuleFor(bw => bw.Friday, f => GetBusinessTimeSpanFaker(true).Generate())
+			.RuleFor(bw => bw.Saturday, f => GetBusinessTimeSpanFaker(true).Generate());
+	}
+
+	public Faker<BusinessTimeSpan> GetBusinessTimeSpanFaker(bool isActive) {
+		return new Faker<BusinessTimeSpan>()
+			.RuleFor(bts => bts.Id, f => Guid.NewGuid().ToString())
+			.RuleFor(bts => bts.IsActive, f => isActive)
+			.RuleFor(bts => bts.Start, f => new TimeSpan(8, 0, 0))
+			.RuleFor(bts => bts.Finish, f => new TimeSpan(18, 0, 0));
 	}
 
 	public Customer[] GetFakeCustomers(int count, string businessId) {

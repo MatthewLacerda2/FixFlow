@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Server.Models.DTO;
 
@@ -18,6 +19,10 @@ public class Business : IdentityUser {
 	/// CNPJ. Must be on format XX.XXX.XXX/XXXX-XX
 	/// </summary>
 	public string CNPJ { get; set; }
+
+	//Just added for Reddit
+
+	public string businessWeekId { get; set; }
 
 	/// <summary>
 	/// The DateTimes of the week where the business is open
@@ -41,6 +46,7 @@ public class Business : IdentityUser {
 		PhoneNumber = phoneNumber;
 
 		businessWeek = new BusinessWeek();
+		businessWeekId = businessWeek.Id;
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {
