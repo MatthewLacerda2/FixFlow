@@ -49,7 +49,7 @@ public class BusinessCalendarDayController : ControllerBase {
 								.ToArray();
 
 			aux.idlePeriods = _context.IdlePeriods.Where(x => x.BusinessId == businessId)
-								.Where(x => x.start <= aux.date && x.finish >= aux.date).ToArray();
+								.Where(x => x.Start <= aux.date && x.Finish >= aux.date).ToArray();
 
 			businessCalendarDays[i] = aux;
 		}

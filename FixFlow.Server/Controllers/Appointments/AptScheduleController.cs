@@ -39,7 +39,7 @@ public class AptScheduleController : ControllerBase {
 		schedulesQuery = _context.Schedules.Where(x => x.BusinessId == filter.businessId);
 
 		if (!string.IsNullOrWhiteSpace(filter.client)) {
-			schedulesQuery = schedulesQuery.Where(x => x.Customer.FullName.Contains(filter.client));
+			schedulesQuery = schedulesQuery.Where(x => x.customer.FullName.Contains(filter.client));
 		}
 
 		if (!string.IsNullOrWhiteSpace(filter.service)) {
@@ -54,10 +54,10 @@ public class AptScheduleController : ControllerBase {
 
 		switch (filter.sort) {
 			case ScheduleSort.Customer:
-				schedulesQuery = schedulesQuery.OrderBy(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
+				schedulesQuery = schedulesQuery.OrderBy(s => s.customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
 				break;
 			case ScheduleSort.Price:
-				schedulesQuery = schedulesQuery.OrderBy(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Customer.FullName).ThenBy(s => s.Id);
+				schedulesQuery = schedulesQuery.OrderBy(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.customer.FullName).ThenBy(s => s.Id);
 				break;
 			case ScheduleSort.Date:
 				schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
@@ -67,13 +67,13 @@ public class AptScheduleController : ControllerBase {
 		if (filter.descending) {
 			switch (filter.sort) {
 				case ScheduleSort.Customer:
-					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
+					schedulesQuery = schedulesQuery.OrderByDescending(s => s.customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
 					break;
 				case ScheduleSort.Price:
-					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Customer.FullName).ThenBy(s => s.Id);
+					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.customer.FullName).ThenBy(s => s.Id);
 					break;
 				case ScheduleSort.Date:
-					schedulesQuery = schedulesQuery.OrderBy(s => s.dateTime).ThenBy(s => s.Customer.FullName).ThenBy(s => s.Price).ThenBy(s => s.Id);
+					schedulesQuery = schedulesQuery.OrderBy(s => s.dateTime).ThenBy(s => s.customer.FullName).ThenBy(s => s.Price).ThenBy(s => s.Id);
 					break;
 			}
 		}
@@ -101,8 +101,8 @@ public class AptScheduleController : ControllerBase {
 
 		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
 
-		if (existingBusiness!.allowListedServicesOnly) {
-			if (newAppointment.Service == null || !existingBusiness.services.Contains(newAppointment.Service)) {
+		if (existingBusiness!.AllowListedServicesOnly) {
+			if (newAppointment.Service == null || !existingBusiness.Services.Contains(newAppointment.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -111,7 +111,7 @@ public class AptScheduleController : ControllerBase {
 
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingBusiness.Id).ToArray();
 		foreach (IdlePeriod idp in idps) {
-			if (idp.start <= newAppointment.dateTime && idp.finish >= newAppointment.dateTime) {
+			if (idp.Start <= newAppointment.dateTime && idp.Finish >= newAppointment.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
 			}
 		}
@@ -142,8 +142,8 @@ public class AptScheduleController : ControllerBase {
 
 		var existingBusiness = _context.Business.Find(existingAppointment.BusinessId);
 
-		if (upSchedule.Service != null && existingBusiness!.allowListedServicesOnly) {
-			if (!existingBusiness.services.Contains(upSchedule.Service)) {
+		if (upSchedule.Service != null && existingBusiness!.AllowListedServicesOnly) {
+			if (!existingBusiness.Services.Contains(upSchedule.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -152,14 +152,14 @@ public class AptScheduleController : ControllerBase {
 
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
-			if (idp.start <= upSchedule.dateTime && idp.finish >= upSchedule.dateTime) {
+			if (idp.Start <= upSchedule.dateTime && idp.Finish >= upSchedule.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
 			}
 		}
 
 		existingAppointment.dateTime = upSchedule.dateTime;
 		existingAppointment.Service = upSchedule.Service;
-		existingAppointment.observation = upSchedule.observation;
+		existingAppointment.Observation = upSchedule.Observation;
 		existingAppointment.Price = upSchedule.Price;
 
 		await _context.SaveChangesAsync();

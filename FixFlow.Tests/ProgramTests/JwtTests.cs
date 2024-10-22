@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Server.Models;
 using Server.Models.Utils;
 
-namespace FixFlow.Tests.ProgramTests;
+namespace FixFlow.Tests.IntegrationTests;
 
 public class JwtTests : IClassFixture<WebApplicationFactory<Program>> {
 	private readonly WebApplicationFactory<Program> _factory;

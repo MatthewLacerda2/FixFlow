@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace FixFlow.Tests.ProgramTests;
+namespace FixFlow.Tests.IntegrationTests;
 
 public class ProgramTests : IClassFixture<WebApplicationFactory<Program>> {
 

@@ -13,14 +13,14 @@ public class AptSchedule {
 	/// The Id of the Customer who made the Schedule
 	/// </summary>
 	[Required]
-	[ForeignKey(nameof(Models.Customer))]
+	[ForeignKey(nameof(Customer))]
 	public string CustomerId { get; set; }
 
 	/// <summary>
 	/// Navigation Property of the Customer
 	/// </summary>
 	[JsonIgnore]
-	public Customer Customer { get; set; }
+	public Customer customer { get; set; }
 
 	/// <summary>
 	/// The Id of the Business who owns this Contact
@@ -38,7 +38,7 @@ public class AptSchedule {
 
 	public string? Service { get; set; }
 
-	public string? observation { get; set; }
+	public string? Observation { get; set; }
 
 	public float Price { get; set; }
 
@@ -51,7 +51,7 @@ public class AptSchedule {
 		this.dateTime = dateTime;
 		this.Price = price;
 		this.Service = service;
-		Customer = null!;
+		customer = null!;
 	}
 
 	public AptSchedule(CreateAptSchedule createSchedule, string businessId, bool wasContacted) {
@@ -61,8 +61,8 @@ public class AptSchedule {
 		this.dateTime = createSchedule.dateTime;
 		this.Service = createSchedule.Service;
 		this.Price = createSchedule.Price;
-		this.observation = createSchedule.Observation;
+		this.Observation = createSchedule.Observation;
 		WasContacted = wasContacted;
-		Customer = null!;
+		customer = null!;
 	}
 }

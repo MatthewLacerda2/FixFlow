@@ -27,14 +27,14 @@ public class AptContact {
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Business))]
-	public string businessId { get; set; }
+	public string BusinessId { get; set; }
 
 	/// <summary>
 	/// The Id of the Log that precedes this Contact
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(AptLog))]
-	public string aptLogId { get; set; }
+	public string AptLogId { get; set; }
 
 	/// <summary>
 	/// Navigation Property of the AptLog
@@ -53,8 +53,8 @@ public class AptContact {
 	public AptContact(AptLog log, DateTime dateTime) {
 		Id = Guid.NewGuid().ToString();
 		CustomerId = log.CustomerId;
-		businessId = log.BusinessId;
-		aptLogId = log.Id;
+		BusinessId = log.BusinessId;
+		AptLogId = log.Id;
 		this.dateTime = dateTime;
 		customer = null!;
 		aptLog = log;

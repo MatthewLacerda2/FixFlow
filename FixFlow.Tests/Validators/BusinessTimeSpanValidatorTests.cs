@@ -2,7 +2,7 @@ using FixFlow.Server.Validators;
 using FluentValidation.TestHelper;
 using Server.Models.DTO;
 
-namespace FixFlow.Tests;
+namespace FixFlow.Tests.Validators;
 
 public class BusinessTimeSpanValidatorTests {
 	private readonly BusinessTimeSpanValidator _validator;

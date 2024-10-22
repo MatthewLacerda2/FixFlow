@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Server.Models.DTO;
 
@@ -19,14 +20,18 @@ public class Business : IdentityUser {
 	/// </summary>
 	public string CNPJ { get; set; }
 
+	//Just added for Reddit
+
+	public string businessWeekId { get; set; }
+
 	/// <summary>
 	/// The DateTimes of the week where the business is open
 	/// </summary>
-	public BusinessWeek BusinessWeek { get; set; }
+	public BusinessWeek businessWeek { get; set; }
 
-	public string[] services { get; set; } = Array.Empty<string>();
-	public bool allowListedServicesOnly { get; set; } = false;
-	public bool openOnHolidays { get; set; } = false;
+	public string[] Services { get; set; } = Array.Empty<string>();
+	public bool AllowListedServicesOnly { get; set; } = false;
+	public bool OpenOnHolidays { get; set; } = false;
 
 	public Business() : this(string.Empty, string.Empty, string.Empty, string.Empty) { }
 
@@ -40,7 +45,8 @@ public class Business : IdentityUser {
 		CNPJ = cnpj;
 		PhoneNumber = phoneNumber;
 
-		BusinessWeek = new BusinessWeek();
+		businessWeek = new BusinessWeek();
+		businessWeekId = businessWeek.Id;
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {
