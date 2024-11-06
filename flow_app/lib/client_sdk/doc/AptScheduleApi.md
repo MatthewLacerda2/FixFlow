@@ -56,7 +56,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1SchedulesGet**
-> List<List<AptSchedule>> apiV1SchedulesGet(businessId, client, service, minPrice, maxPrice, minDateTime, maxDateTime, sort, descending, offset, limit)
+> List<AptSchedule> apiV1SchedulesGet(businessId, client, service, minPrice, maxPrice, minDateTime, maxDateTime, sort, descending, offset, limit)
 
 Gets a number of filtered Schedules
 
@@ -103,7 +103,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**List<List<AptSchedule>>**](List.md)
+[**List<AptSchedule>**](AptSchedule.md)
 
 ### Authorization
 

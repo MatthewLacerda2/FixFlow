@@ -16,7 +16,7 @@ Method | HTTP request | Description
 
 
 # **apiV1CustomerGet**
-> List<List<CustomerDTO>> apiV1CustomerGet(businessId, offset, limit, fullname)
+> List<CustomerDTO> apiV1CustomerGet(businessId, offset, limit, fullname)
 
 Gets a number of filtered Customers
 
@@ -49,7 +49,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**List<List<CustomerDTO>>**](List.md)
+[**List<CustomerDTO>**](CustomerDTO.md)
 
 ### Authorization
 

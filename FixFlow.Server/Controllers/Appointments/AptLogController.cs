@@ -36,7 +36,7 @@ public class AptLogController : ControllerBase {
 	/// <summary>
 	/// Gets a number of filtered Logs
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog[]))]
 	[HttpGet]
 	public async Task<IActionResult> ReadLogs([FromQuery] AptLogFilter filter) {
 

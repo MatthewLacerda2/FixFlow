@@ -10,9 +10,9 @@
 
 part of openapi.api;
 
+
 class AptScheduleApi {
-  AptScheduleApi([ApiClient? apiClient])
-      : apiClient = apiClient ?? defaultApiClient;
+  AptScheduleApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
@@ -23,9 +23,7 @@ class AptScheduleApi {
   /// Parameters:
   ///
   /// * [String] body:
-  Future<Response> apiV1SchedulesDeleteWithHttpInfo({
-    String? body,
-  }) async {
+  Future<Response> apiV1SchedulesDeleteWithHttpInfo({ String? body, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/schedules';
 
@@ -36,11 +34,8 @@ class AptScheduleApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[
-      'application/json',
-      'text/json',
-      'application/*+json'
-    ];
+    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -58,12 +53,8 @@ class AptScheduleApi {
   /// Parameters:
   ///
   /// * [String] body:
-  Future<void> apiV1SchedulesDelete({
-    String? body,
-  }) async {
-    final response = await apiV1SchedulesDeleteWithHttpInfo(
-      body: body,
-    );
+  Future<void> apiV1SchedulesDelete({ String? body, }) async {
+    final response = await apiV1SchedulesDeleteWithHttpInfo( body: body, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -96,19 +87,7 @@ class AptScheduleApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<Response> apiV1SchedulesGetWithHttpInfo({
-    String? businessId,
-    String? client,
-    String? service,
-    double? minPrice,
-    double? maxPrice,
-    DateTime? minDateTime,
-    DateTime? maxDateTime,
-    ScheduleSort? sort,
-    bool? descending,
-    int? offset,
-    int? limit,
-  }) async {
+  Future<Response> apiV1SchedulesGetWithHttpInfo({ String? businessId, String? client, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, ScheduleSort? sort, bool? descending, int? offset, int? limit, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/schedules';
 
@@ -155,6 +134,7 @@ class AptScheduleApi {
 
     const contentTypes = <String>[];
 
+
     return apiClient.invokeAPI(
       path,
       'GET',
@@ -191,45 +171,20 @@ class AptScheduleApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<List<List<AptSchedule>>?> apiV1SchedulesGet({
-    String? businessId,
-    String? client,
-    String? service,
-    double? minPrice,
-    double? maxPrice,
-    DateTime? minDateTime,
-    DateTime? maxDateTime,
-    ScheduleSort? sort,
-    bool? descending,
-    int? offset,
-    int? limit,
-  }) async {
-    final response = await apiV1SchedulesGetWithHttpInfo(
-      businessId: businessId,
-      client: client,
-      service: service,
-      minPrice: minPrice,
-      maxPrice: maxPrice,
-      minDateTime: minDateTime,
-      maxDateTime: maxDateTime,
-      sort: sort,
-      descending: descending,
-      offset: offset,
-      limit: limit,
-    );
+  Future<List<AptSchedule>?> apiV1SchedulesGet({ String? businessId, String? client, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, ScheduleSort? sort, bool? descending, int? offset, int? limit, }) async {
+    final response = await apiV1SchedulesGetWithHttpInfo( businessId: businessId, client: client, service: service, minPrice: minPrice, maxPrice: maxPrice, minDateTime: minDateTime, maxDateTime: maxDateTime, sort: sort, descending: descending, offset: offset, limit: limit, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(
-              responseBody, 'List<List<AptSchedule>>') as List)
-          .map((e) => (e as List).cast<AptSchedule>())
-          .toList(growable: false);
+      return (await apiClient.deserializeAsync(responseBody, 'List<AptSchedule>') as List)
+        .cast<AptSchedule>()
+        .toList(growable: false);
+
     }
     return null;
   }
@@ -241,9 +196,7 @@ class AptScheduleApi {
   /// Parameters:
   ///
   /// * [AptSchedule] aptSchedule:
-  Future<Response> apiV1SchedulesPatchWithHttpInfo({
-    AptSchedule? aptSchedule,
-  }) async {
+  Future<Response> apiV1SchedulesPatchWithHttpInfo({ AptSchedule? aptSchedule, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/schedules';
 
@@ -254,11 +207,8 @@ class AptScheduleApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[
-      'application/json',
-      'text/json',
-      'application/*+json'
-    ];
+    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -276,24 +226,17 @@ class AptScheduleApi {
   /// Parameters:
   ///
   /// * [AptSchedule] aptSchedule:
-  Future<AptSchedule?> apiV1SchedulesPatch({
-    AptSchedule? aptSchedule,
-  }) async {
-    final response = await apiV1SchedulesPatchWithHttpInfo(
-      aptSchedule: aptSchedule,
-    );
+  Future<AptSchedule?> apiV1SchedulesPatch({ AptSchedule? aptSchedule, }) async {
+    final response = await apiV1SchedulesPatchWithHttpInfo( aptSchedule: aptSchedule, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'AptSchedule',
-      ) as AptSchedule;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AptSchedule',) as AptSchedule;
+    
     }
     return null;
   }
@@ -305,9 +248,7 @@ class AptScheduleApi {
   /// Parameters:
   ///
   /// * [CreateAptSchedule] createAptSchedule:
-  Future<Response> apiV1SchedulesPostWithHttpInfo({
-    CreateAptSchedule? createAptSchedule,
-  }) async {
+  Future<Response> apiV1SchedulesPostWithHttpInfo({ CreateAptSchedule? createAptSchedule, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/schedules';
 
@@ -318,11 +259,8 @@ class AptScheduleApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[
-      'application/json',
-      'text/json',
-      'application/*+json'
-    ];
+    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -340,24 +278,17 @@ class AptScheduleApi {
   /// Parameters:
   ///
   /// * [CreateAptSchedule] createAptSchedule:
-  Future<AptSchedule?> apiV1SchedulesPost({
-    CreateAptSchedule? createAptSchedule,
-  }) async {
-    final response = await apiV1SchedulesPostWithHttpInfo(
-      createAptSchedule: createAptSchedule,
-    );
+  Future<AptSchedule?> apiV1SchedulesPost({ CreateAptSchedule? createAptSchedule, }) async {
+    final response = await apiV1SchedulesPostWithHttpInfo( createAptSchedule: createAptSchedule, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'AptSchedule',
-      ) as AptSchedule;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AptSchedule',) as AptSchedule;
+    
     }
     return null;
   }

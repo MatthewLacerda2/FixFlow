@@ -67,7 +67,7 @@ public class CustomerController : ControllerBase {
 	/// <summary>
 	/// Gets a number of filtered Customers
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CustomerDTO[]>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDTO[]))]
 	[HttpGet]
 	public async Task<IActionResult> ReadCustomers(string businessId, uint offset, uint limit, string? fullname) {
 		var clientsQuery = _context.Customers.AsQueryable();

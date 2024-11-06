@@ -56,7 +56,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1LogsGet**
-> List<List<AptLog>> apiV1LogsGet(client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit)
+> List<AptLog> apiV1LogsGet(client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit)
 
 Gets a number of filtered Logs
 
@@ -97,7 +97,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**List<List<AptLog>>**](List.md)
+[**List<AptLog>**](AptLog.md)
 
 ### Authorization
 

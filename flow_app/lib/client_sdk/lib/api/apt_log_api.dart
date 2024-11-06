@@ -10,6 +10,7 @@
 
 part of openapi.api;
 
+
 class AptLogApi {
   AptLogApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
@@ -22,9 +23,7 @@ class AptLogApi {
   /// Parameters:
   ///
   /// * [String] body:
-  Future<Response> apiV1LogsDeleteWithHttpInfo({
-    String? body,
-  }) async {
+  Future<Response> apiV1LogsDeleteWithHttpInfo({ String? body, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/logs';
 
@@ -35,11 +34,8 @@ class AptLogApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[
-      'application/json',
-      'text/json',
-      'application/*+json'
-    ];
+    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -57,12 +53,8 @@ class AptLogApi {
   /// Parameters:
   ///
   /// * [String] body:
-  Future<void> apiV1LogsDelete({
-    String? body,
-  }) async {
-    final response = await apiV1LogsDeleteWithHttpInfo(
-      body: body,
-    );
+  Future<void> apiV1LogsDelete({ String? body, }) async {
+    final response = await apiV1LogsDeleteWithHttpInfo( body: body, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -89,16 +81,7 @@ class AptLogApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<Response> apiV1LogsGetWithHttpInfo({
-    String? client,
-    String? service,
-    double? minPrice,
-    double? maxPrice,
-    DateTime? minDateTime,
-    DateTime? maxDateTime,
-    int? offset,
-    int? limit,
-  }) async {
+  Future<Response> apiV1LogsGetWithHttpInfo({ String? client, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/logs';
 
@@ -136,6 +119,7 @@ class AptLogApi {
 
     const contentTypes = <String>[];
 
+
     return apiClient.invokeAPI(
       path,
       'GET',
@@ -166,39 +150,20 @@ class AptLogApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<List<List>?> apiV1LogsGet({
-    String? client,
-    String? service,
-    double? minPrice,
-    double? maxPrice,
-    DateTime? minDateTime,
-    DateTime? maxDateTime,
-    int? offset,
-    int? limit,
-  }) async {
-    final response = await apiV1LogsGetWithHttpInfo(
-      client: client,
-      service: service,
-      minPrice: minPrice,
-      maxPrice: maxPrice,
-      minDateTime: minDateTime,
-      maxDateTime: maxDateTime,
-      offset: offset,
-      limit: limit,
-    );
+  Future<List<AptLog>?> apiV1LogsGet({ String? client, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
+    final response = await apiV1LogsGetWithHttpInfo( client: client, service: service, minPrice: minPrice, maxPrice: maxPrice, minDateTime: minDateTime, maxDateTime: maxDateTime, offset: offset, limit: limit, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(
-              responseBody, 'List<List<AptLog>>') as List)
-          .cast<List>()
-          .toList(growable: false);
+      return (await apiClient.deserializeAsync(responseBody, 'List<AptLog>') as List)
+        .cast<AptLog>()
+        .toList(growable: false);
+
     }
     return null;
   }
@@ -210,9 +175,7 @@ class AptLogApi {
   /// Parameters:
   ///
   /// * [UpdateAptLog] updateAptLog:
-  Future<Response> apiV1LogsPatchWithHttpInfo({
-    UpdateAptLog? updateAptLog,
-  }) async {
+  Future<Response> apiV1LogsPatchWithHttpInfo({ UpdateAptLog? updateAptLog, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/logs';
 
@@ -223,11 +186,8 @@ class AptLogApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[
-      'application/json',
-      'text/json',
-      'application/*+json'
-    ];
+    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -245,24 +205,17 @@ class AptLogApi {
   /// Parameters:
   ///
   /// * [UpdateAptLog] updateAptLog:
-  Future<AptLog?> apiV1LogsPatch({
-    UpdateAptLog? updateAptLog,
-  }) async {
-    final response = await apiV1LogsPatchWithHttpInfo(
-      updateAptLog: updateAptLog,
-    );
+  Future<AptLog?> apiV1LogsPatch({ UpdateAptLog? updateAptLog, }) async {
+    final response = await apiV1LogsPatchWithHttpInfo( updateAptLog: updateAptLog, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'AptLog',
-      ) as AptLog;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AptLog',) as AptLog;
+    
     }
     return null;
   }
@@ -276,9 +229,7 @@ class AptLogApi {
   /// Parameters:
   ///
   /// * [CreateAptLog] createAptLog:
-  Future<Response> apiV1LogsPostWithHttpInfo({
-    CreateAptLog? createAptLog,
-  }) async {
+  Future<Response> apiV1LogsPostWithHttpInfo({ CreateAptLog? createAptLog, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/logs';
 
@@ -289,11 +240,8 @@ class AptLogApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>[
-      'application/json',
-      'text/json',
-      'application/*+json'
-    ];
+    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+
 
     return apiClient.invokeAPI(
       path,
@@ -313,24 +261,17 @@ class AptLogApi {
   /// Parameters:
   ///
   /// * [CreateAptLog] createAptLog:
-  Future<AptLog?> apiV1LogsPost({
-    CreateAptLog? createAptLog,
-  }) async {
-    final response = await apiV1LogsPostWithHttpInfo(
-      createAptLog: createAptLog,
-    );
+  Future<AptLog?> apiV1LogsPost({ CreateAptLog? createAptLog, }) async {
+    final response = await apiV1LogsPostWithHttpInfo( createAptLog: createAptLog, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
     // When a remote server returns no body with a status of 204, we shall not decode it.
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty &&
-        response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(
-        await _decodeBodyBytes(response),
-        'AptLog',
-      ) as AptLog;
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'AptLog',) as AptLog;
+    
     }
     return null;
   }

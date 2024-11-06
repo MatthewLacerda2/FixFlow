@@ -31,7 +31,7 @@ public class AptScheduleController : ControllerBase {
 	/// <summary>
 	/// Gets a number of filtered Schedules
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptSchedule[]>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule[]))]
 	[HttpGet]
 	public async Task<IActionResult> ReadSchedules([FromQuery] AptScheduleFilter filter) {
 		var schedulesQuery = _context.Schedules.AsQueryable();
