@@ -20,3 +20,5 @@ flutter upgrade
 flutter build apk
 openapi-generator-cli generate -i ..\..\FixFlow.Server\swagger.json -g dart -o ./client_sdk
 flutter build (this motherfucker takes some minutes)
+
+dotnet watch run --urls http://192.168.15.81:5105
