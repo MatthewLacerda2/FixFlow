@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flow_app/client_sdk/lib/api.dart'; //Hello reddit
 import '../intro/introduction_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
+
+  BusinessRegisterRequest createBusinessRegisterRequest() {
+    //The function i told you about
+    return BusinessRegisterRequest(
+      name: companyNameController.text,
+      email: emailController.text,
+      cnpj: cnpjController.text,
+      phoneNumber: phoneController.text,
+    );
+  }
 
   final TextEditingController companyNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
