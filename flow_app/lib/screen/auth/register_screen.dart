@@ -1,7 +1,7 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:flow_app/client_sdk/lib/api.dart'; //Hello reddit
 import '../intro/introduction_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
