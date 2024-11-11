@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../AppConfig/create_idle_period_screen.dart';
 import '../AppConfig/option_item.dart';
 import '../intro/introduction_screen.dart';
+import '../test_screen.dart';
 import 'account/about_screen.dart';
 import 'account/app_config_screen.dart';
 
@@ -81,6 +82,18 @@ class AccountScreen extends StatelessWidget {
                   MaterialPageRoute<void>(
                       builder: (BuildContext context) =>
                           const CreateIdlePeriodScreen()),
+                );
+              },
+            ),
+            OptionItem(
+              title: 'Teste screen',
+              titleStyle: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.bold),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                      builder: (BuildContext context) => const TestScreen()),
                 );
               },
             ),

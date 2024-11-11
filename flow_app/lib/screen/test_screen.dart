@@ -1,3 +1,4 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../components/Inputs/check_input_field.dart';
@@ -9,6 +10,7 @@ import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/password_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
 import '../components/Inputs/time_picker_rectangle.dart';
+import '../utils/flow_storage.dart';
 
 class TestScreen extends StatelessWidget {
   const TestScreen({super.key});
@@ -24,6 +26,36 @@ class TestScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            FutureBuilder<BusinessDTO?>(
+              future: FlowStorage.getBusinessDTO(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return const Text('Error retrieving data');
+                } else if (!snapshot.hasData || snapshot.data == null) {
+                  return const Text('No BusinessDTO found.');
+                } else {
+                  final BusinessDTO businessDTO = snapshot.data!;
+                  return Text('Business Name: ${businessDTO.name}');
+                }
+              },
+            ),
+            FutureBuilder<String?>(
+              future: FlowStorage.getToken(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return const Text('Error retrieving data');
+                } else if (!snapshot.hasData || snapshot.data == null) {
+                  return const Text('No jwt found.');
+                } else {
+                  final String jwt = snapshot.data!;
+                  return Text('Business Name: ${jwt}');
+                }
+              },
+            ),
             TimePickerRectangle(
               initialTime: TimeOfDay.now(),
               onTimeSelected: (TimeOfDay date) {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -84,7 +85,7 @@ public class AccountsController : ControllerBase {
 
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-	//[Authorize]
+	[Authorize]
 	[HttpPost("logout")]
 	public async Task<IActionResult> Logout() {
 		try {

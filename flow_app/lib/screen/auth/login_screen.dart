@@ -1,6 +1,8 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
+import '../../utils/login_utils.dart';
 import '../main/main_screen.dart';
 
 //TODO: http request credentials
@@ -43,23 +45,16 @@ class LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 24),
             ColoredBorderTextButton(
-              text: "Login",
+              text: "LoginX",
               textColor: Colors.grey[700]!,
               width: 40,
               onPressed: () {
                 setState(() {
-                  if (emailController.text == 'test@example.com' &&
-                      passwordController.text == 'password') {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              const MainScreen()),
-                      (Route<dynamic> route) => false,
-                    );
-                  } else {
-                    errorMessage = 'Wrong email or password';
-                  }
+                  final FlowLoginRequest flr = FlowLoginRequest(
+                      email: emailController.text,
+                      password: passwordController.text);
+                  LoginUtils.Login(
+                      flr.email, flr.password, context, const MainScreen());
                 });
               },
             ),

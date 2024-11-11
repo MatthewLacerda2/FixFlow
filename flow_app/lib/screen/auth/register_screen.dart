@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/src/response.dart';
 
 import '../../components/Inputs/password_input_field.dart';
+import '../../utils/login_utils.dart';
 import '../intro/introduction_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -15,8 +16,8 @@ class RegisterScreen extends StatelessWidget {
         email: emailController.text,
         cnpj: cnpjController.text,
         phoneNumber: phoneController.text,
-        password: Bpassword,
-        confirmPassword: BconfirmPassword);
+        password: registerPassword,
+        confirmPassword: registerPasswordConfirmation);
   }
 
   final TextEditingController companyNameController = TextEditingController();
@@ -24,7 +25,7 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController cnpjController = TextEditingController();
 
-  String? Bpassword, BconfirmPassword;
+  String? registerPassword, registerPasswordConfirmation;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class RegisterScreen extends StatelessWidget {
               placeholder: 'Password',
               onPasswordChanged: (String password) {
                 print('Password is: $password');
-                Bpassword = password;
+                registerPassword = password;
               },
             ),
             const SizedBox(height: 20),
@@ -76,53 +77,34 @@ class RegisterScreen extends StatelessWidget {
               placeholder: 'Current password',
               onPasswordChanged: (String password) {
                 print('Password is: $password');
-                BconfirmPassword = password;
+                registerPasswordConfirmation = password;
               },
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                final BusinessRegisterRequest businessRegisterRequest =
+                final BusinessRegisterRequest brr =
                     createBusinessRegisterRequest();
-                print(businessRegisterRequest);
-                try {
-                  // Step 2: Call the API to register the business and wait for the response
-                  final Response response =
-                      await BusinessApi().apiV1BusinessPostWithHttpInfo(
-                    businessRegisterRequest: businessRegisterRequest,
-                  );
+                print(brr);
 
-                  // Check if the response status code is 201 (Created)
-                  if (response.statusCode == 201) {
-                    // Navigate to the IntroductionScreenPage on success
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) =>
-                            const IntroductionScreenPage(),
-                      ),
-                      (Route<dynamic> route) => false,
-                    );
-                  } else {
-                    // Show SnackBar if the response is not 201
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                            'Registration failed. Please check your input.'),
-                      ),
-                    );
-                  }
-                } catch (e) {
-                  // Handle errors
-                  print("Failed to register business: $e");
+                final Response response = await BusinessApi()
+                    .apiV1BusinessPostWithHttpInfo(
+                        businessRegisterRequest: brr);
+
+                if (response.statusCode != 201) {
                   ScaffoldMessenger.of(context).showSnackBar(
+                    //TODO: proper response at snackbar
                     const SnackBar(
-                      content: Text('Registration failed. Please try again.'),
+                      content:
+                          Text('Registration failed. Please check your input.'),
                     ),
                   );
                 }
+
+                LoginUtils.Login(brr.email!, brr.password!, context,
+                    const IntroductionScreenPage());
               },
-              child: const Text('Registrare'),
+              child: const Text('Registrar'),
             ),
           ],
         ),
