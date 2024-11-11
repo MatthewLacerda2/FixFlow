@@ -39,15 +39,17 @@ class LoginUtils {
     );
   }
 
-  static Future<void> FetchBusinessDTO() async {
-    final String? jwtToken = await FlowStorage.getToken();
-    final JWT jwtTokenDecoded = JWT.decode(jwtToken!);
-
-    final String businessId = jwtTokenDecoded.payload['id'];
+  static Future<BusinessDTO?> FetchBusinessDTO() async {
+    String? jwtToken = await FlowStorage.getToken();
+    jwtToken = jwtToken!.replaceAll('"', '');
+    final JWT jwtTokenDecoded = JWT.decode(jwtToken);
+    final String businessId = jwtTokenDecoded.payload['businessId'];
 
     final BusinessDTO? businessDTO =
         await BusinessApi().apiV1BusinessGet(businessId: businessId);
 
     FlowStorage.saveBusinessDTO(businessDTO!);
+
+    return businessDTO;
   }
 }

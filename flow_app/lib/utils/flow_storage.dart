@@ -13,7 +13,6 @@ class FlowStorage {
 
   static Future<void> saveToken(String token) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(token);
     await prefs.setString(jwtTokenKey, token);
   }
 
@@ -22,14 +21,14 @@ class FlowStorage {
     return prefs.getString(jwtTokenKey);
   }
 
-  static Future<void> removeToken() async {
+  static Future<void> clear() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove(jwtTokenKey);
+    prefs.clear();
   }
 
   static Future<void> saveBusinessDTO(BusinessDTO businessDTO) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(businessDTOKey, businessDTO.toJson().toString());
+    await prefs.setString(businessDTOKey, json.encode(businessDTO));
   }
 
   static Future<BusinessDTO?> getBusinessDTO() async {

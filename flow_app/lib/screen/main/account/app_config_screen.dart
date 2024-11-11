@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../components/Buttons/custom_button.dart';
 import '../../../components/Inputs/check_input_field.dart';
 import '../../../components/Inputs/enum_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
 import '../../../components/warning_modal.dart';
+import '../../../utils/flow_storage.dart';
 import '../../AppConfig/change_phone/change_phone_screen.dart';
 import '../../AppConfig/deactivate_account/deactivate_account_screen.dart';
 import '../../AppConfig/delete_account/delete_warning_screen.dart';
@@ -49,7 +51,7 @@ class AppConfigScreen extends StatelessWidget {
                 height: 10,
                 color: Colors.grey.shade800,
               ),
-              
+
               const SizedBox(height: 32),
               const Text(
                 'Opções de Serviços',
@@ -177,13 +179,14 @@ class AppConfigScreen extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return WarningModal(
-                        title: "Você quer sair da conta?",
+                        title: "Você quer sair da contax?",
                         optionOne: CustomButton(
                           text: "Sim",
                           textSize: 16,
                           backgroundColor: Colors.green,
                           textColor: Colors.black,
                           onPressed: () {
+                            FlowStorage.clear();
                             Navigator.push(
                               context,
                               MaterialPageRoute<void>(

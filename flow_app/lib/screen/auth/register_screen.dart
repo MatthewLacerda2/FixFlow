@@ -85,7 +85,6 @@ class RegisterScreen extends StatelessWidget {
               onPressed: () async {
                 final BusinessRegisterRequest brr =
                     createBusinessRegisterRequest();
-                print(brr);
 
                 final Response response = await BusinessApi()
                     .apiV1BusinessPostWithHttpInfo(

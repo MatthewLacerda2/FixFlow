@@ -11,6 +11,7 @@ import '../components/Inputs/password_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
 import '../components/Inputs/time_picker_rectangle.dart';
 import '../utils/flow_storage.dart';
+import '../utils/login_utils.dart';
 
 class TestScreen extends StatelessWidget {
   const TestScreen({super.key});
@@ -27,17 +28,18 @@ class TestScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FutureBuilder<BusinessDTO?>(
-              future: FlowStorage.getBusinessDTO(),
+              future: LoginUtils.FetchBusinessDTO(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
+                  print("snapshot.error");
                   return const Text('Error retrieving data');
-                } else if (!snapshot.hasData || snapshot.data == null) {
+                } else if (snapshot.data == null) {
                   return const Text('No BusinessDTO found.');
                 } else {
-                  final BusinessDTO businessDTO = snapshot.data!;
-                  return Text('Business Name: ${businessDTO.name}');
+                  final BusinessDTO dto = snapshot.data!;
+                  return Text('Business: ${dto.businessWeek}');
                 }
               },
             ),
@@ -52,7 +54,7 @@ class TestScreen extends StatelessWidget {
                   return const Text('No jwt found.');
                 } else {
                   final String jwt = snapshot.data!;
-                  return Text('Business Name: ${jwt}');
+                  return Text('JWT: ${jwt}');
                 }
               },
             ),
