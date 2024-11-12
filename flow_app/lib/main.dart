@@ -1,11 +1,21 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screen/auth/initial_screen.dart';
 import 'screen/main/main_screen.dart';
+import 'utils/flow_storage.dart';
 
-void main() {
+void main() async {
   runApp(const FlowApp());
+
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? jwtToken = prefs.getString(FlowStorage.jwtTokenKey);
+  if (jwtToken != null) {
+    final ApiClient apiClient = ApiClient();
+    apiClient.addDefaultHeader("Bearer", jwtToken);
+  }
 }
 
 class FlowApp extends StatelessWidget {

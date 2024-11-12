@@ -15,7 +15,7 @@ namespace Server.Controllers;
 /// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(Customer))]
-[Authorize]
+//[Authorize]
 [Produces("application/json")]
 public class CustomerController : ControllerBase {
 

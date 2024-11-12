@@ -10,7 +10,6 @@ import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/password_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
 import '../components/Inputs/time_picker_rectangle.dart';
-import '../utils/flow_storage.dart';
 import '../utils/login_utils.dart';
 
 class TestScreen extends StatelessWidget {
@@ -40,21 +39,6 @@ class TestScreen extends StatelessWidget {
                 } else {
                   final BusinessDTO dto = snapshot.data!;
                   return Text('Business: ${dto.businessWeek}');
-                }
-              },
-            ),
-            FutureBuilder<String?>(
-              future: FlowStorage.getToken(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return const Text('Error retrieving data');
-                } else if (!snapshot.hasData || snapshot.data == null) {
-                  return const Text('No jwt found.');
-                } else {
-                  final String jwt = snapshot.data!;
-                  return Text('JWT: ${jwt}');
                 }
               },
             ),

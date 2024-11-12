@@ -92,16 +92,15 @@ class RegisterScreen extends StatelessWidget {
 
                 if (response.statusCode != 201) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    //TODO: proper response at snackbar
                     const SnackBar(
                       content:
                           Text('Registration failed. Please check your input.'),
                     ),
                   );
+                } else {
+                  LoginUtils.Login(brr.email!, brr.password!, context,
+                      const IntroductionScreenPage());
                 }
-
-                LoginUtils.Login(brr.email!, brr.password!, context,
-                    const IntroductionScreenPage());
               },
               child: const Text('Registrar'),
             ),

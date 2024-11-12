@@ -1,15 +1,59 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
+import 'package:http/src/response.dart';
 
 import '../components/Buttons/custom_button.dart';
 import '../components/Inputs/cpf_input_field.dart';
 import '../components/Inputs/email_input_field.dart';
 import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
+import '../utils/flow_storage.dart';
 
 class CreateClientScreen extends StatelessWidget {
-  const CreateClientScreen({super.key, required this.nextScreen});
+  CreateClientScreen({super.key, required this.nextScreen});
 
   final Widget nextScreen;
+
+  String _fullname = "";
+  String _phoneNumber = "";
+  String? _cpf;
+  String? _email;
+  String? _note;
+
+  void SendCreateRequest(BuildContext context) async {
+    print("debug is on the table");
+
+    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+
+    print(bd);
+
+    final CustomerCreate customer = CustomerCreate(
+        businessId: bd!.id!,
+        fullName: _fullname,
+        phoneNumber: _phoneNumber,
+        cpf: _cpf,
+        email: _email,
+        additionalNote: _note);
+
+    print(customer);
+
+    final Response response = await CustomerApi()
+        .apiV1CustomerPostWithHttpInfo(customerCreate: customer);
+
+    if (response.statusCode != 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.body),
+        ),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(builder: (BuildContext context) => nextScreen),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,36 +66,42 @@ class CreateClientScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             NameInputField(
               placeholder: 'Nome do(a) Cliente',
               onNameChanged: (String name) {
-                print('Name is: $name');
+                _fullname = name;
               },
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             PhoneInputField(
               placeholder: 'Telefone',
               onPhoneChanged: (String phone) {
-                print('Phone Number: $phone');
+                _phoneNumber = phone;
               },
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             EmailInputField(
               placeholder: 'Email',
               onEmailValidated: (String email) {
-                print('Validated Email: $email');
+                _email = email;
               },
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             CPFInputField(
               placeholder: "CPF",
               onCPFChanged: (String cpf) {
-                print('CPF is: $cpf');
+                _cpf = cpf;
               },
             ),
-            //TODO: limited_text_input
-            const SizedBox(height: 46),
+            const SizedBox(height: 20),
+            NameInputField(
+              placeholder: 'Observação:',
+              onNameChanged: (String note) {
+                _note = note;
+              },
+            ),
+            const SizedBox(height: 44),
             Align(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,18 +118,14 @@ class CreateClientScreen extends StatelessWidget {
                     },
                   ),
                   CustomButton(
-                    text: "Próximo",
+                    text: "PróximoX",
                     textSize: 16,
                     backgroundColor: Colors.grey[300]!,
                     borderRadius: 12,
                     padding:
                         const EdgeInsets.symmetric(vertical: 1, horizontal: 30),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                            builder: (BuildContext context) => nextScreen),
-                      );
+                      SendCreateRequest(context);
                     },
                   ),
                 ],

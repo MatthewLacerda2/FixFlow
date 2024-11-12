@@ -18,9 +18,8 @@ class LoginUtils {
 
     if (loginResponse.statusCode != 200) {
       ScaffoldMessenger.of(context).showSnackBar(
-        //TODO: proper response at snackbar
-        const SnackBar(
-          content: Text('Registration failed. Please check your input.'),
+        SnackBar(
+          content: Text(loginResponse.body),
         ),
       );
       return;
