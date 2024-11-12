@@ -21,11 +21,7 @@ class CreateClientScreen extends StatelessWidget {
   String? _note;
 
   void SendCreateRequest(BuildContext context) async {
-    print("debug is on the table");
-
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
-
-    print(bd);
 
     final CustomerCreate customer = CustomerCreate(
         businessId: bd!.id!,
@@ -34,8 +30,6 @@ class CreateClientScreen extends StatelessWidget {
         cpf: _cpf,
         email: _email,
         additionalNote: _note);
-
-    print(customer);
 
     final Response response = await CustomerApi()
         .apiV1CustomerPostWithHttpInfo(customerCreate: customer);

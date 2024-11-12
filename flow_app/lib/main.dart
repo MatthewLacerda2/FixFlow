@@ -9,13 +9,6 @@ import 'utils/flow_storage.dart';
 
 void main() async {
   runApp(const FlowApp());
-
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? jwtToken = prefs.getString(FlowStorage.jwtTokenKey);
-  if (jwtToken != null) {
-    final ApiClient apiClient = ApiClient();
-    apiClient.addDefaultHeader("Bearer", jwtToken);
-  }
 }
 
 class FlowApp extends StatelessWidget {
@@ -33,7 +26,6 @@ class FlowApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: FutureBuilder<bool>(
-        // TODO: Check if the user is logged in
         future: checkIfLoggedIn(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -49,7 +41,6 @@ class FlowApp extends StatelessWidget {
   }
 
   Future<bool> checkIfLoggedIn() async {
-    // TODO: Implement the actual login check logic
-    return false;
+    return await FlowStorage.getToken() != null;
   }
 }
