@@ -27,8 +27,9 @@ class TestScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FutureBuilder<BusinessDTO?>(
-              future: LoginUtils.FetchBusinessDTO(),
-              builder: (context, snapshot) {
+              future: LoginUtils.fetchBusinessDTO(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<BusinessDTO?> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
@@ -98,7 +99,7 @@ class TestScreen extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
-            CPFInputField(
+            CpfInputField(
                 placeholder: "CPF",
                 onCPFChanged: (String cpf) {
                   print('CPF is: $cpf');

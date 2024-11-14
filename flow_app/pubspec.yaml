@@ -45,6 +45,7 @@ dependencies:
     path: ../client_sdk
   shared_preferences: ^2.3.2
   dart_jsonwebtoken: ^2.14.1
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

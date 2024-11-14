@@ -1,14 +1,14 @@
 import 'package:client_sdk/api.dart';
-import 'package:http/src/response.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 import 'flow_storage.dart';
 
 class LoginUtils {
   void debug() {}
 
-  static Future<void> Login(String email, String password, BuildContext context,
+  static Future<void> login(String email, String password, BuildContext context,
       Widget nextPage) async {
     final FlowLoginRequest flr =
         FlowLoginRequest(email: email, password: password);
@@ -27,7 +27,7 @@ class LoginUtils {
 
     FlowStorage.saveToken(loginResponse.body);
 
-    FetchBusinessDTO();
+    fetchBusinessDTO();
 
     Navigator.pushAndRemoveUntil(
       context,
@@ -38,11 +38,13 @@ class LoginUtils {
     );
   }
 
-  static Future<BusinessDTO?> FetchBusinessDTO() async {
+  static Future<BusinessDTO?> fetchBusinessDTO() async {
     String? jwtToken = await FlowStorage.getToken();
     jwtToken = jwtToken!.replaceAll('"', '');
     final JWT jwtTokenDecoded = JWT.decode(jwtToken);
-    final String businessId = jwtTokenDecoded.payload['businessId'];
+    final Map<String, dynamic> payload =
+        jwtTokenDecoded.payload as Map<String, dynamic>;
+    final String businessId = payload['businessId'] as String;
 
     final BusinessDTO? businessDTO =
         await BusinessApi().apiV1BusinessGet(businessId: businessId);

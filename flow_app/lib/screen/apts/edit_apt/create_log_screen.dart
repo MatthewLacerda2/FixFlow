@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
+import '../../../components/Inputs/customer_dropdown.dart';
 import '../../../components/Inputs/date_picker_rectangle.dart';
 import '../../../components/Inputs/limited_text_input_field.dart';
-import '../../../components/Inputs/name_input_field.dart';
 import '../../../components/Inputs/price_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
 
-//TODO: http request to check if client exists
 class CreateLogScreen extends StatefulWidget {
   const CreateLogScreen({
     super.key,
@@ -93,12 +92,7 @@ class CreateLogScreenState extends State<CreateLogScreen> {
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 22),
                         )
-                      : NameInputField(
-                          placeholder: 'Cliente',
-                          onNameChanged: (String name) {
-                            print('Name is: $name');
-                          },
-                        ),
+                      : const CustomerDropdown(),
                 ),
                 if (widget.cliente != null || widget.contactado)
                   const Row(

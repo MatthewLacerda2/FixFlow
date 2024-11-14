@@ -1,9 +1,9 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
-import 'package:http/src/response.dart';
+import 'package:http/http.dart';
 
 import '../components/Buttons/custom_button.dart';
-import '../components/Inputs/cpf_input_field.dart';
+import '../components/Inputs/CPF_input_field.dart';
 import '../components/Inputs/email_input_field.dart';
 import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
@@ -20,7 +20,7 @@ class CreateClientScreen extends StatelessWidget {
   String? _email;
   String? _note;
 
-  void SendCreateRequest(BuildContext context) async {
+  void sendCreateRequest(BuildContext context) async {
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
 
     final CustomerCreate customer = CustomerCreate(
@@ -82,7 +82,7 @@ class CreateClientScreen extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
-            CPFInputField(
+            CpfInputField(
               placeholder: "CPF",
               onCPFChanged: (String cpf) {
                 _cpf = cpf;
@@ -119,7 +119,7 @@ class CreateClientScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(vertical: 1, horizontal: 30),
                     onPressed: () {
-                      SendCreateRequest(context);
+                      sendCreateRequest(context);
                     },
                   ),
                 ],

@@ -1,7 +1,7 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/src/response.dart';
+import 'package:http/http.dart';
 
 import '../../components/Inputs/password_input_field.dart';
 import '../../utils/login_utils.dart';
@@ -98,7 +98,7 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   );
                 } else {
-                  LoginUtils.Login(brr.email!, brr.password!, context,
+                  LoginUtils.login(brr.email!, brr.password!, context,
                       const IntroductionScreenPage());
                 }
               },

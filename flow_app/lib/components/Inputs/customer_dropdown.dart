@@ -7,10 +7,10 @@ class CustomerDropdown extends StatefulWidget {
   const CustomerDropdown({super.key});
 
   @override
-  _CustomerDropdownState createState() => _CustomerDropdownState();
+  CustomerDropdownState createState() => CustomerDropdownState();
 }
 
-class _CustomerDropdownState extends State<CustomerDropdown> {
+class CustomerDropdownState extends State<CustomerDropdown> {
   final TextEditingController _searchController = TextEditingController();
   List<CustomerDTO> _customerNames = <CustomerDTO>[];
   CustomerDTO? _selectedCustomer;

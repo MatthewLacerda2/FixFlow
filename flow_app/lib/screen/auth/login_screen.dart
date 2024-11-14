@@ -53,7 +53,7 @@ class LoginScreenState extends State<LoginScreen> {
                   final FlowLoginRequest flr = FlowLoginRequest(
                       email: emailController.text,
                       password: passwordController.text);
-                  LoginUtils.Login(
+                  LoginUtils.login(
                       flr.email, flr.password, context, const MainScreen());
                 });
               },
