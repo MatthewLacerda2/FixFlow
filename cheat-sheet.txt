@@ -5,7 +5,7 @@ dotnet restore
 dotnet build -c Release .\FixFlow.Server.csproj
 swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
-dotnet watch run --urls http://192.168.15.81:5105
+dotnet watch run --urls http://192.168.15.186:5105
 
 cd FixFlow.Tests
 

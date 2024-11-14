@@ -75,7 +75,8 @@ public class CustomerController : ControllerBase {
 		clientsQuery = clientsQuery.Where(client => client.BusinessId == businessId);
 
 		if (!string.IsNullOrWhiteSpace(fullname)) {
-			clientsQuery = clientsQuery.Where(client => client.FullName.Contains(fullname));
+			//TODO: this is a gambiarra. should've used StringComparison.OrdinalIgnoreCase, but it's bugging. Fix it
+			clientsQuery = clientsQuery.Where(client => client.FullName.ToLower().Contains(fullname.ToLower()));
 		}
 
 		clientsQuery = clientsQuery.OrderBy(client => client.FullName).ThenBy(client => client.PhoneNumber);

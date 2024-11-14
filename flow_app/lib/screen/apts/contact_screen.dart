@@ -105,7 +105,7 @@ class ContactScreenState extends State<ContactScreen> {
                     backgroundColor: Colors.blue,
                   ),
                   child: const Text(
-                    'Criar agendamento',
+                    'Criar lembrete',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),

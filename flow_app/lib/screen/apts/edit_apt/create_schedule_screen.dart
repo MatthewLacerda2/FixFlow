@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
+import '../../../components/Inputs/customer_dropdown.dart';
 import '../../../components/Inputs/date_picker_rectangle.dart';
 import '../../../components/Inputs/limited_text_input_field.dart';
 import '../../../components/Inputs/name_input_field.dart';
@@ -113,6 +114,7 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   ),
               ],
             ),
+            CustomerDropdown(),
             const SizedBox(height: 24),
             Row(
               children: <Widget>[
