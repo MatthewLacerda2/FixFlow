@@ -18,7 +18,7 @@ namespace Server.Controllers;
 /// </remarks>
 [ApiController]
 [Route(Common.api_v1 + "schedules")]
-[Authorize]
+//[Authorize]
 [Produces("application/json")]
 public class AptScheduleController : ControllerBase {
 

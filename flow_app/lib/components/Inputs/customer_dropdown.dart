@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import '../../utils/flow_storage.dart';
 
 class CustomerDropdown extends StatefulWidget {
-  const CustomerDropdown({super.key});
+  const CustomerDropdown({super.key, required this.onCustomerIdChanged});
+
+  final ValueChanged<String> onCustomerIdChanged;
 
   @override
   CustomerDropdownState createState() => CustomerDropdownState();
@@ -13,13 +15,21 @@ class CustomerDropdown extends StatefulWidget {
 class CustomerDropdownState extends State<CustomerDropdown> {
   final TextEditingController _searchController = TextEditingController();
   List<CustomerDTO> _customerNames = <CustomerDTO>[];
-  CustomerDTO? _selectedCustomer;
+  String customerId = "";
   bool _isDropdownVisible = false;
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
+  }
+
+  void _updateCustomerId(String id) {
+    setState(() {
+      customerId = id;
+    });
+    _isDropdownVisible = false;
+    widget.onCustomerIdChanged(id);
   }
 
   @override
@@ -86,8 +96,7 @@ class CustomerDropdownState extends State<CustomerDropdown> {
                       customer.fullName, customer.phoneNumber)),
                   onTap: () {
                     setState(() {
-                      _selectedCustomer = customer;
-                      _isDropdownVisible = false;
+                      _updateCustomerId(customer.id);
                     });
                     _searchController.text = customer.fullName;
                   },

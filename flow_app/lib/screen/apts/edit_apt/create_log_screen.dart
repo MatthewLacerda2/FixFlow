@@ -92,7 +92,11 @@ class CreateLogScreenState extends State<CreateLogScreen> {
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 22),
                         )
-                      : const CustomerDropdown(),
+                      : CustomerDropdown(
+                          onCustomerIdChanged: (String id) {
+                            print(id);
+                          },
+                        ),
                 ),
                 if (widget.cliente != null || widget.contactado)
                   const Row(

@@ -1,4 +1,6 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:snackbar/snackbar.dart';
 
 import '../../../components/Inputs/customer_dropdown.dart';
@@ -6,6 +8,8 @@ import '../../../components/Inputs/date_picker_rectangle.dart';
 import '../../../components/Inputs/limited_text_input_field.dart';
 import '../../../components/Inputs/price_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
+import '../../../utils/date_time_utils.dart';
+import '../../main/main_screen.dart';
 
 class CreateScheduleScreen extends StatefulWidget {
   const CreateScheduleScreen({
@@ -33,6 +37,9 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 
+  String customerId = "";
+  late DateTime dateTime = DateTime.now();
+
   bool _isEdited = false;
 
   @override
@@ -49,15 +56,49 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
     });
   }
 
-  void _saveChanges() {
+  void _saveChanges() async {
     setState(() {
-      snackUndo("Confirmar?", () {
-        // TODO: load animation for when we wait for the response of the server
-        // TODO: Check if the response is 200OK or something else
-        snack("Salvo!");
-        Navigator.pop(context);
-      }, undoText: "Confirmar");
+      // Show loading indicator or disable buttons here
     });
+
+    try {
+      final CreateAptSchedule createAptSchedule = CreateAptSchedule(
+        customerId: customerId,
+        dateTime: dateTime,
+        service: 'Service Name',
+        observation: _observacaoController.text,
+        price: double.tryParse(_precoController.text) ?? 0.0,
+      );
+      print("UHASUHASAS");
+      print(createAptSchedule);
+      print("UHASUHASAS");
+      final Response response = await AptScheduleApi()
+          .apiV1SchedulesPostWithHttpInfo(createAptSchedule: createAptSchedule);
+      print("osfidjgsorgi");
+      if (response.statusCode == 201) {
+        print("11111111");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Agendamento feito!"),
+          ),
+        );
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => const MainScreen()),
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        print("2222222222");
+        print(createAptSchedule);
+        print(response);
+        print(response.body);
+        snack("Error: $response");
+      }
+    } catch (error) {
+      snack("An error occurred: $error");
+    }
+    print("debug");
   }
 
   void _cancelChanges() {
@@ -86,13 +127,11 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Expanded(
-                  child: widget.cliente != null
-                      ? Text(
-                          'Cliente: ${widget.cliente}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 22),
-                        )
-                      : const CustomerDropdown(),
+                  child: CustomerDropdown(
+                    onCustomerIdChanged: (String id) {
+                      customerId = id;
+                    },
+                  ),
                 ),
                 if (widget.contactado)
                   const Row(
@@ -115,6 +154,8 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   child: DatePickerRectangle(
                     initialDate: widget.dia,
                     onDateSelected: (DateTime date) {
+                      dateTime = DateTimeUtils.setDate(dateTime, date);
+                      print("umubuga");
                       _toggleEdit();
                     },
                   ),
@@ -124,6 +165,8 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   child: TimePickerRectangle(
                     initialTime: widget.horario,
                     onTimeSelected: (TimeOfDay time) {
+                      dateTime = DateTimeUtils.setTime(time, dateTime);
+                      print("fei di tal");
                       _toggleEdit();
                     },
                   ),
@@ -162,8 +205,10 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   onPressed: _isEdited ? _cancelChanges : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.blue : Colors.grey,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 5,
+                    ),
                   ),
                   child: const Text(
                     'Cancelar',
