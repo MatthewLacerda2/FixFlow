@@ -112,7 +112,7 @@ class CreateClientScreen extends StatelessWidget {
                     },
                   ),
                   CustomButton(
-                    text: "PróximoX",
+                    text: "Próximo",
                     textSize: 16,
                     backgroundColor: Colors.grey[300]!,
                     borderRadius: 12,

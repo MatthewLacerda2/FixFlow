@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../components/Inputs/customer_dropdown.dart';
 import '../components/Inputs/date_picker_rectangle.dart';
-import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/time_picker_rectangle.dart';
 
 class AptFiltersScreen extends StatelessWidget {
@@ -21,10 +21,9 @@ class AptFiltersScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              NameInputField(
-                placeholder: 'Cliente',
-                onNameChanged: (String name) {
-                  print('Cliente is: $name');
+              CustomerDropdown(
+                onCustomerIdChanged: (String id) {
+                  print(id);
                 },
               ),
               const SizedBox(height: 18),

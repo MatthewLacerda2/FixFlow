@@ -178,7 +178,7 @@ class AppConfigScreen extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return WarningModal(
-                        title: "Você quer sair da contax?",
+                        title: "Você quer sair da conta?",
                         optionOne: CustomButton(
                           text: "Sim",
                           textSize: 16,
