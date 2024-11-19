@@ -1,16 +1,54 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/schedules_list.dart';
+import '../../utils/flow_storage.dart';
 import '../apt_filters_screen.dart';
 import '../apts/edit_apt/create_schedule_screen.dart';
 import '../apts/schedule_screen.dart';
 import '../create_client_screen.dart';
 
-class SchedulesScreen extends StatelessWidget {
+class SchedulesScreen extends StatefulWidget {
   const SchedulesScreen({super.key});
+
+  @override
+  _SchedulesScreenState createState() => _SchedulesScreenState();
+}
+
+class _SchedulesScreenState extends State<SchedulesScreen> {
+  late Future<List<AptSchedule>> _schedulesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _schedulesFuture = _fetchSchedules();
+  }
+
+  Future<List<AptSchedule>> _fetchSchedules() async {
+    try {
+      final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+      final String businessId = bd!.id!;
+
+      final response = await AptScheduleApi().apiV1SchedulesGet(
+        businessId: businessId,
+        minPrice: 0,
+        maxPrice: 999,
+        minDateTime: DateTime(2023),
+        maxDateTime: DateTime.now(),
+        limit: 10,
+        offset: 0,
+      );
+
+      // Return the response as a list of AptSchedule
+      return response ?? []; // Handle null safety
+    } catch (e) {
+      debugPrint("Error fetching schedules: $e");
+      throw Exception("Failed to fetch schedules.");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +60,7 @@ class SchedulesScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                // Header
                 Container(
                   color: Colors.greenAccent,
                   padding: const EdgeInsets.all(8),
@@ -36,11 +75,10 @@ class SchedulesScreen extends StatelessWidget {
                     ),
                   ]),
                 ),
-                Container(
-                  color: Colors.black,
-                  height: 1,
-                ),
+                Container(color: Colors.black, height: 1),
                 const SizedBox(height: 8),
+
+                // Filters
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
@@ -81,33 +119,64 @@ class SchedulesScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
+
+                // Schedule List
                 Expanded(
-                  child: ListView.separated(
-                    itemCount: 10,
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(
-                            color: Colors.transparent, thickness: 1, height: 9),
-                    itemBuilder: (BuildContext context, int index) {
-                      return SchedulesList(
-                        clientName: 'nomeDoCliente',
-                        price: 150.00,
-                        hour: '17h45m',
-                        date: '21/12/24',
-                        service: 'troca de peças',
-                        observation: 'Agendamento de numero $index',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) => ScheduleScreen(
-                                cliente: 'Fulano $index',
-                                contactado: true,
-                                horario: const TimeOfDay(hour: 14, minute: 30),
-                                dia: DateTime(2024, 8, 27),
-                                preco: 150.00,
-                                observacao: "This is an observation",
-                              ),
-                            ),
+                  child: FutureBuilder<List<AptSchedule>>(
+                    future: _schedulesFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text('Error: ${snapshot.error}'),
+                        );
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(
+                          child: Text('No schedules available.'),
+                        );
+                      }
+
+                      final schedules = snapshot.data!;
+                      return ListView.separated(
+                        itemCount: schedules.length,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const Divider(
+                                color: Colors.transparent,
+                                thickness: 1,
+                                height: 9),
+                        itemBuilder: (BuildContext context, int index) {
+                          final schedule = schedules[index];
+                          return SchedulesList(
+                            clientName:
+                                schedule.customer?.fullName ?? 'Unknown Client',
+                            price: schedule.price ?? 0.0,
+                            hour: TimeOfDay.fromDateTime(schedule.dateTime!)
+                                .format(context),
+                            date:
+                                '${schedule.dateTime!.day}/${schedule.dateTime!.month}/${schedule.dateTime!.year}',
+                            service: schedule.service ?? 'No Service',
+                            observation:
+                                schedule.observation ?? 'No Observation',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      ScheduleScreen(
+                                    cliente: schedule.customer?.fullName ??
+                                        'Unknown',
+                                    contactado: schedule.wasContacted ?? false,
+                                    horario: TimeOfDay.fromDateTime(
+                                        schedule.dateTime!),
+                                    dia: schedule.dateTime!,
+                                    preco: schedule.price ?? 0.0,
+                                    observacao: schedule.observation ??
+                                        'No Observation',
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         },
                       );
@@ -116,6 +185,8 @@ class SchedulesScreen extends StatelessWidget {
                 ),
               ],
             ),
+
+            // Floating Action Buttons
             RoundedIconedButton(
               icon: Icons.person_add_alt_1_sharp,
               size: 38,

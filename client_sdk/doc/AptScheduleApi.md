@@ -56,7 +56,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1SchedulesGet**
-> List<AptSchedule> apiV1SchedulesGet(businessId, client, service, minPrice, maxPrice, minDateTime, maxDateTime, sort, descending, offset, limit)
+> List<AptSchedule> apiV1SchedulesGet(businessId, client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit)
 
 Gets a number of filtered Schedules
 
@@ -72,13 +72,11 @@ final minPrice = 3.4; // double |
 final maxPrice = 3.4; // double | 
 final minDateTime = 2013-10-20T19:20:30+01:00; // DateTime | 
 final maxDateTime = 2013-10-20T19:20:30+01:00; // DateTime | 
-final sort = ; // ScheduleSort | 
-final descending = true; // bool | 
 final offset = 56; // int | 
 final limit = 56; // int | 
 
 try {
-    final result = api_instance.apiV1SchedulesGet(businessId, client, service, minPrice, maxPrice, minDateTime, maxDateTime, sort, descending, offset, limit);
+    final result = api_instance.apiV1SchedulesGet(businessId, client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit);
     print(result);
 } catch (e) {
     print('Exception when calling AptScheduleApi->apiV1SchedulesGet: $e\n');
@@ -96,8 +94,6 @@ Name | Type | Description  | Notes
  **maxPrice** | **double**|  | [optional] 
  **minDateTime** | **DateTime**|  | [optional] 
  **maxDateTime** | **DateTime**|  | [optional] 
- **sort** | [**ScheduleSort**](.md)|  | [optional] 
- **descending** | **bool**|  | [optional] 
  **offset** | **int**|  | [optional] 
  **limit** | **int**|  | [optional] 
 

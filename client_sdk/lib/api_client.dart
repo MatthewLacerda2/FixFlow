@@ -265,8 +265,6 @@ class ApiClient {
           return IdlePeriod.fromJson(value);
         case 'ProblemDetails':
           return ProblemDetails.fromJson(value);
-        case 'ScheduleSort':
-          return ScheduleSortTypeTransformer().decode(value);
         case 'UpdateAptLog':
           return UpdateAptLog.fromJson(value);
         default:

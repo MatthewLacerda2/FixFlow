@@ -102,7 +102,6 @@ Class | Method | HTTP request | Description
  - [FlowLoginRequest](doc//FlowLoginRequest.md)
  - [IdlePeriod](doc//IdlePeriod.md)
  - [ProblemDetails](doc//ProblemDetails.md)
- - [ScheduleSort](doc//ScheduleSort.md)
  - [UpdateAptLog](doc//UpdateAptLog.md)
 
 

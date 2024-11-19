@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 README.md
 analysis_options.yaml
@@ -28,7 +27,6 @@ doc/FlowLoginRequest.md
 doc/IdlePeriod.md
 doc/IdlePeriodApi.md
 doc/ProblemDetails.md
-doc/ScheduleSort.md
 doc/UpdateAptLog.md
 git_push.sh
 lib/api.dart
@@ -65,7 +63,6 @@ lib/model/customer_record.dart
 lib/model/flow_login_request.dart
 lib/model/idle_period.dart
 lib/model/problem_details.dart
-lib/model/schedule_sort.dart
 lib/model/update_apt_log.dart
 pubspec.yaml
 test/accounts_api_test.dart
@@ -93,5 +90,4 @@ test/flow_login_request_test.dart
 test/idle_period_api_test.dart
 test/idle_period_test.dart
 test/problem_details_test.dart
-test/schedule_sort_test.dart
 test/update_apt_log_test.dart

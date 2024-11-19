@@ -15,14 +15,14 @@ class ScheduleScreen extends StatefulWidget {
     required this.horario,
     required this.dia,
     required this.preco,
-    required this.observacao,
+    this.observacao,
   });
   final String cliente;
   final bool contactado;
   final TimeOfDay horario;
   final DateTime dia;
   final double preco;
-  final String observacao;
+  final String? observacao;
 
   @override
   ScheduleScreenState createState() => ScheduleScreenState();
@@ -63,7 +63,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     setState(() {
       _isEdited = false;
       _precoController.text = widget.preco.toStringAsFixed(2);
-      _observacaoController.text = widget.observacao;
+      _observacaoController.text = widget.observacao ?? "";
     });
   }
 
@@ -103,7 +103,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[                
+              children: <Widget>[
                 const Text(
                   'Dia:',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),

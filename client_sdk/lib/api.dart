@@ -54,7 +54,6 @@ part 'model/customer_record.dart';
 part 'model/flow_login_request.dart';
 part 'model/idle_period.dart';
 part 'model/problem_details.dart';
-part 'model/schedule_sort.dart';
 part 'model/update_apt_log.dart';
 
 
