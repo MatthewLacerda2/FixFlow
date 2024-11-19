@@ -58,6 +58,11 @@ public class AptScheduleController : ControllerBase {
 			.Take(limit)
 			.ToArrayAsync();
 
+		for (int i = 0; i < resultsArray.Length; i++) {
+			Customer customer = _context.Customers.Find(resultsArray[i].CustomerId)!;
+			resultsArray[i].Customer = customer;
+		}
+
 		return Ok(resultsArray);
 	}
 
