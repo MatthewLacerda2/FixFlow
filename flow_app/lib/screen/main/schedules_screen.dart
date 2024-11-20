@@ -161,16 +161,7 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                                 context,
                                 MaterialPageRoute<void>(
                                   builder: (BuildContext context) =>
-                                      ScheduleScreen(
-                                    cliente: schedule.customer!.fullName,
-                                    contactado: schedule.wasContacted ?? false,
-                                    horario: TimeOfDay.fromDateTime(
-                                        schedule.dateTime!),
-                                    dia: schedule.dateTime!,
-                                    preco: schedule.price ?? 0.0,
-                                    observacao: schedule.observation ??
-                                        'No Observation',
-                                  ),
+                                      ScheduleScreen(schedule: schedule),
                                 ),
                               );
                             },
