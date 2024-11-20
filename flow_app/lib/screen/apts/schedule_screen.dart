@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
+import '../../components/Buttons/custom_button.dart';
+import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/limited_text_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
+import '../../components/warning_modal.dart';
+import '../main/schedules_screen.dart';
 
 //TODO: buttons must ask for a confirmation
 class ScheduleScreen extends StatefulWidget {
@@ -74,7 +78,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         title: const Text('Editar Agendamento'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(22.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -84,7 +88,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 Text(
                   'Cliente: ${widget.cliente}',
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 22),
+                      fontWeight: FontWeight.bold, fontSize: 24),
                 ),
                 if (widget.contactado)
                   const Row(
@@ -100,13 +104,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 26),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 const Text(
                   'Dia:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 DatePickerRectangle(
                   initialDate: widget.dia,
@@ -116,7 +120,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 ),
                 const Text(
                   'Hora:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 TimePickerRectangle(
                   initialTime: widget.horario,
@@ -126,21 +130,21 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 22),
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
                 _toggleEdit();
               },
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: 28),
             LimitedTextInputField(
               controller: _observacaoController,
               maxLength: 250,
               labelText: 'Observação',
               onChanged: (String value) => _toggleEdit(),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 26),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -167,7 +171,50 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(height: 52),
+            RoundedIconedButton(
+                icon: Icons.delete_forever_rounded,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return WarningModal(
+                        title: "Você tem certeza?",
+                        description:
+                            "Deletar o agendamento? Esta ação não poderá ser desfeita",
+                        optionOne: CustomButton(
+                          text: "Sim",
+                          textSize: 14,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.black,
+                          onPressed: () {
+                            //TODO: endpoint
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const SchedulesScreen()),
+                            );
+                          },
+                        ),
+                        optionTwo: CustomButton(
+                          text: "Não",
+                          textSize: 14,
+                          backgroundColor: Colors.blue,
+                          textColor: Colors.black,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                size: 54,
+                bottom: 46,
+                right: 46,
+                color: Colors.red),
           ],
         ),
       ),
