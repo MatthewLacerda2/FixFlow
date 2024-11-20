@@ -39,11 +39,9 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
         maxPrice: 999,
         minDateTime: DateTime(2023),
         maxDateTime: DateTime(2033), //TODO: change once maxDate is nullable
-        limit: 10,
+        limit: 30,
         offset: 0,
       );
-
-      // Return the response as a list of AptSchedule
       return response ?? <AptSchedule>[]; // Handle null safety
     } catch (e) {
       debugPrint("Error fetching schedules: $e");
@@ -65,7 +63,6 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                // Header
                 Container(
                   color: Colors.greenAccent,
                   padding: const EdgeInsets.all(8),
@@ -82,8 +79,6 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                 ),
                 Container(color: Colors.black, height: 1),
                 const SizedBox(height: 8),
-
-                // Filters
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
@@ -124,8 +119,6 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-
-                // Schedule List
                 Expanded(
                   child: FutureBuilder<List<AptSchedule>>(
                     future: _schedulesFuture,
@@ -139,7 +132,7 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                         );
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                         return const Center(
-                          child: Text('No schedules available.'),
+                          child: Text('Não há agendamentos.'),
                         );
                       }
 
@@ -154,8 +147,7 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                         itemBuilder: (BuildContext context, int index) {
                           final AptSchedule schedule = schedules[index];
                           return SchedulesList(
-                            clientName:
-                                schedule.customer?.fullName ?? 'Unknown Client',
+                            clientName: schedule.customer!.fullName,
                             price: schedule.price ?? 0.0,
                             hour: TimeOfDay.fromDateTime(schedule.dateTime!)
                                 .format(context),
@@ -170,8 +162,7 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                                 MaterialPageRoute<void>(
                                   builder: (BuildContext context) =>
                                       ScheduleScreen(
-                                    cliente: schedule.customer?.fullName ??
-                                        'Unknown',
+                                    cliente: schedule.customer!.fullName,
                                     contactado: schedule.wasContacted ?? false,
                                     horario: TimeOfDay.fromDateTime(
                                         schedule.dateTime!),
@@ -191,8 +182,6 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                 ),
               ],
             ),
-
-            // Floating Action Buttons
             RoundedIconedButton(
               icon: Icons.person_add_alt_1_sharp,
               size: 38,
@@ -207,9 +196,9 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                       nextScreen: CreateScheduleScreen(
                         contactado: false,
                         horario: TimeOfDay.now(),
-                        dia: DateTime(2024, 8, 27),
+                        dia: DateTime.now(),
                         preco: 150.00,
-                        observacao: "This is an observation",
+                        observacao: "",
                       ),
                     ),
                   ),
