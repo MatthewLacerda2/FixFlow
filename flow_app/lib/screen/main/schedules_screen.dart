@@ -32,22 +32,27 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
       final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
       final String businessId = bd!.id!;
 
-      final response = await AptScheduleApi().apiV1SchedulesGet(
+      final List<AptSchedule>? response =
+          await AptScheduleApi().apiV1SchedulesGet(
         businessId: businessId,
         minPrice: 0,
         maxPrice: 999,
         minDateTime: DateTime(2023),
-        maxDateTime: DateTime.now(),
+        maxDateTime: DateTime(2033), //TODO: change once maxDate is nullable
         limit: 10,
         offset: 0,
       );
 
       // Return the response as a list of AptSchedule
-      return response ?? []; // Handle null safety
+      return response ?? <AptSchedule>[]; // Handle null safety
     } catch (e) {
       debugPrint("Error fetching schedules: $e");
       throw Exception("Failed to fetch schedules.");
     }
+  }
+
+  String getNormalizedString(String? string) {
+    return (string == null || string.isEmpty) ? '-' : string;
   }
 
   @override
@@ -124,7 +129,8 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                 Expanded(
                   child: FutureBuilder<List<AptSchedule>>(
                     future: _schedulesFuture,
-                    builder: (context, snapshot) {
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<AptSchedule>> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
@@ -137,16 +143,16 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                         );
                       }
 
-                      final schedules = snapshot.data!;
+                      final List<AptSchedule> schedules = snapshot.data!;
                       return ListView.separated(
                         itemCount: schedules.length,
                         separatorBuilder: (BuildContext context, int index) =>
                             const Divider(
                                 color: Colors.transparent,
                                 thickness: 1,
-                                height: 9),
+                                height: 14),
                         itemBuilder: (BuildContext context, int index) {
-                          final schedule = schedules[index];
+                          final AptSchedule schedule = schedules[index];
                           return SchedulesList(
                             clientName:
                                 schedule.customer?.fullName ?? 'Unknown Client',
@@ -155,9 +161,9 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                                 .format(context),
                             date:
                                 '${schedule.dateTime!.day}/${schedule.dateTime!.month}/${schedule.dateTime!.year}',
-                            service: schedule.service ?? 'No Service',
+                            service: getNormalizedString(schedule.service),
                             observation:
-                                schedule.observation ?? 'No Observation',
+                                getNormalizedString(schedule.observation),
                             onTap: () {
                               Navigator.push(
                                 context,
