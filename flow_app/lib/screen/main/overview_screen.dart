@@ -163,17 +163,6 @@ class OverviewScreen extends StatelessWidget {
                       },
                     ),
                     RoundedIconedButton(
-                      icon: Icons.edit_calendar_outlined,
-                      text: 'Lembretes',
-                      size: 76,
-                      bottom: 18,
-                      right: 16,
-                      color: Colors.blueAccent,
-                      onPressed: () {
-                        // TODO: Navigate to Contatos Screen
-                      },
-                    ),
-                    RoundedIconedButton(
                       icon: Icons.schedule,
                       text: 'Agenda',
                       size: 76,
@@ -193,6 +182,17 @@ class OverviewScreen extends StatelessWidget {
                       color: Colors.blueAccent,
                       onPressed: () {
                         // TODO: Navigate to Atendimentos Screen
+                      },
+                    ),
+                    RoundedIconedButton(
+                      icon: Icons.punch_clock_sharp,
+                      text: 'Lembretes',
+                      size: 76,
+                      bottom: 18,
+                      right: 16,
+                      color: Colors.blueAccent,
+                      onPressed: () {
+                        // TODO: Navigate to Contatos Screen
                       },
                     ),
                   ],

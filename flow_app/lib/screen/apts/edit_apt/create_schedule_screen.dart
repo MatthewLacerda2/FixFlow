@@ -7,8 +7,10 @@ import '../../../components/Inputs/customer_dropdown.dart';
 import '../../../components/Inputs/date_picker_rectangle.dart';
 import '../../../components/Inputs/limited_text_input_field.dart';
 import '../../../components/Inputs/price_input_field.dart';
+import '../../../components/Inputs/services_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
 import '../../../utils/date_time_utils.dart';
+import '../../../utils/flow_storage.dart';
 import '../../main/main_screen.dart';
 
 class CreateScheduleScreen extends StatefulWidget {
@@ -38,6 +40,7 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
   late TextEditingController _observacaoController;
 
   String customerId = "";
+  String service = "";
   late DateTime dateTime = DateTime.now();
 
   bool _isEdited = false;
@@ -65,20 +68,16 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
       final CreateAptSchedule createAptSchedule = CreateAptSchedule(
         customerId: customerId,
         dateTime: dateTime,
-        service: 'Service Name',
+        service: service,
         observation: _observacaoController.text,
         price: double.tryParse(_precoController.text) ?? 0.0,
       );
-      print("UHASUHASAS");
-      print(createAptSchedule);
-      print("UHASUHASAS");
       final Response response = await AptScheduleApi()
           .apiV1SchedulesPostWithHttpInfo(createAptSchedule: createAptSchedule);
-      print("osfidjgsorgi");
+
       if (response.statusCode == 201) {
-        print("11111111");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("Agendamento feito!"),
           ),
         );
@@ -89,9 +88,7 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
           (Route<dynamic> route) => false,
         );
       } else {
-        print("2222222222");
         print(createAptSchedule);
-        print(response);
         print(response.body);
         snack("Error: $response");
       }
@@ -148,6 +145,14 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
               ],
             ),
             const SizedBox(height: 24),
+            ServicesInputField(
+              services: const <String>[],
+              allowNewServices: true,
+              onServiceSelected: (String? selectedService) {
+                service = selectedService ?? "";
+              },
+            ),
+            const SizedBox(height: 24),
             Row(
               children: <Widget>[
                 Expanded(
@@ -155,7 +160,6 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
                     initialDate: widget.dia,
                     onDateSelected: (DateTime date) {
                       dateTime = DateTimeUtils.setDate(dateTime, date);
-                      print("umubuga");
                       _toggleEdit();
                     },
                   ),
@@ -166,7 +170,6 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
                     initialTime: widget.horario,
                     onTimeSelected: (TimeOfDay time) {
                       dateTime = DateTimeUtils.setTime(time, dateTime);
-                      print("fei di tal");
                       _toggleEdit();
                     },
                   ),

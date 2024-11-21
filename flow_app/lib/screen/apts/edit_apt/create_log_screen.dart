@@ -5,6 +5,7 @@ import '../../../components/Inputs/customer_dropdown.dart';
 import '../../../components/Inputs/date_picker_rectangle.dart';
 import '../../../components/Inputs/limited_text_input_field.dart';
 import '../../../components/Inputs/price_input_field.dart';
+import '../../../components/Inputs/services_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
 
 class CreateLogScreen extends StatefulWidget {
@@ -33,6 +34,7 @@ class CreateLogScreenState extends State<CreateLogScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 
+  String service = "";
   bool _isEdited = false;
 
   @override
@@ -111,6 +113,14 @@ class CreateLogScreenState extends State<CreateLogScreen> {
                     ],
                   ),
               ],
+            ),
+            const SizedBox(height: 24),
+            ServicesInputField(
+              services: const <String>[],
+              allowNewServices: true,
+              onServiceSelected: (String? selectedService) {
+                service = selectedService ?? "";
+              },
             ),
             const SizedBox(height: 24),
             Row(

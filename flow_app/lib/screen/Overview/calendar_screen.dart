@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../apts/edit_apt/create_log_screen.dart';
 import '../apts/edit_apt/create_schedule_screen.dart';
+
 //TODO: we got to think of a better way to let users do actions like creating, editing or deleting schedules, logs and idle periods
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -32,42 +33,43 @@ class CalendarScreenState extends State<CalendarScreen> {
       body: Stack(
         children: <Widget>[
           Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
                   DateFormat('MMMM').format(currentDate),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
               ),
-            ),
-          ),
-          _buildWeekDayLabels(),
+              _buildWeekDayLabels(),
               const SizedBox(height: 10),
-          SizedBox(
+              SizedBox(
                 height: MediaQuery.of(context).size.height * 0.385,
-            child: PageView.builder(
-              itemCount: 12, // 12 months
-              controller: PageController(initialPage: currentDate.month - 1),
-              onPageChanged: (int index) {
-                setState(() {
-                  currentDate = DateTime(currentDate.year, index + 1);
-                });
-              },
-              itemBuilder: (BuildContext context, int index) {
-                return _buildMonthView(index + 1);
-              },
-            ),
-          ),
-          Container(
-            height: 1,
-            color: Colors.grey,
-          ),
-          const SizedBox(height: 20),
-          _buildDetailsSection(),
+                child: PageView.builder(
+                  itemCount: 12, // 12 months
+                  controller:
+                      PageController(initialPage: currentDate.month - 1),
+                  onPageChanged: (int index) {
+                    setState(() {
+                      currentDate = DateTime(currentDate.year, index + 1);
+                    });
+                  },
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildMonthView(index + 1);
+                  },
+                ),
+              ),
+              Container(
+                height: 1,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 20),
+              _buildDetailsSection(),
             ],
-      ),
+          ),
           RoundedIconedButton(
             icon: Icons.add,
             size: 60,
@@ -83,7 +85,7 @@ class CalendarScreenState extends State<CalendarScreen> {
                     horario: TimeOfDay.now(),
                     dia: DateTime(2024, 8, 27),
                     preco: 150.00,
-                    observacao: "This is an observation",
+                    observacao: "",
                   ),
                 ),
               );
@@ -104,7 +106,7 @@ class CalendarScreenState extends State<CalendarScreen> {
                     horario: TimeOfDay.now(),
                     dia: DateTime(2024, 8, 27),
                     preco: 150.00,
-                    observacao: "This is an observation",
+                    observacao: "",
                   ),
                 ),
               );
@@ -122,17 +124,17 @@ class CalendarScreenState extends State<CalendarScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: daysOfWeek
-          .map((String day) => Expanded(
-                child: Center(
-                  child: Text(
-                    day,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+            .map((String day) => Expanded(
+                  child: Center(
+                    child: Text(
+                      day,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ))
-          .toList(),
+                ))
+            .toList(),
       ),
     );
   }
@@ -140,19 +142,16 @@ class CalendarScreenState extends State<CalendarScreen> {
   Widget _buildMonthView(int month) {
     final DateTime firstDayOfMonth = DateTime(currentDate.year, month, 2);
     final int daysInMonth = DateUtils.getDaysInMonth(currentDate.year, month);
-    final int firstWeekday =
-        firstDayOfMonth.weekday;
+    final int firstWeekday = firstDayOfMonth.weekday;
 
     return GridView.builder(
-      
       padding: const EdgeInsets.symmetric(horizontal: 16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 7,
         crossAxisSpacing: 4,
         mainAxisSpacing: 4,
       ),
-      itemCount: daysInMonth +
-          (firstWeekday - 1),
+      itemCount: daysInMonth + (firstWeekday - 1),
       itemBuilder: (BuildContext context, int index) {
         if (index < firstWeekday - 1) {
           return const SizedBox();
@@ -222,11 +221,11 @@ class CalendarScreenState extends State<CalendarScreen> {
   Widget _buildDetailsSection() {
     return schedules.containsKey(selectedDate)
         ? ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: schedules[selectedDate]!.length,
-              itemBuilder: (BuildContext context, int index) {
+            itemCount: schedules[selectedDate]!.length,
+            itemBuilder: (BuildContext context, int index) {
               return Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -237,7 +236,7 @@ class CalendarScreenState extends State<CalendarScreen> {
                   title: Text(schedules[selectedDate]![index]),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                 ),
-                );
+              );
             },
           )
         : const Padding(

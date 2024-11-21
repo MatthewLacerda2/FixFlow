@@ -110,7 +110,7 @@ class LogsScreen extends StatelessWidget {
                                 horario: const TimeOfDay(hour: 14, minute: 30),
                                 dia: DateTime(2024, 8, 27),
                                 preco: 150.00,
-                                observacao: "This is an observation",
+                                observacao: "",
                               ),
                             ),
                           );
@@ -137,7 +137,7 @@ class LogsScreen extends StatelessWidget {
                         horario: TimeOfDay.now(),
                         dia: DateTime(2024, 8, 27),
                         preco: 150.00,
-                        observacao: "This is an observation",
+                        observacao: "",
                       ),
                     ),
                   ),
@@ -159,7 +159,7 @@ class LogsScreen extends StatelessWidget {
                       horario: TimeOfDay.now(),
                       dia: DateTime(2024, 8, 27),
                       preco: 150.00,
-                      observacao: "This is an observation",
+                      observacao: "",
                     ),
                   ),
                 );

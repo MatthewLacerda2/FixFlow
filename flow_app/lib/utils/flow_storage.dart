@@ -24,6 +24,8 @@ class FlowStorage {
   static Future<void> clear() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
+
+    await AccountsApi().apiV1AccountsLogoutPost();
   }
 
   static Future<void> saveBusinessDTO(BusinessDTO businessDTO) async {
