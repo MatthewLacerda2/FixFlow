@@ -46,7 +46,7 @@ class SchedulesList extends StatelessWidget {
               Text(
                 'R\$ $price',
                 style: const TextStyle(
-                  color: Colors.blue,
+                  color: Colors.blueAccent,
                   fontWeight: FontWeight.bold,
                 ),
               ),

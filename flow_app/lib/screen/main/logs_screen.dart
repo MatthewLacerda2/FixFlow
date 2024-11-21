@@ -23,7 +23,7 @@ class LogsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color: Colors.blue,
+                  color: Colors.blueAccent,
                   padding: const EdgeInsets.all(8),
                   height: 60,
                   child: const Row(

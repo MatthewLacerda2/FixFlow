@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class LogsList extends StatelessWidget {
-
   const LogsList({
     super.key,
     required this.clientName,
@@ -46,7 +45,7 @@ class LogsList extends StatelessWidget {
               Text(
                 'R\$ ${price.toStringAsFixed(2)}',
                 style: const TextStyle(
-                  color: Colors.blue,
+                  color: Colors.blueAccent,
                   fontWeight: FontWeight.bold,
                 ),
               ),
