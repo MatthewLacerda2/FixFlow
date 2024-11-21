@@ -6,7 +6,6 @@ using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
-using Server.Models.Filters;
 
 namespace FixFlow.Tests.Controllers;
 
@@ -71,18 +70,13 @@ public class AptLogControllerTests {
 		_context.Logs.AddRange(logs);
 		_context.SaveChanges();
 
-		var filter = new AptLogFilter(business1.Id, LogSort.Price, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow.AddDays(-3));
-		filter.client = "fulano ";
-		filter.minPrice = 30;
-		filter.maxPrice = 80;
-		filter.service = "Service 1";
-		filter.offset = 1;
-		filter.limit = 1;
+		var minDate = DateTime.UtcNow.AddDays(-7);
+		var maxDate = DateTime.UtcNow.AddDays(-3);
 
 		var expectedLog = logs[5];
 
 		// Act
-		var result = await _controller.ReadLogs(filter) as OkObjectResult;
+		var result = await _controller.ReadLogs(business1.Id, "fulano ", "Service 1", 30, 80, minDate, maxDate, 1, 1) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);

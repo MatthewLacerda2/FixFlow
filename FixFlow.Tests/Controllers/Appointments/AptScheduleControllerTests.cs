@@ -4,7 +4,6 @@ using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
-using Server.Models.Filters;
 using Server.Utils;
 
 namespace FixFlow.Tests.Controllers;
@@ -53,18 +52,13 @@ public class AptScheduleControllerTests {
 		_context.Schedules.AddRange(schedules);
 		_context.SaveChanges();
 
-		var filter = new AptScheduleFilter(business1.Id, ScheduleSort.Price, DateTime.UtcNow.AddDays(3), DateTime.UtcNow.AddDays(8));
-		filter.client = "fulano ";
-		filter.minPrice = 20;
-		filter.maxPrice = 90;
-		filter.service = "Service 1";
-		filter.offset = 1;
-		filter.limit = 1;
+		var minDate = DateTime.UtcNow.AddDays(3);
+		var maxDate = DateTime.UtcNow.AddDays(8);
 
 		var expectedSchedule = schedules[7];
 
 		// Act
-		var result = await _controller.ReadSchedules(filter) as OkObjectResult;
+		var result = await _controller.ReadSchedules(business1.Id, "fulano ", "Service 1", 20, 90, minDate, maxDate, 1, 1) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
