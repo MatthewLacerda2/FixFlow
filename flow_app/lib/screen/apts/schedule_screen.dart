@@ -1,5 +1,6 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
+import 'package:http/src/response.dart';
 import 'package:snackbar/snackbar.dart';
 
 import '../../components/Buttons/custom_button.dart';
@@ -9,9 +10,8 @@ import '../../components/Inputs/limited_text_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/warning_modal.dart';
-import '../main/schedules_screen.dart';
+import '../../utils/date_time_utils.dart';
 
-//TODO: buttons must ask for a confirmation
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({
     super.key,
@@ -29,6 +29,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   bool _isEdited = false;
 
+  double preco = 0.0;
+  DateTime newDateTime = DateTime.now();
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +39,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         text: widget.schedule.price?.toStringAsFixed(2) ?? "");
     _observacaoController =
         TextEditingController(text: widget.schedule.observation);
+    preco = widget.schedule.price ?? 0.0;
+    newDateTime = widget.schedule.dateTime!;
   }
 
   void _toggleEdit() {
@@ -74,29 +79,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Cliente: ${widget.schedule.customer!.fullName}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 24),
-                ),
-                if (widget.schedule.wasContacted!)
-                  const Row(
-                    children: <Widget>[
-                      Icon(Icons.check, color: Colors.blue, size: 22),
-                      SizedBox(width: 8),
-                      Text(
-                        'Contactado',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                    ],
-                  ),
-              ],
+            Text(
+              'Cliente: ${widget.schedule.customer!.fullName}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -107,6 +94,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 DatePickerRectangle(
                   initialDate: widget.schedule.dateTime!,
                   onDateSelected: (DateTime date) {
+                    newDateTime = DateTimeUtils.setDate(newDateTime, date);
                     _toggleEdit();
                   },
                 ),
@@ -118,19 +106,22 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   initialTime:
                       TimeOfDay.fromDateTime(widget.schedule.dateTime!),
                   onTimeSelected: (TimeOfDay time) {
+                    newDateTime =
+                        DateTimeUtils.setTime(time, widget.schedule.dateTime!);
                     _toggleEdit();
                   },
                 ),
               ],
             ),
-            const SizedBox(height: 22),
+            const SizedBox(height: 26),
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
+                preco = double.parse(value);
                 _toggleEdit();
               },
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 30),
             LimitedTextInputField(
               controller: _observacaoController,
               maxLength: 250,
@@ -142,7 +133,31 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: _isEdited ? _saveChanges : null,
+                  onPressed: () async {
+                    _isEdited ? _saveChanges : null;
+                    final AptSchedule patchedSchedule = widget.schedule;
+                    patchedSchedule.price = preco;
+                    patchedSchedule.dateTime = newDateTime;
+                    patchedSchedule.observation = _observacaoController.text;
+                    final Response response = await AptScheduleApi()
+                        .apiV1SchedulesPatchWithHttpInfo(
+                            aptSchedule: patchedSchedule);
+                    print("StatusCode = ${response.statusCode}");
+                    if (response.statusCode == 200) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: const Text("Agendamento editado!"),
+                        ),
+                      );
+                      Navigator.of(context).pop();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(response.body),
+                        ),
+                      );
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.green : Colors.grey,
                   ),
