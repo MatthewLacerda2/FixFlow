@@ -17,15 +17,15 @@ class ServicesInputField extends StatefulWidget {
 
 class ServicesInputFieldState extends State<ServicesInputField> {
   final TextEditingController _textController = TextEditingController();
-  List<String> _availableServices = [];
-  List<String> _filteredServices = [];
+  List<String> _availableServices = <String>[];
+  List<String> _filteredServices = <String>[];
   bool _allowNewServices = false;
   String? _selectedService;
   bool _isDropdownVisible = false;
 
   Future<void> loadBusinessOptions() async {
     try {
-      final BusinessDTO? businessData = await FlowStorage.getBusinessDTO()!;
+      final BusinessDTO? businessData = await FlowStorage.getBusinessDTO();
       if (businessData != null) {
         setState(() {
           _availableServices = businessData.services ?? <String>[];

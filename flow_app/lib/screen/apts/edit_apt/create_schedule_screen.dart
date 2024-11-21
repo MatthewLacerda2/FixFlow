@@ -10,7 +10,6 @@ import '../../../components/Inputs/price_input_field.dart';
 import '../../../components/Inputs/services_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
 import '../../../utils/date_time_utils.dart';
-import '../../../utils/flow_storage.dart';
 import '../../main/main_screen.dart';
 
 class CreateScheduleScreen extends StatefulWidget {
@@ -146,8 +145,6 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
             ),
             const SizedBox(height: 24),
             ServicesInputField(
-              services: const <String>[],
-              allowNewServices: true,
               onServiceSelected: (String? selectedService) {
                 service = selectedService ?? "";
               },

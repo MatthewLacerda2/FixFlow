@@ -116,8 +116,6 @@ class CreateLogScreenState extends State<CreateLogScreen> {
             ),
             const SizedBox(height: 24),
             ServicesInputField(
-              services: const <String>[],
-              allowNewServices: true,
               onServiceSelected: (String? selectedService) {
                 service = selectedService ?? "";
               },
