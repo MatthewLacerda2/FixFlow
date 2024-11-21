@@ -1,15 +1,14 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
+
+import '../../utils/flow_storage.dart';
 
 class ServicesInputField extends StatefulWidget {
   const ServicesInputField({
     super.key,
-    required this.services,
-    required this.allowNewServices,
     required this.onServiceSelected,
   });
 
-  final List<String> services;
-  final bool allowNewServices;
   final ValueChanged<String?> onServiceSelected;
 
   @override
@@ -18,9 +17,23 @@ class ServicesInputField extends StatefulWidget {
 
 class ServicesInputFieldState extends State<ServicesInputField> {
   final TextEditingController _textController = TextEditingController();
+  List<String> _availableServices = [];
   List<String> _filteredServices = [];
+  bool _allowNewServices = false;
   String? _selectedService;
   bool _isDropdownVisible = false;
+
+  Future<void> loadBusinessOptions() async {
+    try {
+      final BusinessDTO? businessData = await FlowStorage.getBusinessDTO()!;
+      if (businessData != null) {
+        setState(() {
+          _availableServices = businessData.services ?? <String>[];
+          _allowNewServices = !(businessData.allowListedServicesOnly ?? true);
+        });
+      }
+    } catch (e) {}
+  }
 
   @override
   void initState() {
@@ -46,11 +59,11 @@ class ServicesInputFieldState extends State<ServicesInputField> {
     }
 
     setState(() {
-      _filteredServices = widget.services
+      _filteredServices = _availableServices
           .where((String service) => service.toLowerCase().contains(query))
           .toList();
 
-      if (widget.allowNewServices &&
+      if (_allowNewServices &&
           !_filteredServices
               .any((String service) => service.toLowerCase() == query)) {
         _filteredServices.insert(0, 'Add Service');
