@@ -4,6 +4,7 @@ import 'package:snackbar/snackbar.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/limited_text_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
+import '../../components/Inputs/services_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 
 //TODO: buttons must ask for a confirmation
@@ -31,6 +32,8 @@ class LogScreen extends StatefulWidget {
 class LogScreenState extends State<LogScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
+
+  String service = "";
 
   bool _isEdited = false;
 
@@ -101,9 +104,15 @@ class LogScreenState extends State<LogScreen> {
               ],
             ),
             const SizedBox(height: 24),
+            ServicesInputField(
+              onServiceSelected: (String? selectedService) {
+                service = selectedService ?? "";
+              },
+            ),
+            const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[                
+              children: <Widget>[
                 const Text(
                   'Dia:',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
