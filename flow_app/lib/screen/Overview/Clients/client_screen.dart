@@ -31,8 +31,7 @@ class ClientScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: <Widget>[
             Text(
               record.fullName,
@@ -120,48 +119,34 @@ class ClientScreen extends StatelessWidget {
               color: Colors.grey,
             ),
             const SizedBox(height: 10),
-            Expanded(
-              child: ListView.separated(
-                shrinkWrap: true,
-                physics: const PageScrollPhysics(),
-                itemCount: record.logs!.length,
-                separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(
-                  color: Colors.transparent,
-                  thickness: 0,
-                  height: 9,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  final AptLog log = record.logs![index];
-                  final String timeOfDayString =
-                      TimeOfDay.fromDateTime(log.dateTime!).format(context);
-                  return LogsList(
-                    clientName: record.fullName,
-                    price: record.logs![index].price ??
-                        0, //TODO: prices are coming null, this is just a band-aid
-                    hour: timeOfDayString,
-                    date: DateTimeUtils.dateOnlyString(log.dateTime!),
-                    service: log.service ?? '-',
-                    observation: log.description ?? '-',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) => LogScreen(
-                            cliente: 'Fulano $index',
-                            marcouHorario: true,
-                            horario: const TimeOfDay(hour: 14, minute: 30),
-                            dia: DateTime(2024, 8, 27),
-                            preco: 150.00,
-                            observacao: "",
-                          ),
-                        ),
-                      );
-                    },
+            ...record.logs!.map((AptLog log) {
+              final String timeOfDayString =
+                  TimeOfDay.fromDateTime(log.dateTime!).format(context);
+              return LogsList(
+                clientName: record.fullName,
+                price: log.price ??
+                    0, //TODO: prices are coming null, this is just a band-aid
+                hour: timeOfDayString,
+                date: DateTimeUtils.dateOnlyString(log.dateTime!),
+                service: log.service ?? '-',
+                observation: log.description ?? '-',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => LogScreen(
+                        cliente: 'Fulano',
+                        marcouHorario: true,
+                        horario: const TimeOfDay(hour: 14, minute: 30),
+                        dia: DateTime(2024, 8, 27),
+                        preco: 150.00,
+                        observacao: "",
+                      ),
+                    ),
                   );
                 },
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),
