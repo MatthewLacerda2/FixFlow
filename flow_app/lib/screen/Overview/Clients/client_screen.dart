@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/colored_border_text_button.dart';
 import '../../../components/logs_list.dart';
+import '../../../utils/date_time_utils.dart';
 import '../../apts/log_screen.dart';
 
 class ClientScreen extends StatelessWidget {
@@ -115,7 +116,7 @@ class ClientScreen extends StatelessWidget {
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: const PageScrollPhysics(),
-                itemCount: 10,
+                itemCount: record.logs!.length,
                 separatorBuilder: (BuildContext context, int index) =>
                     const Divider(
                   color: Colors.transparent,
@@ -123,13 +124,17 @@ class ClientScreen extends StatelessWidget {
                   height: 9,
                 ),
                 itemBuilder: (BuildContext context, int index) {
+                  final AptLog log = record.logs![index];
+                  final String timeOfDayString =
+                      TimeOfDay.fromDateTime(log.dateTime!).format(context);
                   return LogsList(
-                    clientName: 'Nome do Cliente $index',
-                    price: 150.00,
-                    hour: '17h45m',
-                    date: '21/12/24',
-                    service: 'Serviço $index',
-                    observation: "Observação $index",
+                    clientName: record.fullName,
+                    price: record.logs![index].price ??
+                        0, //TODO: prices are coming null, this is just a band-aid
+                    hour: timeOfDayString,
+                    date: DateTimeUtils.dateOnlyString(log.dateTime!),
+                    service: log.service ?? '-',
+                    observation: log.description ?? '-',
                     onTap: () {
                       Navigator.push(
                         context,
