@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
+import '../../components/Buttons/custom_button.dart';
+import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/limited_text_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/services_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
+import '../../components/warning_modal.dart';
 
 //TODO: buttons must ask for a confirmation
 class LogScreen extends StatefulWidget {
@@ -176,7 +179,45 @@ class LogScreenState extends State<LogScreen> {
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(height: 52),
+            RoundedIconedButton(
+                icon: Icons.delete_forever_rounded,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return WarningModal(
+                        title: "Você tem certeza?",
+                        description:
+                            "Deletar o agendamento? Esta ação não poderá ser desfeita",
+                        optionOne: CustomButton(
+                          text: "Sim",
+                          textSize: 14,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.black,
+                          onPressed: () {
+                            print("debug is on the table");
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        optionTwo: CustomButton(
+                          text: "Não",
+                          textSize: 14,
+                          backgroundColor: Colors.blue,
+                          textColor: Colors.black,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                size: 54,
+                bottom: 46,
+                right: 46,
+                color: Colors.red),
           ],
         ),
       ),
