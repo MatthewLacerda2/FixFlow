@@ -16,6 +16,6 @@ class DateTimeUtils {
   }
 
   static String dateOnlyString(DateTime date) {
-    return DateFormat('dd-MM-yy').format(date);
+    return DateFormat('dd/MM/yy').format(date);
   }
 }

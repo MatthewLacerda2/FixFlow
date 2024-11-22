@@ -15,6 +15,14 @@ class ClientScreen extends StatelessWidget {
     return aptLogs.fold(0.0, (double sum, AptLog log) => sum + log.price!);
   }
 
+  String getFormattedDate(DateTime? date) {
+    if (date == null) {
+      return '-';
+    }
+
+    return DateTimeUtils.dateOnlyString(date);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,15 +39,15 @@ class ClientScreen extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
             Text(
-              'Início: ${record.firstLog?.toString() ?? "-"}',
+              'Início: ${getFormattedDate(record.firstLog)}',
               style: TextStyle(fontSize: 12, color: Colors.grey[700]),
             ),
             const SizedBox(height: 4),
             Text(
-              'Último atendimento: ${record.lastLog?.toString() ?? "-"}',
+              'Último atendimento: ${getFormattedDate(record.lastLog)}',
               style: TextStyle(fontSize: 12, color: Colors.grey[700]),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
             Text(
               'Phone: ${record.phoneNumber}',
               style: const TextStyle(fontSize: 16),
