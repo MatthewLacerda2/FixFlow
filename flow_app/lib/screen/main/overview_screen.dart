@@ -102,7 +102,7 @@ class OverviewScreen extends StatelessWidget {
                   backgroundColor: Colors.blueAccent,
                   width: 130,
                   onPressed: () {
-                    // TODO: Navigate to Calendário Screen
+                    // TODO: Navigate to Statistics Screen
                   },
                 ),
                 const SizedBox(height: 24),

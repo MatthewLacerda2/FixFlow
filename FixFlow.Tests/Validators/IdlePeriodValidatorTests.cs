@@ -2,7 +2,7 @@ using FixFlow.Server.Validators;
 using FluentValidation.TestHelper;
 using Server.Models;
 
-namespace FixFlow.Tests;
+namespace FixFlow.Tests.Validators;
 
 public class IdlePeriodValidatorTests {
 

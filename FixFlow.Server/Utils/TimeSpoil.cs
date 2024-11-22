@@ -29,7 +29,7 @@ public static class TimeSpoil {
 
 		// Return the DateTime with the specified time of day
 		return nextTargetDay.Add(timeOfDay);
-	}
+	}/*
 
 	public static DateTime GetNextAvailableBusinessDayAtTime(DateTime date, BusinessWeek businessWeek) {
 
@@ -64,5 +64,5 @@ public static class TimeSpoil {
 		}
 
 		return date.AddDays(7);
-	}
+	}*/
 }

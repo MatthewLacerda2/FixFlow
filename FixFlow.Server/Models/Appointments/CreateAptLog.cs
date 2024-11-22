@@ -12,22 +12,16 @@ public class CreateAptLog {
 	public string CustomerId { get; set; } = string.Empty;
 
 	/// <summary>
-	/// The Id of the Business who owns this Contact
-	/// </summary>
-	[Required]
-	public string BusinessId { get; set; } = string.Empty;
-
-	/// <summary>
 	/// The Id of the Schedule that precedes this Log, if any
 	/// </summary>
-	public string? scheduleId { get; set; }
+	public string? ScheduleId { get; set; }
 
 	/// <summary>
 	/// The DateTime when the Log was registered
 	/// </summary>
 	public DateTime dateTime { get; set; } = DateTime.UtcNow;
 
-	public float price { get; set; }
+	public float Price { get; set; }
 
 	public string? Service { get; set; }
 
@@ -39,12 +33,11 @@ public class CreateAptLog {
 	/// </summary>
 	public DateTime whenShouldCustomerComeBack { get; set; }
 
-	public CreateAptLog(string customerId, string businessId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
+	public CreateAptLog(string customerId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
 		CustomerId = customerId;
-		BusinessId = businessId;
-		this.scheduleId = scheduleId;
+		this.ScheduleId = scheduleId;
 		this.dateTime = dateTime;
-		this.price = price;
+		this.Price = price;
 		this.description = description;
 		Service = service;
 		whenShouldCustomerComeBack = whenComeBack;

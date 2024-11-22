@@ -15,8 +15,8 @@ class ClientsScreen extends StatefulWidget {
 
 class _ClientsScreenState extends State<ClientsScreen> {
   late Future<List<CustomerDTO>> _customersFuture;
-  List<CustomerDTO> _allCustomers = [];
-  List<CustomerDTO> _filteredCustomers = [];
+  List<CustomerDTO> _allCustomers = <CustomerDTO>[];
+  List<CustomerDTO> _filteredCustomers = <CustomerDTO>[];
 
   @override
   void initState() {
@@ -34,7 +34,6 @@ class _ClientsScreenState extends State<ClientsScreen> {
         offset: 0,
         limit: 100,
       );
-      // Save the fetched customers and initialize filtered list
       setState(() {
         _allCustomers = response!;
         _filteredCustomers = response;
@@ -83,7 +82,6 @@ class _ClientsScreenState extends State<ClientsScreen> {
                 } else if (snapshot.hasData && snapshot.data!.isEmpty) {
                   return const Center(child: Text('No customers found'));
                 } else if (snapshot.hasData) {
-                  // Use filtered customers instead of full list
                   final List<CustomerDTO> customers = _filteredCustomers;
                   return ListView.separated(
                     itemCount: customers.length + 1,
@@ -94,19 +92,17 @@ class _ClientsScreenState extends State<ClientsScreen> {
                       height: 9,
                     ),
                     itemBuilder: (BuildContext context, int index) {
-                      // Filter input field
                       if (index == 0) {
                         return NameInputField(
                           placeholder: 'Filtrar por nome',
                           onNameChanged: (String name) {
                             setState(() {
                               if (name.isEmpty) {
-                                // If name is empty, show all customers
                                 _filteredCustomers = _allCustomers;
                               } else {
-                                // Filter customers by full name
                                 _filteredCustomers = _allCustomers
-                                    .where((customer) => customer.fullName
+                                    .where((CustomerDTO customer) => customer
+                                        .fullName
                                         .toLowerCase()
                                         .contains(name.toLowerCase()))
                                     .toList();

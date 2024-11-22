@@ -5,12 +5,14 @@ import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/logs_list.dart';
+import '../../utils/date_time_utils.dart';
+import '../../utils/flow_storage.dart';
 import '../apt_filters_screen.dart';
 import '../apts/edit_apt/create_log_screen.dart';
 import '../apts/log_screen.dart';
 import '../create_client_screen.dart';
 
-class LogsScreen extends StatelessWidget {
+class LogsScreen extends StatefulWidget {
   const LogsScreen({super.key});
 
   AptLog getLog() {
@@ -25,6 +27,33 @@ class LogsScreen extends StatelessWidget {
         description: "something",
         scheduleId: "sId",
         service: "facial");
+  }
+
+  @override
+  _LogsScreenState createState() => _LogsScreenState();
+}
+
+class _LogsScreenState extends State<LogsScreen> {
+  late List<AptLog> _logsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLogs();
+  }
+
+  void _fetchLogs() async {
+    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String businessId = bd!.id!;
+
+    final List<AptLog>? response = await AptLogApi().apiV1LogsGet(
+        limit: 100,
+        offset: 0,
+        maxPrice: 9999,
+        minPrice: 0,
+        minDateTime: DateTime(2023),
+        maxDateTime: DateTime(2025));
+    _logsFuture = response ?? <AptLog>[]; // Handle null safety
   }
 
   @override
@@ -100,7 +129,7 @@ class LogsScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 Expanded(
                   child: ListView.separated(
-                    itemCount: 10,
+                    itemCount: _logsFuture.length,
                     separatorBuilder: (BuildContext context, int index) =>
                         const Divider(
                       color: Colors.transparent,
@@ -108,19 +137,21 @@ class LogsScreen extends StatelessWidget {
                       height: 9,
                     ),
                     itemBuilder: (BuildContext context, int index) {
+                      AptLog log = _logsFuture[index];
+                      TimeOfDay hora = TimeOfDay.fromDateTime(log.dateTime!);
                       return LogsList(
-                        clientName: 'Nome do Cliente $index',
-                        price: 150.00,
-                        hour: '17h45m',
-                        date: '21/12/24',
-                        service: 'Serviço $index',
-                        observation: "Observação $index",
+                        clientName: log.customer!.fullName,
+                        price: log.price ?? 0,
+                        hour: hora.toString(),
+                        date: DateTimeUtils.dateOnlyString(log.dateTime!),
+                        service: log.service,
+                        observation: log.description,
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) => LogScreen(
-                                log: getLog(),
+                                log: log,
                               ),
                             ),
                           );

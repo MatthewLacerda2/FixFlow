@@ -28,25 +28,20 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
   }
 
   Future<List<AptSchedule>> _fetchSchedules() async {
-    try {
-      final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
-      final String businessId = bd!.id!;
+    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String businessId = bd!.id!;
 
-      final List<AptSchedule>? response =
-          await AptScheduleApi().apiV1SchedulesGet(
-        businessId: businessId,
-        minPrice: 0,
-        maxPrice: 999,
-        minDateTime: DateTime(2023),
-        maxDateTime: DateTime(2033), //TODO: change once maxDate is nullable
-        limit: 30,
-        offset: 0,
-      );
-      return response ?? <AptSchedule>[]; // Handle null safety
-    } catch (e) {
-      debugPrint("Error fetching schedules: $e");
-      throw Exception("Failed to fetch schedules.");
-    }
+    final List<AptSchedule>? response =
+        await AptScheduleApi().apiV1SchedulesGet(
+      businessId: businessId,
+      minPrice: 0,
+      maxPrice: 999,
+      minDateTime: DateTime(2023),
+      maxDateTime: DateTime(2033), //TODO: change once maxDate is nullable
+      limit: 30,
+      offset: 0,
+    );
+    return response ?? <AptSchedule>[]; // Handle null safety
   }
 
   String getNormalizedString(String? string) {

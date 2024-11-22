@@ -62,6 +62,11 @@ public class AptLogController : ControllerBase {
 			.Take(limit)
 			.ToArrayAsync();
 
+		for (int i = 0; i < resultsArray.Length; i++) {
+			Customer customer = _context.Customers.Find(resultsArray[i].CustomerId)!;
+			resultsArray[i].Customer = customer;
+		}
+
 		return Ok(resultsArray);
 	}
 
@@ -89,13 +94,10 @@ public class AptLogController : ControllerBase {
 			}
 		}
 
-		AptLog newLog = new AptLog(createLog);
-
 		AptSchedule aptSchedule = _context.Schedules.Where(x => x.CustomerId == createLog.CustomerId)
-								.Where(x => x.dateTime.Date == DateTime.UtcNow.Date)
-								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
+								.Where(x => x.dateTime.Date == DateTime.UtcNow.Date).FirstOrDefault()!;
 
-		newLog.ScheduleId = aptSchedule.Id;
+		AptLog newLog = new AptLog(createLog, existingBusiness.Id, aptSchedule.Id);
 
 		AptContact contact = new AptContact(newLog, createLog.whenShouldCustomerComeBack);
 		if (contact.dateTime.TimeOfDay > new TimeSpan(18, 0, 0)) {
@@ -166,13 +168,12 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.AptLog);
 		}
 
-		_context.Logs.Remove(logToDelete);
-
 		var contact = _context.Contacts.Where(x => x.aptLogId == Id).FirstOrDefault();
-
 		if (contact != null) {
 			_context.Contacts.Remove(contact);
 		}
+
+		_context.Logs.Remove(logToDelete);
 
 		await _context.SaveChangesAsync();
 		return NoContent();
