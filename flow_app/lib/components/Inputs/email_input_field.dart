@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 import 'custom_input_field.dart';
 
-/// Input field for emails, with a proper validation
 class EmailInputField extends StatefulWidget {
   const EmailInputField({
     super.key,
@@ -14,7 +13,6 @@ class EmailInputField extends StatefulWidget {
 
   final String placeholder;
 
-  /// Function called when the value is changed
   final Function(String) onEmailValidated;
 
   @override

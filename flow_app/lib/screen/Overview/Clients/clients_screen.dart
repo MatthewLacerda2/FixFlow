@@ -25,24 +25,19 @@ class _ClientsScreenState extends State<ClientsScreen> {
   }
 
   Future<List<CustomerDTO>> _fetchCustomers() async {
-    try {
-      final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
-      final String businessId = bd!.id!;
+    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String businessId = bd!.id!;
 
-      final List<CustomerDTO>? response = await CustomerApi().apiV1CustomerGet(
-        businessId: businessId,
-        offset: 0,
-        limit: 100,
-      );
-      setState(() {
-        _allCustomers = response!;
-        _filteredCustomers = response;
-      });
-      return response!;
-    } catch (e) {
-      print("Error fetching customers: $e");
-      return <CustomerDTO>[];
-    }
+    final List<CustomerDTO>? response = await CustomerApi().apiV1CustomerGet(
+      businessId: businessId,
+      offset: 0,
+      limit: 100,
+    );
+    setState(() {
+      _allCustomers = response!;
+      _filteredCustomers = response;
+    });
+    return response!;
   }
 
   @override

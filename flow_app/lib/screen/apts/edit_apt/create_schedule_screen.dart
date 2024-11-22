@@ -59,42 +59,33 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
   }
 
   void _saveChanges() async {
-    setState(() {
-      // Show loading indicator or disable buttons here
-    });
+    final CreateAptSchedule createAptSchedule = CreateAptSchedule(
+      customerId: customerId,
+      dateTime: dateTime,
+      service: service,
+      observation: _observacaoController.text,
+      price: double.tryParse(_precoController.text) ?? 0.0,
+    );
+    final Response response = await AptScheduleApi()
+        .apiV1SchedulesPostWithHttpInfo(createAptSchedule: createAptSchedule);
 
-    try {
-      final CreateAptSchedule createAptSchedule = CreateAptSchedule(
-        customerId: customerId,
-        dateTime: dateTime,
-        service: service,
-        observation: _observacaoController.text,
-        price: double.tryParse(_precoController.text) ?? 0.0,
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Agendamento feito!"),
+        ),
       );
-      final Response response = await AptScheduleApi()
-          .apiV1SchedulesPostWithHttpInfo(createAptSchedule: createAptSchedule);
-
-      if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Agendamento feito!"),
-          ),
-        );
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute<void>(
-              builder: (BuildContext context) => const SchedulesScreen()),
-          (Route<dynamic> route) => false,
-        );
-      } else {
-        print(createAptSchedule);
-        print(response.body);
-        snack("Error: $response");
-      }
-    } catch (error) {
-      snack("An error occurred: $error");
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute<void>(
+            builder: (BuildContext context) => const SchedulesScreen()),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      print(createAptSchedule);
+      print(response.body);
+      snack("Error: $response");
     }
-    print("debug");
   }
 
   void _cancelChanges() {

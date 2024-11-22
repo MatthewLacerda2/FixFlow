@@ -48,13 +48,11 @@ class LoginScreenState extends State<LoginScreen> {
               textColor: Colors.grey[700]!,
               width: 40,
               onPressed: () {
-                setState(() {
-                  final FlowLoginRequest flr = FlowLoginRequest(
-                      email: emailController.text,
-                      password: passwordController.text);
-                  LoginUtils.login(
-                      flr.email, flr.password, context, const MainScreen());
-                });
+                final FlowLoginRequest flr = FlowLoginRequest(
+                    email: emailController.text,
+                    password: passwordController.text);
+                LoginUtils.login(
+                    flr.email, flr.password, context, const MainScreen());
               },
             ),
           ],

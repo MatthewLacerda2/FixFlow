@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'screen/auth/initial_screen.dart';
 import 'screen/main/main_screen.dart';
 import 'utils/flow_storage.dart';
+import 'utils/login_utils.dart';
 
 void main() async {
   runApp(const FlowApp());
@@ -39,6 +40,12 @@ class FlowApp extends StatelessWidget {
   }
 
   Future<bool> checkIfLoggedIn() async {
-    return await FlowStorage.getToken() != null;
+    final bool loggedIn = await FlowStorage.getToken() != null;
+
+    if (loggedIn) {
+      LoginUtils.fetchBusinessDTO();
+    }
+
+    return loggedIn;
   }
 }

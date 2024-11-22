@@ -9,7 +9,6 @@ class PasswordInputField extends StatefulWidget {
   });
   final String placeholder;
 
-  /// Function called when the value is changed
   final Function(String)? onPasswordChanged;
 
   @override

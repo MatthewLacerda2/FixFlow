@@ -1,11 +1,12 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../components/Buttons/rounded_iconed_button.dart';
+import '../../utils/flow_storage.dart';
 import '../apts/edit_apt/create_log_screen.dart';
 import '../apts/edit_apt/create_schedule_screen.dart';
 
-//TODO: we got to think of a better way to let users do actions like creating, editing or deleting schedules, logs and idle periods
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
@@ -14,6 +15,16 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class CalendarScreenState extends State<CalendarScreen> {
+  late List<BusinessCalendarDay> _calendar;
+
+  void _fetchCalendar() async {
+    var business = await FlowStorage.getBusinessDTO();
+    var bId = business!.id;
+    var calendar = await BusinessCalendarDayApi()
+        .apiV1BusinessCalendarDayGet(businessId: bId);
+    calendar = _calendar;
+  }
+
   Map<int, List<String>> schedules = <int, List<String>>{
     3: <String>['9:00 AM - Schedule 1', '1:00 PM - Schedule 2'],
     7: <String>['Appointment at 10:00 AM'],
