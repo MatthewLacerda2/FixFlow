@@ -145,7 +145,7 @@ class LogsScreen extends StatelessWidget {
                       nextScreen: CreateLogScreen(
                         contactado: false,
                         horario: TimeOfDay.now(),
-                        dia: DateTime(2024, 8, 27),
+                        dia: DateTime.now(),
                         preco: 150.00,
                         observacao: "",
                       ),

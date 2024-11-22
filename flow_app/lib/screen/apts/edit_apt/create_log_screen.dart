@@ -115,12 +115,6 @@ class CreateLogScreenState extends State<CreateLogScreen> {
               ],
             ),
             const SizedBox(height: 24),
-            ServicesInputField(
-              onServiceSelected: (String? selectedService) {
-                service = selectedService ?? "";
-              },
-            ),
-            const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -143,6 +137,30 @@ class CreateLogScreenState extends State<CreateLogScreen> {
                     TimePickerRectangle(
                       initialTime: widget.horario,
                       onTimeSelected: (TimeOfDay time) {
+                        _toggleEdit();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ServicesInputField(
+              onServiceSelected: (String? selectedService) {
+                service = selectedService ?? "";
+              },
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    const Text('Retornar em:', style: TextStyle(fontSize: 18)),
+                    const SizedBox(width: 6),
+                    DatePickerRectangle(
+                      initialDate: widget.dia,
+                      onDateSelected: (DateTime date) {
                         _toggleEdit();
                       },
                     ),
