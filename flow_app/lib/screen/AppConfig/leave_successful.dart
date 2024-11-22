@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/flow_storage.dart';
 import '../auth/initial_screen.dart';
 
 class LeaveSuccessfulScreen extends StatelessWidget {
@@ -44,11 +45,11 @@ class LeaveSuccessfulScreen extends StatelessWidget {
             const SizedBox(height: 64),
             ElevatedButton(
               onPressed: () {
+                FlowStorage.clear();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute<void>(
                       builder: (BuildContext context) => const InitialScreen()),
-                  //TODO: make it drop your data before leaving
                 );
               },
               style: ElevatedButton.styleFrom(

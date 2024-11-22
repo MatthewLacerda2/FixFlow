@@ -39,7 +39,6 @@ class MainScreenState extends State<MainScreen> {
           children: _screens,
         ),
       ),
-      //TODO: make the apt buttons 'pop' when there is something new
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Main'),

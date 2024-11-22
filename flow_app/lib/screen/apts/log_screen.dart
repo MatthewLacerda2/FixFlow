@@ -13,7 +13,6 @@ import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
 import '../main/logs_screen.dart';
 
-//TODO: buttons must ask for a confirmation
 class LogScreen extends StatefulWidget {
   const LogScreen({
     super.key,
@@ -114,7 +113,7 @@ class LogScreenState extends State<LogScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Cliente: ${widget.log.customer!.fullName}', //TODO: here
+                  'Cliente: ${widget.log.customer!.fullName}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 22),
                 ),

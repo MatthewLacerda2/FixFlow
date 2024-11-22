@@ -76,8 +76,7 @@ class IntroductionScreenPage extends StatelessWidget {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute<void>(
-              builder: (BuildContext context) =>
-                  const MainScreen()), //TODO: should be the configuration screen OR main screen
+              builder: (BuildContext context) => const MainScreen()),
         );
       },
       showSkipButton: true,
