@@ -26,6 +26,7 @@ public class Business : IdentityUser {
 
 	public string[] services { get; set; } = Array.Empty<string>();
 	public bool allowListedServicesOnly { get; set; } = false;
+	//TODO: public bool allowManyServices { get; set; } = false;
 	public bool openOnHolidays { get; set; } = false;
 
 	public Business() : this(string.Empty, string.Empty, string.Empty, string.Empty) { }

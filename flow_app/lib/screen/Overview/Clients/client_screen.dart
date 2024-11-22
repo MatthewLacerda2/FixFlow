@@ -135,12 +135,7 @@ class ClientScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute<void>(
                       builder: (BuildContext context) => LogScreen(
-                        cliente: 'Fulano',
-                        marcouHorario: true,
-                        horario: const TimeOfDay(hour: 14, minute: 30),
-                        dia: DateTime(2024, 8, 27),
-                        preco: 150.00,
-                        observacao: "",
+                        log: log,
                       ),
                     ),
                   );

@@ -6,9 +6,11 @@ import '../../utils/flow_storage.dart';
 class ServicesInputField extends StatefulWidget {
   const ServicesInputField({
     super.key,
+    this.initialService,
     required this.onServiceSelected,
   });
 
+  final String? initialService;
   final ValueChanged<String?> onServiceSelected;
 
   @override
@@ -24,20 +26,20 @@ class ServicesInputFieldState extends State<ServicesInputField> {
   bool _isDropdownVisible = false;
 
   Future<void> loadBusinessOptions() async {
-    try {
-      final BusinessDTO? businessData = await FlowStorage.getBusinessDTO();
-      if (businessData != null) {
-        setState(() {
-          _availableServices = businessData.services ?? <String>[];
-          _allowNewServices = !(businessData.allowListedServicesOnly ?? true);
-        });
-      }
-    } catch (e) {}
+    final BusinessDTO? businessData = await FlowStorage.getBusinessDTO();
+    if (businessData != null) {
+      setState(() {
+        _availableServices = businessData.services ?? <String>[];
+        _allowNewServices = !(businessData.allowListedServicesOnly ?? true);
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
+    _textController.text = widget.initialService ?? "";
+    _selectedService = widget.initialService;
     _textController.addListener(_onSearchChanged);
   }
 

@@ -1,3 +1,4 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
@@ -11,6 +12,20 @@ import '../create_client_screen.dart';
 
 class LogsScreen extends StatelessWidget {
   const LogsScreen({super.key});
+
+  AptLog getLog() {
+    Customer cu = Customer(businessId: "businessId", fullName: "full Name");
+    return AptLog(
+        id: "id",
+        customer: cu,
+        customerId: "cId",
+        businessId: "bId",
+        dateTime: DateTime.now(),
+        price: 100,
+        description: "something",
+        scheduleId: "sId",
+        service: "facial");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,12 +120,7 @@ class LogsScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) => LogScreen(
-                                cliente: 'Fulano $index',
-                                marcouHorario: true,
-                                horario: const TimeOfDay(hour: 14, minute: 30),
-                                dia: DateTime(2024, 8, 27),
-                                preco: 150.00,
-                                observacao: "",
+                                log: getLog(),
                               ),
                             ),
                           );

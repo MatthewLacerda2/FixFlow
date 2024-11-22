@@ -1,3 +1,4 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:snackbar/snackbar.dart';
 
@@ -14,19 +15,10 @@ import '../../components/warning_modal.dart';
 class LogScreen extends StatefulWidget {
   const LogScreen({
     super.key,
-    required this.cliente,
-    required this.marcouHorario,
-    required this.horario,
-    required this.dia,
-    required this.preco,
-    required this.observacao,
+    required this.log,
   });
-  final String cliente;
-  final bool marcouHorario;
-  final TimeOfDay horario;
-  final DateTime dia;
-  final double preco;
-  final String observacao;
+
+  final AptLog log;
 
   @override
   LogScreenState createState() => LogScreenState();
@@ -43,9 +35,9 @@ class LogScreenState extends State<LogScreen> {
   @override
   void initState() {
     super.initState();
-    _precoController =
-        TextEditingController(text: widget.preco.toStringAsFixed(2));
-    _observacaoController = TextEditingController(text: widget.observacao);
+    _precoController = TextEditingController(
+        text: widget.log.price?.toStringAsFixed(2) ?? "0.0");
+    _observacaoController = TextEditingController(text: widget.log.description);
   }
 
   void _toggleEdit() {
@@ -68,8 +60,8 @@ class LogScreenState extends State<LogScreen> {
   void _cancelChanges() {
     setState(() {
       _isEdited = false;
-      _precoController.text = widget.preco.toStringAsFixed(2);
-      _observacaoController.text = widget.observacao;
+      _precoController.text = widget.log.price?.toStringAsFixed(2) ?? "0.0";
+      _observacaoController.text = widget.log.description ?? "";
     });
   }
 
@@ -88,11 +80,11 @@ class LogScreenState extends State<LogScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Cliente: ${widget.cliente}',
+                  'Cliente: ${widget.log.customer!.fullName}', //TODO: here
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 22),
                 ),
-                if (widget.marcouHorario)
+                if (widget.log.scheduleId != null)
                   const Row(
                     children: <Widget>[
                       Icon(Icons.check, color: Colors.blue, size: 22),
@@ -108,6 +100,7 @@ class LogScreenState extends State<LogScreen> {
             ),
             const SizedBox(height: 24),
             ServicesInputField(
+              initialService: widget.log.service,
               onServiceSelected: (String? selectedService) {
                 service = selectedService ?? "";
               },
@@ -121,7 +114,7 @@ class LogScreenState extends State<LogScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 DatePickerRectangle(
-                  initialDate: widget.dia,
+                  initialDate: widget.log.dateTime!,
                   onDateSelected: (DateTime date) {
                     _toggleEdit();
                   },
@@ -131,7 +124,7 @@ class LogScreenState extends State<LogScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 TimePickerRectangle(
-                  initialTime: widget.horario,
+                  initialTime: TimeOfDay.fromDateTime(widget.log.dateTime!),
                   onTimeSelected: (TimeOfDay time) {
                     _toggleEdit();
                   },
