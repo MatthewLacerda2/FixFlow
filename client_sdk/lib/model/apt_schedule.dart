@@ -70,46 +70,43 @@ class AptSchedule {
   double? price;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AptSchedule &&
-          other.id == id &&
-          other.customerId == customerId &&
-          other.customer == customer &&
-          other.businessId == businessId &&
-          other.wasContacted == wasContacted &&
-          other.dateTime == dateTime &&
-          other.service == service &&
-          other.observation == observation &&
-          other.price == price;
+  bool operator ==(Object other) => identical(this, other) || other is AptSchedule &&
+    other.id == id &&
+    other.customerId == customerId &&
+    other.customer == customer &&
+    other.businessId == businessId &&
+    other.wasContacted == wasContacted &&
+    other.dateTime == dateTime &&
+    other.service == service &&
+    other.observation == observation &&
+    other.price == price;
 
   @override
   int get hashCode =>
-      // ignore: unnecessary_parenthesis
-      (id.hashCode) +
-      (customerId.hashCode) +
-      (customer == null ? 0 : customer!.hashCode) +
-      (businessId.hashCode) +
-      (wasContacted == null ? 0 : wasContacted!.hashCode) +
-      (dateTime == null ? 0 : dateTime!.hashCode) +
-      (service == null ? 0 : service!.hashCode) +
-      (observation == null ? 0 : observation!.hashCode) +
-      (price == null ? 0 : price!.hashCode);
+    // ignore: unnecessary_parenthesis
+    (id.hashCode) +
+    (customerId.hashCode) +
+    (customer == null ? 0 : customer!.hashCode) +
+    (businessId.hashCode) +
+    (wasContacted == null ? 0 : wasContacted!.hashCode) +
+    (dateTime == null ? 0 : dateTime!.hashCode) +
+    (service == null ? 0 : service!.hashCode) +
+    (observation == null ? 0 : observation!.hashCode) +
+    (price == null ? 0 : price!.hashCode);
 
   @override
-  String toString() =>
-      'AptSchedule[id=$id, customerId=$customerId, customer=$customer, businessId=$businessId, wasContacted=$wasContacted, dateTime=$dateTime, service=$service, observation=$observation, price=$price]';
+  String toString() => 'AptSchedule[id=$id, customerId=$customerId, customer=$customer, businessId=$businessId, wasContacted=$wasContacted, dateTime=$dateTime, service=$service, observation=$observation, price=$price]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    json[r'id'] = this.id;
-    json[r'customerId'] = this.customerId;
+      json[r'id'] = this.id;
+      json[r'customerId'] = this.customerId;
     if (this.customer != null) {
       json[r'customer'] = this.customer;
     } else {
       json[r'customer'] = null;
     }
-    json[r'businessId'] = this.businessId;
+      json[r'businessId'] = this.businessId;
     if (this.wasContacted != null) {
       json[r'wasContacted'] = this.wasContacted;
     } else {
@@ -150,10 +147,8 @@ class AptSchedule {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key),
-              'Required key "AptSchedule[$key]" is missing from JSON.');
-          assert(json[key] != null,
-              'Required key "AptSchedule[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "AptSchedule[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "AptSchedule[$key]" has a null value in JSON.');
         });
         return true;
       }());
@@ -173,10 +168,7 @@ class AptSchedule {
     return null;
   }
 
-  static List<AptSchedule> listFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static List<AptSchedule> listFromJson(dynamic json, {bool growable = false,}) {
     final result = <AptSchedule>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
@@ -204,19 +196,13 @@ class AptSchedule {
   }
 
   // maps a json object with a list of AptSchedule-objects as value to a dart map
-  static Map<String, List<AptSchedule>> mapListFromJson(
-    dynamic json, {
-    bool growable = false,
-  }) {
+  static Map<String, List<AptSchedule>> mapListFromJson(dynamic json, {bool growable = false,}) {
     final map = <String, List<AptSchedule>>{};
     if (json is Map && json.isNotEmpty) {
       // ignore: parameter_assignments
       json = json.cast<String, dynamic>();
       for (final entry in json.entries) {
-        map[entry.key] = AptSchedule.listFromJson(
-          entry.value,
-          growable: growable,
-        );
+        map[entry.key] = AptSchedule.listFromJson(entry.value, growable: growable,);
       }
     }
     return map;
@@ -229,3 +215,4 @@ class AptSchedule {
     'businessId',
   };
 }
+

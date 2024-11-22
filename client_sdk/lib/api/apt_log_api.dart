@@ -66,7 +66,9 @@ class AptLogApi {
   ///
   /// Parameters:
   ///
-  /// * [String] client:
+  /// * [String] businessId:
+  ///
+  /// * [String] clientName:
   ///
   /// * [String] service:
   ///
@@ -81,7 +83,7 @@ class AptLogApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<Response> apiV1LogsGetWithHttpInfo({ String? client, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
+  Future<Response> apiV1LogsGetWithHttpInfo({ String? businessId, String? clientName, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/logs';
 
@@ -92,8 +94,11 @@ class AptLogApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    if (client != null) {
-      queryParams.addAll(_queryParams('', 'client', client));
+    if (businessId != null) {
+      queryParams.addAll(_queryParams('', 'businessId', businessId));
+    }
+    if (clientName != null) {
+      queryParams.addAll(_queryParams('', 'clientName', clientName));
     }
     if (service != null) {
       queryParams.addAll(_queryParams('', 'service', service));
@@ -135,7 +140,9 @@ class AptLogApi {
   ///
   /// Parameters:
   ///
-  /// * [String] client:
+  /// * [String] businessId:
+  ///
+  /// * [String] clientName:
   ///
   /// * [String] service:
   ///
@@ -150,8 +157,8 @@ class AptLogApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<List<AptLog>?> apiV1LogsGet({ String? client, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
-    final response = await apiV1LogsGetWithHttpInfo( client: client, service: service, minPrice: minPrice, maxPrice: maxPrice, minDateTime: minDateTime, maxDateTime: maxDateTime, offset: offset, limit: limit, );
+  Future<List<AptLog>?> apiV1LogsGet({ String? businessId, String? clientName, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
+    final response = await apiV1LogsGetWithHttpInfo( businessId: businessId, clientName: clientName, service: service, minPrice: minPrice, maxPrice: maxPrice, minDateTime: minDateTime, maxDateTime: maxDateTime, offset: offset, limit: limit, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

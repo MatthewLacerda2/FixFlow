@@ -56,7 +56,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1LogsGet**
-> List<AptLog> apiV1LogsGet(client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit)
+> List<AptLog> apiV1LogsGet(businessId, clientName, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit)
 
 Gets a number of filtered Logs
 
@@ -65,7 +65,8 @@ Gets a number of filtered Logs
 import 'package:openapi/api.dart';
 
 final api_instance = AptLogApi();
-final client = client_example; // String | 
+final businessId = businessId_example; // String | 
+final clientName = clientName_example; // String | 
 final service = service_example; // String | 
 final minPrice = 3.4; // double | 
 final maxPrice = 3.4; // double | 
@@ -75,7 +76,7 @@ final offset = 56; // int |
 final limit = 56; // int | 
 
 try {
-    final result = api_instance.apiV1LogsGet(client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit);
+    final result = api_instance.apiV1LogsGet(businessId, clientName, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit);
     print(result);
 } catch (e) {
     print('Exception when calling AptLogApi->apiV1LogsGet: $e\n');
@@ -86,7 +87,8 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **client** | **String**|  | [optional] 
+ **businessId** | **String**|  | [optional] 
+ **clientName** | **String**|  | [optional] 
  **service** | **String**|  | [optional] 
  **minPrice** | **double**|  | [optional] 
  **maxPrice** | **double**|  | [optional] 

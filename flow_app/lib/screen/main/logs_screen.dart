@@ -16,7 +16,8 @@ class LogsScreen extends StatefulWidget {
   const LogsScreen({super.key});
 
   AptLog getLog() {
-    Customer cu = Customer(businessId: "businessId", fullName: "full Name");
+    final Customer cu =
+        Customer(businessId: "businessId", fullName: "full Name");
     return AptLog(
         id: "id",
         customer: cu,
@@ -34,15 +35,15 @@ class LogsScreen extends StatefulWidget {
 }
 
 class _LogsScreenState extends State<LogsScreen> {
-  late List<AptLog> _logsFuture;
+  late Future<List<AptLog>> _logsFuture;
 
   @override
   void initState() {
     super.initState();
-    _fetchLogs();
+    _logsFuture = _fetchLogs();
   }
 
-  void _fetchLogs() async {
+  Future<List<AptLog>> _fetchLogs() async {
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
     final String businessId = bd!.id!;
 
@@ -52,8 +53,9 @@ class _LogsScreenState extends State<LogsScreen> {
         maxPrice: 9999,
         minPrice: 0,
         minDateTime: DateTime(2023),
-        maxDateTime: DateTime(2025));
-    _logsFuture = response ?? <AptLog>[]; // Handle null safety
+        maxDateTime: DateTime(2025),
+        businessId: businessId);
+    return response ?? <AptLog>[]; // Handle null safety
   }
 
   @override
@@ -128,38 +130,61 @@ class _LogsScreenState extends State<LogsScreen> {
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: ListView.separated(
-                    itemCount: _logsFuture.length,
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(
-                      color: Colors.transparent,
-                      thickness: 0,
-                      height: 9,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      AptLog log = _logsFuture[index];
-                      TimeOfDay hora = TimeOfDay.fromDateTime(log.dateTime!);
-                      return LogsList(
-                        clientName: log.customer!.fullName,
-                        price: log.price ?? 0,
-                        hour: hora.toString(),
-                        date: DateTimeUtils.dateOnlyString(log.dateTime!),
-                        service: log.service,
-                        observation: log.description,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) => LogScreen(
-                                log: log,
-                              ),
+                    child: FutureBuilder<List<AptLog>>(
+                        future: _logsFuture,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<AptLog>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${snapshot.error}'),
+                            );
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(
+                              child: Text('Não há agendamentos.'),
+                            );
+                          }
+
+                          final List<AptLog> logs = snapshot.data!;
+                          return ListView.separated(
+                            itemCount: logs.length,
+                            separatorBuilder:
+                                (BuildContext context, int index) =>
+                                    const Divider(
+                              color: Colors.transparent,
+                              thickness: 0,
+                              height: 9,
                             ),
+                            itemBuilder: (BuildContext context, int index) {
+                              final AptLog log = logs[index];
+                              return LogsList(
+                                clientName: log.customer!.fullName,
+                                price: log.price ?? 0,
+                                hour: TimeOfDay.fromDateTime(log.dateTime!)
+                                    .format(context),
+                                date:
+                                    DateTimeUtils.dateOnlyString(log.dateTime!),
+                                service: log.service,
+                                observation: log.description,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute<void>(
+                                      builder: (BuildContext context) =>
+                                          LogScreen(
+                                        log: log,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           );
-                        },
-                      );
-                    },
-                  ),
-                ),
+                        })),
               ],
             ),
             RoundedIconedButton(

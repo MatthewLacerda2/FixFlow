@@ -14,7 +14,6 @@ class CreateAptLog {
   /// Returns a new [CreateAptLog] instance.
   CreateAptLog({
     required this.customerId,
-    required this.businessId,
     this.scheduleId,
     this.dateTime,
     this.price,
@@ -25,9 +24,6 @@ class CreateAptLog {
 
   /// The Id of the Customer who took the Appointment
   String customerId;
-
-  /// The Id of the Business who owns this Contact
-  String businessId;
 
   /// The Id of the Schedule that precedes this Log, if any
   String? scheduleId;
@@ -65,7 +61,6 @@ class CreateAptLog {
   @override
   bool operator ==(Object other) => identical(this, other) || other is CreateAptLog &&
     other.customerId == customerId &&
-    other.businessId == businessId &&
     other.scheduleId == scheduleId &&
     other.dateTime == dateTime &&
     other.price == price &&
@@ -77,7 +72,6 @@ class CreateAptLog {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (customerId.hashCode) +
-    (businessId.hashCode) +
     (scheduleId == null ? 0 : scheduleId!.hashCode) +
     (dateTime == null ? 0 : dateTime!.hashCode) +
     (price == null ? 0 : price!.hashCode) +
@@ -86,12 +80,11 @@ class CreateAptLog {
     (whenShouldCustomerComeBack == null ? 0 : whenShouldCustomerComeBack!.hashCode);
 
   @override
-  String toString() => 'CreateAptLog[customerId=$customerId, businessId=$businessId, scheduleId=$scheduleId, dateTime=$dateTime, price=$price, service=$service, description=$description, whenShouldCustomerComeBack=$whenShouldCustomerComeBack]';
+  String toString() => 'CreateAptLog[customerId=$customerId, scheduleId=$scheduleId, dateTime=$dateTime, price=$price, service=$service, description=$description, whenShouldCustomerComeBack=$whenShouldCustomerComeBack]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
       json[r'customerId'] = this.customerId;
-      json[r'businessId'] = this.businessId;
     if (this.scheduleId != null) {
       json[r'scheduleId'] = this.scheduleId;
     } else {
@@ -145,7 +138,6 @@ class CreateAptLog {
 
       return CreateAptLog(
         customerId: mapValueOfType<String>(json, r'customerId')!,
-        businessId: mapValueOfType<String>(json, r'businessId')!,
         scheduleId: mapValueOfType<String>(json, r'scheduleId'),
         dateTime: mapDateTime(json, r'dateTime', r''),
         price: mapValueOfType<double>(json, r'price'),
@@ -200,7 +192,6 @@ class CreateAptLog {
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
     'customerId',
-    'businessId',
   };
 }
 
