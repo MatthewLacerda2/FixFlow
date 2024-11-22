@@ -9,7 +9,7 @@ public class CreateAptLog {
 	/// The Id of the Customer who took the Appointment
 	/// </summary>
 	[Required]
-	public string CustomerId { get; set; } = string.Empty;
+	public string customerId { get; set; }
 
 	/// <summary>
 	/// The Id of the Schedule that precedes this Log, if any
@@ -19,13 +19,13 @@ public class CreateAptLog {
 	/// <summary>
 	/// The DateTime when the Log was registered
 	/// </summary>
-	public DateTime dateTime { get; set; } = DateTime.UtcNow;
-
-	public float Price { get; set; }
+	public DateTime dateTime { get; set; }
 
 	public string? Service { get; set; }
 
-	public string? description { get; set; }
+	public string? Observation { get; set; }
+
+	public float Price { get; set; }
 
 	/// <summary>
 	/// The Date when we expect the Customer to schedule another appointment.
@@ -34,11 +34,11 @@ public class CreateAptLog {
 	public DateTime whenShouldCustomerComeBack { get; set; }
 
 	public CreateAptLog(string customerId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
-		CustomerId = customerId;
+		this.customerId = customerId;
 		this.ScheduleId = scheduleId;
 		this.dateTime = dateTime;
 		this.Price = price;
-		this.description = description;
+		this.Observation = description;
 		Service = service;
 		whenShouldCustomerComeBack = whenComeBack;
 	}

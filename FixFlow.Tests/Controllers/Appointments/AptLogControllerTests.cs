@@ -155,11 +155,11 @@ public class AptLogControllerTests {
 		Assert.Equal(201, result!.StatusCode);
 		var createdLog = result.Value as AptLog;
 		Assert.NotNull(createdLog);
-		Assert.Equal(createLog.CustomerId, createdLog!.CustomerId);
+		Assert.Equal(createLog.customerId, createdLog!.CustomerId);
 		Assert.Equal(createLog.Service, createdLog.Service);
 		Assert.Equal(createLog.Price, createdLog.Price);
 		Assert.Equal(createLog.dateTime, createdLog.dateTime);
-		Assert.Equal(createLog.description, createdLog.description);
+		Assert.Equal(createLog.Observation, createdLog.description);
 
 
 		var contact = _context.Contacts.Where(x => x.aptLogId == createdLog.Id).FirstOrDefault();

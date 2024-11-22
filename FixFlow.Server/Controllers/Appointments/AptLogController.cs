@@ -81,7 +81,7 @@ public class AptLogController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateLog([FromBody] CreateAptLog createLog) {
 
-		var existingCustomer = _context.Customers.Find(createLog.CustomerId);
+		var existingCustomer = _context.Customers.Find(createLog.customerId);
 		if (existingCustomer == null) {
 			return BadRequest(NotExistErrors.Customer);
 		}
@@ -94,7 +94,7 @@ public class AptLogController : ControllerBase {
 			}
 		}
 
-		AptSchedule aptSchedule = _context.Schedules.Where(x => x.CustomerId == createLog.CustomerId)
+		AptSchedule aptSchedule = _context.Schedules.Where(x => x.CustomerId == createLog.customerId)
 								.Where(x => x.dateTime.Date == DateTime.UtcNow.Date).FirstOrDefault()!;
 
 		AptLog newLog = new AptLog(createLog, existingBusiness.Id, aptSchedule.Id);

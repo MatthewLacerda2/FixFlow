@@ -1,7 +1,6 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
-import 'package:http/src/response.dart';
-import 'package:snackbar/snackbar.dart';
+import 'package:http/http.dart';
 
 import '../../components/Buttons/custom_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
@@ -11,6 +10,7 @@ import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
+import '../main/schedules_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({
@@ -49,15 +49,40 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     });
   }
 
-  void _saveChanges() {
-    setState(() {
-      snackUndo("Confirmar?", () {
-        // TODO: load animation for when we wait for the response of the server
-        // TODO: Check if the response is 200OK or something else
-        snack("Salvo!");
-        Navigator.pop(context);
-      }, undoText: "Confirmar");
-    });
+  void _saveChanges() async {
+    final AptSchedule patchedSchedule = widget.schedule;
+    patchedSchedule.price = preco;
+    patchedSchedule.dateTime = newDateTime;
+    patchedSchedule.observation = _observacaoController.text;
+    final Response response = await AptScheduleApi()
+        .apiV1SchedulesPatchWithHttpInfo(aptSchedule: patchedSchedule);
+    snackbarResponse(response);
+  }
+
+  void snackbarResponse(Response response) {
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Agendamento editado!"),
+        ),
+      );
+      goToSchedulesScreen();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.body),
+        ),
+      );
+    }
+  }
+
+  void goToSchedulesScreen() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute<void>(
+          builder: (BuildContext context) => const SchedulesScreen()),
+      (Route<dynamic> route) => false,
+    );
   }
 
   void _cancelChanges() {
@@ -135,28 +160,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     _isEdited ? _saveChanges : null;
-                    final AptSchedule patchedSchedule = widget.schedule;
-                    patchedSchedule.price = preco;
-                    patchedSchedule.dateTime = newDateTime;
-                    patchedSchedule.observation = _observacaoController.text;
-                    final Response response = await AptScheduleApi()
-                        .apiV1SchedulesPatchWithHttpInfo(
-                            aptSchedule: patchedSchedule);
-                    print("StatusCode = ${response.statusCode}");
-                    if (response.statusCode == 200) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: const Text("Agendamento editado!"),
-                        ),
-                      );
-                      Navigator.of(context).pop();
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(response.body),
-                        ),
-                      );
-                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.green : Colors.grey,
@@ -190,7 +193,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       return WarningModal(
                         title: "Você tem certeza?",
                         description:
-                            "Deletar o agendamento? Esta ação não poderá ser desfeita",
+                            "Deletar o agendamento? Esta ação não poderá ser desfeita\n",
                         optionOne: CustomButton(
                           text: "Sim",
                           textSize: 14,
@@ -199,7 +202,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           onPressed: () {
                             AptScheduleApi()
                                 .apiV1SchedulesDelete(body: widget.schedule.id);
-                            Navigator.of(context).pop();
+                            goToSchedulesScreen();
                           },
                         ),
                         optionTwo: CustomButton(
