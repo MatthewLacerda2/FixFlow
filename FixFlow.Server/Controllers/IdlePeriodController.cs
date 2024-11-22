@@ -27,6 +27,7 @@ public class IdlePeriodController : ControllerBase {
 	/// Returns all Idle Periods that contain the given date
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod[]))]
+	//TODO: tá errado isso aqui, GET request não tem body
 	[HttpGet]
 	public async Task<IActionResult> GetIdlePeriodsAtDate([FromBody] BusinessIdlePeriodsRequest period) {
 
@@ -57,7 +58,7 @@ public class IdlePeriodController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (idlePeriod.finish <= DateTime.UtcNow) {
+		if (idlePeriod.start <= DateTime.UtcNow.AddMinutes(-5) || idlePeriod.finish <= DateTime.UtcNow) {
 			return BadRequest(ValidatorErrors.IdlePeriodHasPassed);
 		}
 

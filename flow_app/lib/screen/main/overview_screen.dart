@@ -94,7 +94,7 @@ class OverviewScreen extends StatelessWidget {
                   color: Colors.grey,
                   height: 1,
                 ),
-                const SizedBox(height: 26),
+                const SizedBox(height: 24),
                 ColoredBorderTextButton(
                   text: 'Estatísticas',
                   textColor: Colors.white,
