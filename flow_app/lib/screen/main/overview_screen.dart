@@ -95,30 +95,15 @@ class OverviewScreen extends StatelessWidget {
                   height: 1,
                 ),
                 const SizedBox(height: 26),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    ColoredBorderTextButton(
-                      text: 'Finanças',
-                      textColor: Colors.white,
-                      textSize: 16,
-                      backgroundColor: Colors.blueAccent,
-                      width: 50,
-                      onPressed: () {
-                        // TODO: Navigate to Finanças Screen
-                      },
-                    ),
-                    ColoredBorderTextButton(
-                      text: 'Estatísticas',
-                      textColor: Colors.white,
-                      textSize: 16,
-                      backgroundColor: Colors.blueAccent,
-                      width: 42,
-                      onPressed: () {
-                        // TODO: Navigate to Calendário Screen
-                      },
-                    ),
-                  ],
+                ColoredBorderTextButton(
+                  text: 'Estatísticas',
+                  textColor: Colors.white,
+                  textSize: 16,
+                  backgroundColor: Colors.blueAccent,
+                  width: 130,
+                  onPressed: () {
+                    // TODO: Navigate to Calendário Screen
+                  },
                 ),
                 const SizedBox(height: 24),
                 ColoredBorderTextButton(
