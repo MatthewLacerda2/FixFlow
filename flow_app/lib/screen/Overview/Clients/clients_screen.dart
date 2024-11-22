@@ -122,12 +122,15 @@ class _ClientsScreenState extends State<ClientsScreen> {
                         lastAppointment: DateTime.now(),
                         phone: customer.phoneNumber,
                         email: customer.email ?? '-',
-                        onTap: () {
+                        onTap: () async {
+                          final CustomerRecord? record = await CustomerApi()
+                              .apiV1CustomerRecordGet(customerId: customer.id);
+
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) =>
-                                  const ClientScreen(),
+                                  ClientScreen(record: record!),
                             ),
                           );
                         },

@@ -1,3 +1,4 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/colored_border_text_button.dart';
@@ -5,62 +6,69 @@ import '../../../components/logs_list.dart';
 import '../../apts/log_screen.dart';
 
 class ClientScreen extends StatelessWidget {
-  const ClientScreen({super.key});
+  const ClientScreen({super.key, required this.record});
+
+  final CustomerRecord record;
+
+  double getTotalSpent(List<AptLog> aptLogs) {
+    return aptLogs.fold(0.0, (double sum, AptLog log) => sum + log.price!);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Client Screen'),
+        title: const Text('Cliente'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'Cliente: Name of Client',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            Text(
+              record.fullName,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
             Text(
-              'Início: 01/01/2023',
+              'Início: ${record.firstLog?.toString() ?? "-"}',
               style: TextStyle(fontSize: 12, color: Colors.grey[700]),
             ),
+            const SizedBox(height: 4),
             Text(
-              'Último atendimento: ${DateTime.now().toString().split(' ')[0]}',
+              'Último atendimento: ${record.lastLog?.toString() ?? "-"}',
               style: TextStyle(fontSize: 12, color: Colors.grey[700]),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Phone: 123456789',
-              style: TextStyle(fontSize: 16),
+            Text(
+              'Phone: ${record.phoneNumber}',
+              style: const TextStyle(fontSize: 16),
             ),
-            const Text(
-              'Email: example@example.com',
-              style: TextStyle(fontSize: 16),
+            Text(
+              'Email: ${record.email ?? 'não informado'}',
+              style: const TextStyle(fontSize: 16),
             ),
-            const Text(
-              'CPF: 123.456.789-00',
-              style: TextStyle(fontSize: 16),
+            Text(
+              'CPF: ${record.cpf ?? 'não informado'}',
+              style: const TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 6),
-            const Text(
-              'Anotação: Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-              style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+            const SizedBox(height: 8),
+            Text(
+              'Anotação: ${record.additionalNote}',
+              style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 18),
             Container(
-              height: 10,
+              height: 8,
               color: Colors.grey.shade800,
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'Agendamentos: 10',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            const SizedBox(height: 18),
+            Text(
+              'Agendamentos: ${record.numSchedules}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const Text(
-              'Atendimentos: 10',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              'Atendimentos: ${record.logs?.length ?? " 0"}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 2),
             const Row(
@@ -79,11 +87,11 @@ class ClientScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 2),
-            const Text(
-              'Tempo médio de retorno: 90 dias',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              'Tempo médio de retorno: ${record.avgTimeBetweenSchedules}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 22),
             Container(
               height: 1,
               color: Colors.grey,
