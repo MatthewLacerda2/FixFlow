@@ -69,7 +69,7 @@ class AccountScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute<void>(
                             builder: (BuildContext context) =>
-                                const AppConfigScreen()),
+                                AppConfigScreen(businessDTO: business)),
                       );
                     },
                   ),

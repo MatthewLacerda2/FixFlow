@@ -1,3 +1,4 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
@@ -14,7 +15,9 @@ import '../../auth/initial_screen.dart';
 
 //TODO: gotta load the account configs
 class AppConfigScreen extends StatelessWidget {
-  const AppConfigScreen({super.key});
+  const AppConfigScreen({super.key, required this.businessDTO});
+
+  final BusinessDTO businessDTO;
 
   @override
   Widget build(BuildContext context) {
@@ -50,16 +53,15 @@ class AppConfigScreen extends StatelessWidget {
                 height: 10,
                 color: Colors.grey.shade800,
               ),
-
               const SizedBox(height: 32),
               const Text(
                 'Opções de Serviços',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
               ),
               const SizedBox(height: 12),
-              const EnumField(
+              EnumField(
                   description: "Serviço...",
-                  options: <String>['Item 1', 'Item 2', 'Item 3'],
+                  options: businessDTO.services ?? <String>[],
                   characterLimit: 20),
               const SizedBox(height: 3),
               const Text(
@@ -69,7 +71,7 @@ class AppConfigScreen extends StatelessWidget {
               const SizedBox(height: 10),
               CheckInputField(
                 label: 'Permitir apenas serviços listados?',
-                initialValue: false,
+                initialValue: businessDTO.allowListedServicesOnly!,
                 onChanged: (bool isChecked) {
                   print('Outros: $isChecked');
                 },
@@ -77,12 +79,11 @@ class AppConfigScreen extends StatelessWidget {
               const SizedBox(height: 18),
               CheckInputField(
                 label: 'Atende aos feriados?',
-                initialValue: false,
+                initialValue: businessDTO.openOnHolidays!,
                 onChanged: (bool isChecked) {
                   print('Atende aos feriados: $isChecked');
                 },
               ),
-              // TODO: handle google calendar, simultaneous appointments
               const SizedBox(height: 28),
               Container(
                 height: 10,
@@ -107,14 +108,6 @@ class AppConfigScreen extends StatelessWidget {
                 initialValue: true,
                 onChanged: (bool isChecked) {
                   print('Notificar novos agendamentos: $isChecked');
-                },
-              ),
-              const SizedBox(height: 12),
-              CheckInputField(
-                label: 'Notificar novos atendimentos',
-                initialValue: true,
-                onChanged: (bool isChecked) {
-                  print('Notificar novos atendimentos: $isChecked');
                 },
               ),
               const SizedBox(height: 32),

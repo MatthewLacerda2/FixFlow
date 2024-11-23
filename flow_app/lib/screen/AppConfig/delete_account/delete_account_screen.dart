@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
-import '../../main/account/app_config_screen.dart';
+import '../../main/main_screen.dart';
 import '../are_you_sure_screen.dart';
 
 class DeleteAccountScreen extends StatelessWidget {
@@ -59,7 +59,7 @@ class DeleteAccountScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute<void>(
                             builder: (BuildContext context) =>
-                                const AppConfigScreen()),
+                                const MainScreen()),
                       );
                     },
                   ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../main/account/app_config_screen.dart';
+import '../main/main_screen.dart';
 
 class ChangeSuccessfulScreen extends StatelessWidget {
   const ChangeSuccessfulScreen({
@@ -47,8 +47,7 @@ class ChangeSuccessfulScreen extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          const AppConfigScreen()),
+                      builder: (BuildContext context) => const MainScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(

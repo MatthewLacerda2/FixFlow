@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
 import '../../../components/Inputs/phone_input_field.dart';
-import '../../main/account/app_config_screen.dart';
 import '../change_successful.dart';
 
 class ChangePhoneScreen extends StatelessWidget {
@@ -53,13 +52,7 @@ class ChangePhoneScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(vertical: 1, horizontal: 30),
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              const AppConfigScreen(),
-                        ),
-                      );
+                      Navigator.pop(context);
                     },
                   ),
                   CustomButton(
