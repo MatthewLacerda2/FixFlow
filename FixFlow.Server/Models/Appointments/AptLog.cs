@@ -53,14 +53,15 @@ public class AptLog {
 		Customer = null!;
 	}
 
-	public AptLog(CreateAptLog newLog, string businessId, string? scheduleId) {
+	public AptLog(CreateAptLog newLog) {
 		Id = Guid.NewGuid().ToString();
+		Console.WriteLine("something");
 		CustomerId = newLog.customerId;
-		BusinessId = businessId;
-		ScheduleId = scheduleId;
+		BusinessId = newLog.BusinessId;
+		ScheduleId = newLog.ScheduleId;
 		Service = newLog.Service;
 		description = newLog.Observation;
-
+		Console.WriteLine("lurking");
 		dateTime = newLog.dateTime;
 		Price = newLog.Price;
 		Customer = null!;

@@ -12,6 +12,12 @@ public class CreateAptLog {
 	public string customerId { get; set; }
 
 	/// <summary>
+	/// The Id of the Business who owns this Contact
+	/// </summary>
+	[Required]
+	public string BusinessId { get; set; } = string.Empty;
+
+	/// <summary>
 	/// The Id of the Schedule that precedes this Log, if any
 	/// </summary>
 	public string? ScheduleId { get; set; }
@@ -32,6 +38,8 @@ public class CreateAptLog {
 	/// We are leaving as DateTime for simplicity but we only need the Date from this class
 	/// </summary>
 	public DateTime whenShouldCustomerComeBack { get; set; }
+
+	public CreateAptLog() : this(string.Empty, null, DateTime.UtcNow, 0, null, null, DateTime.Now.AddDays(90)) { }
 
 	public CreateAptLog(string customerId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
 		this.customerId = customerId;

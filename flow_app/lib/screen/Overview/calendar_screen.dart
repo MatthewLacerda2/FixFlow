@@ -2,10 +2,7 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../utils/flow_storage.dart';
-import '../apts/edit_apt/create_log_screen.dart';
-import '../apts/edit_apt/create_schedule_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -15,25 +12,34 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class CalendarScreenState extends State<CalendarScreen> {
-  late List<BusinessCalendarDay> _calendar;
+  List<BusinessCalendarDay> _calendarDays = <BusinessCalendarDay>[];
+  final DateTime _currentDate = DateTime.now();
+  int _selectedDay = DateTime.now().day;
+  bool _isLoading = true;
 
-  void _fetchCalendar() async {
-    var business = await FlowStorage.getBusinessDTO();
-    var bId = business!.id;
-    var calendar = await BusinessCalendarDayApi()
-        .apiV1BusinessCalendarDayGet(businessId: bId);
-    calendar = _calendar;
+  @override
+  void initState() {
+    super.initState();
+    _fetchCalendar();
   }
 
-  Map<int, List<String>> schedules = <int, List<String>>{
-    3: <String>['9:00 AM - Schedule 1', '1:00 PM - Schedule 2'],
-    7: <String>['Appointment at 10:00 AM'],
-    10: <String>['Idle period'],
-    15: <String>['Holiday: Independence Day'],
-  };
-
-  DateTime currentDate = DateTime.now();
-  int selectedDate = DateTime.now().day;
+  Future<void> _fetchCalendar() async {
+    try {
+      final BusinessDTO? business = await FlowStorage.getBusinessDTO();
+      final String? bId = business!.id;
+      final List<BusinessCalendarDay>? calendar = await BusinessCalendarDayApi()
+          .apiV1BusinessCalendarDayGet(businessId: bId);
+      setState(() {
+        _calendarDays = calendar ?? <BusinessCalendarDay>[];
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      // Handle error (e.g., show a SnackBar)
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,94 +47,36 @@ class CalendarScreenState extends State<CalendarScreen> {
       appBar: AppBar(
         title: const Text('Calendar'),
       ),
-      body: Stack(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  DateFormat('MMMM').format(currentDate),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
-                ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  _buildMonthTitle(),
+                  _buildWeekdayLabels(),
+                  _buildCalendarGrid(),
+                  const Divider(color: Colors.grey, height: 1),
+                  _buildEventsSection(),
+                ],
               ),
-              _buildWeekDayLabels(),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.385,
-                child: PageView.builder(
-                  itemCount: 12, // 12 months
-                  controller:
-                      PageController(initialPage: currentDate.month - 1),
-                  onPageChanged: (int index) {
-                    setState(() {
-                      currentDate = DateTime(currentDate.year, index + 1);
-                    });
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildMonthView(index + 1);
-                  },
-                ),
-              ),
-              Container(
-                height: 1,
-                color: Colors.grey,
-              ),
-              const SizedBox(height: 20),
-              _buildDetailsSection(),
-            ],
-          ),
-          RoundedIconedButton(
-            icon: Icons.add,
-            size: 60,
-            bottom: 110,
-            right: 18,
-            color: Colors.greenAccent,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => CreateScheduleScreen(
-                    contactado: false,
-                    horario: TimeOfDay.now(),
-                    dia: DateTime(2024, 8, 27),
-                    preco: 150.00,
-                    observacao: "",
-                  ),
-                ),
-              );
-            },
-          ),
-          RoundedIconedButton(
-            icon: Icons.add,
-            size: 60,
-            bottom: 30,
-            right: 18,
-            color: Colors.blueAccent,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => CreateLogScreen(
-                    contactado: false,
-                    horario: TimeOfDay.now(),
-                    dia: DateTime(2024, 8, 27),
-                    preco: 150.00,
-                    observacao: "",
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
+            ),
+    );
+  }
+
+  Widget _buildMonthTitle() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        DateFormat('MMMM yyyy').format(_currentDate),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 24,
+        ),
       ),
     );
   }
 
-  Widget _buildWeekDayLabels() {
+  Widget _buildWeekdayLabels() {
     const List<String> daysOfWeek = <String>['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -150,13 +98,16 @@ class CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Widget _buildMonthView(int month) {
-    final DateTime firstDayOfMonth = DateTime(currentDate.year, month, 2);
-    final int daysInMonth = DateUtils.getDaysInMonth(currentDate.year, month);
-    final int firstWeekday = firstDayOfMonth.weekday;
+  Widget _buildCalendarGrid() {
+    final int daysInMonth =
+        DateUtils.getDaysInMonth(_currentDate.year, _currentDate.month);
+    final int firstWeekday = DateTime(_currentDate.year, _currentDate.month)
+        .weekday; // 1 for Monday, 7 for Sunday
 
     return GridView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 7,
         crossAxisSpacing: 4,
@@ -165,105 +116,115 @@ class CalendarScreenState extends State<CalendarScreen> {
       itemCount: daysInMonth + (firstWeekday - 1),
       itemBuilder: (BuildContext context, int index) {
         if (index < firstWeekday - 1) {
-          return const SizedBox();
+          return const SizedBox(); // Empty cells
         } else {
           final int day = index - (firstWeekday - 2);
-          return _buildDayCell(day);
+          final BusinessCalendarDay calendarDay = _calendarDays.firstWhere(
+            (BusinessCalendarDay dayData) => dayData.date?.day == day,
+          );
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedDay = day;
+              });
+            },
+            child: _buildDayCell(day, calendarDay),
+          );
         }
       },
     );
   }
 
-  Widget _buildDayCell(int day) {
-    final List<String> dayEvents = schedules[day] ?? <String>[];
+  Widget _buildDayCell(int day, BusinessCalendarDay? calendarDay) {
+    final List<Color> indicators = <Color>[];
 
-    final bool isIdle = dayEvents.contains('Idle period');
-    final bool isHoliday =
-        dayEvents.any((String event) => event.contains('Holiday'));
-    final int scheduleCount =
-        dayEvents.where((String event) => event.contains('Schedule')).length;
-    final int appointmentCount =
-        dayEvents.where((String event) => event.contains('Appointment')).length;
-
-    Color dayColor = Colors.black;
-    if (isIdle) {
-      dayColor = Colors.red;
-    } else if (isHoliday) {
-      dayColor = Colors.orange;
+    if (calendarDay != null) {
+      if (calendarDay.schedules!.isNotEmpty) {
+        indicators.add(Colors.yellow);
+      }
+      if (calendarDay.logs!.isNotEmpty) {
+        indicators.add(Colors.purple);
+      }
+      if (calendarDay.holiday!.isNotEmpty) {
+        indicators.add(Colors.blue);
+      }
+      if (calendarDay.idlePeriods!.isNotEmpty) {
+        indicators.add(Colors.green);
+      }
     }
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedDate = day;
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: day == selectedDate ? Border.all(color: Colors.grey) : null,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '$day',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: dayColor,
-              ),
-            ),
-            if (scheduleCount > 0)
-              Text(
-                '$scheduleCount',
-                style: const TextStyle(color: Colors.green),
-              ),
-            if (appointmentCount > 0)
-              Text(
-                '$appointmentCount',
-                style: const TextStyle(color: Colors.blue),
-              ),
-          ],
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: day == _selectedDay
+            ? Border.all(color: Colors.grey, width: 1.5)
+            : null,
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(
+            '$day',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: indicators
+                .map((Color color) => Container(
+                      width: 8,
+                      height: 4,
+                      margin: const EdgeInsets.symmetric(horizontal: 1),
+                      color: color,
+                    ))
+                .toList(),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildDetailsSection() {
-    return schedules.containsKey(selectedDate)
-        ? ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: schedules[selectedDate]!.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                elevation: 1,
-                child: ListTile(
-                  title: Text(schedules[selectedDate]![index]),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                ),
-              );
+  Widget _buildEventsSection() {
+    final BusinessCalendarDay selectedDayData = _calendarDays.firstWhere(
+      (BusinessCalendarDay dayData) => dayData.date?.day == _selectedDay,
+    );
+
+    if (selectedDayData == null) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Text('No events', style: TextStyle(fontSize: 16)),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        ...selectedDayData.schedules!.map(
+          (AptSchedule schedule) => ListTile(
+            title: Text(schedule.service ?? schedule.customer!.fullName),
+            onTap: () {
+              // TODO: Navigate to Schedule screen
             },
-          )
-        : const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  'Sem eventos',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          );
+          ),
+        ),
+        ...selectedDayData.idlePeriods!.map(
+          (IdlePeriod idle) => ListTile(
+            title: Text('Idle Period: ${idle.name}'),
+          ),
+        ),
+        ...selectedDayData.holiday!.map(
+          (String holiday) => ListTile(
+            title: Text('Holiday: $holiday'),
+          ),
+        ),
+        ...selectedDayData.logs!.map(
+          (AptLog log) => ListTile(
+            title: Text(log.service ?? log.customer!.fullName),
+            onTap: () {
+              // TODO: Navigate to Log screen
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

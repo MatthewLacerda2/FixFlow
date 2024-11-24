@@ -38,14 +38,14 @@ public class BusinessCalendarDayController : ControllerBase {
 
 		for (int i = 0; i < daysInMonth; i++) {
 			BusinessCalendarDay aux = new BusinessCalendarDay();
-			aux.date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, i + 1, 0, 0, 0, DateTimeKind.Utc);
+			aux.date = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, i + 1);
 
 			aux.schedules = _context.Schedules.Where(x => x.BusinessId == businessId)
-								.Where(x => x.dateTime == aux.date)
+								.Where(x => x.dateTime.ToUniversalTime().Day == aux.date.ToUniversalTime().Day)
 								.ToArray();
 
 			aux.logs = _context.Logs.Where(x => x.BusinessId == businessId)
-								.Where(x => x.dateTime == aux.date)
+								.Where(x => x.dateTime.ToUniversalTime().Day == aux.date.ToUniversalTime().Day)
 								.ToArray();
 
 			aux.idlePeriods = _context.IdlePeriods.Where(x => x.BusinessId == businessId)
@@ -53,6 +53,8 @@ public class BusinessCalendarDayController : ControllerBase {
 
 			businessCalendarDays[i] = aux;
 		}
+
+		Console.WriteLine(nameof(daysInMonth) + daysInMonth);
 
 		return Ok(businessCalendarDays);
 	}
