@@ -30,7 +30,9 @@ class FlowApp extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           } else if (snapshot.hasData && snapshot.data == true) {
-            return const MainScreen();
+            return const MainScreen(
+              initialIndex: 0,
+            );
           } else {
             return const InitialScreen();
           }

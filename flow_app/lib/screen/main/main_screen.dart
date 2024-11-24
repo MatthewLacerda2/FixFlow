@@ -7,7 +7,9 @@ import 'overview_screen.dart';
 import 'schedules_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({super.key, required this.initialIndex});
+
+  final int initialIndex;
 
   @override
   MainScreenState createState() => MainScreenState();
@@ -15,6 +17,13 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Use the initialIndex from the widget
+    _selectedIndex = widget.initialIndex;
+  }
 
   final List<Widget> _screens = <Widget>[
     const OverviewScreen(),

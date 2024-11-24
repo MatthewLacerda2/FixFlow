@@ -47,7 +47,9 @@ class ChangeSuccessfulScreen extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute<void>(
-                      builder: (BuildContext context) => const MainScreen()),
+                      builder: (BuildContext context) => const MainScreen(
+                            initialIndex: 4,
+                          )),
                 );
               },
               style: ElevatedButton.styleFrom(

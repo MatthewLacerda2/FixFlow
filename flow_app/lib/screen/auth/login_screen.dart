@@ -52,7 +52,12 @@ class LoginScreenState extends State<LoginScreen> {
                     email: emailController.text,
                     password: passwordController.text);
                 LoginUtils.login(
-                    flr.email, flr.password, context, const MainScreen());
+                    flr.email,
+                    flr.password,
+                    context,
+                    const MainScreen(
+                      initialIndex: 0,
+                    ));
               },
             ),
           ],

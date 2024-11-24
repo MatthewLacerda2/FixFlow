@@ -63,8 +63,9 @@ class AreYouSureScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const MainScreen()),
+                            builder: (BuildContext context) => const MainScreen(
+                                  initialIndex: 4,
+                                )),
                       );
                     },
                   ),
