@@ -2,7 +2,12 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../components/logs_list.dart';
+import '../../components/schedules_list.dart';
+import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
+import '../apts/log_screen.dart';
+import '../apts/schedule_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -54,7 +59,9 @@ class CalendarScreenState extends State<CalendarScreen> {
                   _buildMonthTitle(),
                   _buildWeekdayLabels(),
                   _buildCalendarGrid(),
+                  const SizedBox(height: 14),
                   const Divider(color: Colors.grey, height: 1),
+                  const SizedBox(height: 14),
                   _buildEventsSection(),
                 ],
               ),
@@ -190,14 +197,6 @@ class CalendarScreenState extends State<CalendarScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        ...selectedDayData.schedules!.map(
-          (AptSchedule schedule) => ListTile(
-            title: Text(schedule.service ?? schedule.customer!.fullName),
-            onTap: () {
-              // TODO: Navigate to Schedule screen
-            },
-          ),
-        ),
         ...selectedDayData.idlePeriods!.map(
           (IdlePeriod idle) => ListTile(
             title: Text('Idle Period: ${idle.name}'),
@@ -208,11 +207,41 @@ class CalendarScreenState extends State<CalendarScreen> {
             title: Text('Holiday: $holiday'),
           ),
         ),
-        ...selectedDayData.logs!.map(
-          (AptLog log) => ListTile(
-            title: Text(log.service ?? log.customer!.fullName),
+        ...selectedDayData.schedules!.map(
+          (AptSchedule item) => SchedulesList(
+            clientName: item.customer!.fullName,
+            price: item.price ?? 0,
+            hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
+            date: DateTimeUtils.dateOnlyString(item.dateTime!),
             onTap: () {
-              // TODO: Navigate to Log screen
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) =>
+                      ScheduleScreen(schedule: item),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 10),
+        ...selectedDayData.logs!.map(
+          (AptLog item) => LogsList(
+            clientName: item.customer!.fullName,
+            price: item.price ?? 0,
+            hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
+            date: DateTimeUtils.dateOnlyString(item.dateTime!),
+            service: item.service,
+            observation: item.description,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => LogScreen(
+                    log: item,
+                  ),
+                ),
+              );
             },
           ),
         ),

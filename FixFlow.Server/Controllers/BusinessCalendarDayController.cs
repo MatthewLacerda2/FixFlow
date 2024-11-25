@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Data;
+using Server.Models;
+using Server.Models.Appointments;
 using Server.Models.DTO;
 using Server.Models.Erros;
 using Server.Models.Utils;
@@ -50,6 +52,13 @@ public class BusinessCalendarDayController : ControllerBase {
 
 			aux.idlePeriods = _context.IdlePeriods.Where(x => x.BusinessId == businessId)
 								.Where(x => x.start <= aux.date && x.finish >= aux.date).ToArray();
+
+			foreach (AptSchedule sched in aux.schedules) {
+				sched.Customer = _context.Customers.Find(sched.CustomerId)!;
+			}
+			foreach (AptLog log in aux.logs) {
+				log.Customer = _context.Customers.Find(log.CustomerId)!;
+			}
 
 			businessCalendarDays[i] = aux;
 		}
