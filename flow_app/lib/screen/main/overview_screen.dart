@@ -1,203 +1,226 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
+import '../../utils/date_time_utils.dart';
+import '../../utils/flow_storage.dart';
 import '../Overview/Clients/clients_screen.dart';
 import '../Overview/calendar_screen.dart';
 import '../Overview/notifications_screen.dart';
 
-class OverviewScreen extends StatelessWidget {
+class OverviewScreen extends StatefulWidget {
   const OverviewScreen({super.key});
+
+  @override
+  _OverviewScreenState createState() => _OverviewScreenState();
+}
+
+class _OverviewScreenState extends State<OverviewScreen> {
+  bool _isLoading = true;
+  int _todayCount = 0;
+  int _weekCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String businessId = bd!.id!;
+
+    final List<AptSchedule>? todaySchedules =
+        await AptScheduleApi().apiV1SchedulesGet(
+      businessId: businessId,
+      minPrice: 0,
+      maxPrice: 999,
+      minDateTime: DateTime.now(),
+      maxDateTime:
+          DateTimeUtils.getNextDayAtMidnight(DateTime.now().weekday + 1),
+      limit: 100,
+      offset: 0,
+    );
+
+    final List<AptSchedule>? weekSchedules =
+        await AptScheduleApi().apiV1SchedulesGet(
+      businessId: businessId,
+      minPrice: 0,
+      maxPrice: 999,
+      minDateTime: DateTime.now(),
+      maxDateTime: DateTimeUtils.getNextDayAtMidnight(DateTime.sunday),
+      limit: 100,
+      offset: 0,
+    );
+
+    setState(() {
+      _todayCount = todaySchedules?.length ?? 0;
+      _weekCount = weekSchedules?.length ?? 0;
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        const Text(
-                          '12',
-                          style: TextStyle(
-                              fontSize: 42, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(width: 6),
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 100),
-                          child: Text(
-                            'agendamentos para hoje',
-                            style: TextStyle(
-                                fontSize: 12, color: Colors.grey[600]),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            '$_todayCount',
+                            style: const TextStyle(
+                                fontSize: 42, fontWeight: FontWeight.bold),
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        const Text(
-                          '28',
-                          style: TextStyle(
-                              fontSize: 42, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(width: 8),
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 100),
-                          child: Text(
-                            'agendamentos para a semana',
-                            style: TextStyle(
-                                fontSize: 12, color: Colors.grey[600]),
-                          ),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const NotificationsScreen(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
+                          const SizedBox(width: 6),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 100),
+                            child: Text(
+                              'agendamentos para hoje',
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.grey[600]),
                             ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        child: const Icon(
-                          Icons.notifications,
-                          color: Colors.black,
-                          size: 24,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 9),
-                const Divider(
-                  color: Colors.grey,
-                  height: 1,
-                ),
-                const SizedBox(height: 24),
-                ColoredBorderTextButton(
-                  text: 'Estatísticas',
-                  textColor: Colors.white,
-                  textSize: 16,
-                  backgroundColor: Colors.blueAccent,
-                  width: 130,
-                  onPressed: () {
-                    // TODO: Navigate to Statistics Screen
-                  },
-                ),
-                const SizedBox(height: 24),
-                ColoredBorderTextButton(
-                  text: 'Calendário',
-                  textColor: Colors.white,
-                  textSize: 16,
-                  backgroundColor: Colors.blueAccent,
-                  width: 130,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) =>
-                            const CalendarScreen(),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 22),
-                const Text('Informações',
-                    style:
-                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    RoundedIconedButton(
-                      icon: Icons.person,
-                      text: 'Clientes',
-                      size: 76,
-                      bottom: 18,
-                      right: 16,
-                      color: Colors.blueAccent,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const ClientsScreen(),
                           ),
-                        );
-                      },
-                    ),
-                    RoundedIconedButton(
-                      icon: Icons.schedule,
-                      text: 'Agenda',
-                      size: 76,
-                      bottom: 18,
-                      right: 16,
-                      color: Colors.blueAccent,
-                      onPressed: () {
-                        // TODO: Navigate to Agendamentos Screen
-                      },
-                    ),
-                    RoundedIconedButton(
-                      icon: Icons.note_alt_rounded,
-                      text: 'Atendimento',
-                      size: 76,
-                      bottom: 18,
-                      right: 16,
-                      color: Colors.blueAccent,
-                      onPressed: () {
-                        // TODO: Navigate to Atendimentos Screen
-                      },
-                    ),
-                    RoundedIconedButton(
-                      icon: Icons.punch_clock_sharp,
-                      text: 'Lembretes',
-                      size: 76,
-                      bottom: 18,
-                      right: 16,
-                      color: Colors.blueAccent,
-                      onPressed: () {
-                        // TODO: Navigate to Contatos Screen
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 28),
-                ColoredBorderTextButton(
-                  text: 'Mensalidades',
-                  textColor: Colors.black,
-                  textSize: 16,
-                  backgroundColor: Colors.grey[300]!,
-                  width: 100,
-                  onPressed: () {
-                    // TODO: Navigate to Mensalidades Screen
-                  },
-                ),
-              ],
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            '$_weekCount',
+                            style: const TextStyle(
+                                fontSize: 42, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(width: 8),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 100),
+                            child: Text(
+                              'agendamentos para a semana',
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.grey[600]),
+                            ),
+                          ),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) =>
+                                  const NotificationsScreen(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: const Icon(
+                            Icons.notifications,
+                            color: Colors.black,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 9),
+                  const Divider(
+                    color: Colors.grey,
+                    height: 1,
+                  ),
+                  const SizedBox(height: 24),
+                  ColoredBorderTextButton(
+                    text: 'Estatísticas',
+                    textColor: Colors.white,
+                    textSize: 16,
+                    backgroundColor: Colors.blueAccent,
+                    width: 130,
+                    onPressed: () {
+                      // TODO: Navigate to Statistics Screen
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  ColoredBorderTextButton(
+                    text: 'Calendário',
+                    textColor: Colors.white,
+                    textSize: 16,
+                    backgroundColor: Colors.blueAccent,
+                    width: 130,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              const CalendarScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 22),
+                  const Text('Informações',
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      RoundedIconedButton(
+                        icon: Icons.person,
+                        text: 'Clientes',
+                        size: 76,
+                        bottom: 18,
+                        right: 16,
+                        color: Colors.blueAccent,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) =>
+                                  const ClientsScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 28),
+                  ColoredBorderTextButton(
+                    text: 'Mensalidades',
+                    textColor: Colors.black,
+                    textSize: 16,
+                    backgroundColor: Colors.grey[300]!,
+                    width: 100,
+                    onPressed: () {
+                      // TODO: Navigate to Mensalidades Screen
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
     );
   }
 }
