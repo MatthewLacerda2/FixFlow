@@ -10,7 +10,7 @@ import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
-import '../main/schedules_screen.dart';
+import '../main/main_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({
@@ -80,7 +80,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute<void>(
-          builder: (BuildContext context) => const SchedulesScreen()),
+          builder: (BuildContext context) => const MainScreen(
+                initialIndex: 1,
+              )),
       (Route<dynamic> route) => false,
     );
   }

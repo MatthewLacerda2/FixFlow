@@ -188,13 +188,6 @@ class CalendarScreenState extends State<CalendarScreen> {
       (BusinessCalendarDay dayData) => dayData.date?.day == _selectedDay,
     );
 
-    if (selectedDayData == null) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        child: Text('No events', style: TextStyle(fontSize: 16)),
-      );
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[

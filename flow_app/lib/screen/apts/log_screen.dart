@@ -11,7 +11,7 @@ import '../../components/Inputs/services_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
-import '../main/logs_screen.dart';
+import '../main/main_screen.dart';
 
 class LogScreen extends StatefulWidget {
   const LogScreen({
@@ -93,7 +93,9 @@ class LogScreenState extends State<LogScreen> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute<void>(
-          builder: (BuildContext context) => const LogsScreen()),
+          builder: (BuildContext context) => const MainScreen(
+                initialIndex: 3,
+              )),
       (Route<dynamic> route) => false,
     );
   }
