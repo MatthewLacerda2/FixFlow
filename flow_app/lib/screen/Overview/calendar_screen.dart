@@ -37,7 +37,6 @@ class CalendarScreenState extends State<CalendarScreen> {
       setState(() {
         _isLoading = false;
       });
-      // Handle error (e.g., show a SnackBar)
     }
   }
 
@@ -101,8 +100,8 @@ class CalendarScreenState extends State<CalendarScreen> {
   Widget _buildCalendarGrid() {
     final int daysInMonth =
         DateUtils.getDaysInMonth(_currentDate.year, _currentDate.month);
-    final int firstWeekday = DateTime(_currentDate.year, _currentDate.month)
-        .weekday; // 1 for Monday, 7 for Sunday
+    final int firstWeekday =
+        DateTime(_currentDate.year, _currentDate.month).weekday;
 
     return GridView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -116,7 +115,7 @@ class CalendarScreenState extends State<CalendarScreen> {
       itemCount: daysInMonth + (firstWeekday - 1),
       itemBuilder: (BuildContext context, int index) {
         if (index < firstWeekday - 1) {
-          return const SizedBox(); // Empty cells
+          return const SizedBox();
         } else {
           final int day = index - (firstWeekday - 2);
           final BusinessCalendarDay calendarDay = _calendarDays.firstWhere(
@@ -141,13 +140,13 @@ class CalendarScreenState extends State<CalendarScreen> {
 
     if (calendarDay != null) {
       if (calendarDay.schedules!.isNotEmpty) {
-        indicators.add(Colors.yellow);
+        indicators.add(Colors.orangeAccent);
       }
       if (calendarDay.logs!.isNotEmpty) {
-        indicators.add(Colors.purple);
+        indicators.add(Colors.blue);
       }
       if (calendarDay.holiday!.isNotEmpty) {
-        indicators.add(Colors.blue);
+        indicators.add(Colors.red);
       }
       if (calendarDay.idlePeriods!.isNotEmpty) {
         indicators.add(Colors.green);

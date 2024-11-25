@@ -43,28 +43,12 @@ class _ClientsScreenState extends State<ClientsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Clientes'),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            color: const Color.fromARGB(255, 43, 255, 36),
-            padding: const EdgeInsets.all(8),
-            height: 60,
-            child: const Row(
-              children: <Widget>[
-                Icon(Icons.person, size: 28),
-                SizedBox(width: 8),
-                Text(
-                  'Clientes',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            color: Colors.black,
-            height: 1,
-          ),
           Expanded(
             child: FutureBuilder<List<CustomerDTO>>(
               future: _customersFuture,
