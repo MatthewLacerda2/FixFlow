@@ -17,7 +17,7 @@ public class AptLogValidatorTests {
 	public void Should_HaveError_When_PriceIsNegative() {
 		// Arrange
 		var dateTime = new DateTime(2024, 6, 1);
-		var aptLog = new AptLog(new CreateAptLog("clientId", null, dateTime, -1, null, null, dateTime.AddDays(90)), "bId", "sId");
+		var aptLog = new AptLog(new CreateAptLog("clientId", null, dateTime, -1, null, null, dateTime.AddDays(90)));
 
 		// Act & Assert
 		var result = _validator.TestValidate(aptLog);
@@ -29,7 +29,7 @@ public class AptLogValidatorTests {
 	public void Should_HaveError_When_DateTimeIsBefore2024() {
 		// Arrange
 		var dateTime = new DateTime(2023, 12, 31);
-		var aptLog = new AptLog(new CreateAptLog("clientId", null, dateTime, 100, null, null, dateTime.AddDays(90)), "bId", "sId");
+		var aptLog = new AptLog(new CreateAptLog("clientId", null, dateTime, 100, null, null, dateTime.AddDays(90)));
 
 		// Act & Assert
 		var result = _validator.TestValidate(aptLog);
@@ -41,7 +41,7 @@ public class AptLogValidatorTests {
 	public void Should_HaveError_When_DateTimeIsInTheFuture() {
 		// Arrange
 		var futureDate = DateTime.UtcNow.AddDays(1);
-		var aptLog = new AptLog(new CreateAptLog("clientId", null, futureDate, 100, null, null, futureDate.AddDays(90)), "bId", "sId");
+		var aptLog = new AptLog(new CreateAptLog("clientId", null, futureDate, 100, null, null, futureDate.AddDays(90)));
 
 		// Act & Assert
 		var result = _validator.TestValidate(aptLog);
@@ -53,7 +53,7 @@ public class AptLogValidatorTests {
 	public void Should_NotHaveError_When_ValidAptLog() {
 		// Arrange
 		var dateTime = DateTime.UtcNow.AddDays(-1);
-		var validAptLog = new AptLog(new CreateAptLog("clientId", null, dateTime, 100, null, null, dateTime.AddDays(90)), "bId", "sId");
+		var validAptLog = new AptLog(new CreateAptLog("clientId", null, dateTime, 100, null, null, dateTime.AddDays(90)));
 
 		// Act & Assert
 		var result = _validator.TestValidate(validAptLog);

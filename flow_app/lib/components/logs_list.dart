@@ -45,7 +45,7 @@ class LogsList extends StatelessWidget {
               Text(
                 'R\$ ${price.toStringAsFixed(2)}',
                 style: const TextStyle(
-                  color: Colors.blueAccent,
+                  color: Colors.blue,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -57,17 +57,13 @@ class LogsList extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text('Hora: $hour'),
                   Text('Data: $date'),
+                  Text('Hora: $hour'),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(service != null ? 'Serviço: $service' : '-'),
-                ],
-              ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
+              Text(service != null ? 'Serviço: $service' : '-'),
+              const SizedBox(height: 2),
               Text('Observação: ${observation ?? ''}'),
             ],
           ),

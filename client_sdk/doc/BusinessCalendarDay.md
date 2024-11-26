@@ -9,7 +9,6 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **date** | [**DateTime**](DateTime.md) |  | [optional] 
-**description** | **String** |  | [optional] 
 **idlePeriods** | [**List<IdlePeriod>**](IdlePeriod.md) |  | [optional] [default to const []]
 **holiday** | **List<String>** |  | [optional] [default to const []]
 **schedules** | [**List<AptSchedule>**](AptSchedule.md) |  | [optional] [default to const []]

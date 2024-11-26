@@ -223,7 +223,7 @@ class _LogsScreenState extends State<LogsScreen> {
                     builder: (BuildContext context) => CreateLogScreen(
                       contactado: false,
                       horario: TimeOfDay.now(),
-                      dia: DateTime(2024, 8, 27),
+                      dia: DateTime.now(),
                       preco: 150.00,
                       observacao: "",
                     ),

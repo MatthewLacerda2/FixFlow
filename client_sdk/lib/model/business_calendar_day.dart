@@ -14,7 +14,6 @@ class BusinessCalendarDay {
   /// Returns a new [BusinessCalendarDay] instance.
   BusinessCalendarDay({
     this.date,
-    this.description,
     this.idlePeriods = const [],
     this.holiday = const [],
     this.schedules = const [],
@@ -29,8 +28,6 @@ class BusinessCalendarDay {
   ///
   DateTime? date;
 
-  String? description;
-
   List<IdlePeriod>? idlePeriods;
 
   List<String>? holiday;
@@ -42,7 +39,6 @@ class BusinessCalendarDay {
   @override
   bool operator ==(Object other) => identical(this, other) || other is BusinessCalendarDay &&
     other.date == date &&
-    other.description == description &&
     _deepEquality.equals(other.idlePeriods, idlePeriods) &&
     _deepEquality.equals(other.holiday, holiday) &&
     _deepEquality.equals(other.schedules, schedules) &&
@@ -52,14 +48,13 @@ class BusinessCalendarDay {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (date == null ? 0 : date!.hashCode) +
-    (description == null ? 0 : description!.hashCode) +
     (idlePeriods == null ? 0 : idlePeriods!.hashCode) +
     (holiday == null ? 0 : holiday!.hashCode) +
     (schedules == null ? 0 : schedules!.hashCode) +
     (logs == null ? 0 : logs!.hashCode);
 
   @override
-  String toString() => 'BusinessCalendarDay[date=$date, description=$description, idlePeriods=$idlePeriods, holiday=$holiday, schedules=$schedules, logs=$logs]';
+  String toString() => 'BusinessCalendarDay[date=$date, idlePeriods=$idlePeriods, holiday=$holiday, schedules=$schedules, logs=$logs]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -67,11 +62,6 @@ class BusinessCalendarDay {
       json[r'date'] = this.date!.toUtc().toIso8601String();
     } else {
       json[r'date'] = null;
-    }
-    if (this.description != null) {
-      json[r'description'] = this.description;
-    } else {
-      json[r'description'] = null;
     }
     if (this.idlePeriods != null) {
       json[r'idlePeriods'] = this.idlePeriods;
@@ -116,7 +106,6 @@ class BusinessCalendarDay {
 
       return BusinessCalendarDay(
         date: mapDateTime(json, r'date', r''),
-        description: mapValueOfType<String>(json, r'description'),
         idlePeriods: IdlePeriod.listFromJson(json[r'idlePeriods']),
         holiday: json[r'holiday'] is Iterable
             ? (json[r'holiday'] as Iterable).cast<String>().toList(growable: false)

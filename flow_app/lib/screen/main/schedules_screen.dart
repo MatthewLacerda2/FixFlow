@@ -204,7 +204,7 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                     builder: (BuildContext context) => CreateScheduleScreen(
                       contactado: false,
                       horario: TimeOfDay.now(),
-                      dia: DateTime(2024, 8, 27),
+                      dia: DateTime.now(),
                       preco: 150.00,
                       observacao: "",
                     ),

@@ -63,8 +63,6 @@ public class BusinessCalendarDayController : ControllerBase {
 			businessCalendarDays[i] = aux;
 		}
 
-		Console.WriteLine(nameof(daysInMonth) + daysInMonth);
-
 		return Ok(businessCalendarDays);
 	}
 }

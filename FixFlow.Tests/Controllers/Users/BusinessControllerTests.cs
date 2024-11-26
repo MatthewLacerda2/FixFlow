@@ -229,7 +229,7 @@ public class BusinessControllerTests {
 		Customer client = new Customer(businessId, "98912345678", "fulano da silva bezerra", null, null, null);
 		AptSchedule schedule = new AptSchedule(client.Id, businessId, DateTime.UtcNow.AddDays(-1), 100f, null);
 		CreateAptLog createAptLog = new CreateAptLog(client.Id, schedule.Id, DateTime.UtcNow, 100f, null, null, DateTime.UtcNow.AddDays(90));
-		AptLog log = new AptLog(createAptLog, businessId, schedule.Id);
+		AptLog log = new AptLog(createAptLog);
 		AptContact contact = new AptContact(log, DateTime.UtcNow);
 
 		_context.Business.Add(business);

@@ -44,9 +44,9 @@ class SchedulesList extends StatelessWidget {
             children: <Widget>[
               Text('Cliente: $clientName'),
               Text(
-                'R\$ $price',
+                'R\$ ${price.toStringAsFixed(2)}',
                 style: const TextStyle(
-                  color: Colors.blueAccent,
+                  color: Colors.blue,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -63,10 +63,9 @@ class SchedulesList extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 2),
-              Text('Observação: ${observation ?? '-'}'),
-              const SizedBox(height: 2),
               Text(service != null ? 'Serviço: $service' : '-'),
               const SizedBox(height: 2),
+              Text('Observação: ${observation ?? '-'}')
             ],
           ),
           onTap: onTap,

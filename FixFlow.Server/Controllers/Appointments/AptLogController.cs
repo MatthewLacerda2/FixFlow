@@ -93,18 +93,17 @@ public class AptLogController : ControllerBase {
 			}
 		}
 
-		Console.WriteLine("debug");
-		var existingBusiness = _context.Business.Find(createLog.BusinessId);
-		Console.WriteLine("is");
+		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
+		createLog.BusinessId = existingCustomer.Id;
+
 		if (existingBusiness!.allowListedServicesOnly) {
 			if (createLog.Service == null || !existingBusiness.services.Contains(createLog.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
-		Console.WriteLine("on");
-		Console.WriteLine("the");
+
 		AptLog newLog = new AptLog(createLog);
-		Console.WriteLine("table");
+
 		AptContact contact = new AptContact(newLog, createLog.whenShouldCustomerComeBack);
 		if (contact.dateTime.TimeOfDay > new TimeSpan(18, 0, 0)) {
 			contact.dateTime = contact.dateTime.Date.AddHours(12);
@@ -115,7 +114,7 @@ public class AptLogController : ControllerBase {
 		else if (contact.dateTime.DayOfWeek == DayOfWeek.Sunday) {
 			contact.dateTime = contact.dateTime.AddDays(1);
 		}
-		Console.WriteLine("friends;");
+
 		_context.Logs.Add(newLog);
 		_context.Contacts.Add(contact);
 		await _context.SaveChangesAsync();

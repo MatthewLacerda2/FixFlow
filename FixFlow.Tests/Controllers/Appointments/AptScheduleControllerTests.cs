@@ -321,7 +321,7 @@ public class AptScheduleControllerTests {
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
 		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(1), 100, "Service 1");
 		var createAptLog = new CreateAptLog(client.Id, schedule.Id, DateTime.UtcNow, 30, null, null, DateTime.UtcNow.AddDays(30));
-		var log = new AptLog(createAptLog, business.Id, schedule.Id);
+		var log = new AptLog(createAptLog);
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);
