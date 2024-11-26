@@ -160,7 +160,12 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     backgroundColor: Colors.blueAccent,
                     width: 130,
                     onPressed: () {
-                      // TODO: Navigate to Statistics Screen
+                      //TODO: Make the Statistics Screen
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Botão não-implementado !"),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: 24),
@@ -215,7 +220,12 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     backgroundColor: Colors.grey[300]!,
                     width: 100,
                     onPressed: () {
-                      // TODO: Navigate to Mensalidades Screen
+                      // TODO: Create Mensalidades Screen
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Botão não-implementado !"),
+                        ),
+                      );
                     },
                   ),
                 ],
