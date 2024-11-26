@@ -43,19 +43,44 @@ public class AptLogController : ControllerBase {
 
 		logsQuery = logsQuery.Where(x => x.BusinessId == businessId);
 
+		var aux = logsQuery
+			.Skip(offset)
+			.Take(limit)
+			.ToArray();
+
 		if (!string.IsNullOrWhiteSpace(clientName)) {
 			logsQuery = logsQuery.Where(x => x.Customer.FullName.Contains(clientName!));
 		}
+
+		aux = logsQuery
+			.Skip(offset)
+			.Take(limit)
+			.ToArray();
 
 		if (!string.IsNullOrWhiteSpace(service)) {
 			logsQuery = logsQuery.Where(x => x.Service != null && x.Service.Contains(service!));
 		}
 
+		aux = logsQuery
+			.Skip(offset)
+			.Take(limit)
+			.ToArray();
+
 		logsQuery = logsQuery.Where(x => x.Price >= minPrice);
 		logsQuery = logsQuery.Where(x => x.Price <= maxPrice);
 
+		aux = logsQuery
+			.Skip(offset)
+			.Take(limit)
+			.ToArray();
+
 		logsQuery = logsQuery.Where(x => x.dateTime.Date >= minDateTime.Date);
 		logsQuery = logsQuery.Where(x => x.dateTime.Date <= maxDateTime.Date);
+
+		aux = logsQuery
+			.Skip(offset)
+			.Take(limit)
+			.ToArray();
 
 		var resultsArray = await logsQuery
 			.Skip(offset)
@@ -94,7 +119,7 @@ public class AptLogController : ControllerBase {
 		}
 
 		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
-		createLog.BusinessId = existingCustomer.Id;
+		createLog.BusinessId = existingCustomer.BusinessId;
 
 		if (existingBusiness!.allowListedServicesOnly) {
 			if (createLog.Service == null || !existingBusiness.services.Contains(createLog.Service)) {

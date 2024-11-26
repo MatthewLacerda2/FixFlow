@@ -48,7 +48,7 @@ class LogScreenState extends State<LogScreen> {
     print(upLog);
 
     _precoController = TextEditingController(
-        text: widget.log.price?.toStringAsFixed(2) ?? "0.0");
+        text: widget.log.price?.toStringAsFixed(2) ?? 0.toString());
     _observacaoController = TextEditingController(text: widget.log.description);
   }
 
@@ -68,7 +68,7 @@ class LogScreenState extends State<LogScreen> {
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Agendamento editado!"),
+          content: Text("Atendimento editado!"),
         ),
       );
       goToLogsScreen();
@@ -84,7 +84,8 @@ class LogScreenState extends State<LogScreen> {
   void _cancelChanges() {
     setState(() {
       _isEdited = false;
-      _precoController.text = widget.log.price?.toStringAsFixed(2) ?? "0.0";
+      _precoController.text =
+          widget.log.price?.toStringAsFixed(2) ?? 0.toString();
       _observacaoController.text = widget.log.description ?? "";
     });
   }
