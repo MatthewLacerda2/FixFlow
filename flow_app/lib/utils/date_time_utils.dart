@@ -29,7 +29,7 @@ class DateTimeUtils {
     return DateTime(from.year, from.month, from.day, to.hour, to.minute);
   }
 
-  static String dateOnlyString(DateTime date) {
-    return DateFormat('dd/MM/yy').format(date);
+  static String dateOnlyString(DateTime? date) {
+    return date == null ? '-' : DateFormat('dd/MM/yy').format(date);
   }
 }

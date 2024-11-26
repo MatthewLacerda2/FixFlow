@@ -2,7 +2,6 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
-import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
 import '../Overview/Clients/clients_screen.dart';
@@ -126,7 +125,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     text: 'Estatísticas',
                     textColor: Colors.white,
                     textSize: 16,
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: Colors.orangeAccent,
                     width: 130,
                     onPressed: () {
                       //TODO: Make the Statistics Screen
@@ -154,34 +153,24 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height: 22),
-                  const Text('Informações',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      RoundedIconedButton(
-                        icon: Icons.person,
-                        text: 'Clientes',
-                        size: 76,
-                        bottom: 18,
-                        right: 16,
-                        color: Colors.blueAccent,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) =>
-                                  const ClientsScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                  const SizedBox(height: 24),
+                  ColoredBorderTextButton(
+                    text: 'Clientes',
+                    textColor: Colors.white,
+                    textSize: 16,
+                    backgroundColor: Colors.green,
+                    width: 130,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              const ClientsScreen(),
+                        ),
+                      );
+                    },
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 24),
                   ColoredBorderTextButton(
                     text: 'Mensalidades',
                     textColor: Colors.black,
