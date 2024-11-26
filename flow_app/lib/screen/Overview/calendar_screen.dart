@@ -62,6 +62,7 @@ class CalendarScreenState extends State<CalendarScreen> {
                   _buildWeekdayLabels(),
                   const SizedBox(height: 10),
                   _buildCalendarGrid(),
+                  const SizedBox(height: 16),
                   Stack(
                     alignment: Alignment.center,
                     children: <Widget>[
@@ -73,6 +74,11 @@ class CalendarScreenState extends State<CalendarScreen> {
                           size: 50,
                           onPressed: () {
                             //TODO:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Botão não-implementado !"),
+                              ),
+                            );
                           },
                         ),
                       ),
@@ -83,6 +89,11 @@ class CalendarScreenState extends State<CalendarScreen> {
                           size: 50,
                           onPressed: () {
                             //TODO:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Botão não-implementado !"),
+                              ),
+                            );
                           },
                         ),
                       ),
@@ -269,7 +280,7 @@ class CalendarScreenState extends State<CalendarScreen> {
             },
           ),
         ),
-        if (selectedDayData.schedules!.isNotEmpty)
+        if (selectedDayData.logs!.isNotEmpty)
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
