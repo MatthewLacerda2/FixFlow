@@ -2,6 +2,7 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../components/Inputs/circular_button.dart';
 import '../../components/logs_list.dart';
 import '../../components/schedules_list.dart';
 import '../../utils/date_time_utils.dart';
@@ -57,11 +58,36 @@ class CalendarScreenState extends State<CalendarScreen> {
               child: Column(
                 children: <Widget>[
                   _buildMonthTitle(),
+                  const SizedBox(height: 6),
                   _buildWeekdayLabels(),
+                  const SizedBox(height: 10),
                   _buildCalendarGrid(),
-                  const SizedBox(height: 14),
-                  const Divider(color: Colors.grey, height: 1),
-                  const SizedBox(height: 14),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      const Divider(color: Colors.grey, height: 50),
+                      Positioned(
+                        left: 16,
+                        child: CircularButton(
+                          icon: Icons.keyboard_arrow_left,
+                          size: 50,
+                          onPressed: () {
+                            //TODO:
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        right: 16,
+                        child: CircularButton(
+                          icon: Icons.keyboard_arrow_right,
+                          size: 50,
+                          onPressed: () {
+                            //TODO:
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                   _buildEventsSection(),
                 ],
               ),
@@ -147,7 +173,7 @@ class CalendarScreenState extends State<CalendarScreen> {
 
     if (calendarDay != null) {
       if (calendarDay.schedules!.isNotEmpty) {
-        indicators.add(Colors.orangeAccent);
+        indicators.add(Colors.green);
       }
       if (calendarDay.logs!.isNotEmpty) {
         indicators.add(Colors.blue);
@@ -156,7 +182,7 @@ class CalendarScreenState extends State<CalendarScreen> {
         indicators.add(Colors.red);
       }
       if (calendarDay.idlePeriods!.isNotEmpty) {
-        indicators.add(Colors.green);
+        indicators.add(const Color.fromARGB(255, 0, 100, 3));
       }
     }
 
@@ -199,14 +225,33 @@ class CalendarScreenState extends State<CalendarScreen> {
       children: <Widget>[
         ...selectedDayData.idlePeriods!.map(
           (IdlePeriod idle) => ListTile(
-            title: Text('Idle Period: ${idle.name}'),
+            title: Text('Período ocioso: ${idle.name}'),
           ),
         ),
         ...selectedDayData.holiday!.map(
           (String holiday) => ListTile(
-            title: Text('Holiday: $holiday'),
+            title: Text('Feriado: $holiday'),
           ),
         ),
+        if (selectedDayData.schedules!.isNotEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 10),
+                Text(
+                  'Agendamentos',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    color: Colors.green,
+                  ),
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
+          ),
         ...selectedDayData.schedules!.map(
           (AptSchedule item) => SchedulesList(
             clientName: item.customer!.fullName,
@@ -224,11 +269,29 @@ class CalendarScreenState extends State<CalendarScreen> {
             },
           ),
         ),
-        const SizedBox(height: 10),
+        if (selectedDayData.schedules!.isNotEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 14),
+                Text(
+                  'Atendimentos',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    color: Colors.blue,
+                  ),
+                ),
+                SizedBox(height: 14),
+              ],
+            ),
+          ),
         ...selectedDayData.logs!.map(
           (AptLog item) => LogsList(
             clientName: item.customer!.fullName,
-            price: item.price ?? 0,
+            price: item.price ?? 4.2,
             hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
             date: DateTimeUtils.dateOnlyString(item.dateTime!),
             service: item.service,
@@ -245,6 +308,7 @@ class CalendarScreenState extends State<CalendarScreen> {
             },
           ),
         ),
+        const SizedBox(height: 40),
       ],
     );
   }
