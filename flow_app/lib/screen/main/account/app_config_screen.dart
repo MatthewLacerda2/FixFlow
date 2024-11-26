@@ -84,33 +84,7 @@ class AppConfigScreen extends StatelessWidget {
                   print('Atende aos feriados: $isChecked');
                 },
               ),
-              const SizedBox(height: 28),
-              Container(
-                height: 10,
-                color: Colors.grey.shade800,
-              ),
-              const SizedBox(height: 28),
-              const Text(
-                'Notificações',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-              ),
-              const SizedBox(height: 15),
-              CheckInputField(
-                label: 'Aviso de "agendamento próximo"',
-                initialValue: true,
-                onChanged: (bool isChecked) {
-                  print('Aviso de agendamento próximo: $isChecked');
-                },
-              ),
-              const SizedBox(height: 12),
-              CheckInputField(
-                label: 'Notificar novos agendamentos',
-                initialValue: true,
-                onChanged: (bool isChecked) {
-                  print('Notificar novos agendamentos: $isChecked');
-                },
-              ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 30),
               Container(
                 height: 10,
                 color: Colors.grey.shade800,
