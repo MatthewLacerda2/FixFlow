@@ -55,6 +55,7 @@ class _LogsScreenState extends State<LogsScreen> {
         minDateTime: DateTime(2023),
         maxDateTime: DateTime(2025),
         businessId: businessId);
+
     return response ?? <AptLog>[]; // Handle null safety
   }
 
