@@ -68,7 +68,6 @@ class RegisterScreen extends StatelessWidget {
             PasswordInputField(
               placeholder: 'Password',
               onPasswordChanged: (String password) {
-                print('Password is: $password');
                 registerPassword = password;
               },
             ),
@@ -76,7 +75,6 @@ class RegisterScreen extends StatelessWidget {
             PasswordInputField(
               placeholder: 'Current password',
               onPasswordChanged: (String password) {
-                print('Password is: $password');
                 registerPasswordConfirmation = password;
               },
             ),

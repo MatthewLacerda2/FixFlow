@@ -150,7 +150,7 @@ class _AppFiltersScreenState extends State<AptFiltersScreen> {
                           content: Text(auxAptFilters.toString()),
                         ),
                       );
-                      Navigator.pop(context);
+                      Navigator.pop(context, auxAptFilters);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,

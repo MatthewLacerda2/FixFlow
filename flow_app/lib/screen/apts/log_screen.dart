@@ -45,7 +45,6 @@ class LogScreenState extends State<LogScreen> {
         price: log.price,
         scheduleId: log.scheduleId,
         service: log.service);
-    print(upLog);
 
     _precoController = TextEditingController(
         text: widget.log.price?.toStringAsFixed(2) ?? 0.toString());

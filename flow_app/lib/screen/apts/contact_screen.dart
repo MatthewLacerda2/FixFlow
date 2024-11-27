@@ -86,7 +86,6 @@ class ContactScreenState extends State<ContactScreen> {
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    print("debug is on the table");
                     Navigator.push(
                       context,
                       MaterialPageRoute<void>(

@@ -28,6 +28,11 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
   void initState() {
     super.initState();
     _schedulesFuture = _fetchSchedules();
+    print("umubuga fei di tal");
+    print("\n");
+    print(widget.aptFilters);
+    print("\n");
+    print("umubuga fei di tal");
   }
 
   Future<List<AptSchedule>> _fetchSchedules() async {
@@ -102,12 +107,11 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                       ColoredBorderTextButton(
                         text: "Filtros",
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.push<AptFilters>(
                             context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) =>
-                                  AptFiltersScreen(
-                                      aptFilters: widget.aptFilters),
+                            MaterialPageRoute(
+                              builder: (context) => AptFiltersScreen(
+                                  aptFilters: widget.aptFilters),
                             ),
                           );
                         },

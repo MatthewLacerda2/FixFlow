@@ -86,7 +86,6 @@ class DeleteAccountScreen extends StatelessWidget {
                                 "Sua conta foi desativada, mas não perdida. Você pode reativar-la e continuar daonde parou, com o mesmo e-mail e senha\n\nVolte logo!",
                             onPressed: () {
                               //TODO: http request to deactivate account
-                              print("debug");
                             },
                           ),
                         ),
