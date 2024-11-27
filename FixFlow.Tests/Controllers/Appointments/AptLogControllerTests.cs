@@ -85,7 +85,7 @@ public class AptLogControllerTests {
 		Assert.Single(filteredLogs);
 
 		Assert.Equal(client1Name, filteredLogs!.First().Customer.FullName);
-		//Assert.Equal(expectedLog.Price, filteredLogs!.First().Price); //TODO: fix this
+		//Assert.Equal(expectedLog.Price, filteredLogs!.First().Price);
 		Assert.Equal(DateTime.UtcNow.AddDays(-5).Date, filteredLogs!.First().dateTime.Date);
 		Assert.Equal(expectedLog.Service, filteredLogs!.First().Service);
 	}

@@ -19,6 +19,7 @@ public struct ValidatorErrors {
 	public static readonly string DateWithinIdlePeriod = "A data está dentro de um período ocioso.";
 	public static readonly string IdlePeriodHasPassed = "O período ocioso já passou.";
 	public static readonly string StartMustBeOlderThanFinish = "O horário de início deve ser anterior ao horário de término.";
+	public static readonly string DateIsNotValid = "Data inválida";
 
 	public static readonly string PriceMustBeNaturalNumber = "O preço deve ser maior ou igual a 0!";
 	public static readonly string MinPriceIsGreaterThanMaxPrice = "O MinPrice deve ser menor ou igual ao MaxPrice!";

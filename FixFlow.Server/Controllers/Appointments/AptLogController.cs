@@ -37,7 +37,9 @@ public class AptLogController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadLogs(string businessId, string? clientName, string? service, float minPrice, float maxPrice, DateTime minDateTime, DateTime maxDateTime, int offset, int limit) {
+	public async Task<IActionResult> ReadLogs(string businessId, string? clientName, string? service,
+												float minPrice, float maxPrice, DateTime minDateTime, DateTime maxDateTime,
+													int offset, int limit) {
 
 		var logsQuery = _context.Logs.AsQueryable();
 

@@ -31,7 +31,6 @@ public class BusinessController : ControllerBase {
 	/// Used when the User logs-in or opens the app
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpGet]
 	public async Task<IActionResult> GetBusiness(string businessId) {
 

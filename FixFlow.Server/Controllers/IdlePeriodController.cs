@@ -48,7 +48,7 @@ public class IdlePeriodController : ControllerBase {
 	/// <remarks>
 	/// Idle Periods are allowed to overlap
 	/// </remarks>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod))]
+	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(IdlePeriod))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPost]
 	public async Task<IActionResult> CreateIdlePeriod([FromBody] IdlePeriod idlePeriod) {
@@ -72,7 +72,7 @@ public class IdlePeriodController : ControllerBase {
 	/// <summary>
 	/// Removes Idle days
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpDelete]
 	public async Task<IActionResult> RemoveIdlePeriod([FromBody] string idlePeriodId) {

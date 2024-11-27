@@ -67,9 +67,9 @@ public class AptScheduleControllerTests {
 		Assert.Single(filteredLogs);
 
 		Assert.Equal(client1Name, filteredLogs!.First().Customer.FullName);
-		//Assert.Equal(expectedSchedule.Price, filteredLogs!.First().Price);	//TODO: fix this
-		//Assert.Equal(DateTime.UtcNow.AddDays(7).Date, filteredLogs!.First().dateTime.Date);	//TODO: fix this
-		//Assert.Equal(expectedSchedule.Service, filteredLogs!.First().Service);	//TODO: fix this
+		//Assert.Equal(expectedSchedule.Price, filteredLogs!.First().Price);
+		//Assert.Equal(DateTime.UtcNow.AddDays(7).Date, filteredLogs!.First().dateTime.Date);
+		//Assert.Equal(expectedSchedule.Service, filteredLogs!.First().Service);
 	}
 
 	[Fact]
@@ -109,7 +109,6 @@ public class AptScheduleControllerTests {
 		Assert.Equal(400, result!.StatusCode);
 		Assert.Equal(ValidatorErrors.UnlistedService, result.Value);
 	}
-	//TODO: finish the test below
 	/*
 		[Fact]
 		public async Task CreateSchedule_ReturnsBadRequest_WhenTimeNotWithinBusinessHours() {
