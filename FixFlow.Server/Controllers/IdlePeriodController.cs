@@ -27,17 +27,16 @@ public class IdlePeriodController : ControllerBase {
 	/// Returns all Idle Periods that contain the given date
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod[]))]
-	//TODO: tá errado isso aqui, GET request não tem body
 	[HttpGet]
-	public async Task<IActionResult> GetIdlePeriodsAtDate([FromBody] BusinessIdlePeriodsRequest period) {
+	public async Task<IActionResult> GetIdlePeriodsAtDate(string businessId, DateTime date) {
 
-		var business = _context.Business.Find(period.BusinessId);
+		var business = _context.Business.Find(businessId);
 		if (business == null) {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		var idlePeriods = await _context.IdlePeriods.Where(x => x.BusinessId == period.BusinessId)
-								.Where(x => x.start <= period.Date && x.finish >= period.Date)
+		var idlePeriods = await _context.IdlePeriods.Where(x => x.BusinessId == businessId)
+								.Where(x => x.start <= date && x.finish >= date)
 								.ToArrayAsync();
 
 		return Ok(idlePeriods);
