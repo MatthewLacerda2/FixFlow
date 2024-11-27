@@ -24,7 +24,7 @@ public class BusinessCalendarDayController : ControllerBase {
 	/// <summary>
 	/// Gets all the events for this month
 	/// </summary>
-	//Todo: change it to get all the events for a specific month
+	//TODO: change it to get all the events for a specific month
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessCalendarDay[]))]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[HttpGet]

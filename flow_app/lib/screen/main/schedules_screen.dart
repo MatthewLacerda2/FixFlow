@@ -5,6 +5,7 @@ import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/schedules_list.dart';
+import '../../utils/apt_filters.dart';
 import '../../utils/flow_storage.dart';
 import '../apt_filters_screen.dart';
 import '../apts/edit_apt/create_schedule_screen.dart';
@@ -12,7 +13,9 @@ import '../apts/schedule_screen.dart';
 import '../create_client_screen.dart';
 
 class SchedulesScreen extends StatefulWidget {
-  const SchedulesScreen({super.key});
+  const SchedulesScreen({super.key, required this.aptFilters});
+
+  final AptFilters aptFilters;
 
   @override
   _SchedulesScreenState createState() => _SchedulesScreenState();
@@ -31,16 +34,17 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
     final String businessId = bd!.id!;
 
-    final List<AptSchedule>? response =
-        await AptScheduleApi().apiV1SchedulesGet(
-      businessId: businessId,
-      minPrice: 0,
-      maxPrice: 999,
-      minDateTime: DateTime(2023),
-      maxDateTime: DateTime(2033), //TODO: change once maxDate is nullable
-      limit: 30,
-      offset: 0,
-    );
+    final AptFilters f = widget.aptFilters;
+
+    final List<AptSchedule>? response = await AptScheduleApi()
+        .apiV1SchedulesGet(
+            businessId: businessId,
+            offset: f.offset,
+            limit: f.limit,
+            minPrice: f.minPrice,
+            maxPrice: f.maxPrice,
+            minDateTime: f.minDateTime,
+            maxDateTime: f.maxDateTime);
     return response ?? <AptSchedule>[]; // Handle null safety
   }
 
@@ -102,7 +106,8 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                             context,
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) =>
-                                  const AptFiltersScreen(),
+                                  AptFiltersScreen(
+                                      aptFilters: widget.aptFilters),
                             ),
                           );
                         },

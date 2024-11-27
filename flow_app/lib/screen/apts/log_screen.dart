@@ -195,7 +195,9 @@ class LogScreenState extends State<LogScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: _isEdited ? _saveChanges : null,
+                  onPressed: () {
+                    _saveChanges();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.green : Colors.grey,
                   ),

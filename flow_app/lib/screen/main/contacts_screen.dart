@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
+import '../../utils/apt_filters.dart';
 import '../apt_filters_screen.dart';
 import '../apts/contact_screen.dart';
 
 class ContactsScreen extends StatelessWidget {
-  const ContactsScreen({super.key});
+  const ContactsScreen({super.key, required this.aptFilters});
+
+  final AptFilters aptFilters;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +67,9 @@ class ContactsScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) =>
-                                  const AptFiltersScreen(),
+                                  AptFiltersScreen(
+                                aptFilters: aptFilters,
+                              ),
                             ),
                           );
                         },

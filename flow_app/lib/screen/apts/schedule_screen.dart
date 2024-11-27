@@ -161,7 +161,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () async {
-                    _isEdited ? _saveChanges : null;
+                    _saveChanges();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.green : Colors.grey,

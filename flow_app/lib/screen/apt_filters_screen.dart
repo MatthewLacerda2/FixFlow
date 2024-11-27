@@ -3,9 +3,26 @@ import 'package:flutter/material.dart';
 import '../components/Inputs/customer_dropdown.dart';
 import '../components/Inputs/date_picker_rectangle.dart';
 import '../components/Inputs/time_picker_rectangle.dart';
+import '../utils/apt_filters.dart';
+import '../utils/date_time_utils.dart';
 
-class AptFiltersScreen extends StatelessWidget {
-  const AptFiltersScreen({super.key});
+class AptFiltersScreen extends StatefulWidget {
+  const AptFiltersScreen({super.key, required this.aptFilters});
+
+  final AptFilters aptFilters;
+
+  @override
+  State<AptFiltersScreen> createState() => _AppFiltersScreenState();
+}
+
+class _AppFiltersScreenState extends State<AptFiltersScreen> {
+  late AptFilters auxAptFilters;
+
+  @override
+  void initState() {
+    super.initState();
+    auxAptFilters = widget.aptFilters;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +40,7 @@ class AptFiltersScreen extends StatelessWidget {
             children: <Widget>[
               CustomerDropdown(
                 onCustomerIdChanged: (String id) {
-                  print(id);
+                  auxAptFilters.clientId = id;
                 },
               ),
               const SizedBox(height: 18),
@@ -33,7 +50,7 @@ class AptFiltersScreen extends StatelessWidget {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (String value) {
-                  print('Service is: $value');
+                  auxAptFilters.service = value;
                 },
               ),
               const SizedBox(height: 18),
@@ -47,7 +64,7 @@ class AptFiltersScreen extends StatelessWidget {
                       ),
                       keyboardType: TextInputType.number,
                       onChanged: (String value) {
-                        print('Min Price is: $value');
+                        auxAptFilters.minPrice = double.parse(value);
                       },
                     ),
                   ),
@@ -60,7 +77,7 @@ class AptFiltersScreen extends StatelessWidget {
                       ),
                       keyboardType: TextInputType.number,
                       onChanged: (String value) {
-                        print('Max Price is: $value');
+                        auxAptFilters.maxPrice = double.parse(value);
                       },
                     ),
                   ),
@@ -78,7 +95,8 @@ class AptFiltersScreen extends StatelessWidget {
                     child: TimePickerRectangle(
                       initialTime: TimeOfDay.now(),
                       onTimeSelected: (TimeOfDay time) {
-                        print('Min Hour is: $time');
+                        auxAptFilters.minDateTime = DateTimeUtils.setTime(
+                            time, auxAptFilters.minDateTime);
                       },
                     ),
                   ),
@@ -87,7 +105,8 @@ class AptFiltersScreen extends StatelessWidget {
                     child: TimePickerRectangle(
                       initialTime: TimeOfDay.now(),
                       onTimeSelected: (TimeOfDay time) {
-                        print('Max Hour is: $time');
+                        auxAptFilters.maxDateTime = DateTimeUtils.setTime(
+                            time, auxAptFilters.maxDateTime);
                       },
                     ),
                   ),
@@ -102,7 +121,8 @@ class AptFiltersScreen extends StatelessWidget {
                     child: DatePickerRectangle(
                       initialDate: DateTime.now(),
                       onDateSelected: (DateTime date) {
-                        print('Min Date is: $date');
+                        auxAptFilters.minDateTime = DateTimeUtils.setDate(
+                            date, auxAptFilters.minDateTime);
                       },
                     ),
                   ),
@@ -111,8 +131,47 @@ class AptFiltersScreen extends StatelessWidget {
                     child: DatePickerRectangle(
                       initialDate: DateTime.now(),
                       onDateSelected: (DateTime date) {
-                        print('Max Date is: $date');
+                        auxAptFilters.maxDateTime = DateTimeUtils.setDate(
+                            date, auxAptFilters.maxDateTime);
                       },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () async {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        //TODO: make the call
+                        SnackBar(
+                          content: Text(auxAptFilters.toString()),
+                        ),
+                      );
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    child: const Text(
+                      'Salvar',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 5),
+                    ),
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ),
                 ],

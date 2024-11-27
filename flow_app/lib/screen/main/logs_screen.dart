@@ -5,6 +5,7 @@ import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/logs_list.dart';
+import '../../utils/apt_filters.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
 import '../apt_filters_screen.dart';
@@ -13,7 +14,9 @@ import '../apts/log_screen.dart';
 import '../create_client_screen.dart';
 
 class LogsScreen extends StatefulWidget {
-  const LogsScreen({super.key});
+  const LogsScreen({super.key, required this.aptFilters});
+
+  final AptFilters aptFilters;
 
   AptLog getLog() {
     final Customer cu =
@@ -47,14 +50,16 @@ class _LogsScreenState extends State<LogsScreen> {
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
     final String businessId = bd!.id!;
 
+    final AptFilters f = widget.aptFilters;
+
     final List<AptLog>? response = await AptLogApi().apiV1LogsGet(
-        limit: 100,
-        offset: 0,
-        maxPrice: 9999,
-        minPrice: 0,
-        minDateTime: DateTime(2023),
-        maxDateTime: DateTime(2025),
-        businessId: businessId);
+        businessId: businessId,
+        offset: f.offset,
+        limit: f.limit,
+        minPrice: f.minPrice,
+        maxPrice: f.maxPrice,
+        minDateTime: f.minDateTime,
+        maxDateTime: f.maxDateTime);
 
     return response ?? <AptLog>[]; // Handle null safety
   }
@@ -118,7 +123,9 @@ class _LogsScreenState extends State<LogsScreen> {
                             context,
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) =>
-                                  const AptFiltersScreen(),
+                                  AptFiltersScreen(
+                                aptFilters: widget.aptFilters,
+                              ),
                             ),
                           );
                         },
