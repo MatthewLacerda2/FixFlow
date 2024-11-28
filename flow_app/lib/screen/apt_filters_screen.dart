@@ -145,7 +145,6 @@ class _AppFiltersScreenState extends State<AptFiltersScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        //TODO: make the call
                         SnackBar(
                           content: Text(auxAptFilters.toString()),
                         ),
