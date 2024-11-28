@@ -10,6 +10,8 @@ BackEnd: ASP.NET Core WebApi, which handles HTTP CRUD requests to a PostGre DB
 
 Front-End: Flutter
 
+The folder 'client_sdk' is the http client for the flutter app, generated with openapi's client generation tool
+
 ---
 
 **How to run:**
