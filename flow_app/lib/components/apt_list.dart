@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-class LogsList extends StatelessWidget {
-  const LogsList({
+import '../utils/string_utils.dart';
+
+class AptList extends StatelessWidget {
+  const AptList({
     super.key,
     required this.clientName,
     required this.price,
@@ -62,9 +64,9 @@ class LogsList extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 2),
-              Text(service != null ? 'Serviço: $service' : '-'),
+              Text(StringUtils.normalIfBlank(service)),
               const SizedBox(height: 2),
-              Text('Observação: ${observation ?? ''}'),
+              Text('Observação: ${StringUtils.normalIfBlank(observation)}')
             ],
           ),
           onTap: onTap,

@@ -1,11 +1,9 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 import '../../components/Inputs/circular_button.dart';
-import '../../components/logs_list.dart';
-import '../../components/schedules_list.dart';
+import '../../components/apt_list.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
 import '../apts/log_screen.dart';
@@ -35,14 +33,6 @@ class CalendarScreenState extends State<CalendarScreen> {
       final BusinessDTO? business = await FlowStorage.getBusinessDTO();
       final String? bId = business!.id;
 
-      final Response res = await BusinessCalendarDayApi()
-          .apiV1BusinessCalendarDayGetWithHttpInfo(
-              businessId: bId,
-              month: DateTime.now().month,
-              year: DateTime.now().year);
-      print("debug");
-      print(res.body);
-      print("is on the table");
       final List<BusinessCalendarDay>? calendar = await BusinessCalendarDayApi()
           .apiV1BusinessCalendarDayGet(
               businessId: bId,
@@ -278,7 +268,7 @@ class CalendarScreenState extends State<CalendarScreen> {
             ),
           ),
         ...selectedDayData.schedules!.map(
-          (AptSchedule item) => SchedulesList(
+          (AptSchedule item) => AptList(
             clientName: item.customer!.fullName,
             price: item.price ?? 0,
             hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
@@ -314,7 +304,7 @@ class CalendarScreenState extends State<CalendarScreen> {
             ),
           ),
         ...selectedDayData.logs!.map(
-          (AptLog item) => LogsList(
+          (AptLog item) => AptList(
             clientName: item.customer!.fullName,
             price: item.price ?? 4.2,
             hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../components/Inputs/name_input_field.dart';
 import '../../../components/Screens/Overview/Clients/client_list.dart';
 import '../../../utils/flow_storage.dart';
+import '../../../utils/string_utils.dart';
 import 'client_screen.dart';
 
 class ClientsScreen extends StatefulWidget {
@@ -96,7 +97,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
                         name: customer.fullName,
                         lastAppointment: DateTime.now(),
                         phone: customer.phoneNumber,
-                        email: customer.email ?? '-',
+                        email: StringUtils.normalIfBlank(customer.email),
                         onTap: () async {
                           final CustomerRecord? record = await CustomerApi()
                               .apiV1CustomerRecordGet(customerId: customer.id);

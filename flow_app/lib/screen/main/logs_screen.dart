@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
-import '../../components/logs_list.dart';
+import '../../components/apt_list.dart';
 import '../../utils/apt_filters.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
+import '../../utils/string_utils.dart';
 import '../apt_filters_screen.dart';
 import '../apts/edit_apt/create_log_screen.dart';
 import '../apts/log_screen.dart';
@@ -17,21 +18,6 @@ class LogsScreen extends StatefulWidget {
   const LogsScreen({super.key, required this.aptFilters});
 
   final AptFilters aptFilters;
-
-  AptLog getLog() {
-    final Customer cu =
-        Customer(businessId: "businessId", fullName: "full Name");
-    return AptLog(
-        id: "id",
-        customer: cu,
-        customerId: "cId",
-        businessId: "bId",
-        dateTime: DateTime.now(),
-        price: 100,
-        description: "something",
-        scheduleId: "sId",
-        service: "facial");
-  }
 
   @override
   _LogsScreenState createState() => _LogsScreenState();
@@ -60,7 +46,6 @@ class _LogsScreenState extends State<LogsScreen> {
         maxPrice: f.maxPrice,
         minDateTime: f.minDateTime,
         maxDateTime: f.maxDateTime);
-
     return response ?? <AptLog>[]; // Handle null safety
   }
 
@@ -165,19 +150,20 @@ class _LogsScreenState extends State<LogsScreen> {
                                     const Divider(
                               color: Colors.transparent,
                               thickness: 0,
-                              height: 9,
+                              height: 10,
                             ),
                             itemBuilder: (BuildContext context, int index) {
                               final AptLog log = logs[index];
-                              return LogsList(
+                              return AptList(
                                 clientName: log.customer!.fullName,
                                 price: log.price ?? 0,
                                 hour: TimeOfDay.fromDateTime(log.dateTime!)
                                     .format(context),
                                 date:
                                     DateTimeUtils.dateOnlyString(log.dateTime!),
-                                service: log.service,
-                                observation: log.description,
+                                service: StringUtils.normalIfBlank(log.service),
+                                observation:
+                                    StringUtils.normalIfBlank(log.description),
                                 onTap: () {
                                   Navigator.push(
                                     context,

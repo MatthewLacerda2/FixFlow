@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
-import '../../components/schedules_list.dart';
+import '../../components/apt_list.dart';
 import '../../utils/apt_filters.dart';
+import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
+import '../../utils/string_utils.dart';
 import '../apt_filters_screen.dart';
 import '../apts/edit_apt/create_schedule_screen.dart';
 import '../apts/schedule_screen.dart';
@@ -28,11 +30,6 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
   void initState() {
     super.initState();
     _schedulesFuture = _fetchSchedules();
-    print("umubuga fei di tal");
-    print("\n");
-    print(widget.aptFilters);
-    print("\n");
-    print("umubuga fei di tal");
   }
 
   Future<List<AptSchedule>> _fetchSchedules() async {
@@ -51,10 +48,6 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
             minDateTime: f.minDateTime,
             maxDateTime: f.maxDateTime);
     return response ?? <AptSchedule>[]; // Handle null safety
-  }
-
-  String getNormalizedString(String? string) {
-    return (string == null || string.isEmpty) ? '-' : string;
   }
 
   @override
@@ -146,20 +139,21 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                         separatorBuilder: (BuildContext context, int index) =>
                             const Divider(
                                 color: Colors.transparent,
-                                thickness: 1,
-                                height: 14),
+                                thickness: 0,
+                                height: 10),
                         itemBuilder: (BuildContext context, int index) {
                           final AptSchedule schedule = schedules[index];
-                          return SchedulesList(
+                          return AptList(
                             clientName: schedule.customer!.fullName,
                             price: schedule.price ?? 0.0,
                             hour: TimeOfDay.fromDateTime(schedule.dateTime!)
                                 .format(context),
-                            date:
-                                '${schedule.dateTime!.day}/${schedule.dateTime!.month}/${schedule.dateTime!.year}',
-                            service: getNormalizedString(schedule.service),
+                            date: DateTimeUtils.dateOnlyString(
+                                schedule.dateTime!),
+                            service:
+                                StringUtils.normalIfBlank(schedule.service),
                             observation:
-                                getNormalizedString(schedule.observation),
+                                StringUtils.normalIfBlank(schedule.observation),
                             onTap: () {
                               Navigator.push(
                                 context,

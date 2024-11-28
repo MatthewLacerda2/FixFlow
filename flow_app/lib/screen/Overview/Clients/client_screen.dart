@@ -2,8 +2,9 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/colored_border_text_button.dart';
-import '../../../components/logs_list.dart';
+import '../../../components/apt_list.dart';
 import '../../../utils/date_time_utils.dart';
+import '../../../utils/string_utils.dart';
 import '../../apts/log_screen.dart';
 
 class ClientScreen extends StatelessWidget {
@@ -121,14 +122,14 @@ class ClientScreen extends StatelessWidget {
             ...record.logs!.map((AptLog log) {
               final String timeOfDayString =
                   TimeOfDay.fromDateTime(log.dateTime!).format(context);
-              return LogsList(
+              return AptList(
                 clientName: record.fullName,
                 price: log.price ??
                     0, //TODO: prices are coming null, this is just a band-aid
                 hour: timeOfDayString,
                 date: DateTimeUtils.dateOnlyString(log.dateTime!),
-                service: log.service ?? '-',
-                observation: log.description ?? '-',
+                service: StringUtils.normalIfBlank(log.service),
+                observation: StringUtils.normalIfBlank(log.description),
                 onTap: () {
                   Navigator.push(
                     context,
