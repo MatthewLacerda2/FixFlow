@@ -13,6 +13,7 @@ public class BusinessTimeSpan {
 
 	public BusinessTimeSpan(TimeSpan start, TimeSpan finish) {
 		Id = Guid.NewGuid().ToString();
+		IsActive = true;
 		Start = start;
 		Finish = finish;
 	}

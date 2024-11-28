@@ -1,13 +1,17 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:snackbar/snackbar.dart';
 
+import '../../../components/Inputs/customer_dropdown.dart';
 import '../../../components/Inputs/date_picker_rectangle.dart';
 import '../../../components/Inputs/limited_text_input_field.dart';
-import '../../../components/Inputs/name_input_field.dart';
 import '../../../components/Inputs/price_input_field.dart';
+import '../../../components/Inputs/services_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
+import '../../../utils/flow_storage.dart';
+import '../../main/main_screen.dart';
 
-//TODO: http request to check if client exists
 class CreateLogScreen extends StatefulWidget {
   const CreateLogScreen({
     super.key,
@@ -34,6 +38,11 @@ class CreateLogScreenState extends State<CreateLogScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 
+  String customerId = "";
+  DateTime whenShouldComeBack = DateTime.now();
+  DateTime registerDate = DateTime.now();
+
+  String service = "";
   bool _isEdited = false;
 
   @override
@@ -50,15 +59,41 @@ class CreateLogScreenState extends State<CreateLogScreen> {
     });
   }
 
-  void _saveChanges() {
-    setState(() {
-      snackUndo("Confirmar?", () {
-        // TODO: load animation for when we wait for the response of the server
-        // TODO: Check if the response is 200OK or something else
-        snack("Salvo!");
-        Navigator.pop(context);
-      }, undoText: "Confirmar");
-    });
+  void _saveChanges() async {
+    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String businessId = bd!.id!;
+
+    final CreateAptLog createLog = CreateAptLog(
+        customerId: customerId,
+        businessId: businessId,
+        dateTime: registerDate,
+        observation: _observacaoController.text,
+        price: double.tryParse(_precoController.text) ?? 0.0,
+        service: service,
+        whenShouldCustomerComeBack: whenShouldComeBack);
+
+    final Response response =
+        await AptLogApi().apiV1LogsPostWithHttpInfo(createAptLog: createLog);
+
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Atendimento registrado!"),
+        ),
+      );
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute<void>(
+            builder: (BuildContext context) => const MainScreen(
+                  initialIndex: 3,
+                )),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      print(createLog);
+      print(response.body);
+      snack("Error: $response");
+    }
   }
 
   void _cancelChanges() {
@@ -93,10 +128,9 @@ class CreateLogScreenState extends State<CreateLogScreen> {
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 22),
                         )
-                      : NameInputField(
-                          placeholder: 'Cliente',
-                          onNameChanged: (String name) {
-                            print('Name is: $name');
+                      : CustomerDropdown(
+                          onCustomerIdChanged: (String id) {
+                            customerId = id;
                           },
                         ),
                 ),
@@ -125,6 +159,7 @@ class CreateLogScreenState extends State<CreateLogScreen> {
                     DatePickerRectangle(
                       initialDate: widget.dia,
                       onDateSelected: (DateTime date) {
+                        registerDate = date;
                         _toggleEdit();
                       },
                     ),
@@ -137,6 +172,31 @@ class CreateLogScreenState extends State<CreateLogScreen> {
                     TimePickerRectangle(
                       initialTime: widget.horario,
                       onTimeSelected: (TimeOfDay time) {
+                        _toggleEdit();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ServicesInputField(
+              onServiceSelected: (String? selectedService) {
+                service = selectedService ?? "";
+              },
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    const Text('Retornar em:', style: TextStyle(fontSize: 18)),
+                    const SizedBox(width: 6),
+                    DatePickerRectangle(
+                      initialDate: widget.dia,
+                      onDateSelected: (DateTime date) {
+                        whenShouldComeBack = date;
                         _toggleEdit();
                       },
                     ),
@@ -163,7 +223,9 @@ class CreateLogScreenState extends State<CreateLogScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: _isEdited ? _saveChanges : null,
+                  onPressed: () {
+                    _saveChanges();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.green : Colors.grey,
                   ),

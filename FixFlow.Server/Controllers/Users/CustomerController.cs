@@ -15,7 +15,7 @@ namespace Server.Controllers;
 /// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(Customer))]
-[Authorize]
+//[Authorize]
 [Produces("application/json")]
 public class CustomerController : ControllerBase {
 
@@ -67,7 +67,7 @@ public class CustomerController : ControllerBase {
 	/// <summary>
 	/// Gets a number of filtered Customers
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CustomerDTO[]>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDTO[]))]
 	[HttpGet]
 	public async Task<IActionResult> ReadCustomers(string businessId, uint offset, uint limit, string? fullname) {
 		var clientsQuery = _context.Customers.AsQueryable();
@@ -75,7 +75,8 @@ public class CustomerController : ControllerBase {
 		clientsQuery = clientsQuery.Where(client => client.BusinessId == businessId);
 
 		if (!string.IsNullOrWhiteSpace(fullname)) {
-			clientsQuery = clientsQuery.Where(client => client.FullName.Contains(fullname));
+			//TODO: this is a gambiarra. should've used StringComparison.OrdinalIgnoreCase, but it's bugging. Fix it
+			clientsQuery = clientsQuery.Where(client => client.FullName.ToLower().Contains(fullname.ToLower()));
 		}
 
 		clientsQuery = clientsQuery.OrderBy(client => client.FullName).ThenBy(client => client.PhoneNumber);

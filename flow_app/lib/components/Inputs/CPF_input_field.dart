@@ -1,10 +1,12 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'custom_input_field.dart';
 
-class CPFInputField extends StatelessWidget {
-  const CPFInputField({
+class CpfInputField extends StatelessWidget {
+  const CpfInputField({
     super.key,
     required this.placeholder,
     required this.onCPFChanged,
@@ -20,13 +22,13 @@ class CPFInputField extends StatelessWidget {
       inputType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly,
-        _CPFInputFormatter(),
+        _CpfInputFormatter(),
       ],
     );
   }
 }
 
-class _CPFInputFormatter extends TextInputFormatter {
+class _CpfInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,

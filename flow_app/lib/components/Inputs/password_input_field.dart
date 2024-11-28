@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-//TODO: password must contain uppercase letters, lowercase letters, numbers, special characters, hieroglyphics and the blood of a virgin
 class PasswordInputField extends StatefulWidget {
   const PasswordInputField({
     super.key,
@@ -9,7 +8,6 @@ class PasswordInputField extends StatefulWidget {
   });
   final String placeholder;
 
-  /// Function called when the value is changed
   final Function(String)? onPasswordChanged;
 
   @override

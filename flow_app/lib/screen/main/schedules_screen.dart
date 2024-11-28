@@ -1,16 +1,61 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/schedules_list.dart';
+import '../../utils/apt_filters.dart';
+import '../../utils/flow_storage.dart';
 import '../apt_filters_screen.dart';
 import '../apts/edit_apt/create_schedule_screen.dart';
 import '../apts/schedule_screen.dart';
 import '../create_client_screen.dart';
 
-class SchedulesScreen extends StatelessWidget {
-  const SchedulesScreen({super.key});
+class SchedulesScreen extends StatefulWidget {
+  const SchedulesScreen({super.key, required this.aptFilters});
+
+  final AptFilters aptFilters;
+
+  @override
+  _SchedulesScreenState createState() => _SchedulesScreenState();
+}
+
+class _SchedulesScreenState extends State<SchedulesScreen> {
+  late Future<List<AptSchedule>> _schedulesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _schedulesFuture = _fetchSchedules();
+    print("umubuga fei di tal");
+    print("\n");
+    print(widget.aptFilters);
+    print("\n");
+    print("umubuga fei di tal");
+  }
+
+  Future<List<AptSchedule>> _fetchSchedules() async {
+    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String businessId = bd!.id!;
+
+    final AptFilters f = widget.aptFilters;
+
+    final List<AptSchedule>? response = await AptScheduleApi()
+        .apiV1SchedulesGet(
+            businessId: businessId,
+            offset: f.offset,
+            limit: f.limit,
+            minPrice: f.minPrice,
+            maxPrice: f.maxPrice,
+            minDateTime: f.minDateTime,
+            maxDateTime: f.maxDateTime);
+    return response ?? <AptSchedule>[]; // Handle null safety
+  }
+
+  String getNormalizedString(String? string) {
+    return (string == null || string.isEmpty) ? '-' : string;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +81,7 @@ class SchedulesScreen extends StatelessWidget {
                     ),
                   ]),
                 ),
-                Container(
-                  color: Colors.black,
-                  height: 1,
-                ),
+                Container(color: Colors.black, height: 1),
                 const SizedBox(height: 8),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -65,11 +107,11 @@ class SchedulesScreen extends StatelessWidget {
                       ColoredBorderTextButton(
                         text: "Filtros",
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.push<AptFilters>(
                             context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) =>
-                                  const AptFiltersScreen(),
+                            MaterialPageRoute(
+                              builder: (context) => AptFiltersScreen(
+                                  aptFilters: widget.aptFilters),
                             ),
                           );
                         },
@@ -82,32 +124,51 @@ class SchedulesScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: ListView.separated(
-                    itemCount: 10,
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(
-                            color: Colors.transparent, thickness: 1, height: 9),
-                    itemBuilder: (BuildContext context, int index) {
-                      return SchedulesList(
-                        clientName: 'nomeDoCliente',
-                        price: 150.00,
-                        hour: '17h45m',
-                        date: '21/12/24',
-                        service: 'troca de peças',
-                        observation: 'Agendamento de numero $index',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) => ScheduleScreen(
-                                cliente: 'Fulano $index',
-                                contactado: true,
-                                horario: const TimeOfDay(hour: 14, minute: 30),
-                                dia: DateTime(2024, 8, 27),
-                                preco: 150.00,
-                                observacao: "This is an observation",
-                              ),
-                            ),
+                  child: FutureBuilder<List<AptSchedule>>(
+                    future: _schedulesFuture,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<AptSchedule>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text('Error: ${snapshot.error}'),
+                        );
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(
+                          child: Text('Não há agendamentos.'),
+                        );
+                      }
+
+                      final List<AptSchedule> schedules = snapshot.data!;
+                      return ListView.separated(
+                        itemCount: schedules.length,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const Divider(
+                                color: Colors.transparent,
+                                thickness: 1,
+                                height: 14),
+                        itemBuilder: (BuildContext context, int index) {
+                          final AptSchedule schedule = schedules[index];
+                          return SchedulesList(
+                            clientName: schedule.customer!.fullName,
+                            price: schedule.price ?? 0.0,
+                            hour: TimeOfDay.fromDateTime(schedule.dateTime!)
+                                .format(context),
+                            date:
+                                '${schedule.dateTime!.day}/${schedule.dateTime!.month}/${schedule.dateTime!.year}',
+                            service: getNormalizedString(schedule.service),
+                            observation:
+                                getNormalizedString(schedule.observation),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      ScheduleScreen(schedule: schedule),
+                                ),
+                              );
+                            },
                           );
                         },
                       );
@@ -130,9 +191,9 @@ class SchedulesScreen extends StatelessWidget {
                       nextScreen: CreateScheduleScreen(
                         contactado: false,
                         horario: TimeOfDay.now(),
-                        dia: DateTime(2024, 8, 27),
+                        dia: DateTime.now(),
                         preco: 150.00,
-                        observacao: "This is an observation",
+                        observacao: "",
                       ),
                     ),
                   ),
@@ -152,9 +213,9 @@ class SchedulesScreen extends StatelessWidget {
                     builder: (BuildContext context) => CreateScheduleScreen(
                       contactado: false,
                       horario: TimeOfDay.now(),
-                      dia: DateTime(2024, 8, 27),
+                      dia: DateTime.now(),
                       preco: 150.00,
-                      observacao: "This is an observation",
+                      observacao: "",
                     ),
                   ),
                 );

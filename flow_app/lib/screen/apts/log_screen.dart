@@ -1,28 +1,25 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
-import 'package:snackbar/snackbar.dart';
+import 'package:http/http.dart';
 
+import '../../components/Buttons/custom_button.dart';
+import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/limited_text_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
+import '../../components/Inputs/services_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
+import '../../components/warning_modal.dart';
+import '../../utils/date_time_utils.dart';
+import '../main/main_screen.dart';
 
-//TODO: buttons must ask for a confirmation
 class LogScreen extends StatefulWidget {
   const LogScreen({
     super.key,
-    required this.cliente,
-    required this.marcouHorario,
-    required this.horario,
-    required this.dia,
-    required this.preco,
-    required this.observacao,
+    required this.log,
   });
-  final String cliente;
-  final bool marcouHorario;
-  final TimeOfDay horario;
-  final DateTime dia;
-  final double preco;
-  final String observacao;
+
+  final AptLog log;
 
   @override
   LogScreenState createState() => LogScreenState();
@@ -32,14 +29,26 @@ class LogScreenState extends State<LogScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 
+  UpdateAptLog upLog = UpdateAptLog(id: "id");
+
   bool _isEdited = false;
 
   @override
   void initState() {
     super.initState();
-    _precoController =
-        TextEditingController(text: widget.preco.toStringAsFixed(2));
-    _observacaoController = TextEditingController(text: widget.observacao);
+
+    final AptLog log = widget.log;
+    upLog = UpdateAptLog(
+        id: log.id,
+        dateTime: log.dateTime,
+        description: log.description,
+        price: log.price,
+        scheduleId: log.scheduleId,
+        service: log.service);
+
+    _precoController = TextEditingController(
+        text: widget.log.price?.toStringAsFixed(2) ?? 0.toString());
+    _observacaoController = TextEditingController(text: widget.log.description);
   }
 
   void _toggleEdit() {
@@ -48,23 +57,47 @@ class LogScreenState extends State<LogScreen> {
     });
   }
 
-  void _saveChanges() {
-    setState(() {
-      snackUndo("Confirmar?", () {
-        // TODO: load animation for when we wait for the response of the server
-        // TODO: Check if the response is 200OK or something else
-        snack("Salvo!");
-        Navigator.pop(context);
-      }, undoText: "Confirmar");
-    });
+  void _saveChanges() async {
+    final Response response =
+        await AptLogApi().apiV1LogsPatchWithHttpInfo(updateAptLog: upLog);
+    snackbarResponse(response);
+  }
+
+  void snackbarResponse(Response response) {
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Atendimento editado!"),
+        ),
+      );
+      goToLogsScreen();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.body),
+        ),
+      );
+    }
   }
 
   void _cancelChanges() {
     setState(() {
       _isEdited = false;
-      _precoController.text = widget.preco.toStringAsFixed(2);
-      _observacaoController.text = widget.observacao;
+      _precoController.text =
+          widget.log.price?.toStringAsFixed(2) ?? 0.toString();
+      _observacaoController.text = widget.log.description ?? "";
     });
+  }
+
+  void goToLogsScreen() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute<void>(
+          builder: (BuildContext context) => const MainScreen(
+                initialIndex: 3,
+              )),
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
@@ -82,11 +115,11 @@ class LogScreenState extends State<LogScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Cliente: ${widget.cliente}',
+                  'Cliente: ${widget.log.customer!.fullName}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 22),
                 ),
-                if (widget.marcouHorario)
+                if (widget.log.scheduleId != null)
                   const Row(
                     children: <Widget>[
                       Icon(Icons.check, color: Colors.blue, size: 22),
@@ -101,16 +134,25 @@ class LogScreenState extends State<LogScreen> {
               ],
             ),
             const SizedBox(height: 24),
+            ServicesInputField(
+              initialService: widget.log.service,
+              onServiceSelected: (String? selectedService) {
+                upLog.service = selectedService;
+              },
+            ),
+            const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[                
+              children: <Widget>[
                 const Text(
                   'Dia:',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 DatePickerRectangle(
-                  initialDate: widget.dia,
+                  initialDate: widget.log.dateTime!,
                   onDateSelected: (DateTime date) {
+                    upLog.dateTime =
+                        DateTimeUtils.setDate(upLog.dateTime!, date);
                     _toggleEdit();
                   },
                 ),
@@ -119,17 +161,21 @@ class LogScreenState extends State<LogScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
                 TimePickerRectangle(
-                  initialTime: widget.horario,
+                  initialTime: TimeOfDay.fromDateTime(widget.log.dateTime!),
                   onTimeSelected: (TimeOfDay time) {
+                    upLog.dateTime =
+                        DateTimeUtils.setTime(time, upLog.dateTime!);
                     _toggleEdit();
                   },
                 ),
               ],
             ),
             const SizedBox(height: 16),
+            const SizedBox(height: 16),
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
+                upLog.price = double.parse(value);
                 _toggleEdit();
               },
             ),
@@ -138,14 +184,19 @@ class LogScreenState extends State<LogScreen> {
               controller: _observacaoController,
               maxLength: 250,
               labelText: 'Observação',
-              onChanged: (String value) => _toggleEdit(),
+              onChanged: (String value) {
+                upLog.description = value;
+                _toggleEdit();
+              },
             ),
             const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: _isEdited ? _saveChanges : null,
+                  onPressed: () {
+                    _saveChanges();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.green : Colors.grey,
                   ),
@@ -167,7 +218,45 @@ class LogScreenState extends State<LogScreen> {
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(height: 52),
+            RoundedIconedButton(
+                icon: Icons.delete_forever_rounded,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return WarningModal(
+                        title: "Você tem certeza?",
+                        description:
+                            "Deletar o agendamento? Esta ação não poderá ser desfeita\n",
+                        optionOne: CustomButton(
+                          text: "Sim",
+                          textSize: 14,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.black,
+                          onPressed: () {
+                            AptLogApi().apiV1LogsDelete(body: widget.log.id);
+                            goToLogsScreen();
+                          },
+                        ),
+                        optionTwo: CustomButton(
+                          text: "Não",
+                          textSize: 14,
+                          backgroundColor: Colors.blue,
+                          textColor: Colors.black,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                size: 54,
+                bottom: 46,
+                right: 46,
+                color: Colors.red),
           ],
         ),
       ),

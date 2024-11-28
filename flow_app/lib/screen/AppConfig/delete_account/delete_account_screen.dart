@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
-import '../../main/account/app_config_screen.dart';
+import '../../main/main_screen.dart';
 import '../are_you_sure_screen.dart';
 
 class DeleteAccountScreen extends StatelessWidget {
@@ -58,8 +58,9 @@ class DeleteAccountScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const AppConfigScreen()),
+                            builder: (BuildContext context) => const MainScreen(
+                                  initialIndex: 4,
+                                )),
                       );
                     },
                   ),
@@ -85,7 +86,6 @@ class DeleteAccountScreen extends StatelessWidget {
                                 "Sua conta foi desativada, mas não perdida. Você pode reativar-la e continuar daonde parou, com o mesmo e-mail e senha\n\nVolte logo!",
                             onPressed: () {
                               //TODO: http request to deactivate account
-                              print("debug");
                             },
                           ),
                         ),

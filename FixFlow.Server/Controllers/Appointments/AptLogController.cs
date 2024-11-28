@@ -6,7 +6,6 @@ using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
-using Server.Models.Filters;
 using Server.Models.Utils;
 
 namespace Server.Controllers;
@@ -19,7 +18,7 @@ namespace Server.Controllers;
 /// </remarks>
 [ApiController]
 [Route(Common.api_v1 + "logs")]
-[Authorize]
+//[Authorize]
 [Produces("application/json")]
 public class AptLogController : ControllerBase {
 
@@ -36,58 +35,39 @@ public class AptLogController : ControllerBase {
 	/// <summary>
 	/// Gets a number of filtered Logs
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptLog[]>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadLogs([FromQuery] AptLogFilter filter) {
+	public async Task<IActionResult> ReadLogs(string businessId, string? clientName, string? service,
+												float minPrice, float maxPrice, DateTime minDateTime, DateTime maxDateTime,
+													int offset, int limit) {
 
 		var logsQuery = _context.Logs.AsQueryable();
 
-		logsQuery = logsQuery.Where(x => x.BusinessId == filter.businessId);
+		logsQuery = logsQuery.Where(x => x.BusinessId == businessId);
 
-		if (!string.IsNullOrWhiteSpace(filter.client)) {
-			logsQuery = logsQuery.Where(x => x.Customer.FullName.Contains(filter.client!));
+		if (!string.IsNullOrWhiteSpace(clientName)) {
+			logsQuery = logsQuery.Where(x => x.Customer.FullName.Contains(clientName!));
 		}
 
-		if (!string.IsNullOrWhiteSpace(filter.service)) {
-			logsQuery = logsQuery.Where(x => x.Service != null && x.Service.Contains(filter.service!));
+		if (!string.IsNullOrWhiteSpace(service)) {
+			logsQuery = logsQuery.Where(x => x.Service != null && x.Service.Contains(service!));
 		}
 
-		logsQuery = logsQuery.Where(x => x.Price >= filter.minPrice);
-		logsQuery = logsQuery.Where(x => x.Price <= filter.maxPrice);
+		logsQuery = logsQuery.Where(x => x.Price >= minPrice);
+		logsQuery = logsQuery.Where(x => x.Price <= maxPrice);
 
-		logsQuery = logsQuery.Where(x => x.dateTime.Date >= filter.minDateTime.Date);
-		logsQuery = logsQuery.Where(x => x.dateTime.Date <= filter.maxDateTime.Date);
-
-		switch (filter.sort) {
-			case LogSort.Customer:
-				logsQuery = logsQuery.OrderBy(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenByDescending(s => s.Price).ThenBy(s => s.Id);
-				break;
-			case LogSort.Date:
-				logsQuery = logsQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
-				break;
-			case LogSort.Price:
-				logsQuery = logsQuery.OrderByDescending(s => s.Price).ThenBy(s => s.dateTime).ThenBy(s => s.Id);
-				break;
-		}
-
-		if (filter.descending) {
-			switch (filter.sort) {
-				case LogSort.Customer:
-					logsQuery = logsQuery.OrderByDescending(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
-					break;
-				case LogSort.Date:
-					logsQuery = logsQuery.OrderBy(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
-					break;
-				case LogSort.Price:
-					logsQuery = logsQuery.OrderBy(s => s.Price).ThenBy(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Id);
-					break;
-			}
-		}
+		logsQuery = logsQuery.Where(x => x.dateTime.Date >= minDateTime.Date);
+		logsQuery = logsQuery.Where(x => x.dateTime.Date <= maxDateTime.Date);
 
 		var resultsArray = await logsQuery
-			.Skip(filter.offset)
-			.Take(filter.limit)
+			.Skip(offset)
+			.Take(limit)
 			.ToArrayAsync();
+
+		for (int i = 0; i < resultsArray.Length; i++) {
+			Customer customer = _context.Customers.Find(resultsArray[i].CustomerId)!;
+			resultsArray[i].Customer = customer;
+		}
 
 		return Ok(resultsArray);
 	}
@@ -103,12 +83,20 @@ public class AptLogController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateLog([FromBody] CreateAptLog createLog) {
 
-		var existingCustomer = _context.Customers.Find(createLog.CustomerId);
+		var existingCustomer = _context.Customers.Find(createLog.customerId);
 		if (existingCustomer == null) {
 			return BadRequest(NotExistErrors.Customer);
 		}
 
+		if (!string.IsNullOrWhiteSpace(createLog.ScheduleId)) {
+			var scheduleExists = _context.Schedules.Find(createLog.ScheduleId);
+			if (scheduleExists == null) {
+				return BadRequest(NotExistErrors.AptSchedule);
+			}
+		}
+
 		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
+		createLog.BusinessId = existingCustomer.BusinessId;
 
 		if (existingBusiness!.allowListedServicesOnly) {
 			if (createLog.Service == null || !existingBusiness.services.Contains(createLog.Service)) {
@@ -117,12 +105,6 @@ public class AptLogController : ControllerBase {
 		}
 
 		AptLog newLog = new AptLog(createLog);
-
-		AptSchedule aptSchedule = _context.Schedules.Where(x => x.CustomerId == createLog.CustomerId)
-								.Where(x => x.dateTime.Date == DateTime.UtcNow.Date)
-								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
-
-		newLog.ScheduleId = aptSchedule.Id;
 
 		AptContact contact = new AptContact(newLog, createLog.whenShouldCustomerComeBack);
 		if (contact.dateTime.TimeOfDay > new TimeSpan(18, 0, 0)) {
@@ -193,13 +175,12 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.AptLog);
 		}
 
-		_context.Logs.Remove(logToDelete);
-
 		var contact = _context.Contacts.Where(x => x.aptLogId == Id).FirstOrDefault();
-
 		if (contact != null) {
 			_context.Contacts.Remove(contact);
 		}
+
+		_context.Logs.Remove(logToDelete);
 
 		await _context.SaveChangesAsync();
 		return NoContent();

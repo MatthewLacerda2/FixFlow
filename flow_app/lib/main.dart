@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 
 import 'screen/auth/initial_screen.dart';
 import 'screen/main/main_screen.dart';
+import 'utils/flow_storage.dart';
+import 'utils/login_utils.dart';
 
-void main() {
+void main() async {
   runApp(const FlowApp());
 }
 
@@ -23,13 +25,14 @@ class FlowApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: FutureBuilder<bool>(
-        // TODO: Check if the user is logged in
         future: checkIfLoggedIn(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           } else if (snapshot.hasData && snapshot.data == true) {
-            return const MainScreen();
+            return const MainScreen(
+              initialIndex: 0,
+            );
           } else {
             return const InitialScreen();
           }
@@ -39,7 +42,12 @@ class FlowApp extends StatelessWidget {
   }
 
   Future<bool> checkIfLoggedIn() async {
-    // TODO: Implement the actual login check logic
-    return false;
+    final bool loggedIn = await FlowStorage.getToken() != null;
+
+    if (loggedIn) {
+      LoginUtils.fetchBusinessDTO();
+    }
+
+    return loggedIn;
   }
 }

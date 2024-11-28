@@ -9,7 +9,7 @@ public class CreateAptLog {
 	/// The Id of the Customer who took the Appointment
 	/// </summary>
 	[Required]
-	public string CustomerId { get; set; } = string.Empty;
+	public string customerId { get; set; }
 
 	/// <summary>
 	/// The Id of the Business who owns this Contact
@@ -20,18 +20,18 @@ public class CreateAptLog {
 	/// <summary>
 	/// The Id of the Schedule that precedes this Log, if any
 	/// </summary>
-	public string? scheduleId { get; set; }
+	public string? ScheduleId { get; set; }
 
 	/// <summary>
 	/// The DateTime when the Log was registered
 	/// </summary>
-	public DateTime dateTime { get; set; } = DateTime.UtcNow;
-
-	public float price { get; set; }
+	public DateTime dateTime { get; set; }
 
 	public string? Service { get; set; }
 
-	public string? description { get; set; }
+	public string? Observation { get; set; }
+
+	public float Price { get; set; }
 
 	/// <summary>
 	/// The Date when we expect the Customer to schedule another appointment.
@@ -39,13 +39,14 @@ public class CreateAptLog {
 	/// </summary>
 	public DateTime whenShouldCustomerComeBack { get; set; }
 
-	public CreateAptLog(string customerId, string businessId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
-		CustomerId = customerId;
-		BusinessId = businessId;
-		this.scheduleId = scheduleId;
+	public CreateAptLog() : this(string.Empty, null, DateTime.UtcNow, 0, null, null, DateTime.Now.AddDays(90)) { }
+
+	public CreateAptLog(string customerId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
+		this.customerId = customerId;
+		this.ScheduleId = scheduleId;
 		this.dateTime = dateTime;
-		this.price = price;
-		this.description = description;
+		this.Price = price;
+		this.Observation = description;
 		Service = service;
 		whenShouldCustomerComeBack = whenComeBack;
 	}

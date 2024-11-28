@@ -63,7 +63,6 @@ class DeleteWarningScreen extends StatelessWidget {
                                     "Uma pena te ver partir. Volte sempre!",
                                 onPressed: () {
                                   //TODO: http request to deactivate account
-                                  print("debug");
                                 })),
                       );
                     },

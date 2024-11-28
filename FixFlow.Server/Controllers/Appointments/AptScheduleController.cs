@@ -5,7 +5,6 @@ using Server.Data;
 using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
-using Server.Models.Filters;
 using Server.Models.Utils;
 
 namespace Server.Controllers;
@@ -18,7 +17,7 @@ namespace Server.Controllers;
 /// </remarks>
 [ApiController]
 [Route(Common.api_v1 + "schedules")]
-[Authorize]
+//[Authorize]
 [Produces("application/json")]
 public class AptScheduleController : ControllerBase {
 
@@ -31,57 +30,37 @@ public class AptScheduleController : ControllerBase {
 	/// <summary>
 	/// Gets a number of filtered Schedules
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AptSchedule[]>))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadSchedules([FromQuery] AptScheduleFilter filter) {
+	public async Task<IActionResult> ReadSchedules(string businessId, string? client, string? service, float minPrice, float maxPrice,
+													DateTime minDateTime, DateTime maxDateTime, int offset, int limit) {
 		var schedulesQuery = _context.Schedules.AsQueryable();
 
-		schedulesQuery = _context.Schedules.Where(x => x.BusinessId == filter.businessId);
+		schedulesQuery = _context.Schedules.Where(x => x.BusinessId == businessId);
 
-		if (!string.IsNullOrWhiteSpace(filter.client)) {
-			schedulesQuery = schedulesQuery.Where(x => x.Customer.FullName.Contains(filter.client));
+		if (!string.IsNullOrWhiteSpace(client)) {
+			schedulesQuery = schedulesQuery.Where(x => x.Customer.FullName.Contains(client));
 		}
 
-		if (!string.IsNullOrWhiteSpace(filter.service)) {
-			schedulesQuery = schedulesQuery.Where(x => x.Service != null && x.Service.Contains(filter.service));
+		if (!string.IsNullOrWhiteSpace(service)) {
+			schedulesQuery = schedulesQuery.Where(x => x.Service != null && x.Service.Contains(service));
 		}
 
-		schedulesQuery = schedulesQuery.Where(x => x.dateTime >= filter.minDateTime);
-		schedulesQuery = schedulesQuery.Where(x => x.dateTime <= filter.maxDateTime);
+		schedulesQuery = schedulesQuery.Where(x => x.dateTime >= minDateTime);
+		schedulesQuery = schedulesQuery.Where(x => x.dateTime <= maxDateTime);
 
-		schedulesQuery = schedulesQuery.Where(x => x.Price >= filter.minPrice);
-		schedulesQuery = schedulesQuery.Where(x => x.Price <= filter.maxPrice);
-
-		switch (filter.sort) {
-			case ScheduleSort.Customer:
-				schedulesQuery = schedulesQuery.OrderBy(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
-				break;
-			case ScheduleSort.Price:
-				schedulesQuery = schedulesQuery.OrderBy(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Customer.FullName).ThenBy(s => s.Id);
-				break;
-			case ScheduleSort.Date:
-				schedulesQuery = schedulesQuery.OrderByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
-				break;
-		}
-
-		if (filter.descending) {
-			switch (filter.sort) {
-				case ScheduleSort.Customer:
-					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Customer.FullName).ThenByDescending(s => s.dateTime).ThenBy(s => s.Price).ThenBy(s => s.Id);
-					break;
-				case ScheduleSort.Price:
-					schedulesQuery = schedulesQuery.OrderByDescending(s => s.Price).ThenByDescending(s => s.dateTime).ThenBy(s => s.Customer.FullName).ThenBy(s => s.Id);
-					break;
-				case ScheduleSort.Date:
-					schedulesQuery = schedulesQuery.OrderBy(s => s.dateTime).ThenBy(s => s.Customer.FullName).ThenBy(s => s.Price).ThenBy(s => s.Id);
-					break;
-			}
-		}
+		schedulesQuery = schedulesQuery.Where(x => x.Price >= minPrice);
+		schedulesQuery = schedulesQuery.Where(x => x.Price <= maxPrice);
 
 		var resultsArray = await schedulesQuery
-			.Skip(filter.offset)
-			.Take(filter.limit)
+			.Skip(offset)
+			.Take(limit)
 			.ToArrayAsync();
+
+		for (int i = 0; i < resultsArray.Length; i++) {
+			Customer customer = _context.Customers.Find(resultsArray[i].CustomerId)!;
+			resultsArray[i].Customer = customer;
+		}
 
 		return Ok(resultsArray);
 	}

@@ -1,16 +1,68 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/logs_list.dart';
+import '../../utils/apt_filters.dart';
+import '../../utils/date_time_utils.dart';
+import '../../utils/flow_storage.dart';
 import '../apt_filters_screen.dart';
 import '../apts/edit_apt/create_log_screen.dart';
 import '../apts/log_screen.dart';
 import '../create_client_screen.dart';
 
-class LogsScreen extends StatelessWidget {
-  const LogsScreen({super.key});
+class LogsScreen extends StatefulWidget {
+  const LogsScreen({super.key, required this.aptFilters});
+
+  final AptFilters aptFilters;
+
+  AptLog getLog() {
+    final Customer cu =
+        Customer(businessId: "businessId", fullName: "full Name");
+    return AptLog(
+        id: "id",
+        customer: cu,
+        customerId: "cId",
+        businessId: "bId",
+        dateTime: DateTime.now(),
+        price: 100,
+        description: "something",
+        scheduleId: "sId",
+        service: "facial");
+  }
+
+  @override
+  _LogsScreenState createState() => _LogsScreenState();
+}
+
+class _LogsScreenState extends State<LogsScreen> {
+  late Future<List<AptLog>> _logsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _logsFuture = _fetchLogs();
+  }
+
+  Future<List<AptLog>> _fetchLogs() async {
+    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String businessId = bd!.id!;
+
+    final AptFilters f = widget.aptFilters;
+
+    final List<AptLog>? response = await AptLogApi().apiV1LogsGet(
+        businessId: businessId,
+        offset: f.offset,
+        limit: f.limit,
+        minPrice: f.minPrice,
+        maxPrice: f.maxPrice,
+        minDateTime: f.minDateTime,
+        maxDateTime: f.maxDateTime);
+
+    return response ?? <AptLog>[]; // Handle null safety
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +75,7 @@ class LogsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color: Colors.blue,
+                  color: Colors.blueAccent,
                   padding: const EdgeInsets.all(8),
                   height: 60,
                   child: const Row(
@@ -71,7 +123,9 @@ class LogsScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) =>
-                                  const AptFiltersScreen(),
+                                  AptFiltersScreen(
+                                aptFilters: widget.aptFilters,
+                              ),
                             ),
                           );
                         },
@@ -84,41 +138,61 @@ class LogsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: ListView.separated(
-                    itemCount: 10,
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(
-                      color: Colors.transparent,
-                      thickness: 0,
-                      height: 9,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      return LogsList(
-                        clientName: 'Nome do Cliente $index',
-                        price: 150.00,
-                        hour: '17h45m',
-                        date: '21/12/24',
-                        service: 'Serviço $index',
-                        observation: "Observação $index",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) => LogScreen(
-                                cliente: 'Fulano $index',
-                                marcouHorario: true,
-                                horario: const TimeOfDay(hour: 14, minute: 30),
-                                dia: DateTime(2024, 8, 27),
-                                preco: 150.00,
-                                observacao: "This is an observation",
-                              ),
+                    child: FutureBuilder<List<AptLog>>(
+                        future: _logsFuture,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<AptLog>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${snapshot.error}'),
+                            );
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(
+                              child: Text('Não há agendamentos.'),
+                            );
+                          }
+
+                          final List<AptLog> logs = snapshot.data!;
+                          return ListView.separated(
+                            itemCount: logs.length,
+                            separatorBuilder:
+                                (BuildContext context, int index) =>
+                                    const Divider(
+                              color: Colors.transparent,
+                              thickness: 0,
+                              height: 9,
                             ),
+                            itemBuilder: (BuildContext context, int index) {
+                              final AptLog log = logs[index];
+                              return LogsList(
+                                clientName: log.customer!.fullName,
+                                price: log.price ?? 0,
+                                hour: TimeOfDay.fromDateTime(log.dateTime!)
+                                    .format(context),
+                                date:
+                                    DateTimeUtils.dateOnlyString(log.dateTime!),
+                                service: log.service,
+                                observation: log.description,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute<void>(
+                                      builder: (BuildContext context) =>
+                                          LogScreen(
+                                        log: log,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           );
-                        },
-                      );
-                    },
-                  ),
-                ),
+                        })),
               ],
             ),
             RoundedIconedButton(
@@ -135,9 +209,9 @@ class LogsScreen extends StatelessWidget {
                       nextScreen: CreateLogScreen(
                         contactado: false,
                         horario: TimeOfDay.now(),
-                        dia: DateTime(2024, 8, 27),
+                        dia: DateTime.now(),
                         preco: 150.00,
-                        observacao: "This is an observation",
+                        observacao: "",
                       ),
                     ),
                   ),
@@ -157,9 +231,9 @@ class LogsScreen extends StatelessWidget {
                     builder: (BuildContext context) => CreateLogScreen(
                       contactado: false,
                       horario: TimeOfDay.now(),
-                      dia: DateTime(2024, 8, 27),
+                      dia: DateTime.now(),
                       preco: 150.00,
-                      observacao: "This is an observation",
+                      observacao: "",
                     ),
                   ),
                 );

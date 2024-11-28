@@ -1,10 +1,16 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
-import '../../components/Buttons/rounded_iconed_button.dart';
-import '../apts/edit_apt/create_log_screen.dart';
-import '../apts/edit_apt/create_schedule_screen.dart';
-//TODO: we got to think of a better way to let users do actions like creating, editing or deleting schedules, logs and idle periods
+import '../../components/Inputs/circular_button.dart';
+import '../../components/logs_list.dart';
+import '../../components/schedules_list.dart';
+import '../../utils/date_time_utils.dart';
+import '../../utils/flow_storage.dart';
+import '../apts/log_screen.dart';
+import '../apts/schedule_screen.dart';
+
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
@@ -13,15 +19,46 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class CalendarScreenState extends State<CalendarScreen> {
-  Map<int, List<String>> schedules = <int, List<String>>{
-    3: <String>['9:00 AM - Schedule 1', '1:00 PM - Schedule 2'],
-    7: <String>['Appointment at 10:00 AM'],
-    10: <String>['Idle period'],
-    15: <String>['Holiday: Independence Day'],
-  };
+  List<BusinessCalendarDay> _calendarDays = <BusinessCalendarDay>[];
+  final DateTime _currentDate = DateTime.now();
+  int _selectedDay = DateTime.now().day;
+  bool _isLoading = true;
 
-  DateTime currentDate = DateTime.now();
-  int selectedDate = DateTime.now().day;
+  @override
+  void initState() {
+    super.initState();
+    _fetchCalendar();
+  }
+
+  Future<void> _fetchCalendar() async {
+    try {
+      final BusinessDTO? business = await FlowStorage.getBusinessDTO();
+      final String? bId = business!.id;
+
+      final Response res = await BusinessCalendarDayApi()
+          .apiV1BusinessCalendarDayGetWithHttpInfo(
+              businessId: bId,
+              month: DateTime.now().month,
+              year: DateTime.now().year);
+      print("debug");
+      print(res.body);
+      print("is on the table");
+      final List<BusinessCalendarDay>? calendar = await BusinessCalendarDayApi()
+          .apiV1BusinessCalendarDayGet(
+              businessId: bId,
+              month: DateTime.now().month,
+              year: DateTime.now().year);
+
+      setState(() {
+        _calendarDays = calendar ?? <BusinessCalendarDay>[];
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,231 +66,275 @@ class CalendarScreenState extends State<CalendarScreen> {
       appBar: AppBar(
         title: const Text('Calendar'),
       ),
-      body: Stack(
-        children: <Widget>[
-          Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(
-                  DateFormat('MMMM').format(currentDate),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  _buildMonthTitle(),
+                  const SizedBox(height: 6),
+                  _buildWeekdayLabels(),
+                  const SizedBox(height: 10),
+                  _buildCalendarGrid(),
+                  const SizedBox(height: 16),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      const Divider(color: Colors.grey, height: 50),
+                      Positioned(
+                        left: 16,
+                        child: CircularButton(
+                          icon: Icons.keyboard_arrow_left,
+                          size: 50,
+                          onPressed: () {
+                            //TODO:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Botão não-implementado !"),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        right: 16,
+                        child: CircularButton(
+                          icon: Icons.keyboard_arrow_right,
+                          size: 50,
+                          onPressed: () {
+                            //TODO:
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Botão não-implementado !"),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  _buildEventsSection(),
+                ],
               ),
             ),
-          ),
-          _buildWeekDayLabels(),
-              const SizedBox(height: 10),
-          SizedBox(
-                height: MediaQuery.of(context).size.height * 0.385,
-            child: PageView.builder(
-              itemCount: 12, // 12 months
-              controller: PageController(initialPage: currentDate.month - 1),
-              onPageChanged: (int index) {
-                setState(() {
-                  currentDate = DateTime(currentDate.year, index + 1);
-                });
-              },
-              itemBuilder: (BuildContext context, int index) {
-                return _buildMonthView(index + 1);
-              },
-            ),
-          ),
-          Container(
-            height: 1,
-            color: Colors.grey,
-          ),
-          const SizedBox(height: 20),
-          _buildDetailsSection(),
-            ],
-      ),
-          RoundedIconedButton(
-            icon: Icons.add,
-            size: 60,
-            bottom: 110,
-            right: 18,
-            color: Colors.greenAccent,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => CreateScheduleScreen(
-                    contactado: false,
-                    horario: TimeOfDay.now(),
-                    dia: DateTime(2024, 8, 27),
-                    preco: 150.00,
-                    observacao: "This is an observation",
-                  ),
-                ),
-              );
-            },
-          ),
-          RoundedIconedButton(
-            icon: Icons.add,
-            size: 60,
-            bottom: 30,
-            right: 18,
-            color: Colors.blueAccent,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => CreateLogScreen(
-                    contactado: false,
-                    horario: TimeOfDay.now(),
-                    dia: DateTime(2024, 8, 27),
-                    preco: 150.00,
-                    observacao: "This is an observation",
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
+    );
+  }
+
+  Widget _buildMonthTitle() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        DateFormat('MMMM yyyy').format(_currentDate),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 24,
+        ),
       ),
     );
   }
 
-  Widget _buildWeekDayLabels() {
+  Widget _buildWeekdayLabels() {
     const List<String> daysOfWeek = <String>['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: daysOfWeek
-          .map((String day) => Expanded(
-                child: Center(
-                  child: Text(
-                    day,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+            .map((String day) => Expanded(
+                  child: Center(
+                    child: Text(
+                      day,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ))
-          .toList(),
+                ))
+            .toList(),
       ),
     );
   }
 
-  Widget _buildMonthView(int month) {
-    final DateTime firstDayOfMonth = DateTime(currentDate.year, month, 2);
-    final int daysInMonth = DateUtils.getDaysInMonth(currentDate.year, month);
+  Widget _buildCalendarGrid() {
+    final int daysInMonth =
+        DateUtils.getDaysInMonth(_currentDate.year, _currentDate.month);
     final int firstWeekday =
-        firstDayOfMonth.weekday;
+        DateTime(_currentDate.year, _currentDate.month).weekday;
 
     return GridView.builder(
-      
       padding: const EdgeInsets.symmetric(horizontal: 16),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 7,
         crossAxisSpacing: 4,
         mainAxisSpacing: 4,
       ),
-      itemCount: daysInMonth +
-          (firstWeekday - 1),
+      itemCount: daysInMonth + (firstWeekday - 1),
       itemBuilder: (BuildContext context, int index) {
         if (index < firstWeekday - 1) {
           return const SizedBox();
         } else {
           final int day = index - (firstWeekday - 2);
-          return _buildDayCell(day);
+          final BusinessCalendarDay calendarDay = _calendarDays.firstWhere(
+            (BusinessCalendarDay dayData) => dayData.date?.day == day,
+          );
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedDay = day;
+              });
+            },
+            child: _buildDayCell(day, calendarDay),
+          );
         }
       },
     );
   }
 
-  Widget _buildDayCell(int day) {
-    final List<String> dayEvents = schedules[day] ?? <String>[];
+  Widget _buildDayCell(int day, BusinessCalendarDay? calendarDay) {
+    final List<Color> indicators = <Color>[];
 
-    final bool isIdle = dayEvents.contains('Idle period');
-    final bool isHoliday =
-        dayEvents.any((String event) => event.contains('Holiday'));
-    final int scheduleCount =
-        dayEvents.where((String event) => event.contains('Schedule')).length;
-    final int appointmentCount =
-        dayEvents.where((String event) => event.contains('Appointment')).length;
-
-    Color dayColor = Colors.black;
-    if (isIdle) {
-      dayColor = Colors.red;
-    } else if (isHoliday) {
-      dayColor = Colors.orange;
+    if (calendarDay != null) {
+      if (calendarDay.schedules!.isNotEmpty) {
+        indicators.add(Colors.green);
+      }
+      if (calendarDay.logs!.isNotEmpty) {
+        indicators.add(Colors.blue);
+      }
+      if (calendarDay.holiday!.isNotEmpty) {
+        indicators.add(Colors.red);
+      }
+      if (calendarDay.idlePeriods!.isNotEmpty) {
+        indicators.add(const Color.fromARGB(255, 0, 100, 3));
+      }
     }
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedDate = day;
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: day == selectedDate ? Border.all(color: Colors.grey) : null,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '$day',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: dayColor,
-              ),
-            ),
-            if (scheduleCount > 0)
-              Text(
-                '$scheduleCount',
-                style: const TextStyle(color: Colors.green),
-              ),
-            if (appointmentCount > 0)
-              Text(
-                '$appointmentCount',
-                style: const TextStyle(color: Colors.blue),
-              ),
-          ],
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: day == _selectedDay
+            ? Border.all(color: Colors.grey, width: 1.5)
+            : null,
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(
+            '$day',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: indicators
+                .map((Color color) => Container(
+                      width: 8,
+                      height: 4,
+                      margin: const EdgeInsets.symmetric(horizontal: 1),
+                      color: color,
+                    ))
+                .toList(),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildDetailsSection() {
-    return schedules.containsKey(selectedDate)
-        ? ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: schedules[selectedDate]!.length,
-              itemBuilder: (BuildContext context, int index) {
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                elevation: 1,
-                child: ListTile(
-                  title: Text(schedules[selectedDate]![index]),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                ),
-                );
-            },
-          )
-        : const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-            child: Row(
+  Widget _buildEventsSection() {
+    final BusinessCalendarDay selectedDayData = _calendarDays.firstWhere(
+      (BusinessCalendarDay dayData) => dayData.date?.day == _selectedDay,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        ...selectedDayData.idlePeriods!.map(
+          (IdlePeriod idle) => ListTile(
+            title: Text('Período ocioso: ${idle.name}'),
+          ),
+        ),
+        ...selectedDayData.holiday!.map(
+          (String holiday) => ListTile(
+            title: Text('Feriado: $holiday'),
+          ),
+        ),
+        if (selectedDayData.schedules!.isNotEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                SizedBox(height: 10),
                 Text(
-                  'Sem eventos',
-                  textAlign: TextAlign.start,
+                  'Agendamentos',
                   style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    color: Colors.green,
                   ),
                 ),
+                SizedBox(height: 10),
               ],
             ),
-          );
+          ),
+        ...selectedDayData.schedules!.map(
+          (AptSchedule item) => SchedulesList(
+            clientName: item.customer!.fullName,
+            price: item.price ?? 0,
+            hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
+            date: DateTimeUtils.dateOnlyString(item.dateTime!),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) =>
+                      ScheduleScreen(schedule: item),
+                ),
+              );
+            },
+          ),
+        ),
+        if (selectedDayData.logs!.isNotEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 14),
+                Text(
+                  'Atendimentos',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    color: Colors.blue,
+                  ),
+                ),
+                SizedBox(height: 14),
+              ],
+            ),
+          ),
+        ...selectedDayData.logs!.map(
+          (AptLog item) => LogsList(
+            clientName: item.customer!.fullName,
+            price: item.price ?? 4.2,
+            hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
+            date: DateTimeUtils.dateOnlyString(item.dateTime!),
+            service: item.service,
+            observation: item.description,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => LogScreen(
+                    log: item,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 40),
+      ],
+    );
   }
 }

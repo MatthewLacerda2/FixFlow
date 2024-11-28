@@ -7,7 +7,7 @@ namespace Server.Validators.Appointments;
 public class CreateAptLogValidator : AbstractValidator<CreateAptLog> {
 
 	public CreateAptLogValidator() {
-		RuleFor(x => x.price)
+		RuleFor(x => x.Price)
 			.GreaterThanOrEqualTo(0)
 			.WithMessage(ValidatorErrors.PriceMustBeNaturalNumber);
 
@@ -22,7 +22,7 @@ public class CreateAptLogValidator : AbstractValidator<CreateAptLog> {
 			.GreaterThan(DateTime.UtcNow.Date)
 			.WithMessage(ValidatorErrors.DateMustBeInTheFuture);
 
-		RuleFor(x => x.price)
+		RuleFor(x => x.Price)
 			.GreaterThanOrEqualTo(0)
 			.WithMessage(ValidatorErrors.PriceMustBeNaturalNumber);
 	}

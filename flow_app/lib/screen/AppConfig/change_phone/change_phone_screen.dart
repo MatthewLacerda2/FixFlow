@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
 import '../../../components/Inputs/phone_input_field.dart';
-import '../../auth/otp_screen.dart';
-import '../../main/account/app_config_screen.dart';
 import '../change_successful.dart';
 
 class ChangePhoneScreen extends StatelessWidget {
@@ -54,13 +52,7 @@ class ChangePhoneScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(vertical: 1, horizontal: 30),
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              const AppConfigScreen(),
-                        ),
-                      );
+                      Navigator.pop(context);
                     },
                   ),
                   CustomButton(
@@ -74,14 +66,11 @@ class ChangePhoneScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (BuildContext context) => const OtpScreen(
-                              message:
-                                  "Enviamos um SMS com um código para o telefone (98) 99934-4788. Insira-o aqui para confirmar:",
-                              phoneNumber: "98999344788",
-                              nextScreen: ChangeSuccessfulScreen(
+                          builder: (BuildContext context) =>
+                              const ChangeSuccessfulScreen(
                                   title: "Telefone atualizado!",
                                   description:
-                                      "Seu número de telefone foi trocado com sucesso")),
+                                      "Seu número de telefone foi trocado com sucesso"),
                         ),
                       );
                     },

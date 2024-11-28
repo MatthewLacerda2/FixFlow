@@ -32,7 +32,7 @@ class ColoredBorderTextButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: width ?? 10),
+          padding: EdgeInsets.symmetric(horizontal: width ?? 5),
         ),
         child: Text(
           text,

@@ -28,15 +28,15 @@ public class IdlePeriodController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod[]))]
 	[HttpGet]
-	public async Task<IActionResult> GetIdlePeriodsAtDate([FromBody] BusinessIdlePeriodsRequest period) {
+	public async Task<IActionResult> GetIdlePeriodsAtDate(string businessId, DateTime date) {
 
-		var business = _context.Business.Find(period.BusinessId);
+		var business = _context.Business.Find(businessId);
 		if (business == null) {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		var idlePeriods = await _context.IdlePeriods.Where(x => x.BusinessId == period.BusinessId)
-								.Where(x => x.start <= period.Date && x.finish >= period.Date)
+		var idlePeriods = await _context.IdlePeriods.Where(x => x.BusinessId == businessId)
+								.Where(x => x.start <= date && x.finish >= date)
 								.ToArrayAsync();
 
 		return Ok(idlePeriods);
@@ -48,7 +48,7 @@ public class IdlePeriodController : ControllerBase {
 	/// <remarks>
 	/// Idle Periods are allowed to overlap
 	/// </remarks>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod))]
+	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(IdlePeriod))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPost]
 	public async Task<IActionResult> CreateIdlePeriod([FromBody] IdlePeriod idlePeriod) {
@@ -57,7 +57,7 @@ public class IdlePeriodController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (idlePeriod.finish <= DateTime.UtcNow) {
+		if (idlePeriod.start <= DateTime.UtcNow.AddMinutes(-5) || idlePeriod.finish <= DateTime.UtcNow) {
 			return BadRequest(ValidatorErrors.IdlePeriodHasPassed);
 		}
 
@@ -72,7 +72,7 @@ public class IdlePeriodController : ControllerBase {
 	/// <summary>
 	/// Removes Idle days
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpDelete]
 	public async Task<IActionResult> RemoveIdlePeriod([FromBody] string idlePeriodId) {

@@ -55,14 +55,13 @@ public class AptLog {
 
 	public AptLog(CreateAptLog newLog) {
 		Id = Guid.NewGuid().ToString();
-		CustomerId = newLog.CustomerId;
+		CustomerId = newLog.customerId;
 		BusinessId = newLog.BusinessId;
-		ScheduleId = newLog.scheduleId;
+		ScheduleId = newLog.ScheduleId;
 		Service = newLog.Service;
-		description = newLog.description;
-
-		this.dateTime = newLog.dateTime;
-		this.Price = newLog.price;
+		description = newLog.Observation;
+		dateTime = newLog.dateTime;
+		Price = newLog.Price;
 		Customer = null!;
 	}
 }

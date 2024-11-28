@@ -18,7 +18,6 @@ class PriceInputField extends StatefulWidget {
 }
 
 class PriceInputFieldState extends State<PriceInputField> {
-
   @override
   void initState() {
     super.initState();

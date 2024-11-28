@@ -86,7 +86,6 @@ class ContactScreenState extends State<ContactScreen> {
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    print("debug is on the table");
                     Navigator.push(
                       context,
                       MaterialPageRoute<void>(
@@ -96,7 +95,7 @@ class ContactScreenState extends State<ContactScreen> {
                           horario: TimeOfDay.now(),
                           dia: DateTime(2024, 8, 27),
                           preco: 150.00,
-                          observacao: "This is an observation",
+                          observacao: "",
                         ),
                       ),
                     );
@@ -105,7 +104,7 @@ class ContactScreenState extends State<ContactScreen> {
                     backgroundColor: Colors.blue,
                   ),
                   child: const Text(
-                    'Criar agendamento',
+                    'Criar lembrete',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),

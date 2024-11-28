@@ -1,3 +1,4 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../components/Inputs/check_input_field.dart';
@@ -9,6 +10,7 @@ import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/password_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
 import '../components/Inputs/time_picker_rectangle.dart';
+import '../utils/login_utils.dart';
 
 class TestScreen extends StatelessWidget {
   const TestScreen({super.key});
@@ -24,6 +26,23 @@ class TestScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            FutureBuilder<BusinessDTO?>(
+              future: LoginUtils.fetchBusinessDTO(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<BusinessDTO?> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  print("snapshot.error");
+                  return const Text('Error retrieving data');
+                } else if (snapshot.data == null) {
+                  return const Text('No BusinessDTO found.');
+                } else {
+                  final BusinessDTO dto = snapshot.data!;
+                  return Text('Business: ${dto.businessWeek}');
+                }
+              },
+            ),
             TimePickerRectangle(
               initialTime: TimeOfDay.now(),
               onTimeSelected: (TimeOfDay date) {
@@ -80,7 +99,7 @@ class TestScreen extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
-            CPFInputField(
+            CpfInputField(
                 placeholder: "CPF",
                 onCPFChanged: (String cpf) {
                   print('CPF is: $cpf');

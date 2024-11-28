@@ -12,25 +12,25 @@ class IntroductionScreenPage extends StatelessWidget {
       pages: <PageViewModel>[
         PageViewModel(
           title: "Bem-vindo ao Flow!",
-          body: "Automatize seus agendamentos de forma fácil e eficiente.",
+          body: "Retenha seus clientes de forma fácil!",
           image: const Padding(
             padding: EdgeInsets.only(bottom: 24.0),
             child: Center(child: Icon(Icons.av_timer, size: 90)),
           ),
         ),
         PageViewModel(
-          title: "Gerencie seus agendamentos",
+          title: "Acompanhe seus agendamentos",
           body:
-              "Crie e acompanhe agendamentos de serviço, com calma e sem se perder.",
+              "Crie e acompanhe agendamentos de serviço, de forma simples e rápida",
           image: const Padding(
             padding: EdgeInsets.only(bottom: 24.0),
             child: Center(child: Icon(Icons.event_note, size: 90)),
           ),
         ),
         PageViewModel(
-          title: "Acompanhe seus registros",
+          title: "Gerencie seus atendimentos",
           body:
-              "Veja todos os seus atendimentos já feitos, organizados com calma e todos os detalhes",
+              "Veja todos os seus atendimentos já feitos, organizados com calma e todos os detalhes!",
           image: const Padding(
             padding: EdgeInsets.only(bottom: 24.0),
             child: Center(child: Icon(Icons.history, size: 90)),
@@ -39,7 +39,7 @@ class IntroductionScreenPage extends StatelessWidget {
         PageViewModel(
           title: "Consistência",
           body:
-              "Seu serviço deve ser contratado pelo Cliente de tempos em tempos, correto? É aí que o Flow entra!",
+              "O Cliente vai precisar do seu serviço denovo, né? É aí que o Flow entra!",
           image: const Padding(
             padding: EdgeInsets.only(bottom: 24.0),
             child: Center(child: Icon(Icons.repeat, size: 90)),
@@ -48,16 +48,16 @@ class IntroductionScreenPage extends StatelessWidget {
         PageViewModel(
           title: '"Alô Fulano! Bora agendar?"',
           body:
-              "O App vai lhe lembrar quando o Cliente tal, que veio dia tal, fazer tal coisa, deveria agendar outro atendimento.",
+              "O App vai lembrar quando já é tempo do Cliente agendar outro atendimento.",
           image: const Padding(
             padding: EdgeInsets.only(bottom: 24.0),
             child: Center(child: Icon(Icons.message, size: 90)),
           ),
         ),
         PageViewModel(
-          title: "Automatizado e organizado",
+          title: "Tudo flui suave",
           body:
-              "O App lembra de tudo pra você, incluindo a hora de contatar o cliente sugerindo um agendamento",
+              "O App organiza de tudo pra você, incluindo a hora de contatar o cliente sugerindo um agendamento",
           image: const Padding(
             padding: EdgeInsets.only(bottom: 24.0),
             child: Center(child: Icon(Icons.notifications, size: 90)),
@@ -76,8 +76,9 @@ class IntroductionScreenPage extends StatelessWidget {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute<void>(
-              builder: (BuildContext context) =>
-                  const MainScreen()), //TODO: should be the configuration screen OR main screen
+              builder: (BuildContext context) => const MainScreen(
+                    initialIndex: 0,
+                  )),
         );
       },
       showSkipButton: true,

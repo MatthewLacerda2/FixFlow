@@ -1,16 +1,31 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 
+import '../../components/Inputs/password_input_field.dart';
+import '../../utils/login_utils.dart';
 import '../intro/introduction_screen.dart';
-import 'otp_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
+
+  BusinessRegisterRequest createBusinessRegisterRequest() {
+    return BusinessRegisterRequest(
+        name: companyNameController.text,
+        email: emailController.text,
+        cnpj: cnpjController.text,
+        phoneNumber: phoneController.text,
+        password: registerPassword,
+        confirmPassword: registerPasswordConfirmation);
+  }
 
   final TextEditingController companyNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController cnpjController = TextEditingController();
+
+  String? registerPassword, registerPasswordConfirmation;
 
   @override
   Widget build(BuildContext context) {
@@ -46,22 +61,44 @@ class RegisterScreen extends StatelessWidget {
               keyboardType: TextInputType.number,
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly,
+                _CNPJInputFormatter(),
               ],
             ),
             const SizedBox(height: 20),
+            PasswordInputField(
+              placeholder: 'Password',
+              onPasswordChanged: (String password) {
+                registerPassword = password;
+              },
+            ),
+            const SizedBox(height: 20),
+            PasswordInputField(
+              placeholder: 'Current password',
+              onPasswordChanged: (String password) {
+                registerPasswordConfirmation = password;
+              },
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // TODO: Validate this data
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute<void>(
-                      builder: (BuildContext context) => const OtpScreen(
-                          message:
-                              'Enviamos um SMS com um código para o telefone (98) 99934-4788. Insira-o aqui para confirmar o seu telefone:',
-                          phoneNumber: "98999344788",
-                          nextScreen: IntroductionScreenPage())),
-                  (Route<dynamic> route) => false,
-                );
+              onPressed: () async {
+                final BusinessRegisterRequest brr =
+                    createBusinessRegisterRequest();
+
+                final Response response = await BusinessApi()
+                    .apiV1BusinessPostWithHttpInfo(
+                        businessRegisterRequest: brr);
+
+                if (response.statusCode != 201) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content:
+                          Text('Registration failed. Please check your input.'),
+                    ),
+                  );
+                } else {
+                  LoginUtils.login(brr.email!, brr.password!, context,
+                      const IntroductionScreenPage());
+                }
               },
               child: const Text('Registrar'),
             ),
@@ -89,6 +126,31 @@ class _PhoneInputFormatter extends TextInputFormatter {
       if (i == 7) formatted += '-';
       formatted += digits[i];
     }
+    return newValue.copyWith(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
+
+class _CNPJInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Remove all non-digit characters
+    final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+
+    String formatted = '';
+    for (int i = 0; i < digits.length; i++) {
+      if (i == 2) formatted += '.';
+      if (i == 5) formatted += '.';
+      if (i == 8) formatted += '/';
+      if (i == 12) formatted += '-';
+      formatted += digits[i];
+    }
+
     return newValue.copyWith(
       text: formatted,
       selection: TextSelection.collapsed(offset: formatted.length),

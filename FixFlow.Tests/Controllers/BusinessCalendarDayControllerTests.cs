@@ -35,7 +35,6 @@ public class BusinessCalendarControllerTests {
 	public async Task GetBusinessCalendar_ReturnsOk_WithBusinessCalendarDays() {
 		// Arrange
 		Business business = new Business("lenda", "lenda@gmail.com", "1234", "9899344788");
-		business.Id = Guid.NewGuid().ToString();
 		_context.Business.Add(business);
 
 		_context.SaveChanges();

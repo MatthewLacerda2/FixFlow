@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+//TODO: price tá vindo em branco!
 class SchedulesList extends StatelessWidget {
   const SchedulesList({
     super.key,
     required this.clientName,
-    this.price,
+    required this.price,
     required this.hour,
     required this.date,
     this.service,
@@ -12,7 +13,7 @@ class SchedulesList extends StatelessWidget {
     required this.onTap,
   });
   final String clientName;
-  final double? price;
+  final double price;
   final String hour;
   final String date;
   final String? service;
@@ -22,7 +23,7 @@ class SchedulesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.5),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -43,7 +44,7 @@ class SchedulesList extends StatelessWidget {
             children: <Widget>[
               Text('Cliente: $clientName'),
               Text(
-                price != null ? 'R\$ ${price!.toStringAsFixed(2)}' : '-',
+                'R\$ ${price.toStringAsFixed(2)}',
                 style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
@@ -57,18 +58,14 @@ class SchedulesList extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text('Hora: $hour'),
                   Text('Data: $date'),
+                  Text('Hora: $hour'),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(service != null ? 'Serviço: $service' : '-'),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text('Observação: ${observation ?? ''}'),
+              const SizedBox(height: 2),
+              Text(service != null ? 'Serviço: $service' : '-'),
+              const SizedBox(height: 2),
+              Text('Observação: ${observation ?? '-'}')
             ],
           ),
           onTap: onTap,

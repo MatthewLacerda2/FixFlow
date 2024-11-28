@@ -1,11 +1,16 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:snackbar/snackbar.dart';
 
+import '../../../components/Inputs/customer_dropdown.dart';
 import '../../../components/Inputs/date_picker_rectangle.dart';
 import '../../../components/Inputs/limited_text_input_field.dart';
-import '../../../components/Inputs/name_input_field.dart';
 import '../../../components/Inputs/price_input_field.dart';
+import '../../../components/Inputs/services_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
+import '../../../utils/date_time_utils.dart';
+import '../../main/main_screen.dart';
 
 class CreateScheduleScreen extends StatefulWidget {
   const CreateScheduleScreen({
@@ -33,6 +38,10 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 
+  String customerId = "";
+  String service = "";
+  late DateTime dateTime = DateTime.now();
+
   bool _isEdited = false;
 
   @override
@@ -49,15 +58,36 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
     });
   }
 
-  void _saveChanges() {
-    setState(() {
-      snackUndo("Confirmar?", () {
-        // TODO: load animation for when we wait for the response of the server
-        // TODO: Check if the response is 200OK or something else
-        snack("Salvo!");
-        Navigator.pop(context);
-      }, undoText: "Confirmar");
-    });
+  void _saveChanges() async {
+    final CreateAptSchedule createAptSchedule = CreateAptSchedule(
+      customerId: customerId,
+      dateTime: dateTime,
+      service: service,
+      observation: _observacaoController.text,
+      price: double.tryParse(_precoController.text) ?? 0.0,
+    );
+    final Response response = await AptScheduleApi()
+        .apiV1SchedulesPostWithHttpInfo(createAptSchedule: createAptSchedule);
+
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Agendamento feito!"),
+        ),
+      );
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute<void>(
+            builder: (BuildContext context) => const MainScreen(
+                  initialIndex: 1,
+                )),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      print(createAptSchedule);
+      print(response.body);
+      snack("Error: $response");
+    }
   }
 
   void _cancelChanges() {
@@ -86,20 +116,13 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Expanded(
-                  child: widget.cliente != null
-                      ? Text(
-                          'Cliente: ${widget.cliente}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 22),
-                        )
-                      : NameInputField(
-                          placeholder: 'Cliente',
-                          onNameChanged: (String name) {
-                            print('Name is: $name');
-                          },
-                        ),
+                  child: CustomerDropdown(
+                    onCustomerIdChanged: (String id) {
+                      customerId = id;
+                    },
+                  ),
                 ),
-                if (widget.cliente != null || widget.contactado)
+                if (widget.contactado)
                   const Row(
                     children: <Widget>[
                       Icon(Icons.check, color: Colors.blue, size: 22),
@@ -114,12 +137,19 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
               ],
             ),
             const SizedBox(height: 24),
+            ServicesInputField(
+              onServiceSelected: (String? selectedService) {
+                service = selectedService ?? "";
+              },
+            ),
+            const SizedBox(height: 24),
             Row(
               children: <Widget>[
                 Expanded(
                   child: DatePickerRectangle(
                     initialDate: widget.dia,
                     onDateSelected: (DateTime date) {
+                      dateTime = DateTimeUtils.setDate(dateTime, date);
                       _toggleEdit();
                     },
                   ),
@@ -129,6 +159,7 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   child: TimePickerRectangle(
                     initialTime: widget.horario,
                     onTimeSelected: (TimeOfDay time) {
+                      dateTime = DateTimeUtils.setTime(time, dateTime);
                       _toggleEdit();
                     },
                   ),
@@ -154,7 +185,9 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: _isEdited ? _saveChanges : null,
+                  onPressed: () {
+                    _saveChanges();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.green : Colors.grey,
                   ),
@@ -167,8 +200,10 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   onPressed: _isEdited ? _cancelChanges : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _isEdited ? Colors.blue : Colors.grey,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 5,
+                    ),
                   ),
                   child: const Text(
                     'Cancelar',

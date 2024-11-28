@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class LogsList extends StatelessWidget {
-
   const LogsList({
     super.key,
     required this.clientName,
@@ -23,7 +22,7 @@ class LogsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.5),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -58,17 +57,13 @@ class LogsList extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text('Hora: $hour'),
                   Text('Data: $date'),
+                  Text('Hora: $hour'),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(service != null ? 'Serviço: $service' : '-'),
-                ],
-              ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
+              Text(service != null ? 'Serviço: $service' : '-'),
+              const SizedBox(height: 2),
               Text('Observação: ${observation ?? ''}'),
             ],
           ),

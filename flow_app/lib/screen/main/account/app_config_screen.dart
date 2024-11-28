@@ -1,3 +1,4 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
@@ -5,6 +6,7 @@ import '../../../components/Inputs/check_input_field.dart';
 import '../../../components/Inputs/enum_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
 import '../../../components/warning_modal.dart';
+import '../../../utils/flow_storage.dart';
 import '../../AppConfig/change_phone/change_phone_screen.dart';
 import '../../AppConfig/deactivate_account/deactivate_account_screen.dart';
 import '../../AppConfig/delete_account/delete_warning_screen.dart';
@@ -13,7 +15,9 @@ import '../../auth/initial_screen.dart';
 
 //TODO: gotta load the account configs
 class AppConfigScreen extends StatelessWidget {
-  const AppConfigScreen({super.key});
+  const AppConfigScreen({super.key, required this.businessDTO});
+
+  final BusinessDTO businessDTO;
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +53,15 @@ class AppConfigScreen extends StatelessWidget {
                 height: 10,
                 color: Colors.grey.shade800,
               ),
-              
               const SizedBox(height: 32),
               const Text(
                 'Opções de Serviços',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
               ),
               const SizedBox(height: 12),
-              const EnumField(
+              EnumField(
                   description: "Serviço...",
-                  options: <String>['Item 1', 'Item 2', 'Item 3'],
+                  options: businessDTO.services ?? <String>[],
                   characterLimit: 20),
               const SizedBox(height: 3),
               const Text(
@@ -68,7 +71,7 @@ class AppConfigScreen extends StatelessWidget {
               const SizedBox(height: 10),
               CheckInputField(
                 label: 'Permitir apenas serviços listados?',
-                initialValue: false,
+                initialValue: businessDTO.allowListedServicesOnly!,
                 onChanged: (bool isChecked) {
                   print('Outros: $isChecked');
                 },
@@ -76,47 +79,12 @@ class AppConfigScreen extends StatelessWidget {
               const SizedBox(height: 18),
               CheckInputField(
                 label: 'Atende aos feriados?',
-                initialValue: false,
+                initialValue: businessDTO.openOnHolidays!,
                 onChanged: (bool isChecked) {
                   print('Atende aos feriados: $isChecked');
                 },
               ),
-              // TODO: handle google calendar, simultaneous appointments
-              const SizedBox(height: 28),
-              Container(
-                height: 10,
-                color: Colors.grey.shade800,
-              ),
-              const SizedBox(height: 28),
-              const Text(
-                'Notificações',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-              ),
-              const SizedBox(height: 15),
-              CheckInputField(
-                label: 'Aviso de "agendamento próximo"',
-                initialValue: true,
-                onChanged: (bool isChecked) {
-                  print('Aviso de agendamento próximo: $isChecked');
-                },
-              ),
-              const SizedBox(height: 12),
-              CheckInputField(
-                label: 'Notificar novos agendamentos',
-                initialValue: true,
-                onChanged: (bool isChecked) {
-                  print('Notificar novos agendamentos: $isChecked');
-                },
-              ),
-              const SizedBox(height: 12),
-              CheckInputField(
-                label: 'Notificar novos atendimentos',
-                initialValue: true,
-                onChanged: (bool isChecked) {
-                  print('Notificar novos atendimentos: $isChecked');
-                },
-              ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 30),
               Container(
                 height: 10,
                 color: Colors.grey.shade800,
@@ -184,6 +152,7 @@ class AppConfigScreen extends StatelessWidget {
                           backgroundColor: Colors.green,
                           textColor: Colors.black,
                           onPressed: () {
+                            FlowStorage.clear();
                             Navigator.push(
                               context,
                               MaterialPageRoute<void>(
