@@ -66,19 +66,28 @@ class IdlePeriodApi {
   ///
   /// Parameters:
   ///
-  /// * [BusinessIdlePeriodsRequest] businessIdlePeriodsRequest:
-  Future<Response> apiV1IdlePeriodGetWithHttpInfo({ BusinessIdlePeriodsRequest? businessIdlePeriodsRequest, }) async {
+  /// * [String] businessId:
+  ///
+  /// * [DateTime] date:
+  Future<Response> apiV1IdlePeriodGetWithHttpInfo({ String? businessId, DateTime? date, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/IdlePeriod';
 
     // ignore: prefer_final_locals
-    Object? postBody = businessIdlePeriodsRequest;
+    Object? postBody;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+    if (businessId != null) {
+      queryParams.addAll(_queryParams('', 'businessId', businessId));
+    }
+    if (date != null) {
+      queryParams.addAll(_queryParams('', 'date', date));
+    }
+
+    const contentTypes = <String>[];
 
 
     return apiClient.invokeAPI(
@@ -96,9 +105,11 @@ class IdlePeriodApi {
   ///
   /// Parameters:
   ///
-  /// * [BusinessIdlePeriodsRequest] businessIdlePeriodsRequest:
-  Future<List<IdlePeriod>?> apiV1IdlePeriodGet({ BusinessIdlePeriodsRequest? businessIdlePeriodsRequest, }) async {
-    final response = await apiV1IdlePeriodGetWithHttpInfo( businessIdlePeriodsRequest: businessIdlePeriodsRequest, );
+  /// * [String] businessId:
+  ///
+  /// * [DateTime] date:
+  Future<List<IdlePeriod>?> apiV1IdlePeriodGet({ String? businessId, DateTime? date, }) async {
+    final response = await apiV1IdlePeriodGetWithHttpInfo( businessId: businessId, date: date, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

@@ -89,7 +89,6 @@ Class | Method | HTTP request | Description
  - [Business](doc//Business.md)
  - [BusinessCalendarDay](doc//BusinessCalendarDay.md)
  - [BusinessDTO](doc//BusinessDTO.md)
- - [BusinessIdlePeriodsRequest](doc//BusinessIdlePeriodsRequest.md)
  - [BusinessRegisterRequest](doc//BusinessRegisterRequest.md)
  - [BusinessTimeSpan](doc//BusinessTimeSpan.md)
  - [BusinessWeek](doc//BusinessWeek.md)

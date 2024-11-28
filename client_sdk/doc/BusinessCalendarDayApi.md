@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **apiV1BusinessCalendarDayGet**
-> List<BusinessCalendarDay> apiV1BusinessCalendarDayGet(businessId)
+> List<BusinessCalendarDay> apiV1BusinessCalendarDayGet(businessId, year, month)
 
 Gets all the events for this month
 
@@ -23,9 +23,11 @@ import 'package:openapi/api.dart';
 
 final api_instance = BusinessCalendarDayApi();
 final businessId = businessId_example; // String | 
+final year = 56; // int | 
+final month = 56; // int | 
 
 try {
-    final result = api_instance.apiV1BusinessCalendarDayGet(businessId);
+    final result = api_instance.apiV1BusinessCalendarDayGet(businessId, year, month);
     print(result);
 } catch (e) {
     print('Exception when calling BusinessCalendarDayApi->apiV1BusinessCalendarDayGet: $e\n');
@@ -37,6 +39,8 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **businessId** | **String**|  | [optional] 
+ **year** | **int**|  | [optional] 
+ **month** | **int**|  | [optional] 
 
 ### Return type
 

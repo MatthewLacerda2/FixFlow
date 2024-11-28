@@ -41,7 +41,6 @@ part 'model/apt_schedule.dart';
 part 'model/business.dart';
 part 'model/business_calendar_day.dart';
 part 'model/business_dto.dart';
-part 'model/business_idle_periods_request.dart';
 part 'model/business_register_request.dart';
 part 'model/business_time_span.dart';
 part 'model/business_week.dart';

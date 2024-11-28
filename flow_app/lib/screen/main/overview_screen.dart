@@ -6,6 +6,7 @@ import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
 import '../Overview/Clients/clients_screen.dart';
 import '../Overview/calendar_screen.dart';
+import 'main_screen.dart';
 
 class OverviewScreen extends StatefulWidget {
   const OverviewScreen({super.key});
@@ -110,6 +111,39 @@ class _OverviewScreenState extends State<OverviewScreen> {
                                   fontSize: 12, color: Colors.grey[600]),
                             ),
                           ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>
+                                        const MainScreen(
+                                          initialIndex: 0,
+                                        )),
+                                (Route<dynamic> route) => false,
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.all(8),
+                              child: const Icon(
+                                Icons.refresh_outlined,
+                                color: Colors.black,
+                                size: 26,
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ],

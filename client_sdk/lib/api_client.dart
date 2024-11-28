@@ -239,8 +239,6 @@ class ApiClient {
           return BusinessCalendarDay.fromJson(value);
         case 'BusinessDTO':
           return BusinessDTO.fromJson(value);
-        case 'BusinessIdlePeriodsRequest':
-          return BusinessIdlePeriodsRequest.fromJson(value);
         case 'BusinessRegisterRequest':
           return BusinessRegisterRequest.fromJson(value);
         case 'BusinessTimeSpan':

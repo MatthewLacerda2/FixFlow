@@ -55,7 +55,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1IdlePeriodGet**
-> List<IdlePeriod> apiV1IdlePeriodGet(businessIdlePeriodsRequest)
+> List<IdlePeriod> apiV1IdlePeriodGet(businessId, date)
 
 Returns all Idle Periods that contain the given date
 
@@ -64,10 +64,11 @@ Returns all Idle Periods that contain the given date
 import 'package:openapi/api.dart';
 
 final api_instance = IdlePeriodApi();
-final businessIdlePeriodsRequest = BusinessIdlePeriodsRequest(); // BusinessIdlePeriodsRequest | 
+final businessId = businessId_example; // String | 
+final date = 2013-10-20T19:20:30+01:00; // DateTime | 
 
 try {
-    final result = api_instance.apiV1IdlePeriodGet(businessIdlePeriodsRequest);
+    final result = api_instance.apiV1IdlePeriodGet(businessId, date);
     print(result);
 } catch (e) {
     print('Exception when calling IdlePeriodApi->apiV1IdlePeriodGet: $e\n');
@@ -78,7 +79,8 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **businessIdlePeriodsRequest** | [**BusinessIdlePeriodsRequest**](BusinessIdlePeriodsRequest.md)|  | [optional] 
+ **businessId** | **String**|  | [optional] 
+ **date** | **DateTime**|  | [optional] 
 
 ### Return type
 
@@ -90,7 +92,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, text/json, application/*+json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

@@ -12,7 +12,6 @@ doc/BusinessApi.md
 doc/BusinessCalendarDay.md
 doc/BusinessCalendarDayApi.md
 doc/BusinessDTO.md
-doc/BusinessIdlePeriodsRequest.md
 doc/BusinessRegisterRequest.md
 doc/BusinessTimeSpan.md
 doc/BusinessWeek.md
@@ -50,7 +49,6 @@ lib/model/apt_schedule.dart
 lib/model/business.dart
 lib/model/business_calendar_day.dart
 lib/model/business_dto.dart
-lib/model/business_idle_periods_request.dart
 lib/model/business_register_request.dart
 lib/model/business_time_span.dart
 lib/model/business_week.dart
@@ -74,7 +72,6 @@ test/business_api_test.dart
 test/business_calendar_day_api_test.dart
 test/business_calendar_day_test.dart
 test/business_dto_test.dart
-test/business_idle_periods_request_test.dart
 test/business_register_request_test.dart
 test/business_test.dart
 test/business_time_span_test.dart

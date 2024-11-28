@@ -34,11 +34,6 @@ public class BusinessCalendarDayController : ControllerBase {
 			return NotFound(NotExistErrors.Business);
 		}
 
-		DateTime now = DateTime.Now;
-		if (year < 2024 || year < 1 || year > 13) {
-			return BadRequest(ValidatorErrors.DateIsNotValid);
-		}
-
 		int daysInMonth = DateTime.DaysInMonth(year, month);
 		BusinessCalendarDay[] businessCalendarDays = new BusinessCalendarDay[daysInMonth];
 
