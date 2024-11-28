@@ -48,6 +48,8 @@ public class AptContact {
 	/// </summary>
 	public DateTime dateTime { get; set; }
 
+	//TODO: public bool beenDone { get; set ;}	//TODO: include in the endpoint
+
 	public AptContact() : this(new AptLog(), DateTime.UtcNow) { }
 
 	public AptContact(AptLog log, DateTime dateTime) {
