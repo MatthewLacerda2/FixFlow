@@ -6,8 +6,11 @@ import '../../components/Buttons/custom_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
+import '../../components/copyable_text.dart';
 import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
+import '../../utils/flow_storage.dart';
+import '../../utils/string_utils.dart';
 import '../main/main_screen.dart';
 
 class ContactScreen extends StatefulWidget {
@@ -26,6 +29,8 @@ class ContactScreenState extends State<ContactScreen> {
   UpdateAptContact upCont =
       UpdateAptContact(id: "id", dateTime: DateTime(2024), beenDone: false);
 
+  String suggestedMessage = "";
+
   bool _isEdited = false;
 
   @override
@@ -36,6 +41,26 @@ class ContactScreenState extends State<ContactScreen> {
         id: widget.contact.id,
         dateTime: widget.contact.dateTime!,
         beenDone: false);
+
+    _initializeSuggestedMessage();
+  }
+
+  Future<void> _initializeSuggestedMessage() async {
+    final String message = await getSuggestedText();
+    setState(() {
+      suggestedMessage = message;
+    });
+  }
+
+  Future<String> getSuggestedText() async {
+    final BusinessDTO? dto = await FlowStorage.getBusinessDTO();
+    String? service = widget.contact.aptLog!.service;
+    if (service != null) {
+      service += " ";
+    }
+    final String dia =
+        DateTimeUtils.dateOnlyString(widget.contact.aptLog!.dateTime);
+    return 'Olá, aqui é da ${dto!.name}. Você contratou um serviço conosco ${service}dia $dia, gostaria de agendar novamente?';
   }
 
   void _toggleEdit() {
@@ -101,7 +126,7 @@ class ContactScreenState extends State<ContactScreen> {
                 Text(
                   'Cliente: ${widget.contact.customer!.fullName}',
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 22),
+                      fontWeight: FontWeight.bold, fontSize: 24),
                 ),
               ],
             ),
@@ -111,7 +136,7 @@ class ContactScreenState extends State<ContactScreen> {
               children: <Widget>[
                 const Text(
                   'Dia:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 DatePickerRectangle(
                   initialDate: widget.contact.dateTime!,
@@ -123,7 +148,7 @@ class ContactScreenState extends State<ContactScreen> {
                 ),
                 const Text(
                   'Hora:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 TimePickerRectangle(
                   initialTime: TimeOfDay.fromDateTime(widget.contact.dateTime!),
@@ -135,6 +160,8 @@ class ContactScreenState extends State<ContactScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 26),
+            CopyableText(text: suggestedMessage),
             const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -165,7 +192,7 @@ class ContactScreenState extends State<ContactScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 52),
+            const SizedBox(height: 64),
             RoundedIconedButton(
                 icon: Icons.delete_forever_rounded,
                 onPressed: () {
