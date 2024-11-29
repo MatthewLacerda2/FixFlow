@@ -8,6 +8,7 @@ import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/copyable_text.dart';
 import '../../components/warning_modal.dart';
+import '../../components/whatsapp_button.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
 import '../../utils/string_utils.dart';
@@ -192,6 +193,9 @@ class ContactScreenState extends State<ContactScreen> {
             ),
             const SizedBox(height: 34),
             CopyableText(text: suggestedMessage),
+            //WhatsAppButton(
+            //    phoneNumber: widget.contact.customer!.phoneNumber!,
+            //    message: "um dois tres trestando"),
             const SizedBox(height: 42),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
