@@ -1,32 +1,87 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
-import 'edit_apt/create_schedule_screen.dart';
+import '../../components/Buttons/custom_button.dart';
+import '../../components/Buttons/rounded_iconed_button.dart';
+import '../../components/Inputs/date_picker_rectangle.dart';
+import '../../components/Inputs/time_picker_rectangle.dart';
+import '../../components/warning_modal.dart';
+import '../../utils/date_time_utils.dart';
+import '../main/main_screen.dart';
 
 class ContactScreen extends StatefulWidget {
-  const ContactScreen(
-      {super.key,
-      required this.cliente,
-      required this.dia,
-      required this.previousHorario,
-      required this.previousDia,
-      required this.previousPrice,
-      required this.previousObservacao});
+  const ContactScreen({
+    super.key,
+    required this.contact,
+  });
 
-  final String cliente;
-  final DateTime dia;
-  final TimeOfDay previousHorario;
-  final DateTime previousDia;
-  final double previousPrice;
-  final String previousObservacao;
+  final AptContact contact;
 
   @override
   ContactScreenState createState() => ContactScreenState();
 }
 
 class ContactScreenState extends State<ContactScreen> {
+  UpdateAptContact upCont =
+      UpdateAptContact(id: "id", dateTime: DateTime(2024), beenDone: false);
+
+  bool _isEdited = false;
+
   @override
   void initState() {
     super.initState();
+
+    upCont = UpdateAptContact(
+        id: widget.contact.id,
+        dateTime: widget.contact.dateTime!,
+        beenDone: false);
+  }
+
+  void _toggleEdit() {
+    setState(() {
+      _isEdited = true;
+    });
+  }
+
+  void _saveChanges() async {
+    final Response response = await AptContactApi()
+        .apiV1ContactsPatchWithHttpInfo(updateAptContact: upCont);
+    snackbarResponse(response);
+  }
+
+  void snackbarResponse(Response response) {
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Lembrete editado!"),
+        ),
+      );
+      goToContactScreen();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.body),
+        ),
+      );
+    }
+  }
+
+  void _cancelChanges() {
+    setState(() {
+      _isEdited = false;
+    });
+  }
+
+  void goToContactScreen() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute<void>(
+          builder: (BuildContext context) => const MainScreen(
+                initialIndex: 2,
+              )),
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
@@ -44,72 +99,111 @@ class ContactScreenState extends State<ContactScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  'Cliente: ${widget.cliente}',
+                  'Cliente: ${widget.contact.customer!.fullName}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 22),
                 ),
-                Text(
-                  '${widget.dia.day.toString().padLeft(2, '0')} / ${widget.dia.month.toString().padLeft(2, '0')} / ${widget.dia.year}',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.normal, fontSize: 18),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                const Text(
+                  'Dia:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                DatePickerRectangle(
+                  initialDate: widget.contact.dateTime!,
+                  onDateSelected: (DateTime date) {
+                    upCont.dateTime =
+                        DateTimeUtils.setDate(upCont.dateTime, date);
+                    _toggleEdit();
+                  },
+                ),
+                const Text(
+                  'Hora:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                TimePickerRectangle(
+                  initialTime: TimeOfDay.fromDateTime(widget.contact.dateTime!),
+                  onTimeSelected: (TimeOfDay time) {
+                    upCont.dateTime =
+                        DateTimeUtils.setTime(time, upCont.dateTime);
+                    _toggleEdit();
+                  },
                 ),
               ],
             ),
-            const SizedBox(height: 23),
-            const Text(
-              'Atendimento anterior:',
-              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Horário: ${widget.previousHorario.format(context)}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Dia: ${widget.previousDia.day.toString().padLeft(2, '0')}/${widget.previousDia.month.toString().padLeft(2, '0')}/${widget.previousDia.year}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Preço: R\$ ${widget.previousPrice.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Observação: ${widget.previousObservacao}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 34),
+            const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => CreateScheduleScreen(
-                          cliente: widget.cliente,
-                          contactado: true,
-                          horario: TimeOfDay.now(),
-                          dia: DateTime(2024, 8, 27),
-                          preco: 150.00,
-                          observacao: "",
-                        ),
-                      ),
-                    );
+                    _saveChanges();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: _isEdited ? Colors.green : Colors.grey,
                   ),
                   child: const Text(
-                    'Criar lembrete',
+                    'Salvar',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _isEdited ? _cancelChanges : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isEdited ? Colors.blue : Colors.grey,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                  ),
+                  child: const Text(
+                    'Cancelar',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(height: 52),
+            RoundedIconedButton(
+                icon: Icons.delete_forever_rounded,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return WarningModal(
+                        title: "Você tem certeza?",
+                        description:
+                            "Deletar o lembrete? Esta ação não poderá ser desfeita\n",
+                        optionOne: CustomButton(
+                          text: "Sim",
+                          textSize: 14,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.black,
+                          onPressed: () {
+                            AptContactApi()
+                                .apiV1ContactsDelete(body: widget.contact.id);
+                            goToContactScreen();
+                          },
+                        ),
+                        optionTwo: CustomButton(
+                          text: "Não",
+                          textSize: 14,
+                          backgroundColor: Colors.blue,
+                          textColor: Colors.black,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+                size: 54,
+                bottom: 46,
+                right: 46,
+                color: Colors.red),
           ],
         ),
       ),

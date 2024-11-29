@@ -40,7 +40,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
         minDateTime: f.minDateTime,
         maxDateTime: f.maxDateTime,
         offset: f.offset,
-        limit: 1);
+        limit: f.limit);
     return response ?? <AptContact>[]; // Handle null safety
   }
 
@@ -58,15 +58,17 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   color: Colors.blueGrey,
                   padding: const EdgeInsets.all(8),
                   height: 60,
-                  child: const Row(children: <Widget>[
-                    Icon(Icons.timer_outlined, size: 28),
-                    SizedBox(width: 8),
-                    Text(
-                      'Lembretes',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ]),
+                  child: const Row(
+                    children: <Widget>[
+                      Icon(Icons.timer_outlined, size: 28),
+                      SizedBox(width: 8),
+                      Text(
+                        'Lembretes',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(color: Colors.black, height: 1),
                 const SizedBox(height: 8),
@@ -139,7 +141,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                           final AptContact contact = contacts[index];
                           return AptList(
                             clientName: contact.customer!.fullName,
-                            price: contact.aptLog!.price ?? 0,
+                            price: contact.aptLog!.price ?? 142,
                             hour: TimeOfDay.fromDateTime(contact.dateTime!)
                                 .format(context),
                             date:
@@ -153,16 +155,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                 context,
                                 MaterialPageRoute<void>(
                                   builder: (BuildContext context) =>
-                                      ContactScreen(
-                                    cliente: contact.customerId,
-                                    dia: contact.dateTime!,
-                                    previousDia: contact.dateTime!,
-                                    previousHorario: TimeOfDay.fromDateTime(
-                                        contact.dateTime!),
-                                    previousObservacao:
-                                        contact.aptLog!.description!,
-                                    previousPrice: contact.aptLog!.price!,
-                                  ),
+                                      ContactScreen(contact: contact),
                                 ),
                               );
                             },
