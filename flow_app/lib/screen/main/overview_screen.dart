@@ -181,8 +181,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              const CalendarScreen(),
+                          builder: (BuildContext context) => CalendarScreen(
+                              month: DateTime.now().month,
+                              year: DateTime.now().year),
                         ),
                       );
                     },

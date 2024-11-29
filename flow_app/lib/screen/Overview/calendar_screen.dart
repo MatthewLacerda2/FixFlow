@@ -10,7 +10,10 @@ import '../apts/log_screen.dart';
 import '../apts/schedule_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({super.key});
+  const CalendarScreen({super.key, required this.year, required this.month});
+
+  final int month;
+  final int year;
 
   @override
   CalendarScreenState createState() => CalendarScreenState();
@@ -18,13 +21,14 @@ class CalendarScreen extends StatefulWidget {
 
 class CalendarScreenState extends State<CalendarScreen> {
   List<BusinessCalendarDay> _calendarDays = <BusinessCalendarDay>[];
-  final DateTime _currentDate = DateTime.now();
+  late DateTime _currentDate = DateTime(2024);
   int _selectedDay = DateTime.now().day;
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _currentDate = DateTime(widget.year, widget.month, DateTime.now().day);
     _fetchCalendar();
   }
 
@@ -35,9 +39,7 @@ class CalendarScreenState extends State<CalendarScreen> {
 
       final List<BusinessCalendarDay>? calendar = await BusinessCalendarDayApi()
           .apiV1BusinessCalendarDayGet(
-              businessId: bId,
-              month: DateTime.now().month,
-              year: DateTime.now().year);
+              businessId: bId, month: widget.month, year: widget.year);
 
       setState(() {
         _calendarDays = calendar ?? <BusinessCalendarDay>[];
@@ -77,11 +79,28 @@ class CalendarScreenState extends State<CalendarScreen> {
                           icon: Icons.keyboard_arrow_left,
                           size: 50,
                           onPressed: () {
-                            //TODO:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Botão não-implementado !"),
-                              ),
+                            int prevMonth = widget.month - 1;
+                            int prevYear = widget.year;
+                            if (prevMonth < 1) {
+                              prevMonth = 12;
+                              prevYear--;
+                            }
+                            if (prevYear < 2024) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      "Datas anterioras a 2024 são inválidas."),
+                                ),
+                              );
+                            }
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      CalendarScreen(
+                                        month: prevMonth,
+                                        year: prevYear,
+                                      )),
                             );
                           },
                         ),
@@ -92,11 +111,20 @@ class CalendarScreenState extends State<CalendarScreen> {
                           icon: Icons.keyboard_arrow_right,
                           size: 50,
                           onPressed: () {
-                            //TODO:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Botão não-implementado !"),
-                              ),
+                            int nextMonth = widget.month + 1;
+                            int nextYear = widget.year;
+                            if (nextMonth > 12) {
+                              nextMonth = 1;
+                              nextYear++;
+                            }
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      CalendarScreen(
+                                        month: nextMonth,
+                                        year: nextYear,
+                                      )),
                             );
                           },
                         ),
