@@ -52,11 +52,7 @@ public class AptContactController : ControllerBase {
 			.ToArrayAsync();
 
 		for (int i = 0; i < resultsArray.Length; i++) {
-			Customer customer = _context.Customers.Find(resultsArray[i].CustomerId)!;
-			resultsArray[i].customer = customer;
-		}
-
-		for (int i = 0; i < resultsArray.Length; i++) {
+			resultsArray[i].customer = _context.Customers.Find(resultsArray[i].CustomerId)!;
 			resultsArray[i].aptLog = _context.Logs.Find(resultsArray[i].aptLogId)!;
 		}
 

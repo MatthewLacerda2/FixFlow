@@ -29,6 +29,7 @@ part 'auth/http_basic_auth.dart';
 part 'auth/http_bearer_auth.dart';
 
 part 'api/accounts_api.dart';
+part 'api/apt_contact_api.dart';
 part 'api/apt_log_api.dart';
 part 'api/apt_schedule_api.dart';
 part 'api/business_api.dart';
@@ -36,6 +37,7 @@ part 'api/business_calendar_day_api.dart';
 part 'api/customer_api.dart';
 part 'api/idle_period_api.dart';
 
+part 'model/apt_contact.dart';
 part 'model/apt_log.dart';
 part 'model/apt_schedule.dart';
 part 'model/business.dart';
@@ -53,6 +55,7 @@ part 'model/customer_record.dart';
 part 'model/flow_login_request.dart';
 part 'model/idle_period.dart';
 part 'model/problem_details.dart';
+part 'model/update_apt_contact.dart';
 part 'model/update_apt_log.dart';
 
 

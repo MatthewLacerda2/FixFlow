@@ -64,7 +64,7 @@ class AptList extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 2),
-              Text(StringUtils.normalIfBlank(service)),
+              Text('Serviço: ${StringUtils.normalIfBlank(service)}'),
               const SizedBox(height: 2),
               Text('Observação: ${StringUtils.normalIfBlank(observation)}')
             ],

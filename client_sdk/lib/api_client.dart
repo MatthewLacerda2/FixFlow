@@ -229,6 +229,8 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'AptContact':
+          return AptContact.fromJson(value);
         case 'AptLog':
           return AptLog.fromJson(value);
         case 'AptSchedule':
@@ -263,6 +265,8 @@ class ApiClient {
           return IdlePeriod.fromJson(value);
         case 'ProblemDetails':
           return ProblemDetails.fromJson(value);
+        case 'UpdateAptContact':
+          return UpdateAptContact.fromJson(value);
         case 'UpdateAptLog':
           return UpdateAptLog.fromJson(value);
         default:

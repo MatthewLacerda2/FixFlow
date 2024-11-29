@@ -59,6 +59,9 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AccountsApi* | [**apiV1AccountsLogoutPost**](doc//AccountsApi.md#apiv1accountslogoutpost) | **POST** /api/v1/accounts/logout | 
 *AccountsApi* | [**apiV1AccountsPost**](doc//AccountsApi.md#apiv1accountspost) | **POST** /api/v1/accounts | Login with an email and password
+*AptContactApi* | [**apiV1ContactsDelete**](doc//AptContactApi.md#apiv1contactsdelete) | **DELETE** /api/v1/contacts | Deletes the Appointment Contact with the given Id
+*AptContactApi* | [**apiV1ContactsGet**](doc//AptContactApi.md#apiv1contactsget) | **GET** /api/v1/contacts | Gets a number of filtered Contacts
+*AptContactApi* | [**apiV1ContactsPatch**](doc//AptContactApi.md#apiv1contactspatch) | **PATCH** /api/v1/contacts | Update the Appointment Contact's DateTime with the given Id
 *AptLogApi* | [**apiV1LogsDelete**](doc//AptLogApi.md#apiv1logsdelete) | **DELETE** /api/v1/logs | Deletes the Appointment Log with the given Id
 *AptLogApi* | [**apiV1LogsGet**](doc//AptLogApi.md#apiv1logsget) | **GET** /api/v1/logs | Gets a number of filtered Logs
 *AptLogApi* | [**apiV1LogsPatch**](doc//AptLogApi.md#apiv1logspatch) | **PATCH** /api/v1/logs | Update the Appointment Log with the given Id
@@ -84,6 +87,7 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AptContact](doc//AptContact.md)
  - [AptLog](doc//AptLog.md)
  - [AptSchedule](doc//AptSchedule.md)
  - [Business](doc//Business.md)
@@ -101,6 +105,7 @@ Class | Method | HTTP request | Description
  - [FlowLoginRequest](doc//FlowLoginRequest.md)
  - [IdlePeriod](doc//IdlePeriod.md)
  - [ProblemDetails](doc//ProblemDetails.md)
+ - [UpdateAptContact](doc//UpdateAptContact.md)
  - [UpdateAptLog](doc//UpdateAptLog.md)
 
 
