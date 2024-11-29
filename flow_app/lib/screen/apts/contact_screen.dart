@@ -130,7 +130,37 @@ class ContactScreenState extends State<ContactScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Dia: ${DateTimeUtils.dateOnlyString(widget.contact.dateTime)}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Text(
+                  'Hora: ${TimeOfDay.fromDateTime(widget.contact.dateTime!).format(context)}',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Serviço: ${StringUtils.normalIfBlank(widget.contact.aptLog!.service)}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Observação: ${StringUtils.normalIfBlank(widget.contact.aptLog!.description)}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            const SizedBox(height: 32),
+            const Text(
+              'Alterar data e horário:',
+              style: TextStyle(fontSize: 12),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -160,9 +190,9 @@ class ContactScreenState extends State<ContactScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: 34),
             CopyableText(text: suggestedMessage),
-            const SizedBox(height: 32),
+            const SizedBox(height: 42),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[

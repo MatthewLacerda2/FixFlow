@@ -22,6 +22,7 @@ class CopyableText extends StatelessWidget {
           child: Text(
             text,
             overflow: TextOverflow.clip,
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ),
       ],

@@ -44,7 +44,7 @@ class LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 24),
             ColoredBorderTextButton(
-              text: "LoginX",
+              text: "Login",
               textColor: Colors.grey[700]!,
               width: 40,
               onPressed: () {
