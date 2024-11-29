@@ -3,6 +3,7 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
+import 'flow_snack.dart';
 import 'flow_storage.dart';
 
 class LoginUtils {
@@ -17,11 +18,7 @@ class LoginUtils {
         .apiV1AccountsPostWithHttpInfo(flowLoginRequest: flr);
 
     if (loginResponse.statusCode != 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(loginResponse.body),
-        ),
-      );
+      FlowSnack.show(context, loginResponse.body);
       return;
     }
 

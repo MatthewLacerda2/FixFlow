@@ -9,6 +9,7 @@ import '../../../components/Inputs/limited_text_input_field.dart';
 import '../../../components/Inputs/price_input_field.dart';
 import '../../../components/Inputs/services_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
+import '../../../utils/flow_snack.dart';
 import '../../../utils/flow_storage.dart';
 import '../../main/main_screen.dart';
 
@@ -76,11 +77,7 @@ class CreateLogScreenState extends State<CreateLogScreen> {
         await AptLogApi().apiV1LogsPostWithHttpInfo(createAptLog: createLog);
 
     if (response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Atendimento registrado!"),
-        ),
-      );
+      FlowSnack.show(context, "Atendimento registrado!");
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(

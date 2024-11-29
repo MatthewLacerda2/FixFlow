@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../components/Inputs/circular_button.dart';
 import '../../components/apt_list.dart';
 import '../../utils/date_time_utils.dart';
+import '../../utils/flow_snack.dart';
 import '../../utils/flow_storage.dart';
 import '../apts/log_screen.dart';
 import '../apts/schedule_screen.dart';
@@ -86,12 +87,8 @@ class CalendarScreenState extends State<CalendarScreen> {
                               prevYear--;
                             }
                             if (prevYear < 2024) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      "Datas anterioras a 2024 são inválidas."),
-                                ),
-                              );
+                              FlowSnack.show(context,
+                                  "Datas anterioras a 2024 são inválidas.");
                             }
                             Navigator.pushReplacement(
                               context,

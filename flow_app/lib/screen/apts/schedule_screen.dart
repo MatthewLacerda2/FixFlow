@@ -10,6 +10,7 @@ import '../../components/Inputs/price_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
+import '../../utils/flow_snack.dart';
 import '../main/main_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -61,18 +62,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   void snackbarResponse(Response response) {
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Agendamento editado!"),
-        ),
-      );
+      FlowSnack.show(context, "Agendamento editado!");
       goToSchedulesScreen();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.body),
-        ),
-      );
+      FlowSnack.show(context, response.body);
     }
   }
 

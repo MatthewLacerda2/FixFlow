@@ -5,6 +5,7 @@ import '../components/Inputs/date_picker_rectangle.dart';
 import '../components/Inputs/time_picker_rectangle.dart';
 import '../utils/apt_filters.dart';
 import '../utils/date_time_utils.dart';
+import '../utils/flow_snack.dart';
 
 class AptFiltersScreen extends StatefulWidget {
   const AptFiltersScreen({super.key, required this.aptFilters});
@@ -144,11 +145,7 @@ class _AppFiltersScreenState extends State<AptFiltersScreen> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () async {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(auxAptFilters.toString()),
-                        ),
-                      );
+                      FlowSnack.show(context, auxAptFilters.toString());
                       Navigator.pop(context, auxAptFilters);
                     },
                     style: ElevatedButton.styleFrom(

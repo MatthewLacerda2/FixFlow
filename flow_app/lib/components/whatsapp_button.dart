@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../utils/flow_snack.dart';
+
 class WhatsAppButton extends StatelessWidget {
   final String phoneNumber;
   final String message;
@@ -29,10 +31,7 @@ class WhatsAppButton extends StatelessWidget {
     if (await canLaunchUrl(whatsappUri)) {
       await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
     } else {
-      // Show an error message if WhatsApp can't be opened
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open WhatsApp')),
-      );
+      FlowSnack.show(context, "Falha ao abrir o WhatsApp");
     }
   }
 

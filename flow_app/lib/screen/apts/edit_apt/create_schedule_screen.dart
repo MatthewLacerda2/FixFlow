@@ -10,6 +10,7 @@ import '../../../components/Inputs/price_input_field.dart';
 import '../../../components/Inputs/services_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
 import '../../../utils/date_time_utils.dart';
+import '../../../utils/flow_snack.dart';
 import '../../main/main_screen.dart';
 
 class CreateScheduleScreen extends StatefulWidget {
@@ -70,11 +71,7 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
         .apiV1SchedulesPostWithHttpInfo(createAptSchedule: createAptSchedule);
 
     if (response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Agendamento feito!"),
-        ),
-      );
+      FlowSnack.show(context, "Agendamento feito!");
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(

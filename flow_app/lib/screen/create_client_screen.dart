@@ -7,6 +7,7 @@ import '../components/Inputs/CPF_input_field.dart';
 import '../components/Inputs/email_input_field.dart';
 import '../components/Inputs/name_input_field.dart';
 import '../components/Inputs/phone_input_field.dart';
+import '../utils/flow_snack.dart';
 import '../utils/flow_storage.dart';
 
 class CreateClientScreen extends StatelessWidget {
@@ -35,11 +36,7 @@ class CreateClientScreen extends StatelessWidget {
         .apiV1CustomerPostWithHttpInfo(customerCreate: customer);
 
     if (response.statusCode != 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.body),
-        ),
-      );
+      FlowSnack.show(context, (response.body));
       return;
     }
 

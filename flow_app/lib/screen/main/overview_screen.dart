@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../utils/date_time_utils.dart';
+import '../../utils/flow_snack.dart';
 import '../../utils/flow_storage.dart';
 import '../Overview/Clients/clients_screen.dart';
 import '../Overview/calendar_screen.dart';
@@ -163,11 +164,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     width: 130,
                     onPressed: () {
                       //TODO: Make the Statistics Screen
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Botão não-implementado !"),
-                        ),
-                      );
+                      FlowSnack.show(context, "Botão não implementado");
                     },
                   ),
                   const SizedBox(height: 24),
@@ -214,11 +211,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     width: 100,
                     onPressed: () {
                       // TODO: Create Mensalidades Screen
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Botão não-implementado !"),
-                        ),
-                      );
+                      FlowSnack.show(context, "Botão não-implementado!");
                     },
                   ),
                 ],

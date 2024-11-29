@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 
 import '../../components/Inputs/password_input_field.dart';
+import '../../utils/flow_snack.dart';
 import '../../utils/login_utils.dart';
 import '../intro/introduction_screen.dart';
 
@@ -89,12 +90,7 @@ class RegisterScreen extends StatelessWidget {
                         businessRegisterRequest: brr);
 
                 if (response.statusCode != 201) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content:
-                          Text('Registration failed. Please check your input.'),
-                    ),
-                  );
+                  FlowSnack.show(context, response.body);
                 } else {
                   LoginUtils.login(brr.email!, brr.password!, context,
                       const IntroductionScreenPage());
