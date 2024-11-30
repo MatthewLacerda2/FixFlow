@@ -46,4 +46,10 @@ class FlowStorage {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(businessDTOKey);
   }
+
+  static ApiClient getApiClient(String token) {
+    final ApiClient cl = ApiClient();
+    cl.addDefaultHeader("Authorization", "Bearer $token");
+    return cl;
+  }
 }

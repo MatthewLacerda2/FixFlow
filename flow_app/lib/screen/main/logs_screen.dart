@@ -35,10 +35,16 @@ class _LogsScreenState extends State<LogsScreen> {
   Future<List<AptLog>> _fetchLogs() async {
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
     final String businessId = bd!.id!;
+    final String? mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient =
+        FlowStorage.getApiClient(mytoken!.replaceAll(RegExp(r'^"|"$'), ''));
+    print("AAAAAAA");
+    print(apiClient.defaultHeaderMap);
+    print("AAAAAAA");
 
     final AptFilters f = widget.aptFilters;
 
-    final List<AptLog>? response = await AptLogApi().apiV1LogsGet(
+    final List<AptLog>? response = await AptLogApi(apiClient).apiV1LogsGet(
         businessId: businessId,
         offset: f.offset,
         limit: f.limit,
