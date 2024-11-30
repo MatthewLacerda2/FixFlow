@@ -62,6 +62,8 @@ class CreateLogScreenState extends State<CreateLogScreen> {
 
   void _saveChanges() async {
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
     final String businessId = bd!.id!;
 
     final CreateAptLog createLog = CreateAptLog(
@@ -73,8 +75,8 @@ class CreateLogScreenState extends State<CreateLogScreen> {
         service: service,
         whenShouldCustomerComeBack: whenShouldComeBack);
 
-    final Response response =
-        await AptLogApi().apiV1LogsPostWithHttpInfo(createAptLog: createLog);
+    final Response response = await AptLogApi(apiClient)
+        .apiV1LogsPostWithHttpInfo(createAptLog: createLog);
 
     if (response.statusCode == 201) {
       FlowSnack.show(context, "Atendimento registrado!");

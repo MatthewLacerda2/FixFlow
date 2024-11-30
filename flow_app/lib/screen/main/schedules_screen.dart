@@ -34,11 +34,13 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
 
   Future<List<AptSchedule>> _fetchSchedules() async {
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String mytoken = await FlowStorage.getToken();
     final String businessId = bd!.id!;
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final AptFilters f = widget.aptFilters;
 
-    final List<AptSchedule>? response = await AptScheduleApi()
+    final List<AptSchedule>? response = await AptScheduleApi(apiClient)
         .apiV1SchedulesGet(
             businessId: businessId,
             offset: f.offset,

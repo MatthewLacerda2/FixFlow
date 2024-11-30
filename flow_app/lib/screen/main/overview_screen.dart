@@ -33,10 +33,12 @@ class _OverviewScreenState extends State<OverviewScreen> {
     });
 
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String mytoken = await FlowStorage.getToken();
     final String businessId = bd!.id!;
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final List<AptSchedule>? todaySchedules =
-        await AptScheduleApi().apiV1SchedulesGet(
+        await AptScheduleApi(apiClient).apiV1SchedulesGet(
       businessId: businessId,
       minPrice: 0,
       maxPrice: 999,
@@ -48,7 +50,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
     );
 
     final List<AptSchedule>? weekSchedules =
-        await AptScheduleApi().apiV1SchedulesGet(
+        await AptScheduleApi(apiClient).apiV1SchedulesGet(
       businessId: businessId,
       minPrice: 0,
       maxPrice: 999,
@@ -169,7 +171,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                   ),
                   const SizedBox(height: 24),
                   ColoredBorderTextButton(
-                    text: 'Calendário',
+                    text: 'Calendario',
                     textColor: Colors.white,
                     textSize: 16,
                     backgroundColor: Colors.blueAccent,

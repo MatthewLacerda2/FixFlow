@@ -11,6 +11,7 @@ import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_snack.dart';
+import '../../utils/flow_storage.dart';
 import '../main/main_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -51,11 +52,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   void _saveChanges() async {
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
+
     final AptSchedule patchedSchedule = widget.schedule;
     patchedSchedule.price = preco;
     patchedSchedule.dateTime = newDateTime;
     patchedSchedule.observation = _observacaoController.text;
-    final Response response = await AptScheduleApi()
+    final Response response = await AptScheduleApi(apiClient)
         .apiV1SchedulesPatchWithHttpInfo(aptSchedule: patchedSchedule);
     snackbarResponse(response);
   }
@@ -194,8 +198,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           textSize: 14,
                           backgroundColor: Colors.green,
                           textColor: Colors.black,
-                          onPressed: () {
-                            AptScheduleApi()
+                          onPressed: () async {
+                            final String mytoken = await FlowStorage.getToken();
+                            final ApiClient apiClient =
+                                FlowStorage.getApiClient(mytoken);
+                            AptScheduleApi(apiClient)
                                 .apiV1SchedulesDelete(body: widget.schedule.id);
                             goToSchedulesScreen();
                           },

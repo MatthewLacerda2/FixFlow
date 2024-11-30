@@ -71,7 +71,10 @@ class ContactScreenState extends State<ContactScreen> {
   }
 
   void _saveChanges() async {
-    final Response response = await AptContactApi()
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
+
+    final Response response = await AptContactApi(apiClient)
         .apiV1ContactsPatchWithHttpInfo(updateAptContact: upCont);
     snackbarResponse(response);
   }
@@ -234,8 +237,11 @@ class ContactScreenState extends State<ContactScreen> {
                           textSize: 14,
                           backgroundColor: Colors.green,
                           textColor: Colors.black,
-                          onPressed: () {
-                            AptContactApi()
+                          onPressed: () async {
+                            final String mytoken = await FlowStorage.getToken();
+                            final ApiClient apiClient =
+                                FlowStorage.getApiClient(mytoken);
+                            AptContactApi(apiClient)
                                 .apiV1ContactsDelete(body: widget.contact.id);
                             goToContactScreen();
                           },

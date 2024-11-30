@@ -27,12 +27,11 @@ class ServicesInputFieldState extends State<ServicesInputField> {
 
   Future<void> loadBusinessOptions() async {
     final BusinessDTO? businessData = await FlowStorage.getBusinessDTO();
-    if (businessData != null) {
-      setState(() {
-        _availableServices = businessData.services ?? <String>[];
-        _allowNewServices = !(businessData.allowListedServicesOnly ?? true);
-      });
-    }
+
+    setState(() {
+      _availableServices = businessData!.services ?? <String>[];
+      _allowNewServices = !(businessData.allowListedServicesOnly ?? true);
+    });
   }
 
   @override

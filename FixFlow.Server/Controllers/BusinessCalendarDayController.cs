@@ -11,7 +11,7 @@ namespace Server.Controllers;
 
 [ApiController]
 [Route(Common.api_v1 + nameof(BusinessCalendarDay))]
-//[Authorize]
+[Authorize]
 [Produces("application/json")]
 public class BusinessCalendarDayController : ControllerBase {
 

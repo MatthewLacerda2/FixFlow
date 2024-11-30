@@ -50,10 +50,13 @@ class CustomerDropdownState extends State<CustomerDropdown> {
   }
 
   Future<void> _fetchCustomers(String query) async {
-    final BusinessDTO? dto = await FlowStorage.getBusinessDTO();
-    final String id = dto!.id!;
-    final List<CustomerDTO>? response = await CustomerApi()
-        .apiV1CustomerGet(businessId: id, offset: 0, limit: 7, fullname: query);
+    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String mytoken = await FlowStorage.getToken();
+    final String businessId = bd!.id!;
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
+    final List<CustomerDTO>? response = await CustomerApi(apiClient)
+        .apiV1CustomerGet(
+            businessId: businessId, offset: 0, limit: 7, fullname: query);
 
     setState(() {
       _customerNames = response ?? <CustomerDTO>[];

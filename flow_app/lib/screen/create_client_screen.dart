@@ -23,6 +23,8 @@ class CreateClientScreen extends StatelessWidget {
 
   void sendCreateRequest(BuildContext context) async {
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final CustomerCreate customer = CustomerCreate(
         businessId: bd!.id!,
@@ -32,7 +34,7 @@ class CreateClientScreen extends StatelessWidget {
         email: _email,
         additionalNote: _note);
 
-    final Response response = await CustomerApi()
+    final Response response = await CustomerApi(apiClient)
         .apiV1CustomerPostWithHttpInfo(customerCreate: customer);
 
     if (response.statusCode != 201) {

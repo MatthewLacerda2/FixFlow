@@ -13,7 +13,7 @@ namespace FixFlow.Server.Controllers.Users;
 /// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(IdlePeriod))]
-//[Authorize]
+[Authorize]
 [Produces("application/json")]
 public class IdlePeriodController : ControllerBase {
 

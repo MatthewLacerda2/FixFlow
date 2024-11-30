@@ -36,15 +36,16 @@ class LoginUtils {
   }
 
   static Future<BusinessDTO?> fetchBusinessDTO() async {
-    String? jwtToken = await FlowStorage.getToken();
-    jwtToken = jwtToken!.replaceAll('"', '');
+    final String jwtToken = await FlowStorage.getToken();
     final JWT jwtTokenDecoded = JWT.decode(jwtToken);
     final Map<String, dynamic> payload =
         jwtTokenDecoded.payload as Map<String, dynamic>;
     final String businessId = payload['businessId'] as String;
 
+    final ApiClient apiClient = FlowStorage.getApiClient(jwtToken);
+
     final BusinessDTO? businessDTO =
-        await BusinessApi().apiV1BusinessGet(businessId: businessId);
+        await BusinessApi(apiClient).apiV1BusinessGet(businessId: businessId);
 
     FlowStorage.saveBusinessDTO(businessDTO!);
 

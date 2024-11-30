@@ -12,6 +12,7 @@ import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_snack.dart';
+import '../../utils/flow_storage.dart';
 import '../main/main_screen.dart';
 
 class LogScreen extends StatefulWidget {
@@ -59,8 +60,11 @@ class LogScreenState extends State<LogScreen> {
   }
 
   void _saveChanges() async {
-    final Response response =
-        await AptLogApi().apiV1LogsPatchWithHttpInfo(updateAptLog: upLog);
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
+
+    final Response response = await AptLogApi(apiClient)
+        .apiV1LogsPatchWithHttpInfo(updateAptLog: upLog);
     snackbarResponse(response);
   }
 
@@ -228,8 +232,12 @@ class LogScreenState extends State<LogScreen> {
                           textSize: 14,
                           backgroundColor: Colors.green,
                           textColor: Colors.black,
-                          onPressed: () {
-                            AptLogApi().apiV1LogsDelete(body: widget.log.id);
+                          onPressed: () async {
+                            final String mytoken = await FlowStorage.getToken();
+                            final ApiClient apiClient =
+                                FlowStorage.getApiClient(mytoken);
+                            AptLogApi(apiClient)
+                                .apiV1LogsDelete(body: widget.log.id);
                             goToLogsScreen();
                           },
                         ),

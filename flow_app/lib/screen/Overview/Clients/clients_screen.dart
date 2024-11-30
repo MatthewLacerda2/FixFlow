@@ -27,9 +27,12 @@ class _ClientsScreenState extends State<ClientsScreen> {
 
   Future<List<CustomerDTO>> _fetchCustomers() async {
     final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String mytoken = await FlowStorage.getToken();
     final String businessId = bd!.id!;
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
-    final List<CustomerDTO>? response = await CustomerApi().apiV1CustomerGet(
+    final List<CustomerDTO>? response =
+        await CustomerApi(apiClient).apiV1CustomerGet(
       businessId: businessId,
       offset: 0,
       limit: 100,
@@ -99,8 +102,13 @@ class _ClientsScreenState extends State<ClientsScreen> {
                         phone: customer.phoneNumber,
                         email: StringUtils.normalIfBlank(customer.email),
                         onTap: () async {
-                          final CustomerRecord? record = await CustomerApi()
-                              .apiV1CustomerRecordGet(customerId: customer.id);
+                          final String mytoken = await FlowStorage.getToken();
+                          final ApiClient apiClient =
+                              FlowStorage.getApiClient(mytoken);
+                          final CustomerRecord? record =
+                              await CustomerApi(apiClient)
+                                  .apiV1CustomerRecordGet(
+                                      customerId: customer.id);
 
                           Navigator.push(
                             context,

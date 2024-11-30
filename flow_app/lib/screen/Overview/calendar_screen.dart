@@ -34,23 +34,19 @@ class CalendarScreenState extends State<CalendarScreen> {
   }
 
   Future<void> _fetchCalendar() async {
-    try {
-      final BusinessDTO? business = await FlowStorage.getBusinessDTO();
-      final String? bId = business!.id;
+    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
+    final String mytoken = await FlowStorage.getToken();
+    final String businessId = bd!.id!;
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
-      final List<BusinessCalendarDay>? calendar = await BusinessCalendarDayApi()
-          .apiV1BusinessCalendarDayGet(
-              businessId: bId, month: widget.month, year: widget.year);
+    final List<BusinessCalendarDay>? calendar =
+        await BusinessCalendarDayApi(apiClient).apiV1BusinessCalendarDayGet(
+            businessId: businessId, month: widget.month, year: widget.year);
 
-      setState(() {
-        _calendarDays = calendar ?? <BusinessCalendarDay>[];
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    setState(() {
+      _calendarDays = calendar ?? <BusinessCalendarDay>[];
+      _isLoading = false;
+    });
   }
 
   @override
