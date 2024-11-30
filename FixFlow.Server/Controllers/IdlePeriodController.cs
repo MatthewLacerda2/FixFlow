@@ -13,7 +13,7 @@ namespace FixFlow.Server.Controllers.Users;
 /// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(IdlePeriod))]
-[Authorize]
+//[Authorize]
 [Produces("application/json")]
 public class IdlePeriodController : ControllerBase {
 
@@ -57,16 +57,12 @@ public class IdlePeriodController : ControllerBase {
 			return BadRequest(NotExistErrors.Business);
 		}
 
-		if (idlePeriod.start <= DateTime.UtcNow.AddMinutes(-5) || idlePeriod.finish <= DateTime.UtcNow) {
-			return BadRequest(ValidatorErrors.IdlePeriodHasPassed);
-		}
-
 		idlePeriod.Id = Guid.NewGuid().ToString();
 		_context.IdlePeriods.Add(idlePeriod);
 
 		await _context.SaveChangesAsync();
 
-		return Ok(idlePeriod);
+		return CreatedAtAction(nameof(CreateIdlePeriod), idlePeriod);
 	}
 
 	/// <summary>

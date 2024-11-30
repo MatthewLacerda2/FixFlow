@@ -31,10 +31,8 @@ public class IdlePeriodControllerTests {
 		_context.IdlePeriods.AddRange(idlePeriod, badDatePeriod, badBiPeriod);
 		await _context.SaveChangesAsync();
 
-		var request = new BusinessIdlePeriodsRequest(business.Id, DateTime.UtcNow);
-
 		// Act
-		var result = await _controller.GetIdlePeriodsAtDate(request) as OkObjectResult;
+		var result = await _controller.GetIdlePeriodsAtDate(business.Id, DateTime.UtcNow) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
@@ -47,7 +45,7 @@ public class IdlePeriodControllerTests {
 		// Arrange
 		var request = new BusinessIdlePeriodsRequest("666", DateTime.UtcNow);
 		// Act
-		var result = await _controller.GetIdlePeriodsAtDate(request);
+		var result = await _controller.GetIdlePeriodsAtDate("non-exist-id", DateTime.UtcNow);
 		// Assert
 		Assert.IsType<BadRequestObjectResult>(result);
 	}
@@ -62,7 +60,7 @@ public class IdlePeriodControllerTests {
 		var idlePeriod = new IdlePeriod(business.Id, DateTime.UtcNow.AddDays(1), DateTime.UtcNow.AddDays(2), "Test");
 
 		// Act
-		var result = await _controller.CreateIdlePeriod(idlePeriod) as OkObjectResult;
+		var result = await _controller.CreateIdlePeriod(idlePeriod) as CreatedAtActionResult;
 
 		// Assert
 		Assert.NotNull(result);
