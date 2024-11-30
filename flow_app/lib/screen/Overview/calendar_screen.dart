@@ -216,13 +216,13 @@ class CalendarScreenState extends State<CalendarScreen> {
         indicators.add(Colors.green);
       }
       if (calendarDay.logs!.isNotEmpty) {
-        indicators.add(Colors.blue);
+        indicators.add(Colors.cyan);
       }
       if (calendarDay.holiday!.isNotEmpty) {
         indicators.add(Colors.red);
       }
       if (calendarDay.idlePeriods!.isNotEmpty) {
-        indicators.add(const Color.fromARGB(255, 0, 100, 3));
+        indicators.add(Colors.pinkAccent);
       }
     }
 
