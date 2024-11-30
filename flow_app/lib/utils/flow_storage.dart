@@ -18,7 +18,13 @@ class FlowStorage {
 
   static Future<String> getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(jwtTokenKey)!.replaceAll('"', '');
+
+    //This shenanigan will return non-nullable String, which makes code throughout the project simpler
+    //Only the code for the login at startup will have to be changed
+    String? token = prefs.getString(jwtTokenKey);
+    token ??= "";
+
+    return token.replaceAll('"', '');
   }
 
   static Future<void> clear() async {

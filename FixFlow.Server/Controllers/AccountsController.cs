@@ -59,19 +59,15 @@ public class AccountsController : ControllerBase {
 
 	private string GenerateToken(Business business) {
 
-		var expirationDate = DateTime.UtcNow.AddMinutes(Common.tokenExpirationTimeInMinutes);
-
 		var claims = new List<Claim>{
 			new Claim(ClaimTypes.Name, business.Name),
 			new Claim(ClaimTypes.Email, business.Email!),
-			new Claim("ExpirationDate", expirationDate.ToString()),
 			new Claim("businessId", business.Id)
 		};
 		var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!);
 		var tokenDescriptor = new SecurityTokenDescriptor {
 			Issuer = _configuration["Jwt:Issuer"],
 			Audience = _configuration["Jwt:Audience"],
-			Expires = expirationDate,
 			Subject = new ClaimsIdentity(claims),
 			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
 		};

@@ -42,7 +42,7 @@ class FlowApp extends StatelessWidget {
   }
 
   Future<bool> checkIfLoggedIn() async {
-    final bool loggedIn = await FlowStorage.getToken() != null;
+    final bool loggedIn = await FlowStorage.getToken() != "";
 
     if (loggedIn) {
       LoginUtils.fetchBusinessDTO();
