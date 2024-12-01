@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,25 +25,6 @@ public class IdlePeriodController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Returns all Idle Periods that contain the given date
-	/// </summary>
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod[]))]
-	[HttpGet]
-	public async Task<IActionResult> GetIdlePeriodsAtDate(string businessId, DateTime date) {
-
-		var business = _context.Business.Find(businessId);
-		if (business == null) {
-			return BadRequest(NotExistErrors.Business);
-		}
-
-		var idlePeriods = await _context.IdlePeriods.Where(x => x.BusinessId == businessId)
-								.Where(x => x.start <= date && x.finish >= date)
-								.ToArrayAsync();
-
-		return Ok(idlePeriods);
-	}
-
-	/// <summary>
 	/// Creates an Idle period
 	/// </summary>
 	/// <remarks>
@@ -52,10 +34,6 @@ public class IdlePeriodController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPost]
 	public async Task<IActionResult> CreateIdlePeriod([FromBody] IdlePeriod idlePeriod) {
-
-		if (_context.Business.Find(idlePeriod.BusinessId) == null) {
-			return BadRequest(NotExistErrors.Business);
-		}
 
 		idlePeriod.Id = Guid.NewGuid().ToString();
 		_context.IdlePeriods.Add(idlePeriod);
@@ -76,6 +54,11 @@ public class IdlePeriodController : ControllerBase {
 		var idlePeriod = _context.IdlePeriods.Find(idlePeriodId);
 		if (idlePeriod == null) {
 			return BadRequest(NotExistErrors.IdlePeriod);
+		}
+
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+		if (idlePeriod.BusinessId != businessId) {
+			return Unauthorized(ValidatorErrors.BadIdlePeriodOwnership);
 		}
 
 		_context.IdlePeriods.Remove(idlePeriod);

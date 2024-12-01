@@ -76,7 +76,7 @@ public class AptLogControllerTests {
 		var expectedLog = logs[3];
 
 		// Act
-		var result = await _controller.ReadLogs(business1.Id, "fulano ", "Service 1", 30, 80, minDate, maxDate, 1, 1) as OkObjectResult;
+		var result = await _controller.ReadLogs("fulano ", "Service 1", 30, 80, minDate, maxDate, 1, 1) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);

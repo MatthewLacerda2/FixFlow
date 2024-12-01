@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Server.Data;
 using Server.Models;
@@ -16,22 +17,24 @@ namespace Server.Controllers;
 public class BusinessCalendarDayController : ControllerBase {
 
 	private readonly ServerContext _context;
+	private readonly UserManager<Customer> _userManager;
 
-	public BusinessCalendarDayController(ServerContext context) {
+	public BusinessCalendarDayController(ServerContext context, UserManager<Customer> userManager) {
 		_context = context;
+		_userManager = userManager;
 	}
 
 	/// <summary>
 	/// Gets all the events for this month
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessCalendarDay[]))]
-	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[HttpGet]
-	public async Task<IActionResult> GetBusinessMonthCalendar(string businessId, int year, int month) {
+	public async Task<IActionResult> GetBusinessMonthCalendar(int year, int month) {
 
-		bool businessExists = await _context.Business.FindAsync(businessId) != null;
-		if (!businessExists) {
-			return NotFound(NotExistErrors.Business);
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+		var businessExists = await _userManager.FindByIdAsync(businessId);
+		if (businessExists == null) {
+			return Unauthorized(NotExistErrors.Business);
 		}
 
 		int daysInMonth = DateTime.DaysInMonth(year, month);

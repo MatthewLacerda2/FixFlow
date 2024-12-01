@@ -33,7 +33,9 @@ public class AptContactController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptContact[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadContacts(string businessId, string? clientName, DateTime minDateTime, DateTime maxDateTime, int offset, int limit) {
+	public async Task<IActionResult> ReadContacts(string? clientName, DateTime minDateTime, DateTime maxDateTime, int offset, int limit) {
+
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
 
 		var contactsQuery = _context.Contacts.AsQueryable();
 

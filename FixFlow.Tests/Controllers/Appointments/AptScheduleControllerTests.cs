@@ -58,7 +58,7 @@ public class AptScheduleControllerTests {
 		var expectedSchedule = schedules[10];
 
 		// Act
-		var result = await _controller.ReadSchedules(business1.Id, "fulano ", "Service 1", 20, 90, minDate, maxDate, 1, 1) as OkObjectResult;
+		var result = await _controller.ReadSchedules("fulano ", "Service 1", 20, 90, minDate, maxDate, 1, 1) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
@@ -320,7 +320,7 @@ public class AptScheduleControllerTests {
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
 		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(1), 100, "Service 1");
 		var createAptLog = new CreateAptLog(client.Id, schedule.Id, DateTime.UtcNow, 30, null, null, DateTime.UtcNow.AddDays(30));
-		var log = new AptLog(createAptLog);
+		var log = new AptLog(createAptLog, business.Id);
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);

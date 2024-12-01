@@ -6,6 +6,11 @@ public struct ValidatorErrors {
 	public static readonly string NullBusinessId = "O valor do BusinessId no seu token é nulo.";
 	public static readonly string NoOpenBusinessDay = "Deve haver pelo menos um dia útil aberto.";
 
+	public static readonly string BadLogOwnership = "Esse atendimento não pertence à sua empresa.";
+	public static readonly string BadScheduleOwnership = "Esse agendamento não pertence à sua empresa.";
+	public static readonly string BadCustomerOwnership = "Esse Cliente não pertence à sua empresa.";
+	public static readonly string BadIdlePeriodOwnership = "Esse Período Ocioso não pertence à sua empresa.";
+
 	public static readonly string UnlistedService = "O negócio só permite serviços listados!";
 	public static readonly string BusinessDayCountMustBe7 = "Devem haver exatamente 7 dias úteis!";
 	public static readonly string BusinessDayStartMustBeLessThanFinish = "O horário de início do dia útil deve ser menor que o horário de término.";

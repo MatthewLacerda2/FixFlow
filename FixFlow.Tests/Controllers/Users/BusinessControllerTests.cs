@@ -198,7 +198,7 @@ public class BusinessControllerTests {
 		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync(business);
 
 		// Act
-		var result = await _controller.DeactivateBusiness(businessId);
+		var result = await _controller.DeactivateBusiness();
 
 		// Assert
 		var okResult = Assert.IsType<OkResult>(result);
@@ -207,11 +207,9 @@ public class BusinessControllerTests {
 
 	[Fact]
 	public async Task DeactivateBusiness_ReturnsBadRequest_WhenBusinessDoesNotExist() {
-		// Arrange
-		var businessId = "non-existent-business-id";
 
 		// Act
-		var result = await _controller.DeactivateBusiness(businessId);
+		var result = await _controller.DeactivateBusiness();
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -229,7 +227,7 @@ public class BusinessControllerTests {
 		Customer client = new Customer(businessId, "98912345678", "fulano da silva bezerra", null, null, null);
 		AptSchedule schedule = new AptSchedule(client.Id, businessId, DateTime.UtcNow.AddDays(-1), 100f, null);
 		CreateAptLog createAptLog = new CreateAptLog(client.Id, schedule.Id, DateTime.UtcNow, 100f, null, null, DateTime.UtcNow.AddDays(90));
-		AptLog log = new AptLog(createAptLog);
+		AptLog log = new AptLog(createAptLog, businessId);
 		AptContact contact = new AptContact(log, DateTime.UtcNow);
 
 		_context.Business.Add(business);
@@ -240,7 +238,7 @@ public class BusinessControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = await _controller.DeleteBusiness(businessId);
+		var result = await _controller.DeleteBusiness();
 
 		// Assert
 		var okResult = Assert.IsType<NoContentResult>(result);
@@ -258,7 +256,7 @@ public class BusinessControllerTests {
 		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync((Business)null!);
 
 		// Act
-		var result = await _controller.DeleteBusiness(businessId);
+		var result = await _controller.DeleteBusiness();
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);

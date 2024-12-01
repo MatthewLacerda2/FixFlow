@@ -53,10 +53,10 @@ public class AptLog {
 		Customer = null!;
 	}
 
-	public AptLog(CreateAptLog newLog) {
+	public AptLog(CreateAptLog newLog, string businessId) {
 		Id = Guid.NewGuid().ToString();
 		CustomerId = newLog.customerId;
-		BusinessId = newLog.BusinessId;
+		BusinessId = businessId;
 		ScheduleId = newLog.ScheduleId;
 		Service = newLog.Service;
 		description = newLog.Observation;

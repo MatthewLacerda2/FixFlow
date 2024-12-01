@@ -33,6 +33,11 @@ public class BusinessController : ControllerBase {
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
 	[HttpGet]
 	public async Task<IActionResult> GetBusiness(string businessId) {
+		string tokenBusinessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+
+		if (businessId != tokenBusinessId) {
+			return Unauthorized();
+		}
 
 		var business = await _userManager.FindByIdAsync(businessId);
 		if (business == null) {
@@ -86,24 +91,22 @@ public class BusinessController : ControllerBase {
 	/// Updates the Business with the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
 	public async Task<IActionResult> UpdateBusiness([FromBody] BusinessDTO upBusiness) {
 
-		var businessExists = await _userManager.FindByIdAsync(upBusiness.Id);
-		if (businessExists == null) {
-			return BadRequest(NotExistErrors.Business);
-		}
+		string Id = User.Claims.First(c => c.Type == "businessId")?.Value!;
 
-		businessExists.Name = upBusiness.Name;
-		businessExists.BusinessWeek = upBusiness.BusinessWeek;
-		businessExists.services = upBusiness.Services;
-		businessExists.allowListedServicesOnly = upBusiness.AllowListedServicesOnly;
-		businessExists.openOnHolidays = upBusiness.OpenOnHolidays;
+		var business = await _userManager.FindByIdAsync(Id);
+
+		business!.Name = upBusiness.Name;
+		business.BusinessWeek = upBusiness.BusinessWeek;
+		business.services = upBusiness.Services;
+		business.allowListedServicesOnly = upBusiness.AllowListedServicesOnly;
+		business.openOnHolidays = upBusiness.OpenOnHolidays;
 
 		await _context.SaveChangesAsync();
 
-		return Ok(new BusinessDTO(businessExists));
+		return Ok(new BusinessDTO(business));
 	}
 
 	/// <summary>
@@ -111,16 +114,12 @@ public class BusinessController : ControllerBase {
 	/// That freezes the subscription, and stops notifications
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch("deactivate")]
-	public async Task<IActionResult> DeactivateBusiness([FromBody] string Id) {
+	public async Task<IActionResult> DeactivateBusiness() {
+		string Id = User.Claims.First(c => c.Type == "businessId")?.Value!;
 
 		var business = await _userManager.FindByIdAsync(Id);
-		if (business == null) {
-			return BadRequest(NotExistErrors.Business);
-		}
-
-		business.IsActive = false;
+		business!.IsActive = false;
 
 		await _context.SaveChangesAsync();
 
@@ -128,25 +127,20 @@ public class BusinessController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Deletes the Business with the given Id and all it's data owned by it
+	/// Deletes the Business
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpDelete]
-	public async Task<IActionResult> DeleteBusiness([FromBody] string Id) {
+	public async Task<IActionResult> DeleteBusiness() {
+		string Id = User.Claims.First(c => c.Type == "businessId")?.Value!;
 
-		var business = await _userManager.FindByIdAsync(Id);
-		if (business == null) {
-			return BadRequest(NotExistErrors.Business);
-		}
-
-		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.businessId == Id));
 		_context.Schedules.RemoveRange(_context.Schedules.Where(x => x.BusinessId == Id));
 		_context.Logs.RemoveRange(_context.Logs.Where(x => x.BusinessId == Id));
-
+		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.businessId == Id));
 		_context.Customers.RemoveRange(_context.Customers.Where(x => x.BusinessId == Id));
 
-		await _userManager.DeleteAsync(business);
+		var business = await _userManager.FindByIdAsync(Id);
+		await _userManager.DeleteAsync(business!);
 
 		await _context.SaveChangesAsync();
 

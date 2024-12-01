@@ -1,4 +1,3 @@
-import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
@@ -48,16 +47,14 @@ class LoginScreenState extends State<LoginScreen> {
               textColor: Colors.grey[700]!,
               width: 40,
               onPressed: () {
-                final FlowLoginRequest flr = FlowLoginRequest(
-                    email: emailController.text,
-                    password: passwordController.text);
+                final String email = emailController.text;
+                final String password = passwordController.text;
                 LoginUtils.login(
-                    flr.email,
-                    flr.password,
-                    context,
-                    const MainScreen(
-                      initialIndex: 0,
-                    ));
+                  email,
+                  password,
+                  context,
+                  const MainScreen(initialIndex: 0),
+                );
               },
             ),
           ],

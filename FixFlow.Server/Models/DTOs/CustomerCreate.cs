@@ -35,8 +35,7 @@ public class CustomerCreate {
 	[EmailAddress]
 	public string? Email { get; set; }
 
-	public CustomerCreate(string businessId, string fullName, string? cpf, string? additionalNote, string phoneNumber, string? email) {
-		BusinessId = businessId;
+	public CustomerCreate(string fullName, string? cpf, string? additionalNote, string phoneNumber, string? email) {
 		FullName = fullName;
 		CPF = cpf;
 		PhoneNumber = phoneNumber;

@@ -32,8 +32,11 @@ public class AptScheduleController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadSchedules(string businessId, string? client, string? service, float minPrice, float maxPrice,
+	public async Task<IActionResult> ReadSchedules(string? client, string? service, float minPrice, float maxPrice,
 													DateTime minDateTime, DateTime maxDateTime, int offset, int limit) {
+
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+
 		var schedulesQuery = _context.Schedules.AsQueryable();
 
 		schedulesQuery = _context.Schedules.Where(x => x.BusinessId == businessId);
@@ -88,7 +91,7 @@ public class AptScheduleController : ControllerBase {
 
 		//TODO: validate business hours
 
-		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingBusiness.Id).ToArray();
+		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingCustomer.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
 			if (idp.start <= newAppointment.dateTime && idp.finish >= newAppointment.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);

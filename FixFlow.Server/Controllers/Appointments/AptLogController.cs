@@ -37,9 +37,10 @@ public class AptLogController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadLogs(string businessId, string? clientName, string? service,
-												float minPrice, float maxPrice, DateTime minDateTime, DateTime maxDateTime,
-													int offset, int limit) {
+	public async Task<IActionResult> ReadLogs(string? clientName, string? service, float minPrice, float maxPrice,
+												DateTime minDateTime, DateTime maxDateTime, int offset, int limit) {
+
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
 
 		var logsQuery = _context.Logs.AsQueryable();
 
@@ -95,21 +96,29 @@ public class AptLogController : ControllerBase {
 			}
 		}
 
-		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
-		createLog.BusinessId = existingCustomer.BusinessId;
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+		if (businessId != existingCustomer.BusinessId) {
+			return Unauthorized(ValidatorErrors.BadLogOwnership);
+		}
 
+		var existingBusiness = _context.Business.Find(businessId);
 		if (existingBusiness!.allowListedServicesOnly) {
 			if (createLog.Service == null || !existingBusiness.services.Contains(createLog.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
 
-		AptLog newLog = new AptLog(createLog);
-
+		AptLog newLog = new AptLog(createLog, businessId);
 		AptContact contact = new AptContact(newLog, createLog.whenShouldCustomerComeBack);
-		if (contact.dateTime.TimeOfDay > new TimeSpan(18, 0, 0)) {
-			contact.dateTime = contact.dateTime.Date.AddHours(12);
+		var timeOfDay = contact.dateTime.TimeOfDay;
+		var early = new TimeSpan(8, 10, 0);
+		var late = new TimeSpan(18, 0, 0);
+
+		if (timeOfDay > late || timeOfDay < early) {
+			var hoursToAdd = Math.Abs(8 - contact.dateTime.TimeOfDay.Hours);
+			contact.dateTime.AddHours(hoursToAdd);
 		}
+
 		if (contact.dateTime.DayOfWeek == DayOfWeek.Saturday) {
 			contact.dateTime = contact.dateTime.AddDays(2);
 		}
@@ -137,7 +146,12 @@ public class AptLogController : ControllerBase {
 			return BadRequest(NotExistErrors.AptLog);
 		}
 
-		var existingBusiness = _context.Business.Find(existingLog.BusinessId);
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+		if (existingLog.BusinessId != businessId) {
+			return Unauthorized(ValidatorErrors.BadLogOwnership);
+		}
+
+		var existingBusiness = _context.Business.Find(businessId);
 		if (upLog.Service != null && existingBusiness!.allowListedServicesOnly) {
 			if (!existingBusiness.services.Contains(upLog.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);

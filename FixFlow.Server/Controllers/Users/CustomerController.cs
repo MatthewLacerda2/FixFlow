@@ -41,6 +41,12 @@ public class CustomerController : ControllerBase {
 			return BadRequest(NotExistErrors.Customer);
 		}
 
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+
+		if (client.BusinessId != businessId) {
+			return BadRequest(ValidatorErrors.BadCustomerOwnership);
+		}
+
 		var clientRecord = (CustomerRecord)client;
 
 		var firstLog = _context.Logs.Where(x => x.CustomerId == customerId).OrderBy(x => x.dateTime).FirstOrDefault();
@@ -69,7 +75,9 @@ public class CustomerController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDTO[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadCustomers(string businessId, uint offset, uint limit, string? fullname) {
+	public async Task<IActionResult> ReadCustomers(uint offset, uint limit, string? fullname) {
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+
 		var clientsQuery = _context.Customers.AsQueryable();
 
 		clientsQuery = clientsQuery.Where(client => client.BusinessId == businessId);
@@ -98,20 +106,23 @@ public class CustomerController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateCustomer([FromBody] CustomerCreate customerCreate) {
 
-		bool phoneTaken = _context.Customers.Where(x => x.BusinessId == customerCreate.BusinessId).Any(x => x.PhoneNumber == customerCreate.PhoneNumber);
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+		customerCreate.BusinessId = businessId;
+
+		bool phoneTaken = _context.Customers.Where(x => x.BusinessId == businessId).Any(x => x.PhoneNumber == customerCreate.PhoneNumber);
 		if (phoneTaken) {
 			return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
 		}
 
 		if (customerCreate.CPF != null) {
-			bool cpfTaken = _context.Customers.Where(x => x.BusinessId == customerCreate.BusinessId).Any(x => x.CPF == customerCreate.CPF);
+			bool cpfTaken = _context.Customers.Where(x => x.BusinessId == businessId).Any(x => x.CPF == customerCreate.CPF);
 			if (cpfTaken) {
 				return BadRequest(AlreadyRegisteredErrors.CPF);
 			}
 		}
 
 		if (customerCreate.Email != null) {
-			bool emailTaken = _context.Customers.Where(x => x.BusinessId == customerCreate.BusinessId).Any(x => x.Email == customerCreate.Email);
+			bool emailTaken = _context.Customers.Where(x => x.BusinessId == businessId).Any(x => x.Email == customerCreate.Email);
 			if (emailTaken) {
 				return BadRequest(AlreadyRegisteredErrors.Email);
 			}
@@ -142,6 +153,11 @@ public class CustomerController : ControllerBase {
 		var existingCustomer = await _userManager.FindByIdAsync(upCustomer.Id);
 		if (existingCustomer == null) {
 			return BadRequest(NotExistErrors.Customer);
+		}
+
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+		if (existingCustomer.BusinessId != businessId) {
+			return BadRequest(ValidatorErrors.BadCustomerOwnership);
 		}
 
 		if (existingCustomer.CPF != upCustomer.CPF) {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Server.Controllers;
 using Server.Data;
@@ -10,13 +11,14 @@ namespace FixFlow.Tests.Controllers;
 public class BusinessCalendarControllerTests {
 
 	private readonly ServerContext _context;
+	private readonly UserManager<Customer> _customerManager;
 	private readonly BusinessCalendarDayController _controller;
 
 	public BusinessCalendarControllerTests() {
 
 		_context = new Util().SetupDbContextForTests();
 
-		_controller = new BusinessCalendarDayController(_context);
+		_controller = new BusinessCalendarDayController(_context, _customerManager);
 	}
 
 	[Fact]
@@ -24,7 +26,7 @@ public class BusinessCalendarControllerTests {
 		// Arrange
 		string nonExistentBusinessId = "non-existent-business-id";
 		// Act
-		var result = await _controller.GetBusinessCalendar(nonExistentBusinessId);
+		var result = await _controller.GetBusinessMonthCalendar(2024, 12);
 		// Assert
 		Assert.IsType<NotFoundObjectResult>(result);
 		var notFoundResult = result as NotFoundObjectResult;
@@ -40,7 +42,7 @@ public class BusinessCalendarControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = await _controller.GetBusinessCalendar(business.Id);
+		var result = await _controller.GetBusinessMonthCalendar(2024, 12);
 
 		// Assert
 		Assert.IsType<OkObjectResult>(result);

@@ -12,12 +12,6 @@ public class CreateAptLog {
 	public string customerId { get; set; }
 
 	/// <summary>
-	/// The Id of the Business who owns this Contact
-	/// </summary>
-	[Required]
-	public string BusinessId { get; set; } = string.Empty;
-
-	/// <summary>
 	/// The Id of the Schedule that precedes this Log, if any
 	/// </summary>
 	public string? ScheduleId { get; set; }
