@@ -128,6 +128,9 @@ public class CustomerController : ControllerBase {
 			}
 		}
 
+		customerCreate.FullName = StringUtils.NameCaseNormalizer(customerCreate.FullName);
+		customerCreate.additionalNote = StringUtils.PhraseCaseNormalizer(customerCreate.additionalNote);
+
 		Customer customer = (Customer)customerCreate;
 
 		IdentityResult userCreationResult = await _userManager.CreateAsync(customer);
@@ -165,18 +168,12 @@ public class CustomerController : ControllerBase {
 			if (existingCPF.Any()) {
 				return BadRequest(AlreadyRegisteredErrors.CPF);
 			}
-			else {
-				existingCustomer.CPF = upCustomer.CPF;
-			}
 		}
 
 		if (existingCustomer.PhoneNumber != upCustomer.PhoneNumber) {
 			var existingPhonenumber = _context.Customers.Where(x => x.PhoneNumber == upCustomer.PhoneNumber);
 			if (existingPhonenumber.Any()) {
 				return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
-			}
-			else {
-				existingCustomer.PhoneNumber = upCustomer.PhoneNumber;
 			}
 		}
 
@@ -185,11 +182,14 @@ public class CustomerController : ControllerBase {
 			if (existingEmail.Any()) {
 				return BadRequest(AlreadyRegisteredErrors.Email);
 			}
-			else {
-				existingCustomer.Email = upCustomer.Email;
-			}
 		}
 
+		upCustomer.FullName = StringUtils.NameCaseNormalizer(upCustomer.FullName);
+		upCustomer.AdditionalNote = StringUtils.PhraseCaseNormalizer(upCustomer.AdditionalNote);
+
+		existingCustomer.PhoneNumber = upCustomer.PhoneNumber;
+		existingCustomer.CPF = upCustomer.CPF;
+		existingCustomer.Email = upCustomer.Email;
 		existingCustomer.FullName = upCustomer.FullName;
 		existingCustomer.AdditionalNote = upCustomer.AdditionalNote;
 

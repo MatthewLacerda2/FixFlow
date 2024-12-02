@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using Server.Controllers;
 using Server.Data;
 using Server.Models;
@@ -11,14 +12,17 @@ namespace FixFlow.Tests.Controllers;
 public class BusinessCalendarControllerTests {
 
 	private readonly ServerContext _context;
-	private readonly UserManager<Customer> _customerManager;
 	private readonly BusinessCalendarDayController _controller;
+	private readonly Mock<UserManager<Customer>> _mockCustomerManager;
 
 	public BusinessCalendarControllerTests() {
 
 		_context = new Util().SetupDbContextForTests();
 
-		_controller = new BusinessCalendarDayController(_context, _customerManager);
+		var clientStore = new Mock<IUserStore<Customer>>();
+		_mockCustomerManager = new Mock<UserManager<Customer>>(clientStore.Object, null!, null!, null!, null!, null!, null!, null!, null!);
+
+		_controller = new BusinessCalendarDayController(_context, _mockCustomerManager.Object);
 	}
 
 	[Fact]

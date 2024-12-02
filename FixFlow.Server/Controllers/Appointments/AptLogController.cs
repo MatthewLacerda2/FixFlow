@@ -101,6 +101,9 @@ public class AptLogController : ControllerBase {
 			return Unauthorized(ValidatorErrors.BadLogOwnership);
 		}
 
+		createLog.Service = StringUtils.PhraseCaseNormalizer(createLog.Service);
+		createLog.Observation = StringUtils.PhraseCaseNormalizer(createLog.Observation);
+
 		var existingBusiness = _context.Business.Find(businessId);
 		if (existingBusiness!.allowListedServicesOnly) {
 			if (createLog.Service == null || !existingBusiness.services.Contains(createLog.Service)) {
@@ -151,6 +154,9 @@ public class AptLogController : ControllerBase {
 			return Unauthorized(ValidatorErrors.BadLogOwnership);
 		}
 
+		existingLog.Service = StringUtils.PhraseCaseNormalizer(existingLog.Service);
+		existingLog.description = StringUtils.PhraseCaseNormalizer(existingLog.description);
+
 		var existingBusiness = _context.Business.Find(businessId);
 		if (upLog.Service != null && existingBusiness!.allowListedServicesOnly) {
 			if (!existingBusiness.services.Contains(upLog.Service)) {
@@ -158,14 +164,6 @@ public class AptLogController : ControllerBase {
 			}
 		}
 
-		if (!string.IsNullOrWhiteSpace(upLog.ScheduleId)) {
-			var existingSchedule = _context.Schedules.Find(upLog.ScheduleId);
-			if (existingSchedule == null) {
-				return BadRequest(NotExistErrors.AptSchedule);
-			}
-		}
-
-		existingLog.ScheduleId = upLog.ScheduleId;
 		existingLog.dateTime = upLog.dateTime;
 		existingLog.Service = upLog.Service;
 		existingLog.Price = upLog.Price;

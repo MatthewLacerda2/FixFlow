@@ -10,12 +10,6 @@ public class UpdateAptLog {
 	public string Id { get; set; }
 
 	/// <summary>
-	/// The Id of the Schedule that precedes this Log, if any
-	/// </summary>
-	[ForeignKey(nameof(AptSchedule))]
-	public string? ScheduleId { get; set; }
-
-	/// <summary>
 	/// The DateTime when the Log was registered
 	/// </summary>
 	public DateTime dateTime { get; set; } = DateTime.UtcNow;
@@ -26,9 +20,8 @@ public class UpdateAptLog {
 
 	public string? Description { get; set; }
 
-	public UpdateAptLog(string Id, string? scheduleId, DateTime dateTime, string? service, float price, string? description) {
+	public UpdateAptLog(string Id, DateTime dateTime, string? service, float price, string? description) {
 		this.Id = Id;
-		this.ScheduleId = scheduleId;
 		this.dateTime = dateTime;
 		this.Price = price;
 		this.Service = service;

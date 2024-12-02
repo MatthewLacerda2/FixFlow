@@ -83,6 +83,9 @@ public class AptScheduleController : ControllerBase {
 
 		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
 
+		newAppointment.Service = StringUtils.PhraseCaseNormalizer(newAppointment.Service);
+		newAppointment.Observation = StringUtils.PhraseCaseNormalizer(newAppointment.Observation);
+
 		if (existingBusiness!.allowListedServicesOnly) {
 			if (newAppointment.Service == null || !existingBusiness.services.Contains(newAppointment.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
@@ -123,6 +126,9 @@ public class AptScheduleController : ControllerBase {
 		}
 
 		var existingBusiness = _context.Business.Find(existingAppointment.BusinessId);
+
+		upSchedule.Service = StringUtils.PhraseCaseNormalizer(upSchedule.Service);
+		upSchedule.observation = StringUtils.PhraseCaseNormalizer(upSchedule.observation);
 
 		if (upSchedule.Service != null && existingBusiness!.allowListedServicesOnly) {
 			if (!existingBusiness.services.Contains(upSchedule.Service)) {

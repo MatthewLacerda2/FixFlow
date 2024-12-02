@@ -10,14 +10,14 @@ public class CustomerRegisterValidator : AbstractValidator<CustomerCreate> {
 	public CustomerRegisterValidator() {
 
 		RuleFor(x => x.FullName).Custom((fullname, context) => {
-			if (StringChecker.IsFullNameValid(fullname) == false) {
+			if (StringUtils.IsFullNameValid(fullname) == false) {
 				context.AddFailure(ValidatorErrors.FullName);
 			}
 		});
 
 		RuleFor(x => x.CPF).Custom((cpf, context) => {
 			if (cpf != null) {
-				if (StringChecker.isCPFvalid(cpf) == false) {
+				if (StringUtils.isCPFvalid(cpf) == false) {
 					context.AddFailure(ValidatorErrors.CPFisInvalid);
 				}
 			}
