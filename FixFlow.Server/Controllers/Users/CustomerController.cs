@@ -34,7 +34,7 @@ public class CustomerController : ControllerBase {
 
 		var client = await _userManager.FindByIdAsync(customerId);
 		if (client == null) {
-			return BadRequest(NotExistErrors.Customer);
+			return BadRequest(NotExistErrors.customer);
 		}
 
 		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
@@ -149,7 +149,7 @@ public class CustomerController : ControllerBase {
 
 		var existingCustomer = await _userManager.FindByIdAsync(upCustomer.Id);
 		if (existingCustomer == null) {
-			return BadRequest(NotExistErrors.Customer);
+			return BadRequest(NotExistErrors.customer);
 		}
 
 		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;

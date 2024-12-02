@@ -1,11 +1,16 @@
+using System.Text.Json.Serialization;
+
 namespace Server.Models.DTO;
 
 public class BusinessWeek {
 
 	public string Id { get; set; }
 
-	public BusinessTimeSpan Sunday { get; set; }
+	[JsonIgnore]
+	public Business Business { get; set; }
+	public string BusinessId { get; set; }
 
+	public BusinessTimeSpan Sunday { get; set; }
 	public BusinessTimeSpan Monday { get; set; }
 	public BusinessTimeSpan Tuesday { get; set; }
 	public BusinessTimeSpan Wednesday { get; set; }
@@ -17,6 +22,7 @@ public class BusinessWeek {
 	public BusinessWeek() {
 
 		Id = Guid.NewGuid().ToString();
+		BusinessId = string.Empty;
 
 		Sunday = new BusinessTimeSpan();
 

@@ -22,6 +22,8 @@ public class Business : IdentityUser {
 	/// </summary>
 	public string CNPJ { get; set; }
 
+	public string BusinessWeekId { get; set; }
+
 	/// <summary>
 	/// The CommercialHours of the Business
 	/// </summary>
@@ -45,6 +47,7 @@ public class Business : IdentityUser {
 		PhoneNumber = phoneNumber;
 
 		BusinessWeek = new BusinessWeek();
+		BusinessWeekId = BusinessWeek.Id;
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {

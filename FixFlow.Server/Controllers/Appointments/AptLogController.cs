@@ -82,13 +82,13 @@ public class AptLogController : ControllerBase {
 
 		var existingCustomer = _context.Customers.Find(createLog.CustomerId);
 		if (existingCustomer == null) {
-			return BadRequest(NotExistErrors.Customer);
+			return BadRequest(NotExistErrors.customer);
 		}
 
 		if (!string.IsNullOrWhiteSpace(createLog.ScheduleId)) {
 			var scheduleExists = _context.Schedules.Find(createLog.ScheduleId);
 			if (scheduleExists == null) {
-				return BadRequest(NotExistErrors.AptSchedule);
+				return BadRequest(NotExistErrors.aptSchedule);
 			}
 		}
 
@@ -142,7 +142,7 @@ public class AptLogController : ControllerBase {
 
 		var existingLog = _context.Logs.Find(upLog.Id);
 		if (existingLog == null) {
-			return BadRequest(NotExistErrors.AptLog);
+			return BadRequest(NotExistErrors.aptLog);
 		}
 
 		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
@@ -180,7 +180,7 @@ public class AptLogController : ControllerBase {
 
 		var logToDelete = _context.Logs.Find(Id);
 		if (logToDelete == null) {
-			return BadRequest(NotExistErrors.AptLog);
+			return BadRequest(NotExistErrors.aptLog);
 		}
 
 		var contact = _context.Contacts.Where(x => x.aptLogId == Id).FirstOrDefault();

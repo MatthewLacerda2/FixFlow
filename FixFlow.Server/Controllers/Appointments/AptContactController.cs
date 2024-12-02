@@ -66,7 +66,7 @@ public class AptContactController : ControllerBase {
 
 		var existingContact = _context.Contacts.Find(upContact.Id);
 		if (existingContact == null) {
-			return BadRequest(NotExistErrors.AptContact);
+			return BadRequest(NotExistErrors.aptContact);
 		}
 
 		existingContact.dateTime = upContact.dateTime;
@@ -86,7 +86,7 @@ public class AptContactController : ControllerBase {
 
 		var contactToDelete = _context.Contacts.Find(Id);
 		if (contactToDelete == null) {
-			return BadRequest(NotExistErrors.AptContact);
+			return BadRequest(NotExistErrors.aptContact);
 		}
 
 		_context.Contacts.Remove(contactToDelete);

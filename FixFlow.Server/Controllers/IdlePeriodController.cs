@@ -49,7 +49,7 @@ public class IdlePeriodController : ControllerBase {
 
 		var idlePeriod = _context.IdlePeriods.Find(idlePeriodId);
 		if (idlePeriod == null) {
-			return BadRequest(NotExistErrors.IdlePeriod);
+			return BadRequest(NotExistErrors.idlePeriod);
 		}
 
 		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;

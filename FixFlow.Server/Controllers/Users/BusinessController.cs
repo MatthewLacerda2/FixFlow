@@ -6,6 +6,7 @@ using Server.Models;
 using Server.Models.DTO;
 using Server.Models.Erros;
 using Server.Models.Utils;
+using Server.Utils;
 
 namespace Server.Controllers;
 
@@ -38,7 +39,7 @@ public class BusinessController : ControllerBase {
 
 		var business = await _userManager.FindByIdAsync(businessId);
 		if (business == null) {
-			return BadRequest(NotExistErrors.Business);
+			return BadRequest(NotExistErrors.business);
 		}
 
 		return Ok(new BusinessDTO(business));
@@ -94,6 +95,15 @@ public class BusinessController : ControllerBase {
 		string Id = User.Claims.First(c => c.Type == "businessId")?.Value!;
 
 		var business = await _userManager.FindByIdAsync(Id);
+
+		if (upBusiness.BusinessWeek.Id != business!.BusinessWeekId) {
+			return BadRequest(NotExistErrors.businessWeek);
+		}
+
+		bool isUpBusinessWeekValid = TimeSpoil.DoTimeSpansIDsMatch(business.BusinessWeek, upBusiness.BusinessWeek);
+		if (isUpBusinessWeekValid == false) {
+			return BadRequest(NotExistErrors.businessTimeSpan);
+		}
 
 		business!.Name = upBusiness.Name;
 		business.BusinessWeek = upBusiness.BusinessWeek;

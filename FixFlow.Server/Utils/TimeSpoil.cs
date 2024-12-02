@@ -7,6 +7,34 @@ namespace Server.Utils;
 /// </summary>
 public static class TimeSpoil {
 
+	public static bool DoTimeSpansIDsMatch(BusinessWeek truth, BusinessWeek tested) {
+
+		if (truth.Sunday.Id != tested.Sunday.Id) {
+			return false;
+		}
+		if (truth.Monday.Id != tested.Monday.Id) {
+			return false;
+		}
+		if (truth.Tuesday.Id != tested.Tuesday.Id) {
+			return false;
+		}
+		if (truth.Wednesday.Id != tested.Wednesday.Id) {
+			return false;
+		}
+		if (truth.Thursday.Id != tested.Thursday.Id) {
+			return false;
+		}
+		if (truth.Friday.Id != tested.Friday.Id) {
+			return false;
+		}
+		if (truth.Saturday.Id != tested.Saturday.Id) {
+			return false;
+		}
+
+		return true;
+
+	}
+
 	public static DateTime GetNextDayOfWeekWithTime(DayOfWeek dayOfWeek, TimeSpan timeOfDay) {
 		DateTime now = DateTime.Now;
 		int currentDayOfWeek = (int)now.DayOfWeek;

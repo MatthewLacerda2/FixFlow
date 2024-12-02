@@ -34,7 +34,7 @@ public class BusinessCalendarDayController : ControllerBase {
 		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
 		var businessExists = await _userManager.FindByIdAsync(businessId);
 		if (businessExists == null) {
-			return Unauthorized(NotExistErrors.Business);
+			return Unauthorized(NotExistErrors.business);
 		}
 
 		int daysInMonth = DateTime.DaysInMonth(year, month);

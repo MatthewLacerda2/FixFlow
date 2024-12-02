@@ -75,7 +75,7 @@ public class AptScheduleController : ControllerBase {
 
 		var existingCustomer = _context.Customers.Find(newAppointment.CustomerId);
 		if (existingCustomer == null) {
-			return BadRequest(NotExistErrors.Customer);
+			return BadRequest(NotExistErrors.customer);
 		}
 
 		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
@@ -119,7 +119,7 @@ public class AptScheduleController : ControllerBase {
 
 		var existingAppointment = _context.Schedules.Find(upSchedule.Id);
 		if (existingAppointment == null) {
-			return BadRequest(NotExistErrors.AptSchedule);
+			return BadRequest(NotExistErrors.aptSchedule);
 		}
 
 		var existingBusiness = _context.Business.Find(existingAppointment.BusinessId);
@@ -162,7 +162,7 @@ public class AptScheduleController : ControllerBase {
 
 		var scheduleToDelete = _context.Schedules.Find(Id);
 		if (scheduleToDelete == null) {
-			return BadRequest(NotExistErrors.AptSchedule);
+			return BadRequest(NotExistErrors.aptSchedule);
 		}
 
 		_context.Schedules.Remove(scheduleToDelete);
