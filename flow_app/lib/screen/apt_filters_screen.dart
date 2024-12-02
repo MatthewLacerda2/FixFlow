@@ -65,7 +65,7 @@ class _AppFiltersScreenState extends State<AptFiltersScreen> {
                       ),
                       keyboardType: TextInputType.number,
                       onChanged: (String value) {
-                        auxAptFilters.minPrice = double.parse(value);
+                        auxAptFilters.minPrice = double.tryParse(value) ?? 0;
                       },
                     ),
                   ),
@@ -78,7 +78,8 @@ class _AppFiltersScreenState extends State<AptFiltersScreen> {
                       ),
                       keyboardType: TextInputType.number,
                       onChanged: (String value) {
-                        auxAptFilters.maxPrice = double.parse(value);
+                        auxAptFilters.maxPrice =
+                            double.tryParse(value) ?? 99999;
                       },
                     ),
                   ),

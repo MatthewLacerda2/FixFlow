@@ -172,7 +172,7 @@ class LogScreenState extends State<LogScreen> {
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
-                upLog.price = double.parse(value);
+                upLog.price = double.tryParse(value);
                 _toggleEdit();
               },
             ),

@@ -37,7 +37,7 @@ public class AptLogController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadLogs(string? clientName, string? service, float minPrice, float maxPrice,
+	public async Task<IActionResult> ReadLogs(string? clientName, string? service, float minPrice, float? maxPrice,
 												DateTime minDateTime, DateTime maxDateTime, int offset, int limit) {
 
 		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
@@ -55,7 +55,9 @@ public class AptLogController : ControllerBase {
 		}
 
 		logsQuery = logsQuery.Where(x => x.Price >= minPrice);
-		logsQuery = logsQuery.Where(x => x.Price <= maxPrice);
+		if (maxPrice.HasValue) {
+			logsQuery = logsQuery.Where(x => x.Price <= maxPrice);
+		}
 
 		logsQuery = logsQuery.Where(x => x.dateTime.Date >= minDateTime.Date);
 		logsQuery = logsQuery.Where(x => x.dateTime.Date <= maxDateTime.Date);

@@ -32,7 +32,7 @@ public class AptScheduleController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadSchedules(string? client, string? service, float minPrice, float maxPrice,
+	public async Task<IActionResult> ReadSchedules(string? client, string? service, float minPrice, float? maxPrice,
 													DateTime minDateTime, DateTime maxDateTime, int offset, int limit) {
 
 		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
@@ -49,11 +49,14 @@ public class AptScheduleController : ControllerBase {
 			schedulesQuery = schedulesQuery.Where(x => x.Service != null && x.Service.Contains(service));
 		}
 
+		schedulesQuery = schedulesQuery.Where(x => x.Price >= minPrice);
+
+		if (maxPrice.HasValue) {
+			schedulesQuery = schedulesQuery.Where(x => x.Price <= maxPrice);
+		}
+
 		schedulesQuery = schedulesQuery.Where(x => x.dateTime >= minDateTime);
 		schedulesQuery = schedulesQuery.Where(x => x.dateTime <= maxDateTime);
-
-		schedulesQuery = schedulesQuery.Where(x => x.Price >= minPrice);
-		schedulesQuery = schedulesQuery.Where(x => x.Price <= maxPrice);
 
 		var resultsArray = await schedulesQuery
 			.Skip(offset)

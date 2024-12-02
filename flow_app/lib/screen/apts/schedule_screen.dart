@@ -141,7 +141,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
-                preco = double.parse(value);
+                preco = double.tryParse(value) ?? 0;
                 _toggleEdit();
               },
             ),
