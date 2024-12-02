@@ -22,6 +22,7 @@ public class CreateAptSchedule {
 
 	public string? Observation { get; set; }
 
+	[Required]
 	public float Price { get; set; }
 
 	public CreateAptSchedule() : this(string.Empty, DateTime.UtcNow, 0, null, null) { }

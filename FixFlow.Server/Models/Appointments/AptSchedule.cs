@@ -40,6 +40,7 @@ public class AptSchedule {
 
 	public string? observation { get; set; }
 
+	[Required]
 	public float Price { get; set; }
 
 	public AptSchedule() : this(string.Empty, string.Empty, DateTime.UtcNow, 0, null) { }

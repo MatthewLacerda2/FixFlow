@@ -19,7 +19,7 @@ public static class StringUtils {
 	}
 
 	//Puts the first letter and letters after a dot uppercase
-	public static string PhraseCaseNormalizer(string? phrase) {
+	public static string? PhraseCaseNormalizer(string? phrase) {
 		if (string.IsNullOrEmpty(phrase)) {
 			return phrase;
 		}

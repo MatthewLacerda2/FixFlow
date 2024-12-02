@@ -19,12 +19,14 @@ public class CreateAptLog {
 	/// <summary>
 	/// The DateTime when the Log was registered
 	/// </summary>
+
 	public DateTime dateTime { get; set; }
 
 	public string? Service { get; set; }
 
 	public string? Observation { get; set; }
 
+	[Required]
 	public float Price { get; set; }
 
 	/// <summary>

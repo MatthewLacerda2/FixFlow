@@ -12,7 +12,7 @@ public class BusinessRegisterRequestValidator : AbstractValidator<BusinessRegist
 				context.AddFailure(ValidatorErrors.ShortPassword);
 			}
 
-			if (StringUtils.IsPasswordStrong(currentPassword) == false) {
+			if (StringChecker.IsPasswordStrong(currentPassword) == false) {
 				context.AddFailure(ValidatorErrors.BadPassword);
 			}
 		});

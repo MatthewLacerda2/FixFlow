@@ -14,5 +14,11 @@ public class IdlePeriodValidator : AbstractValidator<IdlePeriod> {
 		RuleFor(idlePeriod => idlePeriod.finish)
 			.LessThan(idlePeriod => DateTime.UtcNow)
 			.WithMessage(ValidatorErrors.IdlePeriodHasPassed);
+
+		RuleFor(x => x.Name).Custom((Name, context) => {
+			if (string.IsNullOrEmpty(Name)) {
+				context.AddFailure(nameof(Name) + ValidatorErrors.MustNotBeEmpty);
+			}
+		});
 	}
 }

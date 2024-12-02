@@ -36,7 +36,7 @@ public class IdlePeriodController : ControllerBase {
 	public async Task<IActionResult> CreateIdlePeriod([FromBody] IdlePeriod idlePeriod) {
 
 		idlePeriod.Id = Guid.NewGuid().ToString();
-		idlePeriod.Name = StringUtils.PhraseCaseNormalizer(idlePeriod.Name);
+		idlePeriod.Name = StringUtils.PhraseCaseNormalizer(idlePeriod.Name)!;
 
 		_context.IdlePeriods.Add(idlePeriod);
 		await _context.SaveChangesAsync();

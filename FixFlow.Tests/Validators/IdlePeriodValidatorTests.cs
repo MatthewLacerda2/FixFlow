@@ -33,4 +33,16 @@ public class IdlePeriodValidatorTests {
 		var result = _validator.TestValidate(idlePeriod);
 		result.ShouldNotHaveValidationErrorFor(ip => ip.start);
 	}
+
+	[Fact]
+	public void Should_Have_Error_When_Name_Is_Empty() {
+		var idlePeriod = new IdlePeriod {
+			start = DateTime.UtcNow,
+			finish = DateTime.UtcNow.AddDays(1),
+			Name = string.Empty
+		};
+
+		var result = _validator.TestValidate(idlePeriod);
+		result.ShouldHaveValidationErrorFor(ip => ip.Name);
+	}
 }

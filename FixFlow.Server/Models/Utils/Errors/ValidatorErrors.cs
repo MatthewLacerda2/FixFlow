@@ -5,6 +5,7 @@ public struct ValidatorErrors {
 	public static readonly string TokenNotHaveBusinessId = "Seu token não possui um BusinessId.";
 	public static readonly string NullBusinessId = "O valor do BusinessId no seu token é nulo.";
 	public static readonly string NoOpenBusinessDay = "Deve haver pelo menos um dia útil aberto.";
+	public static readonly string MustNotBeEmpty = " não pode ser vazio.";
 
 	public static readonly string BadLogOwnership = "Esse atendimento não pertence à sua empresa.";
 	public static readonly string BadScheduleOwnership = "Esse agendamento não pertence à sua empresa.";
