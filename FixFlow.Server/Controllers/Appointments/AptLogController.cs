@@ -10,12 +10,6 @@ using Server.Models.Utils;
 
 namespace Server.Controllers;
 
-/// <summary>
-/// Controller class for Appointment Log CRUD requests
-/// </summary>
-/// <remarks>
-/// Logs are simply registration that the Appointment was done
-/// </remarks>
 [ApiController]
 [Route(Common.api_v1 + "logs")]
 [Authorize]
@@ -139,7 +133,7 @@ public class AptLogController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Update the Appointment Log with the given Id
+	/// Update the Appointment Log of the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptLog))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -177,7 +171,7 @@ public class AptLogController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Deletes the Appointment Log with the given Id
+	/// Deletes the Appointment Log of the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]

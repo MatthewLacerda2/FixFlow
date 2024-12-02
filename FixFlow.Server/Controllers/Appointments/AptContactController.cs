@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
-using Server.Models;
 using Server.Models.Appointments;
 using Server.Models.Erros;
 using Server.Models.Utils;
@@ -11,11 +9,8 @@ using Server.Models.Utils;
 namespace Server.Controllers;
 
 /// <summary>
-/// Controller class for Appointment Contact .R.U.D requests
+/// Controller class for Appointment Contact R.U.D requests
 /// </summary>
-/// <remarks>
-/// Contacts are 'reminders' for the Clients to Schedule another appointment
-/// </remarks>
 [ApiController]
 [Route(Common.api_v1 + "contacts")]
 [Authorize]
@@ -29,7 +24,7 @@ public class AptContactController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Gets a number of filtered Contacts
+	/// Get a number of Contacts
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptContact[]))]
 	[HttpGet]
@@ -62,7 +57,7 @@ public class AptContactController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Update the Appointment Contact's DateTime with the given Id
+	/// Update the Appointment Contact's of the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptContact))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -82,7 +77,7 @@ public class AptContactController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Deletes the Appointment Contact with the given Id
+	/// Deletes the Appointment Contact of the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]

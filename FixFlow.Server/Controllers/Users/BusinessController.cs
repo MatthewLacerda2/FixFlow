@@ -9,9 +9,6 @@ using Server.Models.Utils;
 
 namespace Server.Controllers;
 
-/// <summary>
-/// Controller class for Business CRUD requests
-/// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(Business))]
 [Authorize]
@@ -27,8 +24,8 @@ public class BusinessController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Gets the Business with the given Id.
-	/// Used when the User logs-in or opens the app
+	/// Gets the Business' Data of the given Id.
+	/// Used mostly when the User logs-in or opens the app
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
 	[HttpGet]
@@ -48,7 +45,7 @@ public class BusinessController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Creates a Business User
+	/// Registers a Business User
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -88,7 +85,7 @@ public class BusinessController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Updates the Business with the given Id
+	/// Updates the Business of the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
 	[HttpPatch]
@@ -110,8 +107,8 @@ public class BusinessController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Deactivates the Business Account with the given Id.
-	/// That freezes the subscription, and stops notifications
+	/// Deactivates the Business Account of the given Id.
+	/// That freezes subscription and stops notifications
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[HttpPatch("deactivate")]

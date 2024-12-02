@@ -9,12 +9,6 @@ using Server.Models.Utils;
 
 namespace Server.Controllers;
 
-/// <summary>
-/// Controller class for Scheduled Appointment CRUD requests
-/// </summary>
-/// <remarks>
-/// Schedules are simply the setup of an Appointment, not the Appointment itself
-/// </remarks>
 [ApiController]
 [Route(Common.api_v1 + "schedules")]
 [Authorize]
@@ -116,7 +110,7 @@ public class AptScheduleController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Update the Appointment Schedule with the given Id
+	/// Update the Appointment Schedule of the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]

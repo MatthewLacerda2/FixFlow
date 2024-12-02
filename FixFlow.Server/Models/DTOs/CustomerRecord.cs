@@ -4,7 +4,7 @@ using Server.Models.Appointments;
 namespace Server.Models.DTO;
 
 /// <summary>
-/// Customer history in the business
+/// Customer's data and history in the business
 /// </summary>
 public class CustomerRecord {
 

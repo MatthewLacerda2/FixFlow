@@ -1,16 +1,14 @@
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Models;
 using Server.Models.Erros;
 using Server.Models.Utils;
 
-namespace FixFlow.Server.Controllers.Users;
+namespace FixFlow.Server.Controllers;
 
 /// <summary>
-/// Controller class for Creating, Extending, Shrinking and Deleting Idle Periods
+/// Controller class for Creating and Deleting Idle Periods
 /// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(IdlePeriod))]
@@ -27,9 +25,6 @@ public class IdlePeriodController : ControllerBase {
 	/// <summary>
 	/// Creates an Idle period
 	/// </summary>
-	/// <remarks>
-	/// Idle Periods are allowed to overlap
-	/// </remarks>
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(IdlePeriod))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPost]
@@ -45,7 +40,7 @@ public class IdlePeriodController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Removes Idle days
+	/// Deletes an Idle Period
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]

@@ -2,6 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models;
 
+/// <summary>
+/// Periods in which the Business will not be taking new Schedules
+/// </summary>
+/// <remarks>
+/// Idle Periods are allowed to overlap
+/// </remarks>
 public class IdlePeriod {
 
 	[Required]

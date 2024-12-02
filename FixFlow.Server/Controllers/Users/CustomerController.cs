@@ -10,9 +10,6 @@ using Server.Models.Utils;
 
 namespace Server.Controllers;
 
-/// <summary>
-/// Controller class for Customer's stuff
-/// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(Customer))]
 [Authorize]
@@ -28,8 +25,7 @@ public class CustomerController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Get Customer Record in the Business.
-	/// Credentials, but also schedules and logs history
+	/// Get Customer's Record in the Business
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerRecord))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -98,7 +94,7 @@ public class CustomerController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Create a Customer Account
+	/// Create a Customer's Account
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CustomerDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -146,7 +142,7 @@ public class CustomerController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Updates the Customer with the given Id
+	/// Updates the Customer's data of the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
