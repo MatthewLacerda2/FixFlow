@@ -16,12 +16,11 @@ class CustomerRecord {
     required this.fullName,
     required this.phoneNumber,
     this.email,
-    this.cpf,
+    required this.cpf,
     this.additionalNote,
     this.firstLog,
     this.lastLog,
     this.logs = const [],
-    this.numSchedules,
     this.avgTimeBetweenSchedules,
   });
 
@@ -49,14 +48,6 @@ class CustomerRecord {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  int? numSchedules;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
   int? avgTimeBetweenSchedules;
 
   @override
@@ -69,7 +60,6 @@ class CustomerRecord {
     other.firstLog == firstLog &&
     other.lastLog == lastLog &&
     _deepEquality.equals(other.logs, logs) &&
-    other.numSchedules == numSchedules &&
     other.avgTimeBetweenSchedules == avgTimeBetweenSchedules;
 
   @override
@@ -83,11 +73,10 @@ class CustomerRecord {
     (firstLog == null ? 0 : firstLog!.hashCode) +
     (lastLog == null ? 0 : lastLog!.hashCode) +
     (logs == null ? 0 : logs!.hashCode) +
-    (numSchedules == null ? 0 : numSchedules!.hashCode) +
     (avgTimeBetweenSchedules == null ? 0 : avgTimeBetweenSchedules!.hashCode);
 
   @override
-  String toString() => 'CustomerRecord[fullName=$fullName, phoneNumber=$phoneNumber, email=$email, cpf=$cpf, additionalNote=$additionalNote, firstLog=$firstLog, lastLog=$lastLog, logs=$logs, numSchedules=$numSchedules, avgTimeBetweenSchedules=$avgTimeBetweenSchedules]';
+  String toString() => 'CustomerRecord[fullName=$fullName, phoneNumber=$phoneNumber, email=$email, cpf=$cpf, additionalNote=$additionalNote, firstLog=$firstLog, lastLog=$lastLog, logs=$logs, avgTimeBetweenSchedules=$avgTimeBetweenSchedules]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -122,11 +111,6 @@ class CustomerRecord {
       json[r'logs'] = this.logs;
     } else {
       json[r'logs'] = null;
-    }
-    if (this.numSchedules != null) {
-      json[r'numSchedules'] = this.numSchedules;
-    } else {
-      json[r'numSchedules'] = null;
     }
     if (this.avgTimeBetweenSchedules != null) {
       json[r'avgTimeBetweenSchedules'] = this.avgTimeBetweenSchedules;
@@ -163,7 +147,6 @@ class CustomerRecord {
         firstLog: mapDateTime(json, r'firstLog', r''),
         lastLog: mapDateTime(json, r'lastLog', r''),
         logs: AptLog.listFromJson(json[r'logs']),
-        numSchedules: mapValueOfType<int>(json, r'numSchedules'),
         avgTimeBetweenSchedules: mapValueOfType<int>(json, r'avgTimeBetweenSchedules'),
       );
     }
@@ -214,6 +197,7 @@ class CustomerRecord {
   static const requiredKeys = <String>{
     'fullName',
     'phoneNumber',
+    'cpf',
   };
 }
 

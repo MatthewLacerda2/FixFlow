@@ -26,7 +26,6 @@ class AptLog {
 
   String id;
 
-  /// The Id of the Customer who took the Appointment
   String customerId;
 
   ///
@@ -37,13 +36,10 @@ class AptLog {
   ///
   Customer? customer;
 
-  /// The Id of the Business who owns this Contact
   String businessId;
 
-  /// The Id of the Schedule that precedes this Log, if any
   String? scheduleId;
 
-  /// The DateTime when the Log was registered
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -62,6 +58,7 @@ class AptLog {
   ///
   double? price;
 
+  /// Anything about the Log that is worth noting
   String? description;
 
   @override

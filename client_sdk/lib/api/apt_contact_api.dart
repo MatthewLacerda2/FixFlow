@@ -16,7 +16,7 @@ class AptContactApi {
 
   final ApiClient apiClient;
 
-  /// Deletes the Appointment Contact with the given Id
+  /// Deletes the Appointment Contact of the given Id
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -48,7 +48,7 @@ class AptContactApi {
     );
   }
 
-  /// Deletes the Appointment Contact with the given Id
+  /// Deletes the Appointment Contact of the given Id
   ///
   /// Parameters:
   ///
@@ -60,13 +60,11 @@ class AptContactApi {
     }
   }
 
-  /// Gets a number of filtered Contacts
+  /// Get a number of Contacts
   ///
   /// Note: This method returns the HTTP [Response].
   ///
   /// Parameters:
-  ///
-  /// * [String] businessId:
   ///
   /// * [String] clientName:
   ///
@@ -77,7 +75,7 @@ class AptContactApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<Response> apiV1ContactsGetWithHttpInfo({ String? businessId, String? clientName, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
+  Future<Response> apiV1ContactsGetWithHttpInfo({ String? clientName, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/contacts';
 
@@ -88,9 +86,6 @@ class AptContactApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    if (businessId != null) {
-      queryParams.addAll(_queryParams('', 'businessId', businessId));
-    }
     if (clientName != null) {
       queryParams.addAll(_queryParams('', 'clientName', clientName));
     }
@@ -121,11 +116,9 @@ class AptContactApi {
     );
   }
 
-  /// Gets a number of filtered Contacts
+  /// Get a number of Contacts
   ///
   /// Parameters:
-  ///
-  /// * [String] businessId:
   ///
   /// * [String] clientName:
   ///
@@ -136,8 +129,8 @@ class AptContactApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<List<AptContact>?> apiV1ContactsGet({ String? businessId, String? clientName, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
-    final response = await apiV1ContactsGetWithHttpInfo( businessId: businessId, clientName: clientName, minDateTime: minDateTime, maxDateTime: maxDateTime, offset: offset, limit: limit, );
+  Future<List<AptContact>?> apiV1ContactsGet({ String? clientName, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
+    final response = await apiV1ContactsGetWithHttpInfo( clientName: clientName, minDateTime: minDateTime, maxDateTime: maxDateTime, offset: offset, limit: limit, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -154,7 +147,7 @@ class AptContactApi {
     return null;
   }
 
-  /// Update the Appointment Contact's DateTime with the given Id
+  /// Update the Appointment Contact's of the given Id
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -186,7 +179,7 @@ class AptContactApi {
     );
   }
 
-  /// Update the Appointment Contact's DateTime with the given Id
+  /// Update the Appointment Contact's of the given Id
   ///
   /// Parameters:
   ///

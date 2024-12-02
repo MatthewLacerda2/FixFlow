@@ -9,12 +9,12 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
-**customerId** | **String** | The Id of the Customer to Contact | 
+**customerId** | **String** |  | 
 **customer** | [**Customer**](Customer.md) |  | [optional] 
-**businessId** | **String** | The Id of the Business who owns this Contact | 
-**aptLogId** | **String** | The Id of the Log that precedes this Contact | 
+**businessId** | **String** |  | 
+**aptLogId** | **String** |  | 
 **aptLog** | [**AptLog**](AptLog.md) |  | [optional] 
-**dateTime** | [**DateTime**](DateTime.md) | The Date to Contact the Customer  The Time is used because, chances are, there is a better Time of the day to contact the Customer | [optional] 
+**dateTime** | [**DateTime**](DateTime.md) | The Date to Contact the Customer  The Time is used because chances are the better time of day to contact them is at the time of the log  But not necessarily that time, thus it's changeable | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

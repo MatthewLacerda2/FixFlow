@@ -243,10 +243,6 @@ class ApiClient {
           return BusinessDTO.fromJson(value);
         case 'BusinessRegisterRequest':
           return BusinessRegisterRequest.fromJson(value);
-        case 'BusinessTimeSpan':
-          return BusinessTimeSpan.fromJson(value);
-        case 'BusinessWeek':
-          return BusinessWeek.fromJson(value);
         case 'CreateAptLog':
           return CreateAptLog.fromJson(value);
         case 'CreateAptSchedule':

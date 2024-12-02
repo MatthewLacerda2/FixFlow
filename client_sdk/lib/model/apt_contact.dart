@@ -24,7 +24,6 @@ class AptContact {
 
   String id;
 
-  /// The Id of the Customer to Contact
   String customerId;
 
   ///
@@ -35,10 +34,8 @@ class AptContact {
   ///
   Customer? customer;
 
-  /// The Id of the Business who owns this Contact
   String businessId;
 
-  /// The Id of the Log that precedes this Contact
   String aptLogId;
 
   ///
@@ -49,7 +46,7 @@ class AptContact {
   ///
   AptLog? aptLog;
 
-  /// The Date to Contact the Customer  The Time is used because, chances are, there is a better Time of the day to contact the Customer
+  /// The Date to Contact the Customer  The Time is used because chances are the better time of day to contact them is at the time of the log  But not necessarily that time, thus it's changeable
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated

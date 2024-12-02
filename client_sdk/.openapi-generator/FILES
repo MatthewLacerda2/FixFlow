@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 .travis.yml
 README.md
 analysis_options.yaml
@@ -15,8 +16,6 @@ doc/BusinessCalendarDay.md
 doc/BusinessCalendarDayApi.md
 doc/BusinessDTO.md
 doc/BusinessRegisterRequest.md
-doc/BusinessTimeSpan.md
-doc/BusinessWeek.md
 doc/CreateAptLog.md
 doc/CreateAptSchedule.md
 doc/Customer.md
@@ -55,8 +54,6 @@ lib/model/business.dart
 lib/model/business_calendar_day.dart
 lib/model/business_dto.dart
 lib/model/business_register_request.dart
-lib/model/business_time_span.dart
-lib/model/business_week.dart
 lib/model/create_apt_log.dart
 lib/model/create_apt_schedule.dart
 lib/model/customer.dart
@@ -82,8 +79,6 @@ test/business_calendar_day_test.dart
 test/business_dto_test.dart
 test/business_register_request_test.dart
 test/business_test.dart
-test/business_time_span_test.dart
-test/business_week_test.dart
 test/create_apt_log_test.dart
 test/create_apt_schedule_test.dart
 test/customer_api_test.dart

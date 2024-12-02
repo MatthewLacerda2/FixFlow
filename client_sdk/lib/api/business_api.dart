@@ -16,25 +16,21 @@ class BusinessApi {
 
   final ApiClient apiClient;
 
-  /// Deactivates the Business Account with the given Id.  That freezes the subscription, and stops notifications
+  /// Deactivates the Business Account of the given Id.  That freezes subscription and stops notifications
   ///
   /// Note: This method returns the HTTP [Response].
-  ///
-  /// Parameters:
-  ///
-  /// * [String] body:
-  Future<Response> apiV1BusinessDeactivatePatchWithHttpInfo({ String? body, }) async {
+  Future<Response> apiV1BusinessDeactivatePatchWithHttpInfo() async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/Business/deactivate';
 
     // ignore: prefer_final_locals
-    Object? postBody = body;
+    Object? postBody;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+    const contentTypes = <String>[];
 
 
     return apiClient.invokeAPI(
@@ -48,37 +44,29 @@ class BusinessApi {
     );
   }
 
-  /// Deactivates the Business Account with the given Id.  That freezes the subscription, and stops notifications
-  ///
-  /// Parameters:
-  ///
-  /// * [String] body:
-  Future<void> apiV1BusinessDeactivatePatch({ String? body, }) async {
-    final response = await apiV1BusinessDeactivatePatchWithHttpInfo( body: body, );
+  /// Deactivates the Business Account of the given Id.  That freezes subscription and stops notifications
+  Future<void> apiV1BusinessDeactivatePatch() async {
+    final response = await apiV1BusinessDeactivatePatchWithHttpInfo();
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
   }
 
-  /// Deletes the Business with the given Id and all it's data owned by it
+  /// Deletes the Business
   ///
   /// Note: This method returns the HTTP [Response].
-  ///
-  /// Parameters:
-  ///
-  /// * [String] body:
-  Future<Response> apiV1BusinessDeleteWithHttpInfo({ String? body, }) async {
+  Future<Response> apiV1BusinessDeleteWithHttpInfo() async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/Business';
 
     // ignore: prefer_final_locals
-    Object? postBody = body;
+    Object? postBody;
 
     final queryParams = <QueryParam>[];
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    const contentTypes = <String>['application/json', 'text/json', 'application/*+json'];
+    const contentTypes = <String>[];
 
 
     return apiClient.invokeAPI(
@@ -92,19 +80,15 @@ class BusinessApi {
     );
   }
 
-  /// Deletes the Business with the given Id and all it's data owned by it
-  ///
-  /// Parameters:
-  ///
-  /// * [String] body:
-  Future<void> apiV1BusinessDelete({ String? body, }) async {
-    final response = await apiV1BusinessDeleteWithHttpInfo( body: body, );
+  /// Deletes the Business
+  Future<void> apiV1BusinessDelete() async {
+    final response = await apiV1BusinessDeleteWithHttpInfo();
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
   }
 
-  /// Gets the Business with the given Id.  Used when the User logs-in or opens the app
+  /// Gets the Business' Data of the given Id.  Used mostly when the User logs-in or opens the app
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -140,7 +124,7 @@ class BusinessApi {
     );
   }
 
-  /// Gets the Business with the given Id.  Used when the User logs-in or opens the app
+  /// Gets the Business' Data of the given Id.  Used mostly when the User logs-in or opens the app
   ///
   /// Parameters:
   ///
@@ -160,7 +144,7 @@ class BusinessApi {
     return null;
   }
 
-  /// Updates the Business with the given Id
+  /// Updates the Business of the given Id
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -192,7 +176,7 @@ class BusinessApi {
     );
   }
 
-  /// Updates the Business with the given Id
+  /// Updates the Business of the given Id
   ///
   /// Parameters:
   ///
@@ -212,7 +196,7 @@ class BusinessApi {
     return null;
   }
 
-  /// Creates a Business User
+  /// Registers a Business User
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -244,7 +228,7 @@ class BusinessApi {
     );
   }
 
-  /// Creates a Business User
+  /// Registers a Business User
   ///
   /// Parameters:
   ///

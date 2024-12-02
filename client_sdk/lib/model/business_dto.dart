@@ -14,7 +14,6 @@ class BusinessDTO {
   /// Returns a new [BusinessDTO] instance.
   BusinessDTO({
     this.id,
-    this.businessWeek,
     this.services = const [],
     this.allowListedServicesOnly,
     this.openOnHolidays,
@@ -25,14 +24,6 @@ class BusinessDTO {
   });
 
   String? id;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  BusinessWeek? businessWeek;
 
   List<String>? services;
 
@@ -63,7 +54,6 @@ class BusinessDTO {
   @override
   bool operator ==(Object other) => identical(this, other) || other is BusinessDTO &&
     other.id == id &&
-    other.businessWeek == businessWeek &&
     _deepEquality.equals(other.services, services) &&
     other.allowListedServicesOnly == allowListedServicesOnly &&
     other.openOnHolidays == openOnHolidays &&
@@ -76,7 +66,6 @@ class BusinessDTO {
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (id == null ? 0 : id!.hashCode) +
-    (businessWeek == null ? 0 : businessWeek!.hashCode) +
     (services == null ? 0 : services!.hashCode) +
     (allowListedServicesOnly == null ? 0 : allowListedServicesOnly!.hashCode) +
     (openOnHolidays == null ? 0 : openOnHolidays!.hashCode) +
@@ -86,7 +75,7 @@ class BusinessDTO {
     (phoneNumber == null ? 0 : phoneNumber!.hashCode);
 
   @override
-  String toString() => 'BusinessDTO[id=$id, businessWeek=$businessWeek, services=$services, allowListedServicesOnly=$allowListedServicesOnly, openOnHolidays=$openOnHolidays, name=$name, email=$email, cnpj=$cnpj, phoneNumber=$phoneNumber]';
+  String toString() => 'BusinessDTO[id=$id, services=$services, allowListedServicesOnly=$allowListedServicesOnly, openOnHolidays=$openOnHolidays, name=$name, email=$email, cnpj=$cnpj, phoneNumber=$phoneNumber]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -94,11 +83,6 @@ class BusinessDTO {
       json[r'id'] = this.id;
     } else {
       json[r'id'] = null;
-    }
-    if (this.businessWeek != null) {
-      json[r'businessWeek'] = this.businessWeek;
-    } else {
-      json[r'businessWeek'] = null;
     }
     if (this.services != null) {
       json[r'services'] = this.services;
@@ -158,7 +142,6 @@ class BusinessDTO {
 
       return BusinessDTO(
         id: mapValueOfType<String>(json, r'id'),
-        businessWeek: BusinessWeek.fromJson(json[r'businessWeek']),
         services: json[r'services'] is Iterable
             ? (json[r'services'] as Iterable).cast<String>().toList(growable: false)
             : const [],

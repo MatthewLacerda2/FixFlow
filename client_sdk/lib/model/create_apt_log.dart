@@ -14,25 +14,18 @@ class CreateAptLog {
   /// Returns a new [CreateAptLog] instance.
   CreateAptLog({
     required this.customerId,
-    required this.businessId,
     this.scheduleId,
     this.dateTime,
     this.service,
-    this.observation,
-    this.price,
-    this.whenShouldCustomerComeBack,
+    this.description,
+    required this.price,
+    this.dateToComeback,
   });
 
-  /// The Id of the Customer who took the Appointment
   String customerId;
 
-  /// The Id of the Business who owns this Contact
-  String businessId;
-
-  /// The Id of the Schedule that precedes this Log, if any
   String? scheduleId;
 
-  /// The DateTime when the Log was registered
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -43,15 +36,9 @@ class CreateAptLog {
 
   String? service;
 
-  String? observation;
+  String? description;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  double? price;
+  double price;
 
   /// The Date when we expect the Customer to schedule another appointment.  We are leaving as DateTime for simplicity but we only need the Date from this class
   ///
@@ -60,38 +47,35 @@ class CreateAptLog {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  DateTime? whenShouldCustomerComeBack;
+  DateTime? dateToComeback;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is CreateAptLog &&
     other.customerId == customerId &&
-    other.businessId == businessId &&
     other.scheduleId == scheduleId &&
     other.dateTime == dateTime &&
     other.service == service &&
-    other.observation == observation &&
+    other.description == description &&
     other.price == price &&
-    other.whenShouldCustomerComeBack == whenShouldCustomerComeBack;
+    other.dateToComeback == dateToComeback;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (customerId.hashCode) +
-    (businessId.hashCode) +
     (scheduleId == null ? 0 : scheduleId!.hashCode) +
     (dateTime == null ? 0 : dateTime!.hashCode) +
     (service == null ? 0 : service!.hashCode) +
-    (observation == null ? 0 : observation!.hashCode) +
-    (price == null ? 0 : price!.hashCode) +
-    (whenShouldCustomerComeBack == null ? 0 : whenShouldCustomerComeBack!.hashCode);
+    (description == null ? 0 : description!.hashCode) +
+    (price.hashCode) +
+    (dateToComeback == null ? 0 : dateToComeback!.hashCode);
 
   @override
-  String toString() => 'CreateAptLog[customerId=$customerId, businessId=$businessId, scheduleId=$scheduleId, dateTime=$dateTime, service=$service, observation=$observation, price=$price, whenShouldCustomerComeBack=$whenShouldCustomerComeBack]';
+  String toString() => 'CreateAptLog[customerId=$customerId, scheduleId=$scheduleId, dateTime=$dateTime, service=$service, description=$description, price=$price, dateToComeback=$dateToComeback]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
       json[r'customerId'] = this.customerId;
-      json[r'businessId'] = this.businessId;
     if (this.scheduleId != null) {
       json[r'scheduleId'] = this.scheduleId;
     } else {
@@ -107,20 +91,16 @@ class CreateAptLog {
     } else {
       json[r'service'] = null;
     }
-    if (this.observation != null) {
-      json[r'observation'] = this.observation;
+    if (this.description != null) {
+      json[r'description'] = this.description;
     } else {
-      json[r'observation'] = null;
+      json[r'description'] = null;
     }
-    if (this.price != null) {
       json[r'price'] = this.price;
+    if (this.dateToComeback != null) {
+      json[r'dateToComeback'] = this.dateToComeback!.toUtc().toIso8601String();
     } else {
-      json[r'price'] = null;
-    }
-    if (this.whenShouldCustomerComeBack != null) {
-      json[r'whenShouldCustomerComeBack'] = this.whenShouldCustomerComeBack!.toUtc().toIso8601String();
-    } else {
-      json[r'whenShouldCustomerComeBack'] = null;
+      json[r'dateToComeback'] = null;
     }
     return json;
   }
@@ -145,13 +125,12 @@ class CreateAptLog {
 
       return CreateAptLog(
         customerId: mapValueOfType<String>(json, r'customerId')!,
-        businessId: mapValueOfType<String>(json, r'businessId')!,
         scheduleId: mapValueOfType<String>(json, r'scheduleId'),
         dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
-        observation: mapValueOfType<String>(json, r'observation'),
-        price: mapValueOfType<double>(json, r'price'),
-        whenShouldCustomerComeBack: mapDateTime(json, r'whenShouldCustomerComeBack', r''),
+        description: mapValueOfType<String>(json, r'description'),
+        price: mapValueOfType<double>(json, r'price')!,
+        dateToComeback: mapDateTime(json, r'dateToComeback', r''),
       );
     }
     return null;
@@ -200,7 +179,7 @@ class CreateAptLog {
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
     'customerId',
-    'businessId',
+    'price',
   };
 }
 

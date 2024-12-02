@@ -16,7 +16,7 @@ class IdlePeriodApi {
 
   final ApiClient apiClient;
 
-  /// Removes Idle days
+  /// Deletes an Idle Period
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -48,7 +48,7 @@ class IdlePeriodApi {
     );
   }
 
-  /// Removes Idle days
+  /// Deletes an Idle Period
   ///
   /// Parameters:
   ///
@@ -60,75 +60,7 @@ class IdlePeriodApi {
     }
   }
 
-  /// Returns all Idle Periods that contain the given date
-  ///
-  /// Note: This method returns the HTTP [Response].
-  ///
-  /// Parameters:
-  ///
-  /// * [String] businessId:
-  ///
-  /// * [DateTime] date:
-  Future<Response> apiV1IdlePeriodGetWithHttpInfo({ String? businessId, DateTime? date, }) async {
-    // ignore: prefer_const_declarations
-    final path = r'/api/v1/IdlePeriod';
-
-    // ignore: prefer_final_locals
-    Object? postBody;
-
-    final queryParams = <QueryParam>[];
-    final headerParams = <String, String>{};
-    final formParams = <String, String>{};
-
-    if (businessId != null) {
-      queryParams.addAll(_queryParams('', 'businessId', businessId));
-    }
-    if (date != null) {
-      queryParams.addAll(_queryParams('', 'date', date));
-    }
-
-    const contentTypes = <String>[];
-
-
-    return apiClient.invokeAPI(
-      path,
-      'GET',
-      queryParams,
-      postBody,
-      headerParams,
-      formParams,
-      contentTypes.isEmpty ? null : contentTypes.first,
-    );
-  }
-
-  /// Returns all Idle Periods that contain the given date
-  ///
-  /// Parameters:
-  ///
-  /// * [String] businessId:
-  ///
-  /// * [DateTime] date:
-  Future<List<IdlePeriod>?> apiV1IdlePeriodGet({ String? businessId, DateTime? date, }) async {
-    final response = await apiV1IdlePeriodGetWithHttpInfo( businessId: businessId, date: date, );
-    if (response.statusCode >= HttpStatus.badRequest) {
-      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
-    }
-    // When a remote server returns no body with a status of 204, we shall not decode it.
-    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
-    // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<IdlePeriod>') as List)
-        .cast<IdlePeriod>()
-        .toList(growable: false);
-
-    }
-    return null;
-  }
-
   /// Creates an Idle period
-  ///
-  /// Idle Periods are allowed to overlap
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -161,8 +93,6 @@ class IdlePeriodApi {
   }
 
   /// Creates an Idle period
-  ///
-  /// Idle Periods are allowed to overlap
   ///
   /// Parameters:
   ///

@@ -15,36 +15,37 @@ class UpdateAptContact {
   UpdateAptContact({
     required this.id,
     required this.dateTime,
-    required this.beenDone,
+    required this.done,
   });
 
   String id;
 
   DateTime dateTime;
 
-  bool beenDone;
+  /// Whether or not we did Contact the Customer as we were supposed to
+  bool done;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is UpdateAptContact &&
     other.id == id &&
     other.dateTime == dateTime &&
-    other.beenDone == beenDone;
+    other.done == done;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (id.hashCode) +
     (dateTime.hashCode) +
-    (beenDone.hashCode);
+    (done.hashCode);
 
   @override
-  String toString() => 'UpdateAptContact[id=$id, dateTime=$dateTime, beenDone=$beenDone]';
+  String toString() => 'UpdateAptContact[id=$id, dateTime=$dateTime, done=$done]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
       json[r'id'] = this.id;
       json[r'dateTime'] = this.dateTime.toUtc().toIso8601String();
-      json[r'beenDone'] = this.beenDone;
+      json[r'done'] = this.done;
     return json;
   }
 
@@ -69,7 +70,7 @@ class UpdateAptContact {
       return UpdateAptContact(
         id: mapValueOfType<String>(json, r'id')!,
         dateTime: mapDateTime(json, r'dateTime', r'')!,
-        beenDone: mapValueOfType<bool>(json, r'beenDone')!,
+        done: mapValueOfType<bool>(json, r'done')!,
       );
     }
     return null;
@@ -119,7 +120,7 @@ class UpdateAptContact {
   static const requiredKeys = <String>{
     'id',
     'dateTime',
-    'beenDone',
+    'done',
   };
 }
 
