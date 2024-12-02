@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../components/Buttons/custom_button.dart';
 import '../../../components/Inputs/check_input_field.dart';
 import '../../../components/Inputs/enum_field.dart';
-import '../../../components/Inputs/time_picker_rectangle.dart';
 import '../../../components/warning_modal.dart';
 import '../../../utils/flow_storage.dart';
 import '../../AppConfig/change_phone/change_phone_screen.dart';
@@ -31,23 +30,6 @@ class AppConfigScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                'Horário Comercial',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-              ),
-              const SizedBox(height: 16),
-              ...List<Widget>.generate(7, (int index) {
-                final List<String> daysOfWeek = <String>[
-                  'Domingo',
-                  'Segunda',
-                  'Terça',
-                  'Quarta',
-                  'Quinta',
-                  'Sexta',
-                  'Sábado'
-                ];
-                return _CommercialHoursRow(day: daysOfWeek[index]);
-              }),
               const SizedBox(height: 18),
               Container(
                 height: 10,
@@ -181,64 +163,6 @@ class AppConfigScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _CommercialHoursRow extends StatefulWidget {
-  const _CommercialHoursRow({required this.day});
-  final String day;
-
-  @override
-  __CommercialHoursRowState createState() => __CommercialHoursRowState();
-}
-
-class __CommercialHoursRowState extends State<_CommercialHoursRow> {
-  bool isActive = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          '${widget.day}:',
-          style: const TextStyle(fontSize: 16),
-        ),
-        const Spacer(),
-        if (isActive)
-          Row(
-            children: <Widget>[
-              TimePickerRectangle(
-                initialTime: const TimeOfDay(hour: 8, minute: 0),
-                onTimeSelected: (TimeOfDay time) {
-                  print('${widget.day} Start Time: $time');
-                },
-              ),
-              const SizedBox(width: 8),
-              TimePickerRectangle(
-                initialTime: const TimeOfDay(hour: 17, minute: 0),
-                onTimeSelected: (TimeOfDay time) {
-                  print('${widget.day} End Time: $time');
-                },
-              ),
-            ],
-          )
-        else
-          const Text(
-            'Sem horário',
-            style: TextStyle(
-                color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-        IconButton(
-          icon: Icon(isActive ? Icons.close : Icons.add,
-              color: isActive ? Colors.red : Colors.green, size: 22),
-          onPressed: () {
-            setState(() {
-              isActive = !isActive;
-            });
-          },
-        ),
-      ],
     );
   }
 }

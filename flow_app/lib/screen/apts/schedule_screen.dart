@@ -42,7 +42,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     _observacaoController =
         TextEditingController(text: widget.schedule.description);
     preco = widget.schedule.price;
-    newDateTime = widget.schedule.dateTime!;
+    newDateTime = widget.schedule.dateTime;
   }
 
   void _toggleEdit() {
@@ -116,7 +116,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 DatePickerRectangle(
-                  initialDate: widget.schedule.dateTime!,
+                  initialDate: widget.schedule.dateTime,
                   onDateSelected: (DateTime date) {
                     newDateTime = DateTimeUtils.setDate(newDateTime, date);
                     _toggleEdit();
@@ -127,11 +127,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 TimePickerRectangle(
-                  initialTime:
-                      TimeOfDay.fromDateTime(widget.schedule.dateTime!),
+                  initialTime: TimeOfDay.fromDateTime(widget.schedule.dateTime),
                   onTimeSelected: (TimeOfDay time) {
                     newDateTime =
-                        DateTimeUtils.setTime(time, widget.schedule.dateTime!);
+                        DateTimeUtils.setTime(time, widget.schedule.dateTime);
                     _toggleEdit();
                   },
                 ),

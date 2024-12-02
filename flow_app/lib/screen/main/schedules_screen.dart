@@ -145,10 +145,10 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                           return AptList(
                             clientName: schedule.customer!.fullName,
                             price: schedule.price,
-                            hour: TimeOfDay.fromDateTime(schedule.dateTime!)
+                            hour: TimeOfDay.fromDateTime(schedule.dateTime)
                                 .format(context),
-                            date: DateTimeUtils.dateOnlyString(
-                                schedule.dateTime!),
+                            date:
+                                DateTimeUtils.dateOnlyString(schedule.dateTime),
                             service:
                                 StringUtils.normalIfBlank(schedule.service),
                             observation:
