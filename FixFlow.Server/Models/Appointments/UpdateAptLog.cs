@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
 namespace Server.Models.Appointments;
@@ -9,9 +8,6 @@ public class UpdateAptLog {
 	[Required]
 	public string Id { get; set; }
 
-	/// <summary>
-	/// The DateTime when the Log was registered
-	/// </summary>
 	public DateTime dateTime { get; set; } = DateTime.UtcNow;
 
 	public string? Service { get; set; }
@@ -24,8 +20,8 @@ public class UpdateAptLog {
 	public UpdateAptLog(string Id, DateTime dateTime, string? service, float price, string? description) {
 		this.Id = Id;
 		this.dateTime = dateTime;
-		this.Price = price;
-		this.Service = service;
-		this.Description = description;
+		Price = price;
+		Service = service;
+		Description = description;
 	}
 }

@@ -4,11 +4,15 @@ using Server.Models.DTO;
 
 namespace Server.Models;
 
+/// <summary>
+/// Clients of the Businesses
+/// </summary>
+/// <remarks>
+/// Customers are NOT meant to Login. They're IdentityUsers out of convenience for development.
+/// They are not called 'Client' to avoid class naming conflicts.
+/// </remarks>
 public class Customer : IdentityUser {
 
-	/// <summary>
-	/// The business from which the Customer is a customer
-	/// </summary>
 	[Required]
 	public string BusinessId { get; set; }
 
@@ -22,6 +26,9 @@ public class Customer : IdentityUser {
 	[Length(14, 14)]
 	public string? CPF { get; set; }
 
+	/// <summary>
+	/// Special information about the Customer, if applicable
+	/// </summary>
 	public string? AdditionalNote { get; set; }
 
 	public Customer() : this(string.Empty, string.Empty, string.Empty, null, null, null) { }

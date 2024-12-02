@@ -12,6 +12,9 @@ public class Business : IdentityUser {
 	/// <summary>
 	/// The Name of the Business or Business owner
 	/// </summary>
+	/// <remarks>
+	/// Idle Periods are allowed to overlap
+	/// </remarks>
 	public string Name { get; set; }
 
 	/// <summary>
@@ -20,7 +23,7 @@ public class Business : IdentityUser {
 	public string CNPJ { get; set; }
 
 	/// <summary>
-	/// The DateTimes of the week where the business is open
+	/// The CommercialHours of the Business
 	/// </summary>
 	public BusinessWeek BusinessWeek { get; set; }
 

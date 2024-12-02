@@ -9,9 +9,6 @@ public class AptLog {
 	[Required]
 	public string Id { get; set; }
 
-	/// <summary>
-	/// The Id of the Customer who took the Appointment
-	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Models.Customer))]
 	public string CustomerId { get; set; }
@@ -22,28 +19,22 @@ public class AptLog {
 	[JsonIgnore]
 	public Customer Customer { get; set; }
 
-	/// <summary>
-	/// The Id of the Business who owns this Contact
-	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Business))]
 	public string BusinessId { get; set; }
 
-	/// <summary>
-	/// The Id of the Schedule that precedes this Log, if any
-	/// </summary>
 	[ForeignKey(nameof(AptSchedule))]
 	public string? ScheduleId { get; set; }
 
-	/// <summary>
-	/// The DateTime when the Log was registered
-	/// </summary>
 	public DateTime dateTime { get; set; } = DateTime.UtcNow;
 
 	public string? Service { get; set; }
 
 	public float Price { get; set; }
 
+	/// <summary>
+	/// Anything about the Log that is worth noting
+	/// </summary>
 	public string? Description { get; set; }
 
 	public AptLog() {

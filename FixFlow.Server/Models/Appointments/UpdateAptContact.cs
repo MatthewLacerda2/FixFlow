@@ -11,6 +11,9 @@ public class UpdateAptContact {
 	[Required]
 	public DateTime dateTime { get; set; }
 
+	/// <summary>
+	/// Whether or not we did Contact the Customer as we were supposed to
+	/// </summary>
 	[Required]
 	public bool Done { get; set; }
 
@@ -21,5 +24,4 @@ public class UpdateAptContact {
 		dateTime = _dateTime;
 		Done = _beenDone;
 	}
-
 }

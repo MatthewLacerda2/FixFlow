@@ -4,14 +4,14 @@ using Newtonsoft.Json;
 
 namespace Server.Models.Appointments;
 
+/// <summary>
+/// Data-Structure on when to message the Client asking them to Schedule another appointment
+/// </summary>
 public class AptContact {
 
 	[Required]
 	public string Id { get; set; }
 
-	/// <summary>
-	/// The Id of the Customer to Contact
-	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Customer))]
 	public string CustomerId { get; set; }
@@ -22,16 +22,10 @@ public class AptContact {
 	[JsonIgnore]
 	public Customer customer { get; set; }
 
-	/// <summary>
-	/// The Id of the Business who owns this Contact
-	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Business))]
 	public string BusinessId { get; set; }
 
-	/// <summary>
-	/// The Id of the Log that precedes this Contact
-	/// </summary>
 	[Required]
 	[ForeignKey(nameof(AptLog))]
 	public string aptLogId { get; set; }
@@ -44,7 +38,8 @@ public class AptContact {
 
 	/// <summary>
 	/// The Date to Contact the Customer
-	/// The Time is used because, chances are, there is a better Time of the day to contact the Customer
+	/// The Time is used because chances are the better time of day to contact them is at the time of the log
+	/// But not necessarily that time, thus it's changeable
 	/// </summary>
 	public DateTime dateTime { get; set; }
 

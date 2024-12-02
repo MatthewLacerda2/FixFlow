@@ -41,7 +41,7 @@ public class BusinessRegisterRequest {
 		Email = email;
 		CNPJ = cnpj;
 		PhoneNumber = phoneNumber;
-		this.Password = password;
-		this.ConfirmPassword = confirmPassword;
+		Password = password;
+		ConfirmPassword = confirmPassword;
 	}
 }

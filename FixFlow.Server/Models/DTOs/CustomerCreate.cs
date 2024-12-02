@@ -40,6 +40,6 @@ public class CustomerCreate {
 		CPF = cpf;
 		PhoneNumber = phoneNumber;
 		Email = email;
-		this.AdditionalNote = additionalNote;
+		AdditionalNote = additionalNote;
 	}
 }

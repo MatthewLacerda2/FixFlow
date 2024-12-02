@@ -6,16 +6,10 @@ namespace Server.Models.Appointments;
 
 public class CreateAptSchedule {
 
-	/// <summary>
-	/// The Id of the Customer who made the Schedule
-	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Customer))]
 	public string CustomerId { get; set; }
 
-	/// <summary>
-	/// The scheduled DateTime of the Appointment
-	/// </summary>
 	public DateTime dateTime { get; set; }
 
 	public string? Service { get; set; }

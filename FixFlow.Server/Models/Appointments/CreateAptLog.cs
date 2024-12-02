@@ -5,20 +5,11 @@ namespace Server.Models.Appointments;
 
 public class CreateAptLog {
 
-	/// <summary>
-	/// The Id of the Customer who took the Appointment
-	/// </summary>
 	[Required]
 	public string CustomerId { get; set; }
 
-	/// <summary>
-	/// The Id of the Schedule that precedes this Log, if any
-	/// </summary>
 	public string? ScheduleId { get; set; }
 
-	/// <summary>
-	/// The DateTime when the Log was registered
-	/// </summary>
 	public DateTime dateTime { get; set; }
 
 	public string? Service { get; set; }
@@ -37,11 +28,11 @@ public class CreateAptLog {
 	public CreateAptLog() : this(string.Empty, null, DateTime.UtcNow, 0, null, null, DateTime.Now.AddDays(90)) { }
 
 	public CreateAptLog(string customerId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
-		this.CustomerId = customerId;
-		this.ScheduleId = scheduleId;
+		CustomerId = customerId;
+		ScheduleId = scheduleId;
 		this.dateTime = dateTime;
-		this.Price = price;
-		this.Description = description;
+		Price = price;
+		Description = description;
 		Service = service;
 		DateToComeback = whenComeBack;
 	}

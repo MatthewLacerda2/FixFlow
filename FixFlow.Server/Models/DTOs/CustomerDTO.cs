@@ -7,6 +7,9 @@ namespace Server.Models.DTO;
 /// </summary>
 public class CustomerDTO {
 
+	[Required]
+	public string Id { get; set; }
+
 	/// <summary>
 	/// Phone Number. Must contain only numbers
 	/// </summary>
@@ -16,9 +19,6 @@ public class CustomerDTO {
 
 	[EmailAddress]
 	public string? Email { get; set; }
-
-	[Required]
-	public string Id { get; set; }
 
 	[Required]
 	[MinLength(5)]

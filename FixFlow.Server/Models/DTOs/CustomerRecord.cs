@@ -22,7 +22,7 @@ public class CustomerRecord {
 	[EmailAddress]
 	public string? Email { get; set; }
 
-	public string? CPF { get; set; }
+	public required string? CPF { get; set; }
 
 	/// <summary>
 	/// Special information about the Customer, if applicable
@@ -47,5 +47,4 @@ public class CustomerRecord {
 			AdditionalNote = customer.AdditionalNote,
 		};
 	}
-
 }
