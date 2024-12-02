@@ -10,7 +10,7 @@ public class AptSchedule {
 	public string Id { get; set; }
 
 	[Required]
-	[ForeignKey(nameof(Models.Customer))]
+	[ForeignKey(nameof(Customer))]
 	public string CustomerId { get; set; }
 
 	/// <summary>

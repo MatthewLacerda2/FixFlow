@@ -20,7 +20,7 @@ public class AptContact {
 	/// Navigation Property of the Customer
 	/// </summary>
 	[JsonIgnore]
-	public Customer customer { get; set; }
+	public Customer Customer { get; set; }
 
 	[Required]
 	[ForeignKey(nameof(Business))]
@@ -53,7 +53,7 @@ public class AptContact {
 		BusinessId = log.BusinessId;
 		aptLogId = log.Id;
 		this.dateTime = dateTime;
-		customer = null!;
+		Customer = null!;
 		aptLog = log;
 	}
 }

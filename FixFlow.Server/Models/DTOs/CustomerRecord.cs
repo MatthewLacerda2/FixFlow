@@ -34,8 +34,6 @@ public class CustomerRecord {
 
 	public AptLog[] logs { get; set; } = Array.Empty<AptLog>();
 
-	public int numSchedules { get; set; }
-
 	public int avgTimeBetweenSchedules { get; set; }
 
 	public static explicit operator CustomerRecord(Customer customer) {

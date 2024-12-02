@@ -37,7 +37,7 @@ public class AptContactController : ControllerBase {
 		contactsQuery = contactsQuery.Where(x => x.BusinessId == businessId);
 
 		if (!string.IsNullOrWhiteSpace(clientName)) {
-			contactsQuery = contactsQuery.Where(x => x.customer.FullName.Contains(clientName!));
+			contactsQuery = contactsQuery.Where(x => x.Customer.FullName.Contains(clientName!));
 		}
 
 		contactsQuery = contactsQuery.Where(x => x.dateTime.Date >= minDateTime.Date);
@@ -49,7 +49,7 @@ public class AptContactController : ControllerBase {
 			.ToArrayAsync();
 
 		for (int i = 0; i < resultsArray.Length; i++) {
-			resultsArray[i].customer = _context.Customers.Find(resultsArray[i].CustomerId)!;
+			resultsArray[i].Customer = _context.Customers.Find(resultsArray[i].CustomerId)!;
 			resultsArray[i].aptLog = _context.Logs.Find(resultsArray[i].aptLogId)!;
 		}
 

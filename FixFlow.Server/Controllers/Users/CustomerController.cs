@@ -57,8 +57,6 @@ public class CustomerController : ControllerBase {
 
 		clientRecord.logs = _context.Logs.Where(x => x.CustomerId == customerId).OrderBy(x => x.dateTime).ToArray();
 
-		clientRecord.numSchedules = _context.Schedules.Where(x => x.CustomerId == customerId).Count();
-
 		for (int i = 0; i < clientRecord.logs.Length - 1; i++) {
 			clientRecord.avgTimeBetweenSchedules += (int)(clientRecord.logs[i + 1].dateTime - clientRecord.logs[i].dateTime).TotalDays;
 		}
