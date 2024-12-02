@@ -37,11 +37,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void initState() {
     super.initState();
-    _precoController = TextEditingController(
-        text: widget.schedule.price?.toStringAsFixed(2) ?? "");
+    _precoController =
+        TextEditingController(text: widget.schedule.price.toStringAsFixed(2));
     _observacaoController =
-        TextEditingController(text: widget.schedule.observation);
-    preco = widget.schedule.price ?? 0.0;
+        TextEditingController(text: widget.schedule.description);
+    preco = widget.schedule.price;
     newDateTime = widget.schedule.dateTime!;
   }
 
@@ -58,7 +58,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     final AptSchedule patchedSchedule = widget.schedule;
     patchedSchedule.price = preco;
     patchedSchedule.dateTime = newDateTime;
-    patchedSchedule.observation = _observacaoController.text;
+    patchedSchedule.description = _observacaoController.text;
     final Response response = await AptScheduleApi(apiClient)
         .apiV1SchedulesPatchWithHttpInfo(aptSchedule: patchedSchedule);
     snackbarResponse(response);
@@ -87,8 +87,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   void _cancelChanges() {
     setState(() {
       _isEdited = false;
-      _precoController.text = widget.schedule.price?.toStringAsFixed(2) ?? "";
-      _observacaoController.text = widget.schedule.observation ?? "";
+      _precoController.text = widget.schedule.price.toStringAsFixed(2);
+      _observacaoController.text = widget.schedule.description ?? "";
     });
   }
 

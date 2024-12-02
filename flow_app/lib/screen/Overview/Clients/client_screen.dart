@@ -71,7 +71,7 @@ class ClientScreen extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             Text(
-              'Agendamentos: ${record.numSchedules}',
+              'Agendamentos: ${record.logs!.length}',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Text(

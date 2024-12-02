@@ -26,17 +26,11 @@ class _ClientsScreenState extends State<ClientsScreen> {
   }
 
   Future<List<CustomerDTO>> _fetchCustomers() async {
-    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
     final String mytoken = await FlowStorage.getToken();
-    final String businessId = bd!.id!;
     final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final List<CustomerDTO>? response =
-        await CustomerApi(apiClient).apiV1CustomerGet(
-      businessId: businessId,
-      offset: 0,
-      limit: 100,
-    );
+        await CustomerApi(apiClient).apiV1CustomerGet(offset: 0, limit: 100);
     setState(() {
       _allCustomers = response!;
       _filteredCustomers = response;

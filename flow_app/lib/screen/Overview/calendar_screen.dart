@@ -34,14 +34,12 @@ class CalendarScreenState extends State<CalendarScreen> {
   }
 
   Future<void> _fetchCalendar() async {
-    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
     final String mytoken = await FlowStorage.getToken();
-    final String businessId = bd!.id!;
     final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final List<BusinessCalendarDay>? calendar =
         await BusinessCalendarDayApi(apiClient).apiV1BusinessCalendarDayGet(
-            businessId: businessId, month: widget.month, year: widget.year);
+            month: widget.month, year: widget.year);
 
     setState(() {
       _calendarDays = calendar ?? <BusinessCalendarDay>[];
@@ -291,7 +289,7 @@ class CalendarScreenState extends State<CalendarScreen> {
         ...selectedDayData.schedules!.map(
           (AptSchedule item) => AptList(
             clientName: item.customer!.fullName,
-            price: item.price ?? 0,
+            price: item.price,
             hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
             date: DateTimeUtils.dateOnlyString(item.dateTime!),
             onTap: () {

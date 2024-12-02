@@ -30,16 +30,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 
   Future<List<AptContact>> _fetchContacts() async {
-    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
     final String mytoken = await FlowStorage.getToken();
-    final String businessId = bd!.id!;
     final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final AptFilters f = widget.aptFilters;
 
     final List<AptContact>? response = await AptContactApi(apiClient)
         .apiV1ContactsGet(
-            businessId: businessId,
             minDateTime: f.minDateTime,
             maxDateTime: f.maxDateTime,
             offset: f.offset,

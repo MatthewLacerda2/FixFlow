@@ -65,7 +65,7 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
       customerId: customerId,
       dateTime: dateTime,
       service: service,
-      observation: _observacaoController.text,
+      description: _observacaoController.text,
       price: double.tryParse(_precoController.text) ?? 0.0,
     );
 

@@ -39,7 +39,7 @@ class TestScreen extends StatelessWidget {
                   return const Text('No BusinessDTO found.');
                 } else {
                   final BusinessDTO dto = snapshot.data!;
-                  return Text('Business: ${dto.businessWeek}');
+                  return Text('Business: ${dto.name}');
                 }
               },
             ),

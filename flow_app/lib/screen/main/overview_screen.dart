@@ -32,14 +32,11 @@ class _OverviewScreenState extends State<OverviewScreen> {
       _isLoading = true;
     });
 
-    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
     final String mytoken = await FlowStorage.getToken();
-    final String businessId = bd!.id!;
     final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final List<AptSchedule>? todaySchedules =
         await AptScheduleApi(apiClient).apiV1SchedulesGet(
-      businessId: businessId,
       minPrice: 0,
       maxPrice: 999,
       minDateTime: DateTime.now(),
@@ -51,7 +48,6 @@ class _OverviewScreenState extends State<OverviewScreen> {
 
     final List<AptSchedule>? weekSchedules =
         await AptScheduleApi(apiClient).apiV1SchedulesGet(
-      businessId: businessId,
       minPrice: 0,
       maxPrice: 999,
       minDateTime: DateTime.now(),

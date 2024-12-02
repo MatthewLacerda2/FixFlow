@@ -18,7 +18,7 @@ class AptSchedule {
     this.customer,
     required this.businessId,
     this.wasContacted,
-    this.dateTime,
+    required this.dateTime,
     this.service,
     this.description,
     required this.price,
@@ -47,13 +47,7 @@ class AptSchedule {
   ///
   bool? wasContacted;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  DateTime? dateTime;
+  DateTime dateTime;
 
   String? service;
 
@@ -81,7 +75,7 @@ class AptSchedule {
     (customer == null ? 0 : customer!.hashCode) +
     (businessId.hashCode) +
     (wasContacted == null ? 0 : wasContacted!.hashCode) +
-    (dateTime == null ? 0 : dateTime!.hashCode) +
+    (dateTime.hashCode) +
     (service == null ? 0 : service!.hashCode) +
     (description == null ? 0 : description!.hashCode) +
     (price.hashCode);
@@ -104,11 +98,7 @@ class AptSchedule {
     } else {
       json[r'wasContacted'] = null;
     }
-    if (this.dateTime != null) {
-      json[r'dateTime'] = this.dateTime!.toUtc().toIso8601String();
-    } else {
-      json[r'dateTime'] = null;
-    }
+      json[r'dateTime'] = this.dateTime.toUtc().toIso8601String();
     if (this.service != null) {
       json[r'service'] = this.service;
     } else {
@@ -147,7 +137,7 @@ class AptSchedule {
         customer: Customer.fromJson(json[r'customer']),
         businessId: mapValueOfType<String>(json, r'businessId')!,
         wasContacted: mapValueOfType<bool>(json, r'wasContacted'),
-        dateTime: mapDateTime(json, r'dateTime', r''),
+        dateTime: mapDateTime(json, r'dateTime', r'')!,
         service: mapValueOfType<String>(json, r'service'),
         description: mapValueOfType<String>(json, r'description'),
         price: mapValueOfType<double>(json, r'price')!,
@@ -201,6 +191,7 @@ class AptSchedule {
     'id',
     'customerId',
     'businessId',
+    'dateTime',
     'price',
   };
 }

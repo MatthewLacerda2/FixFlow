@@ -20,7 +20,7 @@ class AptLog {
     this.scheduleId,
     this.dateTime,
     this.service,
-    this.price,
+    required this.price,
     this.description,
   });
 
@@ -50,13 +50,7 @@ class AptLog {
 
   String? service;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  double? price;
+  double price;
 
   /// Anything about the Log that is worth noting
   String? description;
@@ -83,7 +77,7 @@ class AptLog {
     (scheduleId == null ? 0 : scheduleId!.hashCode) +
     (dateTime == null ? 0 : dateTime!.hashCode) +
     (service == null ? 0 : service!.hashCode) +
-    (price == null ? 0 : price!.hashCode) +
+    (price.hashCode) +
     (description == null ? 0 : description!.hashCode);
 
   @override
@@ -114,11 +108,7 @@ class AptLog {
     } else {
       json[r'service'] = null;
     }
-    if (this.price != null) {
       json[r'price'] = this.price;
-    } else {
-      json[r'price'] = null;
-    }
     if (this.description != null) {
       json[r'description'] = this.description;
     } else {
@@ -153,7 +143,7 @@ class AptLog {
         scheduleId: mapValueOfType<String>(json, r'scheduleId'),
         dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
-        price: mapValueOfType<double>(json, r'price'),
+        price: mapValueOfType<double>(json, r'price')!,
         description: mapValueOfType<String>(json, r'description'),
       );
     }
@@ -205,6 +195,7 @@ class AptLog {
     'id',
     'customerId',
     'businessId',
+    'price',
   };
 }
 

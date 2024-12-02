@@ -28,7 +28,7 @@ class ContactScreen extends StatefulWidget {
 
 class ContactScreenState extends State<ContactScreen> {
   UpdateAptContact upCont =
-      UpdateAptContact(id: "id", dateTime: DateTime(2024), beenDone: false);
+      UpdateAptContact(id: "id", dateTime: DateTime(2024), done: false);
 
   String suggestedMessage = "";
 
@@ -39,9 +39,7 @@ class ContactScreenState extends State<ContactScreen> {
     super.initState();
 
     upCont = UpdateAptContact(
-        id: widget.contact.id,
-        dateTime: widget.contact.dateTime!,
-        beenDone: false);
+        id: widget.contact.id, dateTime: widget.contact.dateTime!, done: false);
 
     _initializeSuggestedMessage();
   }

@@ -61,19 +61,16 @@ class CreateLogScreenState extends State<CreateLogScreen> {
   }
 
   void _saveChanges() async {
-    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
     final String mytoken = await FlowStorage.getToken();
     final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
-    final String businessId = bd!.id!;
 
     final CreateAptLog createLog = CreateAptLog(
         customerId: customerId,
-        businessId: businessId,
         dateTime: registerDate,
-        observation: _observacaoController.text,
+        description: _observacaoController.text,
         price: double.tryParse(_precoController.text) ?? 0.0,
         service: service,
-        whenShouldCustomerComeBack: whenShouldComeBack);
+        dateToComeback: whenShouldComeBack);
 
     final Response response = await AptLogApi(apiClient)
         .apiV1LogsPostWithHttpInfo(createAptLog: createLog);

@@ -30,6 +30,7 @@ public class AptLog {
 
 	public string? Service { get; set; }
 
+	[Required]
 	public float Price { get; set; }
 
 	/// <summary>

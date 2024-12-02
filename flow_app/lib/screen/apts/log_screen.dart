@@ -31,7 +31,7 @@ class LogScreenState extends State<LogScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 
-  UpdateAptLog upLog = UpdateAptLog(id: "id");
+  UpdateAptLog upLog = UpdateAptLog(id: "id", price: 0);
 
   bool _isEdited = false;
 
@@ -44,8 +44,7 @@ class LogScreenState extends State<LogScreen> {
         id: log.id,
         dateTime: log.dateTime,
         description: log.description,
-        price: log.price,
-        scheduleId: log.scheduleId,
+        price: log.price ?? 0,
         service: log.service);
 
     _precoController = TextEditingController(
@@ -172,7 +171,7 @@ class LogScreenState extends State<LogScreen> {
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
-                upLog.price = double.tryParse(value);
+                upLog.price = double.tryParse(value) ?? 0;
                 _toggleEdit();
               },
             ),

@@ -28,6 +28,7 @@ public class AptSchedule {
 	/// </summary>
 	public bool WasContacted { get; set; }
 
+	[Required]
 	public DateTime dateTime { get; set; }
 
 	public string? Service { get; set; }

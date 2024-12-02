@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **customer** | [**Customer**](Customer.md) |  | [optional] 
 **businessId** | **String** |  | 
 **wasContacted** | **bool** | Was the Customer contacted to make this Schedule? | [optional] 
-**dateTime** | [**DateTime**](DateTime.md) |  | [optional] 
+**dateTime** | [**DateTime**](DateTime.md) |  | 
 **service** | **String** |  | [optional] 
 **description** | **String** |  | [optional] 
 **price** | **double** |  | 
