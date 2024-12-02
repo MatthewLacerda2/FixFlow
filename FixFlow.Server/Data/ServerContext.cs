@@ -49,7 +49,8 @@ public class ServerContext : IdentityDbContext {
 		}
 		base.OnConfiguring(optionsBuilder);
 
-		optionsBuilder.UseNpgsql(
-			"Host=localhost;port=3306;Database=fixflow;User=lendacerda;Password=xpvista7810;");
+		optionsBuilder.UseMySql(
+			"Server=localhost;port=3306;Database=fixflow;User=lendacerda;Password=xpvista7810;",
+			new MariaDbServerVersion(new Version(10, 5, 11)));
 	}
 }
