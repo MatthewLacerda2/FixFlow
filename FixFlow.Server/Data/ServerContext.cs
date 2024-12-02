@@ -41,27 +41,6 @@ public class ServerContext : IdentityDbContext {
 				.HasOne<Business>()
 				.WithMany()
 				.HasForeignKey(i => i.BusinessId);
-
-		builder.Entity<Business>()
-				.HasOne(b => b.BusinessWeek)
-				.WithOne(bw => bw.Business)
-				.HasForeignKey<BusinessWeek>(bw => bw.BusinessId)
-				.OnDelete(DeleteBehavior.Cascade);
-
-		builder.Entity<BusinessWeek>()
-		.OwnsOne(bw => bw.Sunday);
-		builder.Entity<BusinessWeek>()
-			.OwnsOne(bw => bw.Monday);
-		builder.Entity<BusinessWeek>()
-			.OwnsOne(bw => bw.Tuesday);
-		builder.Entity<BusinessWeek>()
-			.OwnsOne(bw => bw.Wednesday);
-		builder.Entity<BusinessWeek>()
-			.OwnsOne(bw => bw.Thursday);
-		builder.Entity<BusinessWeek>()
-			.OwnsOne(bw => bw.Friday);
-		builder.Entity<BusinessWeek>()
-			.OwnsOne(bw => bw.Saturday);
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {

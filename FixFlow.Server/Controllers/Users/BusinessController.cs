@@ -96,17 +96,7 @@ public class BusinessController : ControllerBase {
 
 		var business = await _userManager.FindByIdAsync(Id);
 
-		if (upBusiness.BusinessWeek.Id != business!.BusinessWeekId) {
-			return BadRequest(NotExistErrors.businessWeek);
-		}
-
-		bool isUpBusinessWeekValid = TimeSpoil.DoTimeSpansIDsMatch(business.BusinessWeek, upBusiness.BusinessWeek);
-		if (isUpBusinessWeekValid == false) {
-			return BadRequest(NotExistErrors.businessTimeSpan);
-		}
-
 		business!.Name = upBusiness.Name;
-		business.BusinessWeek = upBusiness.BusinessWeek;
 		business.Services = upBusiness.Services;
 		business.AllowListedServicesOnly = upBusiness.AllowListedServicesOnly;
 		business.OpenOnHolidays = upBusiness.OpenOnHolidays;

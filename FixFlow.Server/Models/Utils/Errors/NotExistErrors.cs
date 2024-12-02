@@ -1,5 +1,4 @@
 using Server.Models.Appointments;
-using Server.Models.DTO;
 
 namespace Server.Models.Erros;
 
@@ -13,8 +12,5 @@ public struct NotExistErrors {
 	public static readonly string customer = nameof(Customer) + doesNotExist;
 	public static readonly string idlePeriod = nameof(IdlePeriod) + doesNotExist;
 	public static readonly string business = nameof(Business) + doesNotExist;
-	public static readonly string businessWeek = nameof(BusinessWeek) + doesNotExist;
-	public static readonly string businessTimeSpan = "One or more TimeSpan ID's are not valid";
-
 
 }

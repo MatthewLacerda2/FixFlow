@@ -37,7 +37,7 @@ public class BusinessControllerTests {
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+		Assert.Equal(NotExistErrors.business, badRequestResult.Value);
 	}
 
 	[Fact]
@@ -58,7 +58,6 @@ public class BusinessControllerTests {
 		Assert.Equal(business.Email, okResultValue.Email);
 		Assert.Equal(business.CNPJ, okResultValue.CNPJ);
 		Assert.Equal(business.PhoneNumber, okResultValue.PhoneNumber);
-		Assert.Equal(business.BusinessWeek, okResultValue.BusinessWeek);
 		Assert.Equal(business.Services, okResultValue.Services);
 		Assert.Equal(business.AllowListedServicesOnly, okResultValue.AllowListedServicesOnly);
 		Assert.Equal(business.OpenOnHolidays, okResultValue.OpenOnHolidays);
@@ -170,7 +169,6 @@ public class BusinessControllerTests {
 		var okResult = Assert.IsType<OkObjectResult>(result);
 		var okResultValue = Assert.IsType<BusinessDTO>(okResult.Value);
 
-		Assert.Equal(business.BusinessWeek, upBusiness.BusinessWeek);
 		Assert.Equal(business.Services, upBusiness.Services);
 		Assert.Equal(business.AllowListedServicesOnly, upBusiness.AllowListedServicesOnly);
 		Assert.Equal(business.OpenOnHolidays, upBusiness.OpenOnHolidays);
@@ -187,7 +185,7 @@ public class BusinessControllerTests {
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+		Assert.Equal(NotExistErrors.business, badRequestResult.Value);
 	}
 
 	[Fact]
@@ -213,7 +211,7 @@ public class BusinessControllerTests {
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+		Assert.Equal(NotExistErrors.business, badRequestResult.Value);
 	}
 
 	[Fact]
@@ -225,7 +223,7 @@ public class BusinessControllerTests {
 		_mockUserManager.Setup(x => x.DeleteAsync(business)).ReturnsAsync(IdentityResult.Success);
 
 		Customer client = new Customer(businessId, "98912345678", "fulano da silva bezerra", null, null, null);
-		AptSchedule schedule = new AptSchedule(client.Id, businessId, DateTime.UtcNow.AddDays(-1), 100f, null);
+		AptSchedule schedule = new AptSchedule(client.Id, businessId, DateTime.UtcNow.AddDays(-1), 100f, null, false);
 		CreateAptLog createAptLog = new CreateAptLog(client.Id, schedule.Id, DateTime.UtcNow, 100f, null, null, DateTime.UtcNow.AddDays(90));
 		AptLog log = new AptLog(createAptLog, businessId);
 		AptContact contact = new AptContact(log, DateTime.UtcNow);
@@ -260,6 +258,6 @@ public class BusinessControllerTests {
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+		Assert.Equal(NotExistErrors.business, badRequestResult.Value);
 	}
 }

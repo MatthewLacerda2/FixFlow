@@ -22,13 +22,6 @@ public class Business : IdentityUser {
 	/// </summary>
 	public string CNPJ { get; set; }
 
-	public string BusinessWeekId { get; set; }
-
-	/// <summary>
-	/// The CommercialHours of the Business
-	/// </summary>
-	public BusinessWeek BusinessWeek { get; set; }
-
 	public string[] Services { get; set; } = Array.Empty<string>();
 	public bool AllowListedServicesOnly { get; set; } = false;
 	//TODO: public bool allowManyServices { get; set; } = false;
@@ -45,9 +38,6 @@ public class Business : IdentityUser {
 		Email = email;
 		CNPJ = cnpj;
 		PhoneNumber = phoneNumber;
-
-		BusinessWeek = new BusinessWeek();
-		BusinessWeekId = BusinessWeek.Id;
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {
