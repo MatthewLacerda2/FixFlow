@@ -100,9 +100,9 @@ public class BusinessController : ControllerBase {
 
 		business!.Name = upBusiness.Name;
 		business.BusinessWeek = upBusiness.BusinessWeek;
-		business.services = upBusiness.Services;
-		business.allowListedServicesOnly = upBusiness.AllowListedServicesOnly;
-		business.openOnHolidays = upBusiness.OpenOnHolidays;
+		business.Services = upBusiness.Services;
+		business.AllowListedServicesOnly = upBusiness.AllowListedServicesOnly;
+		business.OpenOnHolidays = upBusiness.OpenOnHolidays;
 
 		await _context.SaveChangesAsync();
 
@@ -136,7 +136,7 @@ public class BusinessController : ControllerBase {
 
 		_context.Schedules.RemoveRange(_context.Schedules.Where(x => x.BusinessId == Id));
 		_context.Logs.RemoveRange(_context.Logs.Where(x => x.BusinessId == Id));
-		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.businessId == Id));
+		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.BusinessId == Id));
 		_context.Customers.RemoveRange(_context.Customers.Where(x => x.BusinessId == Id));
 
 		var business = await _userManager.FindByIdAsync(Id);

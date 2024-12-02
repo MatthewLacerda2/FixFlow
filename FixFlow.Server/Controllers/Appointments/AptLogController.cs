@@ -84,7 +84,7 @@ public class AptLogController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateLog([FromBody] CreateAptLog createLog) {
 
-		var existingCustomer = _context.Customers.Find(createLog.customerId);
+		var existingCustomer = _context.Customers.Find(createLog.CustomerId);
 		if (existingCustomer == null) {
 			return BadRequest(NotExistErrors.Customer);
 		}
@@ -102,17 +102,17 @@ public class AptLogController : ControllerBase {
 		}
 
 		createLog.Service = StringUtils.PhraseCaseNormalizer(createLog.Service);
-		createLog.Observation = StringUtils.PhraseCaseNormalizer(createLog.Observation);
+		createLog.Description = StringUtils.PhraseCaseNormalizer(createLog.Description);
 
 		var existingBusiness = _context.Business.Find(businessId);
-		if (existingBusiness!.allowListedServicesOnly) {
-			if (createLog.Service == null || !existingBusiness.services.Contains(createLog.Service)) {
+		if (existingBusiness!.AllowListedServicesOnly) {
+			if (createLog.Service == null || !existingBusiness.Services.Contains(createLog.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
 
 		AptLog newLog = new AptLog(createLog, businessId);
-		AptContact contact = new AptContact(newLog, createLog.whenShouldCustomerComeBack);
+		AptContact contact = new AptContact(newLog, createLog.DateToComeback);
 		var timeOfDay = contact.dateTime.TimeOfDay;
 		var early = new TimeSpan(8, 10, 0);
 		var late = new TimeSpan(18, 0, 0);
@@ -155,11 +155,11 @@ public class AptLogController : ControllerBase {
 		}
 
 		existingLog.Service = StringUtils.PhraseCaseNormalizer(existingLog.Service);
-		existingLog.description = StringUtils.PhraseCaseNormalizer(existingLog.description);
+		existingLog.Description = StringUtils.PhraseCaseNormalizer(existingLog.Description);
 
 		var existingBusiness = _context.Business.Find(businessId);
-		if (upLog.Service != null && existingBusiness!.allowListedServicesOnly) {
-			if (!existingBusiness.services.Contains(upLog.Service)) {
+		if (upLog.Service != null && existingBusiness!.AllowListedServicesOnly) {
+			if (!existingBusiness.Services.Contains(upLog.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -167,7 +167,7 @@ public class AptLogController : ControllerBase {
 		existingLog.dateTime = upLog.dateTime;
 		existingLog.Service = upLog.Service;
 		existingLog.Price = upLog.Price;
-		existingLog.description = upLog.Description;
+		existingLog.Description = upLog.Description;
 
 		await _context.SaveChangesAsync();
 

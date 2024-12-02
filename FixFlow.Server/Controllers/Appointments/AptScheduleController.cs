@@ -76,7 +76,7 @@ public class AptScheduleController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateSchedule([FromBody] CreateAptSchedule newAppointment) {
 
-		var existingCustomer = _context.Customers.Find(newAppointment.customerId);
+		var existingCustomer = _context.Customers.Find(newAppointment.CustomerId);
 		if (existingCustomer == null) {
 			return BadRequest(NotExistErrors.Customer);
 		}
@@ -84,10 +84,10 @@ public class AptScheduleController : ControllerBase {
 		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
 
 		newAppointment.Service = StringUtils.PhraseCaseNormalizer(newAppointment.Service);
-		newAppointment.Observation = StringUtils.PhraseCaseNormalizer(newAppointment.Observation);
+		newAppointment.Description = StringUtils.PhraseCaseNormalizer(newAppointment.Description);
 
-		if (existingBusiness!.allowListedServicesOnly) {
-			if (newAppointment.Service == null || !existingBusiness.services.Contains(newAppointment.Service)) {
+		if (existingBusiness!.AllowListedServicesOnly) {
+			if (newAppointment.Service == null || !existingBusiness.Services.Contains(newAppointment.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -96,12 +96,12 @@ public class AptScheduleController : ControllerBase {
 
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingCustomer.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
-			if (idp.start <= newAppointment.dateTime && idp.finish >= newAppointment.dateTime) {
+			if (idp.Start <= newAppointment.dateTime && idp.Finish >= newAppointment.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
 			}
 		}
 
-		AptContact contact = _context.Contacts.Where(x => x.CustomerId == newAppointment.customerId)
+		AptContact contact = _context.Contacts.Where(x => x.CustomerId == newAppointment.CustomerId)
 								.Where(x => x.dateTime <= DateTime.UtcNow).Where(x => x.dateTime >= DateTime.UtcNow.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
@@ -128,10 +128,10 @@ public class AptScheduleController : ControllerBase {
 		var existingBusiness = _context.Business.Find(existingAppointment.BusinessId);
 
 		upSchedule.Service = StringUtils.PhraseCaseNormalizer(upSchedule.Service);
-		upSchedule.observation = StringUtils.PhraseCaseNormalizer(upSchedule.observation);
+		upSchedule.Description = StringUtils.PhraseCaseNormalizer(upSchedule.Description);
 
-		if (upSchedule.Service != null && existingBusiness!.allowListedServicesOnly) {
-			if (!existingBusiness.services.Contains(upSchedule.Service)) {
+		if (upSchedule.Service != null && existingBusiness!.AllowListedServicesOnly) {
+			if (!existingBusiness.Services.Contains(upSchedule.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -140,14 +140,14 @@ public class AptScheduleController : ControllerBase {
 
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
-			if (idp.start <= upSchedule.dateTime && idp.finish >= upSchedule.dateTime) {
+			if (idp.Start <= upSchedule.dateTime && idp.Finish >= upSchedule.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
 			}
 		}
 
 		existingAppointment.dateTime = upSchedule.dateTime;
 		existingAppointment.Service = upSchedule.Service;
-		existingAppointment.observation = upSchedule.observation;
+		existingAppointment.Description = upSchedule.Description;
 		existingAppointment.Price = upSchedule.Price;
 
 		await _context.SaveChangesAsync();

@@ -44,7 +44,7 @@ public class AptLog {
 
 	public float Price { get; set; }
 
-	public string? description { get; set; }
+	public string? Description { get; set; }
 
 	public AptLog() {
 		Id = Guid.NewGuid().ToString();
@@ -55,11 +55,11 @@ public class AptLog {
 
 	public AptLog(CreateAptLog newLog, string businessId) {
 		Id = Guid.NewGuid().ToString();
-		CustomerId = newLog.customerId;
+		CustomerId = newLog.CustomerId;
 		BusinessId = businessId;
 		ScheduleId = newLog.ScheduleId;
 		Service = newLog.Service;
-		description = newLog.Observation;
+		Description = newLog.Description;
 		dateTime = newLog.dateTime;
 		Price = newLog.Price;
 		Customer = null!;

@@ -129,7 +129,7 @@ public class CustomerController : ControllerBase {
 		}
 
 		customerCreate.FullName = StringUtils.NameCaseNormalizer(customerCreate.FullName);
-		customerCreate.additionalNote = StringUtils.PhraseCaseNormalizer(customerCreate.additionalNote);
+		customerCreate.AdditionalNote = StringUtils.PhraseCaseNormalizer(customerCreate.AdditionalNote);
 
 		Customer customer = (Customer)customerCreate;
 

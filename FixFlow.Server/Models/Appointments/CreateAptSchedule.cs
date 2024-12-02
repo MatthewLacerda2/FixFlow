@@ -11,7 +11,7 @@ public class CreateAptSchedule {
 	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Customer))]
-	public string customerId { get; set; }
+	public string CustomerId { get; set; }
 
 	/// <summary>
 	/// The scheduled DateTime of the Appointment
@@ -20,7 +20,7 @@ public class CreateAptSchedule {
 
 	public string? Service { get; set; }
 
-	public string? Observation { get; set; }
+	public string? Description { get; set; }
 
 	[Required]
 	public float Price { get; set; }
@@ -28,10 +28,10 @@ public class CreateAptSchedule {
 	public CreateAptSchedule() : this(string.Empty, DateTime.UtcNow, 0, null, null) { }
 
 	public CreateAptSchedule(string clientId, DateTime _dateTime, float price, string? service, string? observation) {
-		customerId = clientId;
+		CustomerId = clientId;
 		dateTime = _dateTime;
 		Price = price;
 		Service = service;
-		Observation = observation;
+		Description = observation;
 	}
 }

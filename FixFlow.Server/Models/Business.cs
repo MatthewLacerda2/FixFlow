@@ -24,10 +24,10 @@ public class Business : IdentityUser {
 	/// </summary>
 	public BusinessWeek BusinessWeek { get; set; }
 
-	public string[] services { get; set; } = Array.Empty<string>();
-	public bool allowListedServicesOnly { get; set; } = false;
+	public string[] Services { get; set; } = Array.Empty<string>();
+	public bool AllowListedServicesOnly { get; set; } = false;
 	//TODO: public bool allowManyServices { get; set; } = false;
-	public bool openOnHolidays { get; set; } = false;
+	public bool OpenOnHolidays { get; set; } = false;
 
 	public Business() : this(string.Empty, string.Empty, string.Empty, string.Empty) { }
 

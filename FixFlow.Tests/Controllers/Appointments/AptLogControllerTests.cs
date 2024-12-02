@@ -35,8 +35,8 @@ public class AptLogControllerTests {
 		var client1Name = "fulano da silva";
 
 		var business1 = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var business2 = new Business("b-2", "b-2@gmail.com", "123.4567.789-0001", "98988263255");
 		var client1 = new Customer(business1.Id, "789456123", client1Name, null, null, null);
@@ -111,8 +111,8 @@ public class AptLogControllerTests {
 	public async Task CreateLog_UnlistedService_ReturnsBadRequest() {
 		// Arrange
 		var business = new Business("power busy", "business@example.com", "123456789", "1234567890") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "98988263255", "Customer Name", null, null, null);
 		_context.Business.Add(business);
@@ -134,8 +134,8 @@ public class AptLogControllerTests {
 	public async Task CreateLog_Successful_ReturnsCreated() {
 		// Arrange
 		var business = new Business("power busy", "business@example.com", "123456789", "1234567890") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var customer = new Customer(business.Id, "98988263255", "Customer Name", null, null, null);
 		var schedule = new AptSchedule(customer.Id, business.Id, DateTime.UtcNow, 100, null);
@@ -155,11 +155,11 @@ public class AptLogControllerTests {
 		Assert.Equal(201, result!.StatusCode);
 		var createdLog = result.Value as AptLog;
 		Assert.NotNull(createdLog);
-		Assert.Equal(createLog.customerId, createdLog!.CustomerId);
+		Assert.Equal(createLog.CustomerId, createdLog!.CustomerId);
 		Assert.Equal(createLog.Service, createdLog.Service);
 		Assert.Equal(createLog.Price, createdLog.Price);
 		Assert.Equal(createLog.dateTime, createdLog.dateTime);
-		Assert.Equal(createLog.Observation, createdLog.description);
+		Assert.Equal(createLog.Description, createdLog.Description);
 
 
 		var contact = _context.Contacts.Where(x => x.aptLogId == createdLog.Id).FirstOrDefault();
@@ -187,8 +187,8 @@ public class AptLogControllerTests {
 	public async Task UpdateLog_UnlistedService_ReturnsBadRequest() {
 		// Arrange
 		var business = new Business("business-id", "business@example.com", "123456789", "1234567890") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "123456789", "Customer Name", null, null, null);
 		var log = new AptLog {
@@ -219,8 +219,8 @@ public class AptLogControllerTests {
 	public async Task UpdateLog_ScheduleDoesNotExist_ReturnsBadRequest() {
 		// Arrange
 		var business = new Business("business-id", "business@example.com", "123456789", "1234567890") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "123456789", "Customer Name", null, null, null);
 		var log = new AptLog {
@@ -251,8 +251,8 @@ public class AptLogControllerTests {
 	public async Task UpdateLog_Successful_ReturnsOk() {
 		// Arrange
 		var business = new Business("business-id", "business@example.com", "123456789", "1234567890") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "123456789", "Customer Name", null, null, null);
 		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddHours(-1), 100, null);
@@ -284,7 +284,7 @@ public class AptLogControllerTests {
 		Assert.Equal(upLog.dateTime, updatedLog.dateTime);
 		Assert.Equal(upLog.Service, updatedLog.Service);
 		Assert.Equal(upLog.Price, updatedLog.Price);
-		Assert.Equal(upLog.Description, updatedLog.description);
+		Assert.Equal(upLog.Description, updatedLog.Description);
 	}
 
 	[Fact]

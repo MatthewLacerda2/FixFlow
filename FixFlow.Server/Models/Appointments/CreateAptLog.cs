@@ -9,7 +9,7 @@ public class CreateAptLog {
 	/// The Id of the Customer who took the Appointment
 	/// </summary>
 	[Required]
-	public string customerId { get; set; }
+	public string CustomerId { get; set; }
 
 	/// <summary>
 	/// The Id of the Schedule that precedes this Log, if any
@@ -19,12 +19,11 @@ public class CreateAptLog {
 	/// <summary>
 	/// The DateTime when the Log was registered
 	/// </summary>
-
 	public DateTime dateTime { get; set; }
 
 	public string? Service { get; set; }
 
-	public string? Observation { get; set; }
+	public string? Description { get; set; }
 
 	[Required]
 	public float Price { get; set; }
@@ -33,17 +32,17 @@ public class CreateAptLog {
 	/// The Date when we expect the Customer to schedule another appointment.
 	/// We are leaving as DateTime for simplicity but we only need the Date from this class
 	/// </summary>
-	public DateTime whenShouldCustomerComeBack { get; set; }
+	public DateTime DateToComeback { get; set; }
 
 	public CreateAptLog() : this(string.Empty, null, DateTime.UtcNow, 0, null, null, DateTime.Now.AddDays(90)) { }
 
 	public CreateAptLog(string customerId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
-		this.customerId = customerId;
+		this.CustomerId = customerId;
 		this.ScheduleId = scheduleId;
 		this.dateTime = dateTime;
 		this.Price = price;
-		this.Observation = description;
+		this.Description = description;
 		Service = service;
-		whenShouldCustomerComeBack = whenComeBack;
+		DateToComeback = whenComeBack;
 	}
 }

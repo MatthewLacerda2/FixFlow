@@ -53,7 +53,7 @@ public class BusinessCalendarDayController : ControllerBase {
 								.ToArray();
 
 			aux.idlePeriods = _context.IdlePeriods.Where(x => x.BusinessId == businessId)
-								.Where(x => x.start <= aux.date && x.finish >= aux.date)
+								.Where(x => x.Start <= aux.date && x.Finish >= aux.date)
 								.ToArray();
 
 			foreach (AptSchedule sched in aux.schedules) {

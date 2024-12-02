@@ -39,7 +39,7 @@ public class AptContactController : ControllerBase {
 
 		var contactsQuery = _context.Contacts.AsQueryable();
 
-		contactsQuery = contactsQuery.Where(x => x.businessId == businessId);
+		contactsQuery = contactsQuery.Where(x => x.BusinessId == businessId);
 
 		if (!string.IsNullOrWhiteSpace(clientName)) {
 			contactsQuery = contactsQuery.Where(x => x.customer.FullName.Contains(clientName!));

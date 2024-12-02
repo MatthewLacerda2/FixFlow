@@ -46,7 +46,7 @@ public class Customer : IdentityUser {
 			customerCreate.FullName,
 			customerCreate.Email,
 			customerCreate.CPF,
-			customerCreate.additionalNote
+			customerCreate.AdditionalNote
 		);
 	}
 

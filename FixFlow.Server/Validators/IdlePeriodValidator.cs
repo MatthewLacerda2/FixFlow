@@ -7,11 +7,11 @@ namespace FixFlow.Server.Validators;
 public class IdlePeriodValidator : AbstractValidator<IdlePeriod> {
 	public IdlePeriodValidator() {
 
-		RuleFor(idlePeriod => idlePeriod.start)
-			.LessThan(idlePeriod => idlePeriod.finish)
+		RuleFor(idlePeriod => idlePeriod.Start)
+			.LessThan(idlePeriod => idlePeriod.Finish)
 			.WithMessage(ValidatorErrors.StartMustBeOlderThanFinish);
 
-		RuleFor(idlePeriod => idlePeriod.finish)
+		RuleFor(idlePeriod => idlePeriod.Finish)
 			.LessThan(idlePeriod => DateTime.UtcNow)
 			.WithMessage(ValidatorErrors.IdlePeriodHasPassed);
 

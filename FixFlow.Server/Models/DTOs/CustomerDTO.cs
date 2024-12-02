@@ -7,6 +7,16 @@ namespace Server.Models.DTO;
 /// </summary>
 public class CustomerDTO {
 
+	/// <summary>
+	/// Phone Number. Must contain only numbers
+	/// </summary>
+	[Required]
+	[Phone]
+	public string PhoneNumber { get; set; }
+
+	[EmailAddress]
+	public string? Email { get; set; }
+
 	[Required]
 	public string Id { get; set; }
 
@@ -24,16 +34,6 @@ public class CustomerDTO {
 	/// Special information about the Customer, if applicable
 	/// </summary>
 	public string? AdditionalNote { get; set; }
-
-	/// <summary>
-	/// Phone Number. Must contain only numbers
-	/// </summary>
-	[Required]
-	[Phone]
-	public string PhoneNumber { get; set; }
-
-	[EmailAddress]
-	public string? Email { get; set; }
 
 	public CustomerDTO() : this(string.Empty, string.Empty, string.Empty, null, null, null) { }
 
