@@ -18,10 +18,15 @@ The folder 'client_sdk' is the http client for the flutter app, generated with o
 
 You'll need .NET 8.0 SDK https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 Flutter SDK https://docs.flutter.dev/get-started/install/windows/mobile#install-the-flutter-sdk
-And a PostGre DB. I suggest a dockerized one
+And a MySQL docker container
 
-`docker pull postgres:latest`
-`docker run --name fixflow-postgres -e POSTGRES_DB=fixflow -e POSTGRES_USER=lendacerda -e POSTGRES_PASSWORD=xpvista7810 -p 5432:5432 -d postgres`
+`docker run -d -p 3306:3306 --name fixflow -e MYSQL_ROOT_PASSWORD=xpvista7810`
+`-e MYSQL_DATABASE=fixflow -e MYSQL_USER=lendacerda -e MYSQL_PASSWORD=xpvista7810 mysql`
+
+At the MySQL terminal, you'll need to Grant \* PRIVILEGES to the 'lendacerda' User
+
+`GRANT ALL PRIVILEGES ON mysql.* TO 'lendacerda'@'%';`
+`FLUSH PRIVILEGES;`
 
 Than, from .\FixFlow.Server, run:
 `dotnet restore` to load the packages
