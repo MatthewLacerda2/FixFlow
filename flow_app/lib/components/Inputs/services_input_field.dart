@@ -40,6 +40,8 @@ class ServicesInputFieldState extends State<ServicesInputField> {
     _textController.text = widget.initialService ?? "";
     _selectedService = widget.initialService;
     _textController.addListener(_onSearchChanged);
+    loadBusinessOptions();
+    print(_availableServices);
   }
 
   @override
@@ -99,7 +101,7 @@ class ServicesInputFieldState extends State<ServicesInputField> {
         TextField(
           controller: _textController,
           decoration: const InputDecoration(
-            hintText: 'Type a service',
+            hintText: 'Digite um serviço',
             border: OutlineInputBorder(),
           ),
         ),

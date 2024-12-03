@@ -1,7 +1,6 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:snackbar/snackbar.dart';
 
 import '../../../components/Inputs/customer_dropdown.dart';
 import '../../../components/Inputs/date_picker_rectangle.dart';
@@ -88,7 +87,7 @@ class CreateLogScreenState extends State<CreateLogScreen> {
     } else {
       print(createLog);
       print(response.body);
-      snack("Error: $response");
+      FlowSnack.show(context, response.body);
     }
   }
 
@@ -179,6 +178,8 @@ class CreateLogScreenState extends State<CreateLogScreen> {
             ServicesInputField(
               onServiceSelected: (String? selectedService) {
                 service = selectedService ?? "";
+                print(selectedService);
+                print("UMU BUGA FEI DI TAL");
               },
             ),
             const SizedBox(height: 24),

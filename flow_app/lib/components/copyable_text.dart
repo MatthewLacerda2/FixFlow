@@ -12,7 +12,6 @@ class CopyableText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         IconButton(
           onPressed: () => Clipboard.setData(ClipboardData(text: text)),

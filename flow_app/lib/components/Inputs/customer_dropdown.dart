@@ -77,7 +77,7 @@ class CustomerDropdownState extends State<CustomerDropdown> {
         TextField(
           controller: _searchController,
           decoration: const InputDecoration(
-            hintText: 'Digite o nome do customer',
+            hintText: 'Digite o nome do Cliente',
             border: OutlineInputBorder(),
           ),
         ),

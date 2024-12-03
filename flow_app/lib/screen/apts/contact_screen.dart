@@ -59,7 +59,7 @@ class ContactScreenState extends State<ContactScreen> {
     }
     final String dia =
         DateTimeUtils.dateOnlyString(widget.contact.aptLog!.dateTime);
-    return 'Olá, aqui é da ${dto!.name}. Você contratou um serviço conosco ${service}dia $dia, gostaria de agendar novamente?';
+    return 'Olá, aqui é da ${dto!.name}. Você contratou um serviço ${service}dia $dia, gostaria de agendar novamente?';
   }
 
   void _toggleEdit() {
@@ -155,6 +155,7 @@ class ContactScreenState extends State<ContactScreen> {
               'Alterar data e horário:',
               style: TextStyle(fontSize: 12),
             ),
+            const SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -185,6 +186,11 @@ class ContactScreenState extends State<ContactScreen> {
               ],
             ),
             const SizedBox(height: 34),
+            const Text(
+              'Mensagem sugerida:',
+              style: TextStyle(fontSize: 12),
+            ),
+            const SizedBox(height: 6),
             CopyableText(text: suggestedMessage),
             //WhatsAppButton(
             //    phoneNumber: widget.contact.customer!.phoneNumber!,
