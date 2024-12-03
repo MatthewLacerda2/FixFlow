@@ -99,11 +99,11 @@ public class BusinessController : ControllerBase {
 		for (int i = 0; i < upBusiness.Services.Length; i++) {
 
 			if (string.IsNullOrEmpty(upBusiness.Services[i])) {
-				return BadRequest("Nome do serviço não pode estar em branco.");
+				return BadRequest(ValidatorErrors.ServiceNameIsBlank);
 			}
 
 			if (upBusiness.Services[i].Length > 32) {
-				return BadRequest("Nome do serviço não pode ser maior que 32 caracteres");
+				return BadRequest(ValidatorErrors.ServiceNameIsTooBig);
 			}
 
 			string phrase = upBusiness.Services[i];

@@ -23,9 +23,10 @@ class BusinessConfig extends StatelessWidget {
         .apiV1BusinessPatchWithHttpInfo(businessDTO: businessDTO);
 
     if (resp.statusCode == 200) {
-      final BusinessDTO businessDTO =
-          BusinessDTO.fromJson(jsonDecode(resp.body))!;
-      FlowStorage.saveBusinessDTO(businessDTO);
+      final BusinessDTO bDTO = BusinessDTO.fromJson(jsonDecode(resp.body))!;
+      FlowStorage.saveBusinessDTO(bDTO);
+    } else {
+      //TODO: implement this
     }
   }
 
@@ -42,7 +43,7 @@ class BusinessConfig extends StatelessWidget {
         EnumField(
           description: "Serviço...",
           options: businessDTO.services ?? <String>[],
-          characterLimit: 20,
+          characterLimit: 32,
           onItemsChanged: (List<String> updatedServices) async {
             businessDTO.services = updatedServices;
             _patchBusinessDTO();

@@ -14,6 +14,9 @@ public struct ValidatorErrors {
 	public static readonly string WrongUsernameOrPassword = "Wrong UserName/Email or Password";
 
 	public static readonly string UnlistedService = "O negócio só permite serviços listados!";
+	public static readonly string ServiceNameIsBlank = "Nome do serviço não pode estar em branco.";
+	public static readonly string ServiceNameIsTooBig = "Nome do serviço não pode ser maior que 32 caracteres";
+
 	public static readonly string BusinessDayCountMustBe7 = "Devem haver exatamente 7 dias úteis!";
 	public static readonly string BusinessDayStartMustBeLessThanFinish = "O horário de início do dia útil deve ser menor que o horário de término.";
 	public static readonly string TimeNotWithinBusinessHours = "O horário está fora do horário de funcionamento.";

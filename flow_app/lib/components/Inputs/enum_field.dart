@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/flow_snack.dart';
+
+//TODO: limit number of items (let's say 16)
 class EnumField extends StatefulWidget {
   const EnumField({
     super.key,
@@ -19,12 +22,13 @@ class EnumField extends StatefulWidget {
 
 class EnumFieldState extends State<EnumField> {
   final TextEditingController _textEditingController = TextEditingController();
-  late List<String> _items = <String>[];
+  List<String> _items = <String>[];
 
   @override
   void initState() {
     super.initState();
-    _items = widget.options;
+    _items =
+        List<String>.from(widget.options); // Create a mutable copy of options
   }
 
   @override
@@ -33,11 +37,22 @@ class EnumFieldState extends State<EnumField> {
     super.dispose();
   }
 
-  void _addItem(String item) {
+  void _addItem(BuildContext context, String item) {
+    item = item.trim();
+    if (item.isEmpty) {
+      return;
+    }
+
+    if (_items.length > 15) {
+      FlowSnack.show(context, "Limite de 16 items atingido");
+      return;
+    }
+
     setState(() {
       _items.add(item);
       _textEditingController.clear();
     });
+
     widget.onItemsChanged(_items);
   }
 
@@ -59,7 +74,7 @@ class EnumFieldState extends State<EnumField> {
             suffixIcon: IconButton(
               icon: const Icon(Icons.add, size: 30),
               onPressed: () {
-                _addItem(_textEditingController.text.trim());
+                _addItem(context, _textEditingController.text.trim());
               },
             ),
             border: const OutlineInputBorder(
@@ -69,7 +84,7 @@ class EnumFieldState extends State<EnumField> {
           ),
           onChanged: (String value) {
             if (value.endsWith(';')) {
-              _addItem(value.substring(0, value.length - 1).trim());
+              _addItem(context, value.substring(0, value.length - 1).trim());
             }
           },
           maxLength: widget.characterLimit,
