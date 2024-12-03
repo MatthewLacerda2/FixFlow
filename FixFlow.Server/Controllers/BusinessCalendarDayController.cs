@@ -17,9 +17,9 @@ namespace Server.Controllers;
 public class BusinessCalendarDayController : ControllerBase {
 
 	private readonly ServerContext _context;
-	private readonly UserManager<Customer> _userManager;
+	private readonly UserManager<Business> _userManager;
 
-	public BusinessCalendarDayController(ServerContext context, UserManager<Customer> userManager) {
+	public BusinessCalendarDayController(ServerContext context, UserManager<Business> userManager) {
 		_context = context;
 		_userManager = userManager;
 	}
@@ -42,14 +42,14 @@ public class BusinessCalendarDayController : ControllerBase {
 
 		for (int i = 0; i < daysInMonth; i++) {
 			BusinessCalendarDay aux = new BusinessCalendarDay();
-			aux.date = new DateTime(year, month, i + 1).ToUniversalTime();
+			aux.date = new DateTime(year, month, i + 1);
 
 			aux.schedules = _context.Schedules.Where(x => x.BusinessId == businessId)
-								.Where(x => x.dateTime.ToUniversalTime().Date == aux.date.ToUniversalTime().Date)
+								.Where(x => x.dateTime.Date == aux.date.Date)
 								.ToArray();
 
 			aux.logs = _context.Logs.Where(x => x.BusinessId == businessId)
-								.Where(x => x.dateTime.ToUniversalTime().Date == aux.date.ToUniversalTime().Date)
+								.Where(x => x.dateTime.Date == aux.date.Date)
 								.ToArray();
 
 			aux.idlePeriods = _context.IdlePeriods.Where(x => x.BusinessId == businessId)
