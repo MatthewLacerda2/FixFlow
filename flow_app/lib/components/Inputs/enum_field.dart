@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
 class EnumField extends StatefulWidget {
-  const EnumField(
-      {super.key,
-      required this.description,
-      required this.options,
-      required this.characterLimit});
+  const EnumField({
+    super.key,
+    required this.description,
+    required this.options,
+    required this.characterLimit,
+    required this.onItemsChanged,
+  });
   final String description;
   final List<String> options;
   final int characterLimit;
+  final Function(List<String>) onItemsChanged;
 
   @override
   EnumFieldState createState() => EnumFieldState();
@@ -16,7 +19,13 @@ class EnumField extends StatefulWidget {
 
 class EnumFieldState extends State<EnumField> {
   final TextEditingController _textEditingController = TextEditingController();
-  final List<String> _items = <String>[];
+  late List<String> _items = <String>[];
+
+  @override
+  void initState() {
+    super.initState();
+    _items = widget.options;
+  }
 
   @override
   void dispose() {
@@ -29,12 +38,14 @@ class EnumFieldState extends State<EnumField> {
       _items.add(item);
       _textEditingController.clear();
     });
+    widget.onItemsChanged(_items);
   }
 
   void _removeItem(String item) {
     setState(() {
       _items.remove(item);
     });
+    widget.onItemsChanged(_items);
   }
 
   @override
@@ -48,7 +59,7 @@ class EnumFieldState extends State<EnumField> {
             suffixIcon: IconButton(
               icon: const Icon(Icons.add, size: 30),
               onPressed: () {
-                _addItem(_textEditingController.text);
+                _addItem(_textEditingController.text.trim());
               },
             ),
             border: const OutlineInputBorder(
@@ -57,8 +68,8 @@ class EnumFieldState extends State<EnumField> {
             ),
           ),
           onChanged: (String value) {
-            if (value.endsWith(',')) {
-              _addItem(value.substring(0, value.length - 1));
+            if (value.endsWith(';')) {
+              _addItem(value.substring(0, value.length - 1).trim());
             }
           },
           maxLength: widget.characterLimit,

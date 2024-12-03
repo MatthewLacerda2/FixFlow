@@ -96,6 +96,23 @@ public class BusinessController : ControllerBase {
 
 		var business = await _userManager.FindByIdAsync(Id);
 
+		for (int i = 0; i < upBusiness.Services.Length; i++) {
+
+			if (string.IsNullOrEmpty(upBusiness.Services[i])) {
+				return BadRequest("Nome do serviço não pode estar em branco.");
+			}
+
+			if (upBusiness.Services[i].Length > 32) {
+				return BadRequest("Nome do serviço não pode ser maior que 32 caracteres");
+			}
+
+			string phrase = upBusiness.Services[i];
+			phrase = char.ToUpper(phrase[0]) + phrase.Substring(1).ToLower();
+
+			upBusiness.Services[i] = phrase;
+
+		}
+
 		business!.Name = upBusiness.Name;
 		business.Services = upBusiness.Services;
 		business.AllowListedServicesOnly = upBusiness.AllowListedServicesOnly;

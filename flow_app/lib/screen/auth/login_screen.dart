@@ -47,7 +47,7 @@ class LoginScreenState extends State<LoginScreen> {
               textColor: Colors.grey[700]!,
               width: 40,
               onPressed: () {
-                final String email = emailController.text;
+                final String email = emailController.text.trim();
                 final String password = passwordController.text;
                 LoginUtils.login(
                   email,

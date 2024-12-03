@@ -8,7 +8,7 @@ public static class StringUtils {
 		if (string.IsNullOrEmpty(name)) {
 			return name;
 		}
-
+		name.Trim();
 		// Split the name into parts and capitalize the first letter of each part
 		var nameParts = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 		var normalizedParts = nameParts.Select(part =>
@@ -23,6 +23,8 @@ public static class StringUtils {
 		if (string.IsNullOrEmpty(phrase)) {
 			return phrase;
 		}
+
+		phrase!.Trim();
 
 		// Trim any leading spaces and make the first letter uppercase
 		phrase = char.ToUpper(phrase[0]) + phrase.Substring(1).ToLower();

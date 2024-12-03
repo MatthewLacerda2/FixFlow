@@ -15,10 +15,7 @@ import '../../utils/flow_storage.dart';
 import '../main/main_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
-  const ScheduleScreen({
-    super.key,
-    required this.schedule,
-  });
+  const ScheduleScreen({super.key, required this.schedule});
   final AptSchedule schedule;
 
   @override
