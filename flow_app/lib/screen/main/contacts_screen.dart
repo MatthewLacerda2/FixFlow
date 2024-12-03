@@ -1,14 +1,12 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/apt_list.dart';
 import '../../utils/apt_filters.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
 import '../../utils/string_utils.dart';
-import '../apt_filters_screen.dart';
 import '../apts/contact_screen.dart';
 
 class ContactsScreen extends StatefulWidget {
@@ -79,42 +77,27 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 ),
                 Container(color: Colors.black, height: 1),
                 const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      const OrderButton(
+                      OrderButton(
                         icon: Icons.perm_contact_cal,
                         isUp: true,
                         iconSize: 40,
                         iconColor: Colors.blueGrey,
                       ),
-                      const OrderButton(
+                      OrderButton(
                         icon: Icons.attach_money,
                         iconSize: 40,
                         iconColor: Colors.blueGrey,
                       ),
-                      const OrderButton(
+                      OrderButton(
                         icon: Icons.calendar_today,
                         iconSize: 40,
                         iconColor: Colors.blueGrey,
                       ),
-                      ColoredBorderTextButton(
-                        text: "Filtros",
-                        onPressed: () {
-                          Navigator.push<AptFilters>(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AptFiltersScreen(
-                                  aptFilters: widget.aptFilters),
-                            ),
-                          );
-                        },
-                        backgroundColor: Colors.blueGrey,
-                        borderColor: Colors.grey,
-                        textColor: Colors.white,
-                      )
                     ],
                   ),
                 ),

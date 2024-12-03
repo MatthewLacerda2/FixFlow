@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
 import '../../utils/date_time_utils.dart';
-import '../../utils/flow_snack.dart';
 import '../../utils/flow_storage.dart';
 import '../Overview/Clients/clients_screen.dart';
 import '../Overview/calendar_screen.dart';
@@ -153,6 +152,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     color: Colors.grey,
                     height: 1,
                   ),
+                  /*
                   const SizedBox(height: 24),
                   ColoredBorderTextButton(
                     text: 'Estatísticas',
@@ -161,10 +161,10 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     backgroundColor: Colors.orangeAccent,
                     width: 130,
                     onPressed: () {
-                      //TODO: Make the Statistics Screen
+                      TODO: Make the Statistics Screen
                       FlowSnack.show(context, "Botão não implementado");
                     },
-                  ),
+                  ),*/
                   const SizedBox(height: 24),
                   ColoredBorderTextButton(
                     text: 'Calendário',
@@ -200,7 +200,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(
+                      height:
+                          24), /*
                   ColoredBorderTextButton(
                     text: 'Mensalidades',
                     textColor: Colors.black,
@@ -208,10 +210,10 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     backgroundColor: Colors.grey[300]!,
                     width: 100,
                     onPressed: () {
-                      // TODO: Create Mensalidades Screen
+                      TODO: Create Mensalidades Screen
                       FlowSnack.show(context, "Botão não-implementado!");
                     },
-                  ),
+                  ),*/
                 ],
               ),
             ),

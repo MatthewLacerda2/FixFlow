@@ -51,7 +51,7 @@ class CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calendar'),
+        title: const Text('Calendário'),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())

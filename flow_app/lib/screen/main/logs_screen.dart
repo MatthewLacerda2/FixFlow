@@ -1,7 +1,6 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/apt_list.dart';
@@ -9,7 +8,6 @@ import '../../utils/apt_filters.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
 import '../../utils/string_utils.dart';
-import '../apt_filters_screen.dart';
 import '../apts/edit_apt/create_log_screen.dart';
 import '../apts/log_screen.dart';
 import '../create_client_screen.dart';
@@ -86,44 +84,27 @@ class _LogsScreenState extends State<LogsScreen> {
                   height: 1,
                 ),
                 const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      const OrderButton(
+                      OrderButton(
                         icon: Icons.perm_contact_cal,
                         isUp: true,
                         iconSize: 40,
                         iconColor: Colors.blue,
                       ),
-                      const OrderButton(
+                      OrderButton(
                         icon: Icons.attach_money,
                         iconSize: 40,
                         iconColor: Colors.blue,
                       ),
-                      const OrderButton(
+                      OrderButton(
                         icon: Icons.calendar_today,
                         iconSize: 40,
                         iconColor: Colors.blue,
                       ),
-                      ColoredBorderTextButton(
-                        text: "Filtros",
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) =>
-                                  AptFiltersScreen(
-                                aptFilters: widget.aptFilters,
-                              ),
-                            ),
-                          );
-                        },
-                        backgroundColor: Colors.blue,
-                        borderColor: Colors.black,
-                        textColor: Colors.white,
-                      )
                     ],
                   ),
                 ),
