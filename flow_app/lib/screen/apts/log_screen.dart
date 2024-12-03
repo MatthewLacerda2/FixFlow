@@ -16,10 +16,7 @@ import '../../utils/flow_storage.dart';
 import '../main/main_screen.dart';
 
 class LogScreen extends StatefulWidget {
-  const LogScreen({
-    super.key,
-    required this.log,
-  });
+  const LogScreen({super.key, required this.log});
 
   final AptLog log;
 

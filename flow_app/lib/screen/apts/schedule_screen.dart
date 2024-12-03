@@ -7,6 +7,7 @@ import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/limited_text_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
+import '../../components/Inputs/services_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
@@ -26,10 +27,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 
-  bool _isEdited = false;
-
+  String? upService;
   double preco = 0.0;
   DateTime newDateTime = DateTime.now();
+
+  bool _isEdited = false;
 
   @override
   void initState() {
@@ -56,6 +58,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     patchedSchedule.price = preco;
     patchedSchedule.dateTime = newDateTime;
     patchedSchedule.description = _observacaoController.text;
+    patchedSchedule.service = upService;
     final Response response = await AptScheduleApi(apiClient)
         .apiV1SchedulesPatchWithHttpInfo(aptSchedule: patchedSchedule);
     snackbarResponse(response);
@@ -134,7 +137,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: 24),
+            ServicesInputField(
+              initialService: widget.schedule.service,
+              onServiceSelected: (String? selectedService) {
+                upService = selectedService;
+              },
+            ),
+            const SizedBox(height: 24),
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
