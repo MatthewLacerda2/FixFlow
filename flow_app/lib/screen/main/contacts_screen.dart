@@ -44,6 +44,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
     return response ?? <AptContact>[]; // Handle null safety
   }
 
+  Future<void> _refreshContacts() async {
+    setState(() {
+      _contactsFuture = _fetchContacts();
+    });
+    await _contactsFuture;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,56 +120,62 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: FutureBuilder<List<AptContact>>(
-                    future: _contactsFuture,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<AptContact>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Error: ${snapshot.error}'),
-                        );
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(
-                          child: Text('Não há lembretes.'),
-                        );
-                      }
-
-                      final List<AptContact> contacts = snapshot.data!;
-                      return ListView.separated(
-                        itemCount: contacts.length,
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(
-                                color: Colors.transparent,
-                                thickness: 0,
-                                height: 10),
-                        itemBuilder: (BuildContext context, int index) {
-                          final AptContact contact = contacts[index];
-                          return AptList(
-                            clientName: contact.customer!.fullName,
-                            price: contact.aptLog!.price ?? 0,
-                            hour: TimeOfDay.fromDateTime(contact.dateTime!)
-                                .format(context),
-                            date:
-                                DateTimeUtils.dateOnlyString(contact.dateTime!),
-                            service: StringUtils.normalIfBlank(
-                                contact.aptLog!.service),
-                            observation: StringUtils.normalIfBlank(
-                                contact.aptLog!.description),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      ContactScreen(contact: contact),
-                                ),
-                              );
-                            },
+                  child: RefreshIndicator(
+                    onRefresh: _refreshContacts,
+                    child: FutureBuilder<List<AptContact>>(
+                      future: _contactsFuture,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<AptContact>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
                           );
-                        },
-                      );
-                    },
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text('Não há lembretes.'),
+                          );
+                        }
+
+                        final List<AptContact> contacts = snapshot.data!;
+                        return ListView.separated(
+                          itemCount: contacts.length,
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(
+                                  color: Colors.transparent,
+                                  thickness: 0,
+                                  height: 10),
+                          itemBuilder: (BuildContext context, int index) {
+                            final AptContact contact = contacts[index];
+                            return AptList(
+                              clientName: contact.customer!.fullName,
+                              price: contact.aptLog!.price ?? 0,
+                              hour: TimeOfDay.fromDateTime(contact.dateTime!)
+                                  .format(context),
+                              date: DateTimeUtils.dateOnlyString(
+                                  contact.dateTime!),
+                              service: StringUtils.normalIfBlank(
+                                  contact.aptLog!.service),
+                              observation: StringUtils.normalIfBlank(
+                                  contact.aptLog!.description),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>
+                                        ContactScreen(contact: contact),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],

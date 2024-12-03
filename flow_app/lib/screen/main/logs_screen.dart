@@ -48,6 +48,13 @@ class _LogsScreenState extends State<LogsScreen> {
     return response ?? <AptLog>[]; // Handle null safety
   }
 
+  Future<void> _refreshLogs() async {
+    setState(() {
+      _logsFuture = _fetchLogs();
+    });
+    await _logsFuture;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,62 +129,65 @@ class _LogsScreenState extends State<LogsScreen> {
                 ),
                 const SizedBox(height: 10),
                 Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: _refreshLogs,
                     child: FutureBuilder<List<AptLog>>(
-                        future: _logsFuture,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<AptLog>> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text('Error: ${snapshot.error}'),
-                            );
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!.isEmpty) {
-                            return const Center(
-                              child: Text('Não há agendamentos.'),
-                            );
-                          }
-
-                          final List<AptLog> logs = snapshot.data!;
-                          return ListView.separated(
-                            itemCount: logs.length,
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    const Divider(
-                              color: Colors.transparent,
-                              thickness: 0,
-                              height: 10,
-                            ),
-                            itemBuilder: (BuildContext context, int index) {
-                              final AptLog log = logs[index];
-                              return AptList(
-                                clientName: log.customer!.fullName,
-                                price: log.price ?? 0,
-                                hour: TimeOfDay.fromDateTime(log.dateTime!)
-                                    .format(context),
-                                date:
-                                    DateTimeUtils.dateOnlyString(log.dateTime!),
-                                service: StringUtils.normalIfBlank(log.service),
-                                observation:
-                                    StringUtils.normalIfBlank(log.description),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute<void>(
-                                      builder: (BuildContext context) =>
-                                          LogScreen(
-                                        log: log,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+                      future: _logsFuture,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<AptLog>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
                           );
-                        })),
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text('Não há agendamentos.'),
+                          );
+                        }
+
+                        final List<AptLog> logs = snapshot.data!;
+                        return ListView.separated(
+                          itemCount: logs.length,
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(
+                            color: Colors.transparent,
+                            thickness: 0,
+                            height: 10,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            final AptLog log = logs[index];
+                            return AptList(
+                              clientName: log.customer!.fullName,
+                              price: log.price ?? 0,
+                              hour: TimeOfDay.fromDateTime(log.dateTime!)
+                                  .format(context),
+                              date: DateTimeUtils.dateOnlyString(log.dateTime!),
+                              service: StringUtils.normalIfBlank(log.service),
+                              observation:
+                                  StringUtils.normalIfBlank(log.description),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>
+                                        LogScreen(
+                                      log: log,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
               ],
             ),
             RoundedIconedButton(

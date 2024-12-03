@@ -34,6 +34,7 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
 
   Future<List<AptSchedule>> _fetchSchedules() async {
     final String mytoken = await FlowStorage.getToken();
+
     final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final AptFilters f = widget.aptFilters;
@@ -50,6 +51,13 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
     return response ?? <AptSchedule>[]; // Handle null safety
   }
 
+  Future<void> _refreshSchedules() async {
+    setState(() {
+      _schedulesFuture = _fetchSchedules();
+    });
+    await _schedulesFuture; // Wait for the new data to load.
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,15 +72,17 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                   color: Colors.greenAccent,
                   padding: const EdgeInsets.all(8),
                   height: 60,
-                  child: const Row(children: <Widget>[
-                    Icon(Icons.timer_outlined, size: 28),
-                    SizedBox(width: 8),
-                    Text(
-                      'Agendamentos',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ]),
+                  child: const Row(
+                    children: <Widget>[
+                      Icon(Icons.timer_outlined, size: 28),
+                      SizedBox(width: 8),
+                      Text(
+                        'Agendamentos',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(color: Colors.black, height: 1),
                 const SizedBox(height: 8),
@@ -117,58 +127,64 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: FutureBuilder<List<AptSchedule>>(
-                    future: _schedulesFuture,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<AptSchedule>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Error: ${snapshot.error}'),
-                        );
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(
-                          child: Text('Não há agendamentos.'),
-                        );
-                      }
-
-                      final List<AptSchedule> schedules = snapshot.data!;
-                      return ListView.separated(
-                        itemCount: schedules.length,
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(
-                                color: Colors.transparent,
-                                thickness: 0,
-                                height: 10),
-                        itemBuilder: (BuildContext context, int index) {
-                          final AptSchedule schedule = schedules[index];
-                          return AptList(
-                            clientName: schedule.customer!.fullName,
-                            price: schedule.price ?? 0,
-                            hour: TimeOfDay.fromDateTime(schedule.dateTime!)
-                                .format(context),
-                            date:
-                                DateTimeUtils.dateOnlyString(schedule.dateTime),
-                            service:
-                                StringUtils.normalIfBlank(schedule.service),
-                            observation:
-                                StringUtils.normalIfBlank(schedule.description),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute<void>(
-                                  builder: (BuildContext context) =>
-                                      ScheduleScreen(schedule: schedule),
-                                ),
-                              );
-                            },
+                  child: RefreshIndicator(
+                    onRefresh: _refreshSchedules,
+                    child: FutureBuilder<List<AptSchedule>>(
+                      future: _schedulesFuture,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<AptSchedule>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
                           );
-                        },
-                      );
-                    },
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text('Não há agendamentos.'),
+                          );
+                        }
+
+                        final List<AptSchedule> schedules = snapshot.data!;
+                        return ListView.separated(
+                          itemCount: schedules.length,
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(
+                                  color: Colors.transparent,
+                                  thickness: 0,
+                                  height: 10),
+                          itemBuilder: (BuildContext context, int index) {
+                            final AptSchedule schedule = schedules[index];
+                            return AptList(
+                              clientName: schedule.customer!.fullName,
+                              price: schedule.price ?? 0,
+                              hour: TimeOfDay.fromDateTime(schedule.dateTime!)
+                                  .format(context),
+                              date: DateTimeUtils.dateOnlyString(
+                                  schedule.dateTime),
+                              service:
+                                  StringUtils.normalIfBlank(schedule.service),
+                              observation: StringUtils.normalIfBlank(
+                                  schedule.description),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>
+                                        ScheduleScreen(schedule: schedule),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
+                )
               ],
             ),
             RoundedIconedButton(
