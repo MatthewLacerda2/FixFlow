@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Server.Data;
 using Server.Models;
 using Server.Models.Utils;
+using Server.Models.Erros;
 
 namespace Server.Controllers;
 
@@ -20,8 +21,6 @@ public class AccountsController : ControllerBase {
 	private readonly UserManager<Business> _userManager;
 	private readonly IConfiguration _configuration;
 	private readonly ServerContext _context;
-
-	const string wrongCredentialsMessage = "Wrong UserName/Email or Password";
 
 	public AccountsController(SignInManager<Business> signInManager, UserManager<Business> userManager,
 								IConfiguration configuration, ServerContext context) {
@@ -41,12 +40,12 @@ public class AccountsController : ControllerBase {
 
 		var userExists = await _userManager.FindByEmailAsync(model.email);
 		if (userExists == null) {
-			return Unauthorized(wrongCredentialsMessage);
+			return Unauthorized(ValidatorErrors.WrongUsernameOrPassword);
 		}
 
 		var result = await _signInManager.PasswordSignInAsync(userExists, model.password, true, false);
 		if (!result.Succeeded) {
-			return Unauthorized(wrongCredentialsMessage);
+			return Unauthorized(ValidatorErrors.WrongUsernameOrPassword);
 		}
 
 		var token = GenerateToken(userExists);
@@ -59,15 +58,19 @@ public class AccountsController : ControllerBase {
 
 	private string GenerateToken(Business business) {
 
+		var expirationDate = DateTime.UtcNow.AddMonths(3);
+
 		var claims = new List<Claim>{
 			new Claim(ClaimTypes.Name, business.Name),
 			new Claim(ClaimTypes.Email, business.Email!),
+			new Claim("ExpirationDate", expirationDate.ToString()),
 			new Claim("businessId", business.Id)
 		};
 		var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!);
 		var tokenDescriptor = new SecurityTokenDescriptor {
 			Issuer = _configuration["Jwt:Issuer"],
 			Audience = _configuration["Jwt:Audience"],
+			Expires = expirationDate,
 			Subject = new ClaimsIdentity(claims),
 			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
 		};

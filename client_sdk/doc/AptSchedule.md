@@ -13,10 +13,10 @@ Name | Type | Description | Notes
 **customer** | [**Customer**](Customer.md) |  | [optional] 
 **businessId** | **String** |  | 
 **wasContacted** | **bool** | Was the Customer contacted to make this Schedule? | [optional] 
-**dateTime** | [**DateTime**](DateTime.md) |  | 
+**dateTime** | [**DateTime**](DateTime.md) |  | [optional] 
 **service** | **String** |  | [optional] 
 **description** | **String** |  | [optional] 
-**price** | **double** |  | 
+**price** | **double** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

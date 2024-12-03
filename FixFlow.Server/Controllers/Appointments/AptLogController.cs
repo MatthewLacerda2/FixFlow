@@ -59,6 +59,7 @@ public class AptLogController : ControllerBase {
 		var resultsArray = await logsQuery
 			.Skip(offset)
 			.Take(limit)
+			.OrderByDescending(x => x.dateTime).ThenBy(x => x.Price).ThenBy(x => x.CustomerId).ThenBy(x => x.Id)
 			.ToArrayAsync();
 
 		for (int i = 0; i < resultsArray.Length; i++) {

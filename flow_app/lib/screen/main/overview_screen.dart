@@ -167,7 +167,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                   ),
                   const SizedBox(height: 24),
                   ColoredBorderTextButton(
-                    text: 'Calendario',
+                    text: 'Calendário',
                     textColor: Colors.white,
                     textSize: 16,
                     backgroundColor: Colors.blueAccent,

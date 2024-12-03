@@ -141,7 +141,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                           final AptContact contact = contacts[index];
                           return AptList(
                             clientName: contact.customer!.fullName,
-                            price: contact.aptLog!.price,
+                            price: contact.aptLog!.price ?? 0,
                             hour: TimeOfDay.fromDateTime(contact.dateTime!)
                                 .format(context),
                             date:

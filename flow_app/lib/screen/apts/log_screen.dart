@@ -44,11 +44,11 @@ class LogScreenState extends State<LogScreen> {
         id: log.id,
         dateTime: log.dateTime,
         description: log.description,
-        price: log.price,
+        price: log.price ?? 0,
         service: log.service);
 
-    _precoController =
-        TextEditingController(text: widget.log.price.toStringAsFixed(2));
+    _precoController = TextEditingController(
+        text: widget.log.price?.toStringAsFixed(2) ?? 0.toString());
     _observacaoController = TextEditingController(text: widget.log.description);
   }
 
@@ -79,7 +79,7 @@ class LogScreenState extends State<LogScreen> {
   void _cancelChanges() {
     setState(() {
       _isEdited = false;
-      _precoController.text = widget.log.price.toStringAsFixed(2);
+      _precoController.text = widget.log.price?.toStringAsFixed(2) ?? "0";
       _observacaoController.text = widget.log.description ?? "";
     });
   }

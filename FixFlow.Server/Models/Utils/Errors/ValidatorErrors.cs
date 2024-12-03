@@ -11,6 +11,7 @@ public struct ValidatorErrors {
 	public static readonly string BadScheduleOwnership = "Esse agendamento não pertence à sua empresa.";
 	public static readonly string BadCustomerOwnership = "Esse Cliente não pertence à sua empresa.";
 	public static readonly string BadIdlePeriodOwnership = "Esse Período Ocioso não pertence à sua empresa.";
+	public static readonly string WrongUsernameOrPassword = "Wrong UserName/Email or Password";
 
 	public static readonly string UnlistedService = "O negócio só permite serviços listados!";
 	public static readonly string BusinessDayCountMustBe7 = "Devem haver exatamente 7 dias úteis!";

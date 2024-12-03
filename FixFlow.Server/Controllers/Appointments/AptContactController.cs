@@ -46,6 +46,7 @@ public class AptContactController : ControllerBase {
 		var resultsArray = await contactsQuery
 			.Skip(offset)
 			.Take(limit)
+			.OrderByDescending(x => x.dateTime).ThenBy(x => x.CustomerId).ThenBy(x => x.Id)
 			.ToArrayAsync();
 
 		for (int i = 0; i < resultsArray.Length; i++) {

@@ -18,10 +18,10 @@ class AptSchedule {
     this.customer,
     required this.businessId,
     this.wasContacted,
-    required this.dateTime,
+    this.dateTime,
     this.service,
     this.description,
-    required this.price,
+    this.price,
   });
 
   String id;
@@ -47,13 +47,25 @@ class AptSchedule {
   ///
   bool? wasContacted;
 
-  DateTime dateTime;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  DateTime? dateTime;
 
   String? service;
 
   String? description;
 
-  double price;
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  double? price;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is AptSchedule &&
@@ -75,10 +87,10 @@ class AptSchedule {
     (customer == null ? 0 : customer!.hashCode) +
     (businessId.hashCode) +
     (wasContacted == null ? 0 : wasContacted!.hashCode) +
-    (dateTime.hashCode) +
+    (dateTime == null ? 0 : dateTime!.hashCode) +
     (service == null ? 0 : service!.hashCode) +
     (description == null ? 0 : description!.hashCode) +
-    (price.hashCode);
+    (price == null ? 0 : price!.hashCode);
 
   @override
   String toString() => 'AptSchedule[id=$id, customerId=$customerId, customer=$customer, businessId=$businessId, wasContacted=$wasContacted, dateTime=$dateTime, service=$service, description=$description, price=$price]';
@@ -98,7 +110,11 @@ class AptSchedule {
     } else {
       json[r'wasContacted'] = null;
     }
-      json[r'dateTime'] = this.dateTime.toUtc().toIso8601String();
+    if (this.dateTime != null) {
+      json[r'dateTime'] = this.dateTime!.toUtc().toIso8601String();
+    } else {
+      json[r'dateTime'] = null;
+    }
     if (this.service != null) {
       json[r'service'] = this.service;
     } else {
@@ -109,7 +125,11 @@ class AptSchedule {
     } else {
       json[r'description'] = null;
     }
+    if (this.price != null) {
       json[r'price'] = this.price;
+    } else {
+      json[r'price'] = null;
+    }
     return json;
   }
 
@@ -137,10 +157,10 @@ class AptSchedule {
         customer: Customer.fromJson(json[r'customer']),
         businessId: mapValueOfType<String>(json, r'businessId')!,
         wasContacted: mapValueOfType<bool>(json, r'wasContacted'),
-        dateTime: mapDateTime(json, r'dateTime', r'')!,
+        dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
         description: mapValueOfType<String>(json, r'description'),
-        price: mapValueOfType<double>(json, r'price')!,
+        price: mapValueOfType<double>(json, r'price'),
       );
     }
     return null;
@@ -191,8 +211,6 @@ class AptSchedule {
     'id',
     'customerId',
     'businessId',
-    'dateTime',
-    'price',
   };
 }
 

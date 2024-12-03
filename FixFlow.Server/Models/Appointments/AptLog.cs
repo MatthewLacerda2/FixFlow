@@ -26,11 +26,10 @@ public class AptLog {
 	[ForeignKey(nameof(AptSchedule))]
 	public string? ScheduleId { get; set; }
 
-	public DateTime dateTime { get; set; } = DateTime.UtcNow;
+	public DateTime dateTime { get; set; }
 
 	public string? Service { get; set; }
 
-	[Required]
 	public float Price { get; set; }
 
 	/// <summary>

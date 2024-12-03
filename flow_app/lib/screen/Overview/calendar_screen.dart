@@ -289,8 +289,8 @@ class CalendarScreenState extends State<CalendarScreen> {
         ...selectedDayData.schedules!.map(
           (AptSchedule item) => AptList(
             clientName: item.customer!.fullName,
-            price: item.price,
-            hour: TimeOfDay.fromDateTime(item.dateTime).format(context),
+            price: item.price ?? 0,
+            hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
             date: DateTimeUtils.dateOnlyString(item.dateTime),
             onTap: () {
               Navigator.push(
@@ -325,7 +325,7 @@ class CalendarScreenState extends State<CalendarScreen> {
         ...selectedDayData.logs!.map(
           (AptLog item) => AptList(
             clientName: item.customer!.fullName,
-            price: item.price,
+            price: item.price ?? 0,
             hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
             date: DateTimeUtils.dateOnlyString(item.dateTime!),
             service: item.service,

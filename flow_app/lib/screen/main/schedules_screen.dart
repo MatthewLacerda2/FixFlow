@@ -40,12 +40,13 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
 
     final List<AptSchedule>? response = await AptScheduleApi(apiClient)
         .apiV1SchedulesGet(
-            offset: f.offset,
-            limit: f.limit,
             minPrice: f.minPrice,
             maxPrice: f.maxPrice,
             minDateTime: f.minDateTime,
-            maxDateTime: f.maxDateTime);
+            maxDateTime: f.maxDateTime,
+            offset: f.offset,
+            limit: f.limit);
+
     return response ?? <AptSchedule>[]; // Handle null safety
   }
 
@@ -144,8 +145,8 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                           final AptSchedule schedule = schedules[index];
                           return AptList(
                             clientName: schedule.customer!.fullName,
-                            price: schedule.price,
-                            hour: TimeOfDay.fromDateTime(schedule.dateTime)
+                            price: schedule.price ?? 0,
+                            hour: TimeOfDay.fromDateTime(schedule.dateTime!)
                                 .format(context),
                             date:
                                 DateTimeUtils.dateOnlyString(schedule.dateTime),

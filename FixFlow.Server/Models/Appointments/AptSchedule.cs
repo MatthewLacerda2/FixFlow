@@ -28,14 +28,12 @@ public class AptSchedule {
 	/// </summary>
 	public bool WasContacted { get; set; }
 
-	[Required]
 	public DateTime dateTime { get; set; }
 
 	public string? Service { get; set; }
 
 	public string? Description { get; set; }
 
-	[Required]
 	public float Price { get; set; }
 
 	public AptSchedule() : this(string.Empty, string.Empty, DateTime.UtcNow, 0, null, false) { }

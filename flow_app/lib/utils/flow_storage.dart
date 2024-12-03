@@ -23,7 +23,6 @@ class FlowStorage {
     //Only the code for the login at startup will have to be changed
     String? token = prefs.getString(jwtTokenKey);
     token ??= "";
-
     return token.replaceAll('"', '');
   }
 

@@ -155,7 +155,7 @@ class _LogsScreenState extends State<LogsScreen> {
                               final AptLog log = logs[index];
                               return AptList(
                                 clientName: log.customer!.fullName,
-                                price: log.price,
+                                price: log.price ?? 0,
                                 hour: TimeOfDay.fromDateTime(log.dateTime!)
                                     .format(context),
                                 date:
