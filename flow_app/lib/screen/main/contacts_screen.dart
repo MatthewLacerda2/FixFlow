@@ -27,6 +27,53 @@ class _ContactsScreenState extends State<ContactsScreen> {
     _contactsFuture = _fetchContacts();
   }
 
+  List<String> order = <String>['date', 'client', 'price'];
+  List<bool?> ups = <bool?>[true, null, null];
+
+  void _handleToggle(String key, bool newIsUp) {
+    setState(() {
+      _contactsFuture = _contactsFuture.then((List<AptContact> schedules) {
+        final List<AptContact> sortedContacts =
+            List<AptContact>.from(schedules);
+
+        switch (key) {
+          case 'date':
+            sortedContacts.sort((AptContact a, AptContact b) {
+              final int comparison = a.dateTime!.compareTo(b.dateTime!);
+              return newIsUp ? comparison : -comparison;
+            });
+            ups[0] = (ups[0] == null) ? true : !ups[0]!;
+            ups[1] = null;
+            ups[2] = null;
+            break;
+          case 'client':
+            sortedContacts.sort((AptContact a, AptContact b) {
+              final int comparison =
+                  a.customer!.fullName.compareTo(b.customer!.fullName);
+              return newIsUp ? comparison : -comparison;
+            });
+            ups[0] = null;
+            ups[1] = (ups[1] == null) ? true : !ups[1]!;
+            ups[2] = null;
+            break;
+          case 'price':
+            sortedContacts.sort((AptContact a, AptContact b) {
+              final int comparison =
+                  (a.aptLog!.price ?? 0).compareTo(b.aptLog!.price ?? 0);
+              return newIsUp ? comparison : -comparison;
+            });
+            ups[0] = null;
+            ups[1] = null;
+            ups[2] = (ups[2] == null) ? true : !ups[2]!;
+            break;
+          default:
+            break;
+        }
+        return sortedContacts;
+      });
+    });
+  }
+
   Future<List<AptContact>> _fetchContacts() async {
     final String mytoken = await FlowStorage.getToken();
     final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
@@ -76,32 +123,40 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   ),
                 ),
                 Container(color: Colors.black, height: 1),
-                const SizedBox(height: 8),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       OrderButton(
-                        icon: Icons.perm_contact_cal,
-                        isUp: true,
-                        iconSize: 40,
-                        iconColor: Colors.blueGrey,
-                      ),
-                      OrderButton(
-                        icon: Icons.attach_money,
-                        iconSize: 40,
-                        iconColor: Colors.blueGrey,
-                      ),
-                      OrderButton(
+                        onToggle: _handleToggle,
+                        sort: order[0],
+                        isUp: ups[0],
                         icon: Icons.calendar_today,
+                        iconSize: 40,
+                        iconColor: Colors.blueGrey,
+                      ),
+                      OrderButton(
+                        onToggle: _handleToggle,
+                        sort: order[1],
+                        isUp: ups[1],
+                        icon: Icons.perm_contact_cal,
+                        iconSize: 40,
+                        iconColor: Colors.blueGrey,
+                      ),
+                      OrderButton(
+                        onToggle: _handleToggle,
+                        sort: order[2],
+                        isUp: ups[2],
+                        icon: Icons.attach_money,
                         iconSize: 40,
                         iconColor: Colors.blueGrey,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 18),
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: _refreshContacts,

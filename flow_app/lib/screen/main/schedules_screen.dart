@@ -53,7 +53,53 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
     setState(() {
       _schedulesFuture = _fetchSchedules();
     });
-    await _schedulesFuture; // Wait for the new data to load.
+    await _schedulesFuture;
+  }
+
+  List<String> order = <String>['date', 'client', 'price'];
+  List<bool?> ups = <bool?>[true, null, null];
+
+  void _handleToggle(String key, bool newIsUp) {
+    setState(() {
+      _schedulesFuture = _schedulesFuture.then((List<AptSchedule> schedules) {
+        final List<AptSchedule> sortedSchedules =
+            List<AptSchedule>.from(schedules);
+
+        switch (key) {
+          case 'date':
+            sortedSchedules.sort((AptSchedule a, AptSchedule b) {
+              final int comparison = a.dateTime!.compareTo(b.dateTime!);
+              return newIsUp ? comparison : -comparison;
+            });
+            ups[0] = (ups[0] == null) ? true : !ups[0]!;
+            ups[1] = null;
+            ups[2] = null;
+            break;
+          case 'client':
+            sortedSchedules.sort((AptSchedule a, AptSchedule b) {
+              final int comparison =
+                  a.customer!.fullName.compareTo(b.customer!.fullName);
+              return newIsUp ? comparison : -comparison;
+            });
+            ups[0] = null;
+            ups[1] = (ups[1] == null) ? true : !ups[1]!;
+            ups[2] = null;
+            break;
+          case 'price':
+            sortedSchedules.sort((AptSchedule a, AptSchedule b) {
+              final int comparison = (a.price ?? 0).compareTo(b.price ?? 0);
+              return newIsUp ? comparison : -comparison;
+            });
+            ups[0] = null;
+            ups[1] = null;
+            ups[2] = (ups[2] == null) ? true : !ups[2]!;
+            break;
+          default:
+            break;
+        }
+        return sortedSchedules;
+      });
+    });
   }
 
   @override
@@ -83,32 +129,40 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                   ),
                 ),
                 Container(color: Colors.black, height: 1),
-                const SizedBox(height: 8),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       OrderButton(
-                        icon: Icons.perm_contact_cal,
-                        isUp: true,
-                        iconSize: 40,
-                        iconColor: Colors.greenAccent,
-                      ),
-                      OrderButton(
-                        icon: Icons.attach_money,
-                        iconSize: 40,
-                        iconColor: Colors.greenAccent,
-                      ),
-                      OrderButton(
+                        onToggle: _handleToggle,
+                        sort: order[0],
+                        isUp: ups[0],
                         icon: Icons.calendar_today,
                         iconSize: 40,
-                        iconColor: Colors.greenAccent,
+                        iconColor: Colors.blueGrey,
+                      ),
+                      OrderButton(
+                        onToggle: _handleToggle,
+                        sort: order[1],
+                        isUp: ups[1],
+                        icon: Icons.perm_contact_cal,
+                        iconSize: 40,
+                        iconColor: Colors.blueGrey,
+                      ),
+                      OrderButton(
+                        onToggle: _handleToggle,
+                        sort: order[2],
+                        isUp: ups[2],
+                        icon: Icons.attach_money,
+                        iconSize: 40,
+                        iconColor: Colors.blueGrey,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 18),
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: _refreshSchedules,
