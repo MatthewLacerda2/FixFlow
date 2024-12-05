@@ -48,9 +48,9 @@ public class AptLogController : ControllerBase {
 			logsQuery = logsQuery.Where(x => x.Service != null && x.Service.Contains(service!));
 		}
 
-		logsQuery = logsQuery.Where(x => x.Price >= minPrice);
+		logsQuery = logsQuery.Where(x => x.price >= minPrice);
 		if (maxPrice.HasValue) {
-			logsQuery = logsQuery.Where(x => x.Price <= maxPrice);
+			logsQuery = logsQuery.Where(x => x.price <= maxPrice);
 		}
 
 		logsQuery = logsQuery.Where(x => x.dateTime.Date >= minDateTime.Date);
@@ -59,7 +59,7 @@ public class AptLogController : ControllerBase {
 		var resultsArray = await logsQuery
 			.Skip(offset)
 			.Take(limit)
-			.OrderByDescending(x => x.dateTime).ThenBy(x => x.Price).ThenBy(x => x.CustomerId).ThenBy(x => x.Id)
+			.OrderByDescending(x => x.dateTime).ThenBy(x => x.price).ThenBy(x => x.CustomerId).ThenBy(x => x.Id)
 			.ToArrayAsync();
 
 		for (int i = 0; i < resultsArray.Length; i++) {
@@ -167,7 +167,7 @@ public class AptLogController : ControllerBase {
 
 		existingLog.dateTime = upLog.dateTime;
 		existingLog.Service = upLog.Service;
-		existingLog.Price = upLog.Price;
+		existingLog.price = upLog.Price;
 		existingLog.Description = upLog.Description;
 
 		await _context.SaveChangesAsync();

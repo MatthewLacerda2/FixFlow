@@ -189,7 +189,7 @@ public class AptScheduleControllerTests {
 		Assert.Equal(newAppointment.CustomerId, createdSchedule!.CustomerId);
 		Assert.Equal(business.Id, createdSchedule.BusinessId);
 		Assert.Equal(newAppointment.dateTime, createdSchedule.dateTime);
-		Assert.Equal(newAppointment.Price, createdSchedule.Price);
+		Assert.Equal(newAppointment.Price, createdSchedule.price);
 		Assert.Equal(newAppointment.Service, createdSchedule.Service);
 		Assert.Equal(newAppointment.Description, createdSchedule.Description);
 	}
@@ -292,7 +292,7 @@ public class AptScheduleControllerTests {
 		Assert.Equal(upSchedule.CustomerId, updatedSchedule!.CustomerId);
 		Assert.Equal(upSchedule.BusinessId, updatedSchedule.BusinessId);
 		Assert.Equal(upSchedule.dateTime, updatedSchedule.dateTime);
-		Assert.Equal(upSchedule.Price, updatedSchedule.Price);
+		Assert.Equal(upSchedule.price, updatedSchedule.price);
 		Assert.Equal(upSchedule.Service, updatedSchedule.Service);
 		Assert.Equal(upSchedule.Description, updatedSchedule.Description);
 	}

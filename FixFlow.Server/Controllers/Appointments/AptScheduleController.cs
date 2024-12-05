@@ -43,10 +43,10 @@ public class AptScheduleController : ControllerBase {
 			schedulesQuery = schedulesQuery.Where(x => x.Service != null && x.Service.Contains(service));
 		}
 
-		schedulesQuery = schedulesQuery.Where(x => x.Price >= minPrice);
+		schedulesQuery = schedulesQuery.Where(x => x.price >= minPrice);
 
 		if (maxPrice.HasValue) {
-			schedulesQuery = schedulesQuery.Where(x => x.Price <= maxPrice);
+			schedulesQuery = schedulesQuery.Where(x => x.price <= maxPrice);
 		}
 
 		schedulesQuery = schedulesQuery.Where(x => x.dateTime >= minDateTime);
@@ -55,7 +55,7 @@ public class AptScheduleController : ControllerBase {
 		var resultsArray = await schedulesQuery
 			.Skip(offset)
 			.Take(limit)
-			.OrderByDescending(x => x.dateTime).ThenBy(x => x.Price).ThenBy(x => x.CustomerId).ThenBy(x => x.Id)
+			.OrderByDescending(x => x.dateTime).ThenBy(x => x.price).ThenBy(x => x.CustomerId).ThenBy(x => x.Id)
 			.ToArrayAsync();
 
 		for (int i = 0; i < resultsArray.Length; i++) {
@@ -146,7 +146,7 @@ public class AptScheduleController : ControllerBase {
 		existingAppointment.dateTime = upSchedule.dateTime;
 		existingAppointment.Service = upSchedule.Service;
 		existingAppointment.Description = upSchedule.Description;
-		existingAppointment.Price = upSchedule.Price;
+		existingAppointment.price = upSchedule.price;
 
 		await _context.SaveChangesAsync();
 

@@ -30,7 +30,7 @@ public class AptLog {
 
 	public string? Service { get; set; }
 
-	public float Price { get; set; }
+	public float price { get; set; }
 
 	/// <summary>
 	/// Anything about the Log that is worth noting
@@ -52,7 +52,7 @@ public class AptLog {
 		Service = newLog.Service;
 		Description = newLog.Description;
 		dateTime = newLog.dateTime;
-		Price = newLog.Price;
+		price = newLog.Price;
 		Customer = null!;
 	}
 }

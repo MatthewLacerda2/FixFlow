@@ -22,7 +22,7 @@ public class AptLogValidatorTests {
 
 		// Act & Assert
 		var result = _validator.TestValidate(aptLog);
-		result.ShouldHaveValidationErrorFor(log => log.Price)
+		result.ShouldHaveValidationErrorFor(log => log.price)
 			  .WithErrorMessage(ValidatorErrors.PriceMustBeNaturalNumber);
 	}
 
@@ -61,7 +61,7 @@ public class AptLogValidatorTests {
 
 		// Act & Assert
 		var result = _validator.TestValidate(validAptLog);
-		result.ShouldNotHaveValidationErrorFor(log => log.Price);
+		result.ShouldNotHaveValidationErrorFor(log => log.price);
 		result.ShouldNotHaveValidationErrorFor(log => log.dateTime);
 	}
 }

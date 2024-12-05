@@ -34,7 +34,7 @@ public class AptSchedule {
 
 	public string? Description { get; set; }
 
-	public float Price { get; set; }
+	public float price { get; set; }
 
 	public AptSchedule() : this(string.Empty, string.Empty, DateTime.UtcNow, 0, null, false) { }
 
@@ -43,7 +43,7 @@ public class AptSchedule {
 		CustomerId = clientId;
 		BusinessId = businessId;
 		this.dateTime = dateTime;
-		Price = price;
+		this.price = price;
 		Service = service;
 		Customer = null!;
 		WasContacted = wasContacted;
@@ -55,7 +55,7 @@ public class AptSchedule {
 		CustomerId = createSchedule.CustomerId;
 		dateTime = createSchedule.dateTime;
 		Service = createSchedule.Service;
-		Price = createSchedule.Price;
+		price = createSchedule.Price;
 		Description = createSchedule.Description;
 		WasContacted = wasContacted;
 		Customer = null!;

@@ -53,7 +53,7 @@ public class AptLogControllerTests {
 				BusinessId = business1.Id,
 				CustomerId = client1.Id,
 				dateTime = DateTime.UtcNow.AddHours(-i * 24),
-				Price = i * 10,
+				price = i * 10,
 				Service = "Service 1"
 			});
 		}
@@ -62,7 +62,7 @@ public class AptLogControllerTests {
 		logs[0].CustomerId = client2.Id;
 
 		logs[1] = logs[5];
-		logs[1].Price = 40;
+		logs[1].price = 40;
 
 		logs[10] = logs[4];
 		logs[10].Service = "Service 2";
@@ -157,7 +157,7 @@ public class AptLogControllerTests {
 		Assert.NotNull(createdLog);
 		Assert.Equal(createLog.CustomerId, createdLog!.CustomerId);
 		Assert.Equal(createLog.Service, createdLog.Service);
-		Assert.Equal(createLog.Price, createdLog.Price);
+		Assert.Equal(createLog.Price, createdLog.price);
 		Assert.Equal(createLog.dateTime, createdLog.dateTime);
 		Assert.Equal(createLog.Description, createdLog.Description);
 
@@ -195,7 +195,7 @@ public class AptLogControllerTests {
 			CustomerId = client.Id,
 			BusinessId = business.Id,
 			dateTime = DateTime.UtcNow,
-			Price = 100,
+			price = 100,
 			Service = "Service 2"
 		};
 
@@ -227,7 +227,7 @@ public class AptLogControllerTests {
 			CustomerId = client.Id,
 			BusinessId = business.Id,
 			dateTime = DateTime.UtcNow,
-			Price = 100,
+			price = 100,
 			Service = "Service 2"
 		};
 
@@ -261,7 +261,7 @@ public class AptLogControllerTests {
 			BusinessId = business.Id,
 			ScheduleId = null,
 			dateTime = DateTime.UtcNow.AddHours(-1),
-			Price = 100,
+			price = 100,
 			Service = "Service 1"
 		};
 
@@ -283,7 +283,7 @@ public class AptLogControllerTests {
 		Assert.Equal(upLog.ScheduleId, updatedLog.ScheduleId);
 		Assert.Equal(upLog.dateTime, updatedLog.dateTime);
 		Assert.Equal(upLog.Service, updatedLog.Service);
-		Assert.Equal(upLog.Price, updatedLog.Price);
+		Assert.Equal(upLog.Price, updatedLog.price);
 		Assert.Equal(upLog.Description, updatedLog.Description);
 	}
 
@@ -311,7 +311,7 @@ public class AptLogControllerTests {
 			CustomerId = client.Id,
 			BusinessId = business.Id,
 			dateTime = DateTime.UtcNow,
-			Price = 100,
+			price = 100,
 			Service = "Service 1"
 		};
 		var contact = new AptContact(log, DateTime.UtcNow.AddDays(-30));
