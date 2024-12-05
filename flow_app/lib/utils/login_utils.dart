@@ -22,9 +22,9 @@ class LoginUtils {
       return;
     }
 
-    FlowStorage.saveToken(loginResponse.body);
+    await FlowStorage.saveToken(loginResponse.body);
 
-    fetchBusinessDTO();
+    await fetchBusinessDTO();
 
     Navigator.pushAndRemoveUntil(
       context,

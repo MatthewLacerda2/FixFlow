@@ -126,6 +126,10 @@ public class AptLogController : ControllerBase {
 			contact.dateTime = contact.dateTime.AddDays(1);
 		}
 
+		var logsQuery = _context.Logs.AsQueryable();    //TODO: could improve this logic
+		logsQuery = logsQuery.Where(x => x.dateTime.Date <= newLog.dateTime.AddDays(-2));
+		logsQuery = logsQuery.Where(x => x.dateTime.Date >= newLog.dateTime.AddDays(7));
+
 		_context.Logs.Add(newLog);
 		_context.Contacts.Add(contact);
 		await _context.SaveChangesAsync();

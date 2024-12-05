@@ -28,7 +28,7 @@ class FlowApp extends StatelessWidget {
         future: checkIfLoggedIn(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData && snapshot.data == true) {
             return const MainScreen(
               initialIndex: 0,
@@ -42,12 +42,14 @@ class FlowApp extends StatelessWidget {
   }
 
   Future<bool> checkIfLoggedIn() async {
-    final bool loggedIn = await FlowStorage.getToken() != "";
+    final String token = await FlowStorage.getToken();
 
-    if (loggedIn) {
-      LoginUtils.fetchBusinessDTO();
+    if (token.isEmpty) {
+      return false;
     }
 
-    return loggedIn;
+    await LoginUtils.fetchBusinessDTO();
+
+    return true;
   }
 }
