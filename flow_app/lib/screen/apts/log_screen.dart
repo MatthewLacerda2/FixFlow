@@ -76,7 +76,7 @@ class LogScreenState extends State<LogScreen> {
   void _cancelChanges() {
     setState(() {
       _isEdited = false;
-      _precoController.text = widget.log.price?.toStringAsFixed(2) ?? "0";
+      _precoController.text = widget.log.price!.toStringAsFixed(2);
       _observacaoController.text = widget.log.description ?? "";
     });
   }

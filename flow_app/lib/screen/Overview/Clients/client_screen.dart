@@ -124,7 +124,7 @@ class ClientScreen extends StatelessWidget {
                   TimeOfDay.fromDateTime(log.dateTime!).format(context);
               return AptList(
                 clientName: record.fullName,
-                price: log.price != null ? log.price! / 100 : 0,
+                price: log.price! / 100,
                 hour: timeOfDayString,
                 date: DateTimeUtils.dateOnlyString(log.dateTime!),
                 service: StringUtils.normalIfBlank(log.service),

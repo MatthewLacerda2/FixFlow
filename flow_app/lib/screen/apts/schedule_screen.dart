@@ -40,7 +40,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         text: (widget.schedule.price! / 100).toStringAsFixed(2));
     _observacaoController =
         TextEditingController(text: widget.schedule.description);
-    preco = widget.schedule.price != null ? widget.schedule.price! * 100 : 0;
+    preco = widget.schedule.price! * 100;
     newDateTime = widget.schedule.dateTime!;
   }
 
@@ -87,7 +87,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   void _cancelChanges() {
     setState(() {
       _isEdited = false;
-      _precoController.text = widget.schedule.price?.toStringAsFixed(2) ?? "0";
+      _precoController.text = widget.schedule.price!.toStringAsFixed(2);
       _observacaoController.text = widget.schedule.description ?? "";
     });
   }
