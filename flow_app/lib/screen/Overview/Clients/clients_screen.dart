@@ -66,7 +66,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
                         const Divider(
                       color: Colors.transparent,
                       thickness: 0,
-                      height: 9,
+                      height: 12,
                     ),
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {

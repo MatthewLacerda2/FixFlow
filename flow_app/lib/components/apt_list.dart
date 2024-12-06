@@ -43,7 +43,7 @@ class AptList extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text('Cliente: $clientName'),
+              Text('Cliente: ${StringUtils.abreviator(clientName, 18)}'),
               Text(
                 'R\$ ${price.toStringAsFixed(2)}',
                 style: const TextStyle(

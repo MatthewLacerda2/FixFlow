@@ -2,6 +2,7 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/flow_storage.dart';
+import '../../utils/string_utils.dart';
 
 class CustomerDropdown extends StatefulWidget {
   const CustomerDropdown({super.key, required this.onCustomerIdChanged});
@@ -62,9 +63,7 @@ class CustomerDropdownState extends State<CustomerDropdown> {
   }
 
   String customerDataText(String fullname, String phoneNumber) {
-    if (fullname.length > 21) {
-      fullname = '${fullname.substring(0, 21)}...';
-    }
+    fullname = StringUtils.abreviator(fullname, 21);
     phoneNumber = phoneNumber.substring(phoneNumber.length - 10);
     return "$fullname | $phoneNumber";
   }
