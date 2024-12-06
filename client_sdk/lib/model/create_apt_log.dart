@@ -38,7 +38,7 @@ class CreateAptLog {
 
   String? description;
 
-  double price;
+  int price;
 
   /// The Date when we expect the Customer to schedule another appointment.  We are leaving as DateTime for simplicity but we only need the Date from this class
   ///
@@ -129,7 +129,7 @@ class CreateAptLog {
         dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
         description: mapValueOfType<String>(json, r'description'),
-        price: mapValueOfType<double>(json, r'price')!,
+        price: mapValueOfType<int>(json, r'price')!,
         dateToComeback: mapDateTime(json, r'dateToComeback', r''),
       );
     }

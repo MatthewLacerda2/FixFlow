@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **dateTime** | [**DateTime**](DateTime.md) |  | [optional] 
 **service** | **String** |  | [optional] 
 **description** | **String** |  | [optional] 
-**price** | **double** |  | 
+**price** | **int** |  | 
 **dateToComeback** | [**DateTime**](DateTime.md) | The Date when we expect the Customer to schedule another appointment.  We are leaving as DateTime for simplicity but we only need the Date from this class | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

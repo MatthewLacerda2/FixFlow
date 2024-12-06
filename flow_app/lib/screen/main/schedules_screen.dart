@@ -197,7 +197,9 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                             final AptSchedule schedule = schedules[index];
                             return AptList(
                               clientName: schedule.customer!.fullName,
-                              price: schedule.price ?? 0,
+                              price: schedule.price != null
+                                  ? schedule.price! / 100
+                                  : 1.23,
                               hour: TimeOfDay.fromDateTime(schedule.dateTime!)
                                   .format(context),
                               date: DateTimeUtils.dateOnlyString(

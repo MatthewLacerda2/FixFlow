@@ -37,7 +37,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
     final List<AptSchedule>? todaySchedules =
         await AptScheduleApi(apiClient).apiV1SchedulesGet(
       minPrice: 0,
-      maxPrice: 999,
+      maxPrice: 99999,
       minDateTime: DateTime.now(),
       maxDateTime:
           DateTimeUtils.getNextDayAtMidnight(DateTime.now().weekday + 1),
@@ -48,7 +48,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
     final List<AptSchedule>? weekSchedules =
         await AptScheduleApi(apiClient).apiV1SchedulesGet(
       minPrice: 0,
-      maxPrice: 999,
+      maxPrice: 99999,
       minDateTime: DateTime.now(),
       maxDateTime: DateTimeUtils.getNextDayAtMidnight(DateTime.sunday),
       limit: 100,

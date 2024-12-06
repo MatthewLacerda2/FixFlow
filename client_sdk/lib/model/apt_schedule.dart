@@ -65,7 +65,7 @@ class AptSchedule {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  double? price;
+  int? price;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is AptSchedule &&
@@ -160,7 +160,7 @@ class AptSchedule {
         dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
         description: mapValueOfType<String>(json, r'description'),
-        price: mapValueOfType<double>(json, r'price'),
+        price: mapValueOfType<int>(json, r'price'),
       );
     }
     return null;

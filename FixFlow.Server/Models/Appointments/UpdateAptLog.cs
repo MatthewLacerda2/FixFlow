@@ -13,11 +13,11 @@ public class UpdateAptLog {
 	public string? Service { get; set; }
 
 	[Required]
-	public float Price { get; set; }
+	public int Price { get; set; }
 
 	public string? Description { get; set; }
 
-	public UpdateAptLog(string Id, DateTime dateTime, string? service, float price, string? description) {
+	public UpdateAptLog(string Id, DateTime dateTime, string? service, int price, string? description) {
 		this.Id = Id;
 		this.dateTime = dateTime;
 		Price = price;

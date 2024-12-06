@@ -66,7 +66,7 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
       dateTime: dateTime,
       service: service,
       description: _observacaoController.text,
-      price: double.tryParse(_precoController.text) ?? 0.0,
+      price: ((double.tryParse(_precoController.text) ?? 0) * 100).toInt(),
     );
 
     final String mytoken = await FlowStorage.getToken();

@@ -67,7 +67,7 @@ class CreateLogScreenState extends State<CreateLogScreen> {
         customerId: customerId,
         dateTime: registerDate,
         description: _observacaoController.text,
-        price: double.tryParse(_precoController.text) ?? 0.0,
+        price: ((double.tryParse(_precoController.text) ?? 0) * 100).toInt(),
         service: service,
         dateToComeback: whenShouldComeBack);
 

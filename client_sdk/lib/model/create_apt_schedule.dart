@@ -34,7 +34,7 @@ class CreateAptSchedule {
 
   String? description;
 
-  double price;
+  int price;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is CreateAptSchedule &&
@@ -101,7 +101,7 @@ class CreateAptSchedule {
         dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
         description: mapValueOfType<String>(json, r'description'),
-        price: mapValueOfType<double>(json, r'price')!,
+        price: mapValueOfType<int>(json, r'price')!,
       );
     }
     return null;

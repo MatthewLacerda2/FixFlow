@@ -17,7 +17,7 @@ public class CreateAptLog {
 	public string? Description { get; set; }
 
 	[Required]
-	public float Price { get; set; }
+	public int Price { get; set; }
 
 	/// <summary>
 	/// The Date when we expect the Customer to schedule another appointment.
@@ -27,7 +27,7 @@ public class CreateAptLog {
 
 	public CreateAptLog() : this(string.Empty, null, DateTime.UtcNow, 0, null, null, DateTime.Now.AddDays(90)) { }
 
-	public CreateAptLog(string customerId, string? scheduleId, DateTime dateTime, float price, string? service, string? description, DateTime whenComeBack) {
+	public CreateAptLog(string customerId, string? scheduleId, DateTime dateTime, int price, string? service, string? description, DateTime whenComeBack) {
 		CustomerId = customerId;
 		ScheduleId = scheduleId;
 		this.dateTime = dateTime;

@@ -45,7 +45,7 @@ class LogScreenState extends State<LogScreen> {
         service: log.service);
 
     _precoController = TextEditingController(
-        text: widget.log.price?.toStringAsFixed(2) ?? 0.toString());
+        text: (widget.log.price! / 100).toStringAsFixed(2));
     _observacaoController = TextEditingController(text: widget.log.description);
   }
 
@@ -167,7 +167,7 @@ class LogScreenState extends State<LogScreen> {
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
-                upLog.price = double.tryParse(value) ?? 0;
+                upLog.price = ((double.tryParse(value) ?? 0) * 100).toInt();
                 _toggleEdit();
               },
             ),

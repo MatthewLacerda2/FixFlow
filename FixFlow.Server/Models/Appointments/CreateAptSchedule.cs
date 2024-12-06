@@ -17,11 +17,11 @@ public class CreateAptSchedule {
 	public string? Description { get; set; }
 
 	[Required]
-	public float Price { get; set; }
+	public int Price { get; set; }
 
 	public CreateAptSchedule() : this(string.Empty, DateTime.UtcNow, 0, null, null) { }
 
-	public CreateAptSchedule(string clientId, DateTime _dateTime, float price, string? service, string? observation) {
+	public CreateAptSchedule(string clientId, DateTime _dateTime, int price, string? service, string? observation) {
 		CustomerId = clientId;
 		dateTime = _dateTime;
 		Price = price;

@@ -32,7 +32,7 @@ class UpdateAptLog {
 
   String? service;
 
-  double price;
+  int price;
 
   String? description;
 
@@ -100,7 +100,7 @@ class UpdateAptLog {
         id: mapValueOfType<String>(json, r'id')!,
         dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
-        price: mapValueOfType<double>(json, r'price')!,
+        price: mapValueOfType<int>(json, r'price')!,
         description: mapValueOfType<String>(json, r'description'),
       );
     }

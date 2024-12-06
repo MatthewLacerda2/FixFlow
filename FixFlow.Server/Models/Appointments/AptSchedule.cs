@@ -34,11 +34,11 @@ public class AptSchedule {
 
 	public string? Description { get; set; }
 
-	public float price { get; set; }
+	public int price { get; set; }
 
 	public AptSchedule() : this(string.Empty, string.Empty, DateTime.UtcNow, 0, null, false) { }
 
-	public AptSchedule(string clientId, string businessId, DateTime dateTime, float price, string? service, bool wasContacted) {
+	public AptSchedule(string clientId, string businessId, DateTime dateTime, int price, string? service, bool wasContacted) {
 		Id = Guid.NewGuid().ToString();
 		CustomerId = clientId;
 		BusinessId = businessId;

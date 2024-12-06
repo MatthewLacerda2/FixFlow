@@ -47,19 +47,19 @@ class MainScreenState extends State<MainScreen> {
 
     scheduleFilters = AptFilters(
         businessId: businessId,
-        maxPrice: 9999,
+        maxPrice: 999999,
         minDateTime: DateTime.now(),
         maxDateTime: DateTime.now().add(const Duration(days: 15)));
 
     logFilters = AptFilters(
         businessId: businessId,
-        maxPrice: 9999,
+        maxPrice: 999999,
         minDateTime: DateTime(2023),
         maxDateTime: DateTime.now());
 
     contactsFilter = AptFilters(
         businessId: businessId,
-        maxPrice: 9999,
+        maxPrice: 999999,
         minDateTime: DateTime.now(),
         maxDateTime: DateTime.now().add(const Duration(days: 5)));
 

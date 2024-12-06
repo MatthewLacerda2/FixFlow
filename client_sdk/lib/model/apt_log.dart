@@ -56,7 +56,7 @@ class AptLog {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  double? price;
+  int? price;
 
   /// Anything about the Log that is worth noting
   String? description;
@@ -153,7 +153,7 @@ class AptLog {
         scheduleId: mapValueOfType<String>(json, r'scheduleId'),
         dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
-        price: mapValueOfType<double>(json, r'price'),
+        price: mapValueOfType<int>(json, r'price'),
         description: mapValueOfType<String>(json, r'description'),
       );
     }

@@ -28,7 +28,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   late TextEditingController _observacaoController;
 
   String? upService;
-  double preco = 0.0;
+  int preco = 0;
   DateTime newDateTime = DateTime.now();
 
   bool _isEdited = false;
@@ -37,10 +37,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   void initState() {
     super.initState();
     _precoController = TextEditingController(
-        text: widget.schedule.price?.toStringAsFixed(2) ?? "0");
+        text: (widget.schedule.price! / 100).toStringAsFixed(2));
     _observacaoController =
         TextEditingController(text: widget.schedule.description);
-    preco = widget.schedule.price ?? 0;
+    preco = widget.schedule.price != null ? widget.schedule.price! * 100 : 0;
     newDateTime = widget.schedule.dateTime!;
   }
 
@@ -148,7 +148,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
-                preco = double.tryParse(value) ?? 0;
+                preco = ((double.tryParse(value) ?? 0) * 100).toInt();
                 _toggleEdit();
               },
             ),

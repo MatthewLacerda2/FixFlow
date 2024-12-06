@@ -2,7 +2,6 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
-import 'package:snackbar/snackbar.dart';
 
 import '../../components/Inputs/password_input_field.dart';
 import '../../utils/flow_snack.dart';

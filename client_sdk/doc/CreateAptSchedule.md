@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **dateTime** | [**DateTime**](DateTime.md) |  | [optional] 
 **service** | **String** |  | [optional] 
 **description** | **String** |  | [optional] 
-**price** | **double** |  | 
+**price** | **int** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

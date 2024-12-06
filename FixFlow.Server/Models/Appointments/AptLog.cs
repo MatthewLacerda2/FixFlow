@@ -30,7 +30,7 @@ public class AptLog {
 
 	public string? Service { get; set; }
 
-	public float price { get; set; }
+	public int price { get; set; }
 
 	/// <summary>
 	/// Anything about the Log that is worth noting
