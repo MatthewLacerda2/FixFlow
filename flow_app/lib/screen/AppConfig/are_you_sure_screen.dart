@@ -12,12 +12,12 @@ class AreYouSureScreen extends StatelessWidget {
       required this.description,
       required this.changeSuccessfulScreenTitle,
       required this.changeSuccessfulScreenDescription,
-      required this.onPressed});
+      required this.onConfirm});
   final String title;
   final String description;
   final String changeSuccessfulScreenTitle;
   final String changeSuccessfulScreenDescription;
-  final VoidCallback onPressed;
+  final Future<void> Function() onConfirm;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class AreYouSureScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(vertical: 1, horizontal: 30),
                     onPressed: () {
-                      onPressed();
+                      onConfirm();
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(

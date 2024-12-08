@@ -127,7 +127,6 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       OrderButton(
                         onToggle: _handleToggle,

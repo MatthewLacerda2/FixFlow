@@ -1,6 +1,9 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
+import '../../../utils/flow_storage.dart';
+import '../../auth/initial_screen.dart';
 import '../are_you_sure_screen.dart';
 import 'delete_account_screen.dart';
 
@@ -54,16 +57,30 @@ class DeleteWarningScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                            builder: (BuildContext context) => AreYouSureScreen(
-                                title: "Confirmação de Deleção",
-                                description:
-                                    "Uma pena te ver partir...\n\nDigite sua senha para confirmar a desativação\n",
-                                changeSuccessfulScreenTitle: "Conta deletada",
-                                changeSuccessfulScreenDescription:
-                                    "Uma pena te ver partir. Volte sempre!",
-                                onPressed: () {
-                                  //TODO: http request to deactivate account
-                                })),
+                          builder: (BuildContext context) => AreYouSureScreen(
+                            title: "Confirmação de Deleção",
+                            description:
+                                "Uma pena te ver partir...\n\nDigite sua senha para confirmar a desativação\n",
+                            changeSuccessfulScreenTitle: "Conta deletada",
+                            changeSuccessfulScreenDescription:
+                                "Uma pena te ver partir. Volte sempre!",
+                            onConfirm: () async {
+                              final String mytoken =
+                                  await FlowStorage.getToken();
+                              final ApiClient apiClient =
+                                  FlowStorage.getApiClient(mytoken);
+                              BusinessApi(apiClient).apiV1BusinessDelete();
+                              FlowStorage.clear();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const InitialScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       );
                     },
                   ),

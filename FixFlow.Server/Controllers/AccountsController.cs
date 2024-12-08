@@ -9,6 +9,7 @@ using Server.Data;
 using Server.Models;
 using Server.Models.Utils;
 using Server.Models.Erros;
+using Microsoft.EntityFrameworkCore;
 
 namespace Server.Controllers;
 
@@ -28,6 +29,15 @@ public class AccountsController : ControllerBase {
 		_userManager = userManager;
 		_configuration = configuration;
 		_context = context;
+	}
+
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+	[HttpGet]
+	public async Task<IActionResult> Debug() {
+		string mensagem = "Olá mundo, Lendacerda mandou esta mensagem\n";
+		int numeros = await _userManager.Users.CountAsync();
+		string usuarios = "Atualmente nós temos " + numeros + " empresas cadastradas.\n";
+		return Ok(mensagem + usuarios);
 	}
 
 	/// <summary>

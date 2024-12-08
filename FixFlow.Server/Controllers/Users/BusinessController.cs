@@ -41,6 +41,9 @@ public class BusinessController : ControllerBase {
 		if (business == null) {
 			return BadRequest(NotExistErrors.business);
 		}
+		if (business.IsActive == false) {
+			return BadRequest(ValidatorErrors.DeactivatedBusiness);
+		}
 
 		return Ok(new BusinessDTO(business));
 	}

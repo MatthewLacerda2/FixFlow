@@ -133,7 +133,6 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       OrderButton(
                         onToggle: _handleToggle,

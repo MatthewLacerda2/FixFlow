@@ -4,6 +4,7 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
+import '../utils/flow_snack.dart';
 import '../utils/flow_storage.dart';
 import 'Inputs/check_input_field.dart';
 import 'Inputs/enum_field.dart';
@@ -16,18 +17,23 @@ class BusinessConfig extends StatelessWidget {
 
   final BusinessDTO businessDTO;
 
-  Future<void> _patchBusinessDTO() async {
+  Future<void> _patchBusinessDTO(BuildContext context) async {
     final String token = await FlowStorage.getToken();
     final ApiClient client = FlowStorage.getApiClient(token);
     final Response resp = await BusinessApi(client)
         .apiV1BusinessPatchWithHttpInfo(businessDTO: businessDTO);
 
+    var message = "";
+
     if (resp.statusCode == 200) {
       final BusinessDTO bDTO = BusinessDTO.fromJson(jsonDecode(resp.body))!;
       FlowStorage.saveBusinessDTO(bDTO);
+      message = "Alterações salvas!";
     } else {
-      //TODO: implement this
+      message = resp.body;
     }
+
+    FlowSnack(message: message);
   }
 
   @override
@@ -46,7 +52,7 @@ class BusinessConfig extends StatelessWidget {
           characterLimit: 32,
           onItemsChanged: (List<String> updatedServices) async {
             businessDTO.services = updatedServices;
-            _patchBusinessDTO();
+            _patchBusinessDTO(context);
           },
         ),
         const SizedBox(height: 12),
@@ -55,7 +61,7 @@ class BusinessConfig extends StatelessWidget {
           initialValue: businessDTO.allowListedServicesOnly ?? false,
           onChanged: (bool isChecked) async {
             businessDTO.allowListedServicesOnly = isChecked;
-            _patchBusinessDTO();
+            _patchBusinessDTO(context);
           },
         ),
         const SizedBox(height: 18),
@@ -64,7 +70,7 @@ class BusinessConfig extends StatelessWidget {
           initialValue: businessDTO.openOnHolidays ?? false,
           onChanged: (bool isChecked) async {
             businessDTO.openOnHolidays = isChecked;
-            _patchBusinessDTO();
+            _patchBusinessDTO(context);
           },
         ),
         const SizedBox(height: 34),

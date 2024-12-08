@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../utils/flow_snack.dart';
 
-//TODO: limit number of items (let's say 16)
 class EnumField extends StatefulWidget {
   const EnumField({
     super.key,
@@ -27,8 +26,7 @@ class EnumFieldState extends State<EnumField> {
   @override
   void initState() {
     super.initState();
-    _items =
-        List<String>.from(widget.options); // Create a mutable copy of options
+    _items = List<String>.from(widget.options);
   }
 
   @override
