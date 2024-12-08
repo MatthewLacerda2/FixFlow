@@ -23,17 +23,12 @@ class BusinessConfig extends StatelessWidget {
     final Response resp = await BusinessApi(client)
         .apiV1BusinessPatchWithHttpInfo(businessDTO: businessDTO);
 
-    var message = "";
-
     if (resp.statusCode == 200) {
       final BusinessDTO bDTO = BusinessDTO.fromJson(jsonDecode(resp.body))!;
       FlowStorage.saveBusinessDTO(bDTO);
-      message = "Alterações salvas!";
     } else {
-      message = resp.body;
+      FlowSnack.show(context, resp.body);
     }
-
-    FlowSnack(message: message);
   }
 
   @override
