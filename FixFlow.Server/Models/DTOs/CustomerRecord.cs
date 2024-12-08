@@ -37,6 +37,9 @@ public class CustomerRecord {
 	public int avgTimeBetweenSchedules { get; set; }
 
 	public static explicit operator CustomerRecord(Customer customer) {
+		if (customer.CPF == null) {
+			customer.CPF = "";//Quick workaround on Flutter's bad Json literacy
+		}
 		return new CustomerRecord {
 			FullName = customer.FullName,
 			PhoneNumber = customer.PhoneNumber!,

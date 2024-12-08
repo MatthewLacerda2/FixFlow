@@ -57,7 +57,7 @@ class ClientScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
             ),
             Text(
-              'CPF: ${record.cpf ?? 'não informado'}',
+              'CPF: ${record.cpf == "" ? 'não informado' : record.cpf}',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
