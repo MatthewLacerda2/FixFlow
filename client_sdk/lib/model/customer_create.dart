@@ -13,13 +13,18 @@ part of openapi.api;
 class CustomerCreate {
   /// Returns a new [CustomerCreate] instance.
   CustomerCreate({
+    required this.phoneNumber,
+    this.email,
     required this.businessId,
     required this.fullName,
     this.cpf,
     this.additionalNote,
-    required this.phoneNumber,
-    this.email,
   });
+
+  /// Phone Number. Must contain only numbers
+  String phoneNumber;
+
+  String? email;
 
   /// The business from which the Customer is a customer
   String businessId;
@@ -32,35 +37,36 @@ class CustomerCreate {
   /// Special information about the Customer, if applicable
   String? additionalNote;
 
-  /// Phone Number. Must contain only numbers
-  String phoneNumber;
-
-  String? email;
-
   @override
   bool operator ==(Object other) => identical(this, other) || other is CustomerCreate &&
+    other.phoneNumber == phoneNumber &&
+    other.email == email &&
     other.businessId == businessId &&
     other.fullName == fullName &&
     other.cpf == cpf &&
-    other.additionalNote == additionalNote &&
-    other.phoneNumber == phoneNumber &&
-    other.email == email;
+    other.additionalNote == additionalNote;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
+    (phoneNumber.hashCode) +
+    (email == null ? 0 : email!.hashCode) +
     (businessId.hashCode) +
     (fullName.hashCode) +
     (cpf == null ? 0 : cpf!.hashCode) +
-    (additionalNote == null ? 0 : additionalNote!.hashCode) +
-    (phoneNumber.hashCode) +
-    (email == null ? 0 : email!.hashCode);
+    (additionalNote == null ? 0 : additionalNote!.hashCode);
 
   @override
-  String toString() => 'CustomerCreate[businessId=$businessId, fullName=$fullName, cpf=$cpf, additionalNote=$additionalNote, phoneNumber=$phoneNumber, email=$email]';
+  String toString() => 'CustomerCreate[phoneNumber=$phoneNumber, email=$email, businessId=$businessId, fullName=$fullName, cpf=$cpf, additionalNote=$additionalNote]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
+      json[r'phoneNumber'] = this.phoneNumber;
+    if (this.email != null) {
+      json[r'email'] = this.email;
+    } else {
+      json[r'email'] = null;
+    }
       json[r'businessId'] = this.businessId;
       json[r'fullName'] = this.fullName;
     if (this.cpf != null) {
@@ -72,12 +78,6 @@ class CustomerCreate {
       json[r'additionalNote'] = this.additionalNote;
     } else {
       json[r'additionalNote'] = null;
-    }
-      json[r'phoneNumber'] = this.phoneNumber;
-    if (this.email != null) {
-      json[r'email'] = this.email;
-    } else {
-      json[r'email'] = null;
     }
     return json;
   }
@@ -101,12 +101,12 @@ class CustomerCreate {
       }());
 
       return CustomerCreate(
+        phoneNumber: mapValueOfType<String>(json, r'phoneNumber')!,
+        email: mapValueOfType<String>(json, r'email'),
         businessId: mapValueOfType<String>(json, r'businessId')!,
         fullName: mapValueOfType<String>(json, r'fullName')!,
         cpf: mapValueOfType<String>(json, r'cpf'),
         additionalNote: mapValueOfType<String>(json, r'additionalNote'),
-        phoneNumber: mapValueOfType<String>(json, r'phoneNumber')!,
-        email: mapValueOfType<String>(json, r'email'),
       );
     }
     return null;
@@ -154,9 +154,9 @@ class CustomerCreate {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
+    'phoneNumber',
     'businessId',
     'fullName',
-    'phoneNumber',
   };
 }
 

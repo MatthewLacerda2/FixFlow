@@ -32,7 +32,6 @@ class Business {
     this.isActive,
     this.name,
     this.cnpj,
-    this.businessWeek,
     this.services = const [],
     this.allowListedServicesOnly,
     this.openOnHolidays,
@@ -120,14 +119,6 @@ class Business {
   /// CNPJ. Must be on format XX.XXX.XXX/XXXX-XX
   String? cnpj;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  BusinessWeek? businessWeek;
-
   List<String>? services;
 
   ///
@@ -167,7 +158,6 @@ class Business {
     other.isActive == isActive &&
     other.name == name &&
     other.cnpj == cnpj &&
-    other.businessWeek == businessWeek &&
     _deepEquality.equals(other.services, services) &&
     other.allowListedServicesOnly == allowListedServicesOnly &&
     other.openOnHolidays == openOnHolidays;
@@ -194,13 +184,12 @@ class Business {
     (isActive == null ? 0 : isActive!.hashCode) +
     (name == null ? 0 : name!.hashCode) +
     (cnpj == null ? 0 : cnpj!.hashCode) +
-    (businessWeek == null ? 0 : businessWeek!.hashCode) +
     (services == null ? 0 : services!.hashCode) +
     (allowListedServicesOnly == null ? 0 : allowListedServicesOnly!.hashCode) +
     (openOnHolidays == null ? 0 : openOnHolidays!.hashCode);
 
   @override
-  String toString() => 'Business[id=$id, userName=$userName, normalizedUserName=$normalizedUserName, email=$email, normalizedEmail=$normalizedEmail, emailConfirmed=$emailConfirmed, passwordHash=$passwordHash, securityStamp=$securityStamp, concurrencyStamp=$concurrencyStamp, phoneNumber=$phoneNumber, phoneNumberConfirmed=$phoneNumberConfirmed, twoFactorEnabled=$twoFactorEnabled, lockoutEnd=$lockoutEnd, lockoutEnabled=$lockoutEnabled, accessFailedCount=$accessFailedCount, createdDate=$createdDate, isActive=$isActive, name=$name, cnpj=$cnpj, businessWeek=$businessWeek, services=$services, allowListedServicesOnly=$allowListedServicesOnly, openOnHolidays=$openOnHolidays]';
+  String toString() => 'Business[id=$id, userName=$userName, normalizedUserName=$normalizedUserName, email=$email, normalizedEmail=$normalizedEmail, emailConfirmed=$emailConfirmed, passwordHash=$passwordHash, securityStamp=$securityStamp, concurrencyStamp=$concurrencyStamp, phoneNumber=$phoneNumber, phoneNumberConfirmed=$phoneNumberConfirmed, twoFactorEnabled=$twoFactorEnabled, lockoutEnd=$lockoutEnd, lockoutEnabled=$lockoutEnabled, accessFailedCount=$accessFailedCount, createdDate=$createdDate, isActive=$isActive, name=$name, cnpj=$cnpj, services=$services, allowListedServicesOnly=$allowListedServicesOnly, openOnHolidays=$openOnHolidays]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -299,11 +288,6 @@ class Business {
     } else {
       json[r'cnpj'] = null;
     }
-    if (this.businessWeek != null) {
-      json[r'businessWeek'] = this.businessWeek;
-    } else {
-      json[r'businessWeek'] = null;
-    }
     if (this.services != null) {
       json[r'services'] = this.services;
     } else {
@@ -360,7 +344,6 @@ class Business {
         isActive: mapValueOfType<bool>(json, r'isActive'),
         name: mapValueOfType<String>(json, r'name'),
         cnpj: mapValueOfType<String>(json, r'cnpj'),
-        businessWeek: BusinessWeek.fromJson(json[r'businessWeek']),
         services: json[r'services'] is Iterable
             ? (json[r'services'] as Iterable).cast<String>().toList(growable: false)
             : const [],

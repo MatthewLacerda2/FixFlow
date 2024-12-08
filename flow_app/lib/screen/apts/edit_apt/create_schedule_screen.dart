@@ -10,6 +10,8 @@ import '../../../components/Inputs/price_input_field.dart';
 import '../../../components/Inputs/services_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
 import '../../../utils/date_time_utils.dart';
+import '../../../utils/flow_snack.dart';
+import '../../../utils/flow_storage.dart';
 import '../../main/main_screen.dart';
 
 class CreateScheduleScreen extends StatefulWidget {
@@ -63,18 +65,18 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
       customerId: customerId,
       dateTime: dateTime,
       service: service,
-      observation: _observacaoController.text,
-      price: double.tryParse(_precoController.text) ?? 0.0,
+      description: _observacaoController.text,
+      price: ((double.tryParse(_precoController.text) ?? 0) * 100).toInt(),
     );
-    final Response response = await AptScheduleApi()
+
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
+
+    final Response response = await AptScheduleApi(apiClient)
         .apiV1SchedulesPostWithHttpInfo(createAptSchedule: createAptSchedule);
 
     if (response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Agendamento feito!"),
-        ),
-      );
+      FlowSnack.show(context, "Agendamento feito!");
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(

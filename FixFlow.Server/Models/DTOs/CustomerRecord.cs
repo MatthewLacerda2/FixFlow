@@ -4,7 +4,7 @@ using Server.Models.Appointments;
 namespace Server.Models.DTO;
 
 /// <summary>
-/// Customer history in the business
+/// Customer's data and history in the business
 /// </summary>
 public class CustomerRecord {
 
@@ -22,7 +22,7 @@ public class CustomerRecord {
 	[EmailAddress]
 	public string? Email { get; set; }
 
-	public string? CPF { get; set; }
+	public required string? CPF { get; set; }
 
 	/// <summary>
 	/// Special information about the Customer, if applicable
@@ -34,11 +34,12 @@ public class CustomerRecord {
 
 	public AptLog[] logs { get; set; } = Array.Empty<AptLog>();
 
-	public int numSchedules { get; set; }
-
 	public int avgTimeBetweenSchedules { get; set; }
 
 	public static explicit operator CustomerRecord(Customer customer) {
+		if (customer.CPF == null) {
+			customer.CPF = "";//Quick workaround on Flutter's bad Json literacy
+		}
 		return new CustomerRecord {
 			FullName = customer.FullName,
 			PhoneNumber = customer.PhoneNumber!,
@@ -47,5 +48,4 @@ public class CustomerRecord {
 			AdditionalNote = customer.AdditionalNote,
 		};
 	}
-
 }

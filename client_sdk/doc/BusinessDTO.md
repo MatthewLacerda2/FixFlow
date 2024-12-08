@@ -9,7 +9,6 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
-**businessWeek** | [**BusinessWeek**](BusinessWeek.md) |  | [optional] 
 **services** | **List<String>** |  | [optional] [default to const []]
 **allowListedServicesOnly** | **bool** |  | [optional] 
 **openOnHolidays** | **bool** |  | [optional] 

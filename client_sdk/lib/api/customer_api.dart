@@ -22,14 +22,12 @@ class CustomerApi {
   ///
   /// Parameters:
   ///
-  /// * [String] businessId:
-  ///
   /// * [int] offset:
   ///
   /// * [int] limit:
   ///
   /// * [String] fullname:
-  Future<Response> apiV1CustomerGetWithHttpInfo({ String? businessId, int? offset, int? limit, String? fullname, }) async {
+  Future<Response> apiV1CustomerGetWithHttpInfo({ int? offset, int? limit, String? fullname, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/Customer';
 
@@ -40,9 +38,6 @@ class CustomerApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    if (businessId != null) {
-      queryParams.addAll(_queryParams('', 'businessId', businessId));
-    }
     if (offset != null) {
       queryParams.addAll(_queryParams('', 'offset', offset));
     }
@@ -71,15 +66,13 @@ class CustomerApi {
   ///
   /// Parameters:
   ///
-  /// * [String] businessId:
-  ///
   /// * [int] offset:
   ///
   /// * [int] limit:
   ///
   /// * [String] fullname:
-  Future<List<CustomerDTO>?> apiV1CustomerGet({ String? businessId, int? offset, int? limit, String? fullname, }) async {
-    final response = await apiV1CustomerGetWithHttpInfo( businessId: businessId, offset: offset, limit: limit, fullname: fullname, );
+  Future<List<CustomerDTO>?> apiV1CustomerGet({ int? offset, int? limit, String? fullname, }) async {
+    final response = await apiV1CustomerGetWithHttpInfo( offset: offset, limit: limit, fullname: fullname, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -96,7 +89,7 @@ class CustomerApi {
     return null;
   }
 
-  /// Updates the Customer with the given Id
+  /// Updates the Customer's data of the given Id
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -128,7 +121,7 @@ class CustomerApi {
     );
   }
 
-  /// Updates the Customer with the given Id
+  /// Updates the Customer's data of the given Id
   ///
   /// Parameters:
   ///
@@ -148,7 +141,7 @@ class CustomerApi {
     return null;
   }
 
-  /// Create a Customer Account
+  /// Create a Customer's Account
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -180,7 +173,7 @@ class CustomerApi {
     );
   }
 
-  /// Create a Customer Account
+  /// Create a Customer's Account
   ///
   /// Parameters:
   ///
@@ -200,7 +193,7 @@ class CustomerApi {
     return null;
   }
 
-  /// Get Customer Record in the Business.  Credentials, but also schedules and logs history
+  /// Get Customer's Record in the Business
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -236,7 +229,7 @@ class CustomerApi {
     );
   }
 
-  /// Get Customer Record in the Business.  Credentials, but also schedules and logs history
+  /// Get Customer's Record in the Business
   ///
   /// Parameters:
   ///

@@ -7,6 +7,8 @@ using Moq;
 using Server.Controllers;
 using Server.Data;
 using Server.Models;
+using Server.Models.Erros;
+using Server.Models.Utils;
 
 namespace FixFlow.Tests.Controllers;
 
@@ -48,7 +50,7 @@ public class AccountsControllerTests {
 		var result = await _controller.Login(loginRequest);
 		// Assert
 		var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
-		Assert.Equal("Wrong UserName/Email or Password", unauthorizedResult.Value);
+		Assert.Equal(ValidatorErrors.WrongUsernameOrPassword, unauthorizedResult.Value);
 	}
 
 
@@ -66,7 +68,7 @@ public class AccountsControllerTests {
 
 		// Assert
 		var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
-		Assert.Equal("Wrong UserName/Email or Password", unauthorizedResult.Value);
+		Assert.Equal(ValidatorErrors.WrongUsernameOrPassword, unauthorizedResult.Value);
 	}
 
 	[Fact]

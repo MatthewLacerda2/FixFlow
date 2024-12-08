@@ -94,7 +94,6 @@ class Customer {
   ///
   int? accessFailedCount;
 
-  /// The business from which the Customer is a customer
   String businessId;
 
   String fullName;
@@ -102,6 +101,7 @@ class Customer {
   /// CPF. Must be on format XXX.XXX.XXX-XX
   String? cpf;
 
+  /// Special information about the Customer, if applicable
   String? additionalNote;
 
   @override

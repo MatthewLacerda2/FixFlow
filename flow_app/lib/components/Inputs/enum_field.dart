@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/flow_snack.dart';
+
 class EnumField extends StatefulWidget {
-  const EnumField(
-      {super.key,
-      required this.description,
-      required this.options,
-      required this.characterLimit});
+  const EnumField({
+    super.key,
+    required this.description,
+    required this.options,
+    required this.characterLimit,
+    required this.onItemsChanged,
+  });
   final String description;
   final List<String> options;
   final int characterLimit;
+  final Function(List<String>) onItemsChanged;
 
   @override
   EnumFieldState createState() => EnumFieldState();
@@ -16,7 +21,13 @@ class EnumField extends StatefulWidget {
 
 class EnumFieldState extends State<EnumField> {
   final TextEditingController _textEditingController = TextEditingController();
-  final List<String> _items = <String>[];
+  List<String> _items = <String>[];
+
+  @override
+  void initState() {
+    super.initState();
+    _items = List<String>.from(widget.options);
+  }
 
   @override
   void dispose() {
@@ -24,17 +35,30 @@ class EnumFieldState extends State<EnumField> {
     super.dispose();
   }
 
-  void _addItem(String item) {
+  void _addItem(BuildContext context, String item) {
+    item = item.trim();
+    if (item.isEmpty) {
+      return;
+    }
+
+    if (_items.length > 15) {
+      FlowSnack.show(context, "Limite de 16 items atingido");
+      return;
+    }
+
     setState(() {
       _items.add(item);
       _textEditingController.clear();
     });
+
+    widget.onItemsChanged(_items);
   }
 
   void _removeItem(String item) {
     setState(() {
       _items.remove(item);
     });
+    widget.onItemsChanged(_items);
   }
 
   @override
@@ -48,7 +72,7 @@ class EnumFieldState extends State<EnumField> {
             suffixIcon: IconButton(
               icon: const Icon(Icons.add, size: 30),
               onPressed: () {
-                _addItem(_textEditingController.text);
+                _addItem(context, _textEditingController.text.trim());
               },
             ),
             border: const OutlineInputBorder(
@@ -57,8 +81,8 @@ class EnumFieldState extends State<EnumField> {
             ),
           ),
           onChanged: (String value) {
-            if (value.endsWith(',')) {
-              _addItem(value.substring(0, value.length - 1));
+            if (value.endsWith(';')) {
+              _addItem(context, value.substring(0, value.length - 1).trim());
             }
           },
           maxLength: widget.characterLimit,

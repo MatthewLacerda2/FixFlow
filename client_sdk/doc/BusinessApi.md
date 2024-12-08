@@ -9,37 +9,33 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**apiV1BusinessDeactivatePatch**](BusinessApi.md#apiv1businessdeactivatepatch) | **PATCH** /api/v1/Business/deactivate | Deactivates the Business Account with the given Id.  That freezes the subscription, and stops notifications
-[**apiV1BusinessDelete**](BusinessApi.md#apiv1businessdelete) | **DELETE** /api/v1/Business | Deletes the Business with the given Id and all it's data owned by it
-[**apiV1BusinessGet**](BusinessApi.md#apiv1businessget) | **GET** /api/v1/Business | Gets the Business with the given Id.  Used when the User logs-in or opens the app
-[**apiV1BusinessPatch**](BusinessApi.md#apiv1businesspatch) | **PATCH** /api/v1/Business | Updates the Business with the given Id
-[**apiV1BusinessPost**](BusinessApi.md#apiv1businesspost) | **POST** /api/v1/Business | Creates a Business User
+[**apiV1BusinessDeactivatePatch**](BusinessApi.md#apiv1businessdeactivatepatch) | **PATCH** /api/v1/Business/deactivate | Deactivates the Business Account of the given Id.  That freezes subscription and stops notifications
+[**apiV1BusinessDelete**](BusinessApi.md#apiv1businessdelete) | **DELETE** /api/v1/Business | Deletes the Business
+[**apiV1BusinessGet**](BusinessApi.md#apiv1businessget) | **GET** /api/v1/Business | Gets the Business' Data of the given Id.  Used mostly when the User logs-in or opens the app
+[**apiV1BusinessPatch**](BusinessApi.md#apiv1businesspatch) | **PATCH** /api/v1/Business | Updates the Business of the given Id
+[**apiV1BusinessPost**](BusinessApi.md#apiv1businesspost) | **POST** /api/v1/Business | Registers a Business User
 
 
 # **apiV1BusinessDeactivatePatch**
-> apiV1BusinessDeactivatePatch(body)
+> apiV1BusinessDeactivatePatch()
 
-Deactivates the Business Account with the given Id.  That freezes the subscription, and stops notifications
+Deactivates the Business Account of the given Id.  That freezes subscription and stops notifications
 
 ### Example
 ```dart
 import 'package:openapi/api.dart';
 
 final api_instance = BusinessApi();
-final body = String(); // String | 
 
 try {
-    api_instance.apiV1BusinessDeactivatePatch(body);
+    api_instance.apiV1BusinessDeactivatePatch();
 } catch (e) {
     print('Exception when calling BusinessApi->apiV1BusinessDeactivatePatch: $e\n');
 }
 ```
 
 ### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **String**|  | [optional] 
+This endpoint does not need any parameter.
 
 ### Return type
 
@@ -51,35 +47,31 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, text/json, application/*+json
- - **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1BusinessDelete**
-> apiV1BusinessDelete(body)
+> apiV1BusinessDelete()
 
-Deletes the Business with the given Id and all it's data owned by it
+Deletes the Business
 
 ### Example
 ```dart
 import 'package:openapi/api.dart';
 
 final api_instance = BusinessApi();
-final body = String(); // String | 
 
 try {
-    api_instance.apiV1BusinessDelete(body);
+    api_instance.apiV1BusinessDelete();
 } catch (e) {
     print('Exception when calling BusinessApi->apiV1BusinessDelete: $e\n');
 }
 ```
 
 ### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **String**|  | [optional] 
+This endpoint does not need any parameter.
 
 ### Return type
 
@@ -91,15 +83,15 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, text/json, application/*+json
- - **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1BusinessGet**
 > BusinessDTO apiV1BusinessGet(businessId)
 
-Gets the Business with the given Id.  Used when the User logs-in or opens the app
+Gets the Business' Data of the given Id.  Used mostly when the User logs-in or opens the app
 
 ### Example
 ```dart
@@ -140,7 +132,7 @@ No authorization required
 # **apiV1BusinessPatch**
 > BusinessDTO apiV1BusinessPatch(businessDTO)
 
-Updates the Business with the given Id
+Updates the Business of the given Id
 
 ### Example
 ```dart
@@ -181,7 +173,7 @@ No authorization required
 # **apiV1BusinessPost**
 > Business apiV1BusinessPost(businessRegisterRequest)
 
-Creates a Business User
+Registers a Business User
 
 ### Example
 ```dart

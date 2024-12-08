@@ -9,16 +9,16 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**apiV1LogsDelete**](AptLogApi.md#apiv1logsdelete) | **DELETE** /api/v1/logs | Deletes the Appointment Log with the given Id
+[**apiV1LogsDelete**](AptLogApi.md#apiv1logsdelete) | **DELETE** /api/v1/logs | Deletes the Appointment Log of the given Id
 [**apiV1LogsGet**](AptLogApi.md#apiv1logsget) | **GET** /api/v1/logs | Gets a number of filtered Logs
-[**apiV1LogsPatch**](AptLogApi.md#apiv1logspatch) | **PATCH** /api/v1/logs | Update the Appointment Log with the given Id
+[**apiV1LogsPatch**](AptLogApi.md#apiv1logspatch) | **PATCH** /api/v1/logs | Update the Appointment Log of the given Id
 [**apiV1LogsPost**](AptLogApi.md#apiv1logspost) | **POST** /api/v1/logs | Creates a Log
 
 
 # **apiV1LogsDelete**
 > apiV1LogsDelete(body)
 
-Deletes the Appointment Log with the given Id
+Deletes the Appointment Log of the given Id
 
 ### Example
 ```dart
@@ -56,7 +56,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1LogsGet**
-> List<AptLog> apiV1LogsGet(businessId, clientName, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit)
+> List<AptLog> apiV1LogsGet(clientName, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit)
 
 Gets a number of filtered Logs
 
@@ -65,7 +65,6 @@ Gets a number of filtered Logs
 import 'package:openapi/api.dart';
 
 final api_instance = AptLogApi();
-final businessId = businessId_example; // String | 
 final clientName = clientName_example; // String | 
 final service = service_example; // String | 
 final minPrice = 3.4; // double | 
@@ -76,7 +75,7 @@ final offset = 56; // int |
 final limit = 56; // int | 
 
 try {
-    final result = api_instance.apiV1LogsGet(businessId, clientName, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit);
+    final result = api_instance.apiV1LogsGet(clientName, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit);
     print(result);
 } catch (e) {
     print('Exception when calling AptLogApi->apiV1LogsGet: $e\n');
@@ -87,7 +86,6 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **businessId** | **String**|  | [optional] 
  **clientName** | **String**|  | [optional] 
  **service** | **String**|  | [optional] 
  **minPrice** | **double**|  | [optional] 
@@ -115,7 +113,7 @@ No authorization required
 # **apiV1LogsPatch**
 > AptLog apiV1LogsPatch(updateAptLog)
 
-Update the Appointment Log with the given Id
+Update the Appointment Log of the given Id
 
 ### Example
 ```dart

@@ -48,13 +48,13 @@ public class CreateAptLogValidatorTests {
 	public void Should_Have_Error_When_WhenShouldCustomerComeBack_Is_Not_In_The_Future() {
 		var model = new CreateAptLog("clientId", null, DateTime.UtcNow, 10, null, null, DateTime.UtcNow.Date);
 		var result = _validator.TestValidate(model);
-		result.ShouldHaveValidationErrorFor(x => x.whenShouldCustomerComeBack);
+		result.ShouldHaveValidationErrorFor(x => x.DateToComeback);
 	}
 
 	[Fact]
 	public void Should_Not_Have_Error_When_WhenShouldCustomerComeBack_Is_In_The_Future() {
 		var model = new CreateAptLog("clientId", null, DateTime.UtcNow, 10, null, null, DateTime.UtcNow.AddDays(1));
 		var result = _validator.TestValidate(model);
-		result.ShouldNotHaveValidationErrorFor(x => x.whenShouldCustomerComeBack);
+		result.ShouldNotHaveValidationErrorFor(x => x.DateToComeback);
 	}
 }

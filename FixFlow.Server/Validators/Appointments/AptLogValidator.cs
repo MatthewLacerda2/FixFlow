@@ -7,7 +7,7 @@ namespace Server.Validators.Appointments;
 public class AptLogValidator : AbstractValidator<AptLog> {
 
 	public AptLogValidator() {
-		RuleFor(x => x.Price)
+		RuleFor(x => x.price)
 			.GreaterThanOrEqualTo(0)
 			.WithMessage(ValidatorErrors.PriceMustBeNaturalNumber);
 

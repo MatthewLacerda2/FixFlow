@@ -6,7 +6,6 @@ public class BusinessDTO {
 
 	public string Id { get; set; } = string.Empty;
 
-	public BusinessWeek BusinessWeek { get; set; }
 	public string[] Services { get; set; } = Array.Empty<string>();
 	public bool AllowListedServicesOnly { get; set; }
 	public bool OpenOnHolidays { get; set; }
@@ -25,10 +24,9 @@ public class BusinessDTO {
 
 	public BusinessDTO(Business business) {
 		Id = business.Id;
-		BusinessWeek = business.BusinessWeek;
-		Services = business.services;
-		AllowListedServicesOnly = business.allowListedServicesOnly;
-		OpenOnHolidays = business.openOnHolidays;
+		Services = business.Services;
+		AllowListedServicesOnly = business.AllowListedServicesOnly;
+		OpenOnHolidays = business.OpenOnHolidays;
 
 		Name = business.Name;
 		Email = business.Email!;

@@ -27,7 +27,6 @@ Name | Type | Description | Notes
 **isActive** | **bool** |  | [optional] 
 **name** | **String** | The Name of the Business or Business owner | [optional] 
 **cnpj** | **String** | CNPJ. Must be on format XX.XXX.XXX/XXXX-XX | [optional] 
-**businessWeek** | [**BusinessWeek**](BusinessWeek.md) |  | [optional] 
 **services** | **List<String>** |  | [optional] [default to const []]
 **allowListedServicesOnly** | **bool** |  | [optional] 
 **openOnHolidays** | **bool** |  | [optional] 

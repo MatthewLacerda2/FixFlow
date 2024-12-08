@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../components/Inputs/name_input_field.dart';
 import '../../../components/Screens/Overview/Clients/client_list.dart';
 import '../../../utils/flow_storage.dart';
+import '../../../utils/string_utils.dart';
 import 'client_screen.dart';
 
 class ClientsScreen extends StatefulWidget {
@@ -25,14 +26,11 @@ class _ClientsScreenState extends State<ClientsScreen> {
   }
 
   Future<List<CustomerDTO>> _fetchCustomers() async {
-    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
-    final String businessId = bd!.id!;
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
-    final List<CustomerDTO>? response = await CustomerApi().apiV1CustomerGet(
-      businessId: businessId,
-      offset: 0,
-      limit: 100,
-    );
+    final List<CustomerDTO>? response =
+        await CustomerApi(apiClient).apiV1CustomerGet(offset: 0, limit: 100);
     setState(() {
       _allCustomers = response!;
       _filteredCustomers = response;
@@ -68,7 +66,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
                         const Divider(
                       color: Colors.transparent,
                       thickness: 0,
-                      height: 9,
+                      height: 12,
                     ),
                     itemBuilder: (BuildContext context, int index) {
                       if (index == 0) {
@@ -96,10 +94,15 @@ class _ClientsScreenState extends State<ClientsScreen> {
                         name: customer.fullName,
                         lastAppointment: DateTime.now(),
                         phone: customer.phoneNumber,
-                        email: customer.email ?? '-',
+                        email: StringUtils.normalIfBlank(customer.email),
                         onTap: () async {
-                          final CustomerRecord? record = await CustomerApi()
-                              .apiV1CustomerRecordGet(customerId: customer.id);
+                          final String mytoken = await FlowStorage.getToken();
+                          final ApiClient apiClient =
+                              FlowStorage.getApiClient(mytoken);
+                          final CustomerRecord? record =
+                              await CustomerApi(apiClient)
+                                  .apiV1CustomerRecordGet(
+                                      customerId: customer.id);
 
                           Navigator.push(
                             context,
