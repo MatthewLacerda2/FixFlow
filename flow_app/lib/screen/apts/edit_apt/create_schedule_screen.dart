@@ -85,8 +85,6 @@ class CreateScheduleScreenState extends State<CreateScheduleScreen> {
         (Route<dynamic> route) => false,
       );
     } else {
-      print(createAptSchedule);
-      print(response.body);
       FlowSnack.show(context, response.body);
     }
   }

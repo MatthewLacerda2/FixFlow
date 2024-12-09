@@ -276,9 +276,9 @@ class _CreateIdlePeriodScreenState extends State<CreateIdlePeriodScreen> {
                         MaterialPageRoute<void>(
                           builder: (BuildContext context) =>
                               const ChangeSuccessfulScreen(
-                            title: "Período criado com sucesso",
+                            title: "Período Ocioso criado!",
                             description:
-                                "Seu período ocioso foi criado com sucesso\n\nNão será possível criar agendamentos para este período\n\nVocê pode cancelar esse período a qualquer momento, na tela de configurações",
+                                "Não será possível criar agendamentos para este período\n\nVocê pode deletar este período na tela de Calendário",
                           ),
                         ),
                       );

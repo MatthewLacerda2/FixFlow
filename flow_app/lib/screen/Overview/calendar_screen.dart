@@ -259,6 +259,9 @@ class CalendarScreenState extends State<CalendarScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        const SizedBox(
+          height: 12,
+        ),
         ...selectedDayData.idlePeriods!.map(
           (IdlePeriod idle) => ColoredBorderTextButton(
               text: 'Período ocioso: ${idle.name}',
@@ -283,7 +286,7 @@ class CalendarScreenState extends State<CalendarScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: 10),
+                SizedBox(height: 8),
                 Text(
                   'Agendamentos',
                   style: TextStyle(
@@ -319,7 +322,7 @@ class CalendarScreenState extends State<CalendarScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: 14),
+                SizedBox(height: 8),
                 Text(
                   'Atendimentos',
                   style: TextStyle(
