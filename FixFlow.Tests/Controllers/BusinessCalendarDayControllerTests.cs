@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using Server.Controllers;
 using Server.Data;
 using Server.Models;
@@ -11,12 +13,16 @@ public class BusinessCalendarControllerTests {
 
 	private readonly ServerContext _context;
 	private readonly BusinessCalendarDayController _controller;
+	private readonly Mock<UserManager<Customer>> _mockCustomerManager;
 
 	public BusinessCalendarControllerTests() {
 
 		_context = new Util().SetupDbContextForTests();
 
-		_controller = new BusinessCalendarDayController(_context);
+		var clientStore = new Mock<IUserStore<Customer>>();
+		_mockCustomerManager = new Mock<UserManager<Customer>>(clientStore.Object, null!, null!, null!, null!, null!, null!, null!, null!);
+
+		_controller = new BusinessCalendarDayController(_context, _mockCustomerManager.Object);
 	}
 
 	[Fact]
@@ -24,7 +30,7 @@ public class BusinessCalendarControllerTests {
 		// Arrange
 		string nonExistentBusinessId = "non-existent-business-id";
 		// Act
-		var result = await _controller.GetBusinessCalendar(nonExistentBusinessId);
+		var result = await _controller.GetBusinessMonthCalendar(2024, 12);
 		// Assert
 		Assert.IsType<NotFoundObjectResult>(result);
 		var notFoundResult = result as NotFoundObjectResult;
@@ -40,7 +46,7 @@ public class BusinessCalendarControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = await _controller.GetBusinessCalendar(business.Id);
+		var result = await _controller.GetBusinessMonthCalendar(2024, 12);
 
 		// Assert
 		Assert.IsType<OkObjectResult>(result);

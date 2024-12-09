@@ -14,14 +14,19 @@ class CustomerDTO {
   /// Returns a new [CustomerDTO] instance.
   CustomerDTO({
     required this.id,
+    required this.phoneNumber,
+    this.email,
     required this.fullName,
     this.cpf,
     this.additionalNote,
-    required this.phoneNumber,
-    this.email,
   });
 
   String id;
+
+  /// Phone Number. Must contain only numbers
+  String phoneNumber;
+
+  String? email;
 
   String fullName;
 
@@ -31,36 +36,37 @@ class CustomerDTO {
   /// Special information about the Customer, if applicable
   String? additionalNote;
 
-  /// Phone Number. Must contain only numbers
-  String phoneNumber;
-
-  String? email;
-
   @override
   bool operator ==(Object other) => identical(this, other) || other is CustomerDTO &&
     other.id == id &&
+    other.phoneNumber == phoneNumber &&
+    other.email == email &&
     other.fullName == fullName &&
     other.cpf == cpf &&
-    other.additionalNote == additionalNote &&
-    other.phoneNumber == phoneNumber &&
-    other.email == email;
+    other.additionalNote == additionalNote;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
     (id.hashCode) +
+    (phoneNumber.hashCode) +
+    (email == null ? 0 : email!.hashCode) +
     (fullName.hashCode) +
     (cpf == null ? 0 : cpf!.hashCode) +
-    (additionalNote == null ? 0 : additionalNote!.hashCode) +
-    (phoneNumber.hashCode) +
-    (email == null ? 0 : email!.hashCode);
+    (additionalNote == null ? 0 : additionalNote!.hashCode);
 
   @override
-  String toString() => 'CustomerDTO[id=$id, fullName=$fullName, cpf=$cpf, additionalNote=$additionalNote, phoneNumber=$phoneNumber, email=$email]';
+  String toString() => 'CustomerDTO[id=$id, phoneNumber=$phoneNumber, email=$email, fullName=$fullName, cpf=$cpf, additionalNote=$additionalNote]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
       json[r'id'] = this.id;
+      json[r'phoneNumber'] = this.phoneNumber;
+    if (this.email != null) {
+      json[r'email'] = this.email;
+    } else {
+      json[r'email'] = null;
+    }
       json[r'fullName'] = this.fullName;
     if (this.cpf != null) {
       json[r'cpf'] = this.cpf;
@@ -71,12 +77,6 @@ class CustomerDTO {
       json[r'additionalNote'] = this.additionalNote;
     } else {
       json[r'additionalNote'] = null;
-    }
-      json[r'phoneNumber'] = this.phoneNumber;
-    if (this.email != null) {
-      json[r'email'] = this.email;
-    } else {
-      json[r'email'] = null;
     }
     return json;
   }
@@ -101,11 +101,11 @@ class CustomerDTO {
 
       return CustomerDTO(
         id: mapValueOfType<String>(json, r'id')!,
+        phoneNumber: mapValueOfType<String>(json, r'phoneNumber')!,
+        email: mapValueOfType<String>(json, r'email'),
         fullName: mapValueOfType<String>(json, r'fullName')!,
         cpf: mapValueOfType<String>(json, r'cpf'),
         additionalNote: mapValueOfType<String>(json, r'additionalNote'),
-        phoneNumber: mapValueOfType<String>(json, r'phoneNumber')!,
-        email: mapValueOfType<String>(json, r'email'),
       );
     }
     return null;
@@ -154,8 +154,8 @@ class CustomerDTO {
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
     'id',
-    'fullName',
     'phoneNumber',
+    'fullName',
   };
 }
 

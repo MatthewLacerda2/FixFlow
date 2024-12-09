@@ -16,7 +16,7 @@ class AptLogApi {
 
   final ApiClient apiClient;
 
-  /// Deletes the Appointment Log with the given Id
+  /// Deletes the Appointment Log of the given Id
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -48,7 +48,7 @@ class AptLogApi {
     );
   }
 
-  /// Deletes the Appointment Log with the given Id
+  /// Deletes the Appointment Log of the given Id
   ///
   /// Parameters:
   ///
@@ -66,8 +66,6 @@ class AptLogApi {
   ///
   /// Parameters:
   ///
-  /// * [String] businessId:
-  ///
   /// * [String] clientName:
   ///
   /// * [String] service:
@@ -83,7 +81,7 @@ class AptLogApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<Response> apiV1LogsGetWithHttpInfo({ String? businessId, String? clientName, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
+  Future<Response> apiV1LogsGetWithHttpInfo({ String? clientName, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/logs';
 
@@ -94,9 +92,6 @@ class AptLogApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    if (businessId != null) {
-      queryParams.addAll(_queryParams('', 'businessId', businessId));
-    }
     if (clientName != null) {
       queryParams.addAll(_queryParams('', 'clientName', clientName));
     }
@@ -140,8 +135,6 @@ class AptLogApi {
   ///
   /// Parameters:
   ///
-  /// * [String] businessId:
-  ///
   /// * [String] clientName:
   ///
   /// * [String] service:
@@ -157,8 +150,8 @@ class AptLogApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<List<AptLog>?> apiV1LogsGet({ String? businessId, String? clientName, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
-    final response = await apiV1LogsGetWithHttpInfo( businessId: businessId, clientName: clientName, service: service, minPrice: minPrice, maxPrice: maxPrice, minDateTime: minDateTime, maxDateTime: maxDateTime, offset: offset, limit: limit, );
+  Future<List<AptLog>?> apiV1LogsGet({ String? clientName, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
+    final response = await apiV1LogsGetWithHttpInfo( clientName: clientName, service: service, minPrice: minPrice, maxPrice: maxPrice, minDateTime: minDateTime, maxDateTime: maxDateTime, offset: offset, limit: limit, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -175,7 +168,7 @@ class AptLogApi {
     return null;
   }
 
-  /// Update the Appointment Log with the given Id
+  /// Update the Appointment Log of the given Id
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -207,7 +200,7 @@ class AptLogApi {
     );
   }
 
-  /// Update the Appointment Log with the given Id
+  /// Update the Appointment Log of the given Id
   ///
   /// Parameters:
   ///

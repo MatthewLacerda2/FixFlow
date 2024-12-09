@@ -26,7 +26,6 @@ class AptLog {
 
   String id;
 
-  /// The Id of the Customer who took the Appointment
   String customerId;
 
   ///
@@ -37,13 +36,10 @@ class AptLog {
   ///
   Customer? customer;
 
-  /// The Id of the Business who owns this Contact
   String businessId;
 
-  /// The Id of the Schedule that precedes this Log, if any
   String? scheduleId;
 
-  /// The DateTime when the Log was registered
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -60,8 +56,9 @@ class AptLog {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  double? price;
+  int? price;
 
+  /// Anything about the Log that is worth noting
   String? description;
 
   @override
@@ -156,7 +153,7 @@ class AptLog {
         scheduleId: mapValueOfType<String>(json, r'scheduleId'),
         dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
-        price: mapValueOfType<double>(json, r'price'),
+        price: mapValueOfType<int>(json, r'price'),
         description: mapValueOfType<String>(json, r'description'),
       );
     }

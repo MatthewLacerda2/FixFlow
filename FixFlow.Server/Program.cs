@@ -17,7 +17,7 @@ public class Program {
 		string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 
 		builder.Services.AddDbContext<ServerContext>(options =>
-			options.UseNpgsql(connectionString));
+			options.UseMySql(connectionString, new MySqlServerVersion(new Version(10, 5, 11))));
 
 		builder.Services.AddIdentity<Business, IdentityRole>()
 			.AddEntityFrameworkStores<ServerContext>()

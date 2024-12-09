@@ -66,8 +66,6 @@ class AptScheduleApi {
   ///
   /// Parameters:
   ///
-  /// * [String] businessId:
-  ///
   /// * [String] client:
   ///
   /// * [String] service:
@@ -83,7 +81,7 @@ class AptScheduleApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<Response> apiV1SchedulesGetWithHttpInfo({ String? businessId, String? client, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
+  Future<Response> apiV1SchedulesGetWithHttpInfo({ String? client, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/schedules';
 
@@ -94,9 +92,6 @@ class AptScheduleApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    if (businessId != null) {
-      queryParams.addAll(_queryParams('', 'businessId', businessId));
-    }
     if (client != null) {
       queryParams.addAll(_queryParams('', 'client', client));
     }
@@ -140,8 +135,6 @@ class AptScheduleApi {
   ///
   /// Parameters:
   ///
-  /// * [String] businessId:
-  ///
   /// * [String] client:
   ///
   /// * [String] service:
@@ -157,8 +150,8 @@ class AptScheduleApi {
   /// * [int] offset:
   ///
   /// * [int] limit:
-  Future<List<AptSchedule>?> apiV1SchedulesGet({ String? businessId, String? client, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
-    final response = await apiV1SchedulesGetWithHttpInfo( businessId: businessId, client: client, service: service, minPrice: minPrice, maxPrice: maxPrice, minDateTime: minDateTime, maxDateTime: maxDateTime, offset: offset, limit: limit, );
+  Future<List<AptSchedule>?> apiV1SchedulesGet({ String? client, String? service, double? minPrice, double? maxPrice, DateTime? minDateTime, DateTime? maxDateTime, int? offset, int? limit, }) async {
+    final response = await apiV1SchedulesGetWithHttpInfo( client: client, service: service, minPrice: minPrice, maxPrice: maxPrice, minDateTime: minDateTime, maxDateTime: maxDateTime, offset: offset, limit: limit, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -175,7 +168,7 @@ class AptScheduleApi {
     return null;
   }
 
-  /// Update the Appointment Schedule with the given Id
+  /// Update the Appointment Schedule of the given Id
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -207,7 +200,7 @@ class AptScheduleApi {
     );
   }
 
-  /// Update the Appointment Schedule with the given Id
+  /// Update the Appointment Schedule of the given Id
   ///
   /// Parameters:
   ///

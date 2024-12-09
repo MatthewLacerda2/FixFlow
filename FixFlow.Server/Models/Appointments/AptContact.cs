@@ -4,14 +4,14 @@ using Newtonsoft.Json;
 
 namespace Server.Models.Appointments;
 
+/// <summary>
+/// Data-Structure on when to message the Client asking them to Schedule another appointment
+/// </summary>
 public class AptContact {
 
 	[Required]
 	public string Id { get; set; }
 
-	/// <summary>
-	/// The Id of the Customer to Contact
-	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Customer))]
 	public string CustomerId { get; set; }
@@ -20,18 +20,12 @@ public class AptContact {
 	/// Navigation Property of the Customer
 	/// </summary>
 	[JsonIgnore]
-	public Customer customer { get; set; }
+	public Customer Customer { get; set; }
 
-	/// <summary>
-	/// The Id of the Business who owns this Contact
-	/// </summary>
 	[Required]
 	[ForeignKey(nameof(Business))]
-	public string businessId { get; set; }
+	public string BusinessId { get; set; }
 
-	/// <summary>
-	/// The Id of the Log that precedes this Contact
-	/// </summary>
 	[Required]
 	[ForeignKey(nameof(AptLog))]
 	public string aptLogId { get; set; }
@@ -44,19 +38,22 @@ public class AptContact {
 
 	/// <summary>
 	/// The Date to Contact the Customer
-	/// The Time is used because, chances are, there is a better Time of the day to contact the Customer
+	/// The Time is used because chances are the better time of day to contact them is at the time of the log
+	/// But not necessarily that time, thus it's changeable
 	/// </summary>
 	public DateTime dateTime { get; set; }
+
+	//TODO: public bool beenDone { get; set ;}	//TODO: include in the endpoint
 
 	public AptContact() : this(new AptLog(), DateTime.UtcNow) { }
 
 	public AptContact(AptLog log, DateTime dateTime) {
 		Id = Guid.NewGuid().ToString();
 		CustomerId = log.CustomerId;
-		businessId = log.BusinessId;
+		BusinessId = log.BusinessId;
 		aptLogId = log.Id;
 		this.dateTime = dateTime;
-		customer = null!;
+		Customer = null!;
 		aptLog = log;
 	}
 }

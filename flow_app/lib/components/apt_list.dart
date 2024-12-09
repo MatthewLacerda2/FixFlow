@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-class LogsList extends StatelessWidget {
-  const LogsList({
+import '../utils/string_utils.dart';
+
+class AptList extends StatelessWidget {
+  const AptList({
     super.key,
     required this.clientName,
     required this.price,
@@ -41,7 +43,7 @@ class LogsList extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text('Cliente: $clientName'),
+              Text('Cliente: ${StringUtils.abreviator(clientName, 18)}'),
               Text(
                 'R\$ ${price.toStringAsFixed(2)}',
                 style: const TextStyle(
@@ -62,9 +64,9 @@ class LogsList extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 2),
-              Text(service != null ? 'Serviço: $service' : '-'),
+              Text('Serviço: ${StringUtils.normalIfBlank(service)}'),
               const SizedBox(height: 2),
-              Text('Observação: ${observation ?? ''}'),
+              Text('Observação: ${StringUtils.normalIfBlank(observation)}')
             ],
           ),
           onTap: onTap,

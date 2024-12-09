@@ -2,6 +2,7 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/flow_storage.dart';
+import '../../utils/string_utils.dart';
 
 class CustomerDropdown extends StatefulWidget {
   const CustomerDropdown({super.key, required this.onCustomerIdChanged});
@@ -50,10 +51,10 @@ class CustomerDropdownState extends State<CustomerDropdown> {
   }
 
   Future<void> _fetchCustomers(String query) async {
-    final BusinessDTO? dto = await FlowStorage.getBusinessDTO();
-    final String id = dto!.id!;
-    final List<CustomerDTO>? response = await CustomerApi()
-        .apiV1CustomerGet(businessId: id, offset: 0, limit: 7, fullname: query);
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
+    final List<CustomerDTO>? response = await CustomerApi(apiClient)
+        .apiV1CustomerGet(offset: 0, limit: 7, fullname: query);
 
     setState(() {
       _customerNames = response ?? <CustomerDTO>[];
@@ -62,9 +63,7 @@ class CustomerDropdownState extends State<CustomerDropdown> {
   }
 
   String customerDataText(String fullname, String phoneNumber) {
-    if (fullname.length > 21) {
-      fullname = '${fullname.substring(0, 21)}...';
-    }
+    fullname = StringUtils.abreviator(fullname, 21);
     phoneNumber = phoneNumber.substring(phoneNumber.length - 10);
     return "$fullname | $phoneNumber";
   }
@@ -77,7 +76,7 @@ class CustomerDropdownState extends State<CustomerDropdown> {
         TextField(
           controller: _searchController,
           decoration: const InputDecoration(
-            hintText: 'Digite o nome do customer',
+            hintText: 'Digite o nome do Cliente',
             border: OutlineInputBorder(),
           ),
         ),

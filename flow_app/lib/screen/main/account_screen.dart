@@ -10,7 +10,7 @@ import 'account/app_config_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
-
+  //TODO: see if ya can delete this
   Future<BusinessDTO?> _fetchBusinessData() async {
     return await FlowStorage.getBusinessDTO();
   }

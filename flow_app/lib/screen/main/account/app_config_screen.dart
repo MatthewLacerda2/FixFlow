@@ -2,18 +2,14 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
-import '../../../components/Inputs/check_input_field.dart';
-import '../../../components/Inputs/enum_field.dart';
-import '../../../components/Inputs/time_picker_rectangle.dart';
+import '../../../components/business_config.dart';
 import '../../../components/warning_modal.dart';
 import '../../../utils/flow_storage.dart';
-import '../../AppConfig/change_phone/change_phone_screen.dart';
 import '../../AppConfig/deactivate_account/deactivate_account_screen.dart';
 import '../../AppConfig/delete_account/delete_warning_screen.dart';
 import '../../AppConfig/option_item.dart';
 import '../../auth/initial_screen.dart';
 
-//TODO: gotta load the account configs
 class AppConfigScreen extends StatelessWidget {
   const AppConfigScreen({super.key, required this.businessDTO});
 
@@ -31,78 +27,12 @@ class AppConfigScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                'Horário Comercial',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              BusinessConfig(
+                businessDTO: businessDTO,
               ),
-              const SizedBox(height: 16),
-              ...List<Widget>.generate(7, (int index) {
-                final List<String> daysOfWeek = <String>[
-                  'Domingo',
-                  'Segunda',
-                  'Terça',
-                  'Quarta',
-                  'Quinta',
-                  'Sexta',
-                  'Sábado'
-                ];
-                return _CommercialHoursRow(day: daysOfWeek[index]);
-              }),
-              const SizedBox(height: 18),
               Container(
                 height: 10,
                 color: Colors.grey.shade800,
-              ),
-              const SizedBox(height: 32),
-              const Text(
-                'Opções de Serviços',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-              ),
-              const SizedBox(height: 12),
-              EnumField(
-                  description: "Serviço...",
-                  options: businessDTO.services ?? <String>[],
-                  characterLimit: 20),
-              const SizedBox(height: 3),
-              const Text(
-                'Opções mais comuns de serviços prestados',
-                style: TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-              const SizedBox(height: 10),
-              CheckInputField(
-                label: 'Permitir apenas serviços listados?',
-                initialValue: businessDTO.allowListedServicesOnly!,
-                onChanged: (bool isChecked) {
-                  print('Outros: $isChecked');
-                },
-              ),
-              const SizedBox(height: 18),
-              CheckInputField(
-                label: 'Atende aos feriados?',
-                initialValue: businessDTO.openOnHolidays!,
-                onChanged: (bool isChecked) {
-                  print('Atende aos feriados: $isChecked');
-                },
-              ),
-              const SizedBox(height: 30),
-              Container(
-                height: 10,
-                color: Colors.grey.shade800,
-              ),
-              OptionItem(
-                title: 'Trocar telefone',
-                titleStyle: const TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                        builder: (BuildContext context) =>
-                            const ChangePhoneScreen()),
-                  );
-                },
               ),
               OptionItem(
                 title: 'Desativar conta',
@@ -181,64 +111,6 @@ class AppConfigScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _CommercialHoursRow extends StatefulWidget {
-  const _CommercialHoursRow({required this.day});
-  final String day;
-
-  @override
-  __CommercialHoursRowState createState() => __CommercialHoursRowState();
-}
-
-class __CommercialHoursRowState extends State<_CommercialHoursRow> {
-  bool isActive = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          '${widget.day}:',
-          style: const TextStyle(fontSize: 16),
-        ),
-        const Spacer(),
-        if (isActive)
-          Row(
-            children: <Widget>[
-              TimePickerRectangle(
-                initialTime: const TimeOfDay(hour: 8, minute: 0),
-                onTimeSelected: (TimeOfDay time) {
-                  print('${widget.day} Start Time: $time');
-                },
-              ),
-              const SizedBox(width: 8),
-              TimePickerRectangle(
-                initialTime: const TimeOfDay(hour: 17, minute: 0),
-                onTimeSelected: (TimeOfDay time) {
-                  print('${widget.day} End Time: $time');
-                },
-              ),
-            ],
-          )
-        else
-          const Text(
-            'Sem horário',
-            style: TextStyle(
-                color: Colors.grey, fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-        IconButton(
-          icon: Icon(isActive ? Icons.close : Icons.add,
-              color: isActive ? Colors.red : Colors.green, size: 22),
-          onPressed: () {
-            setState(() {
-              isActive = !isActive;
-            });
-          },
-        ),
-      ],
     );
   }
 }

@@ -32,6 +32,7 @@ class RoundedIconedButton extends StatelessWidget {
             width: size,
             height: size,
             child: FloatingActionButton(
+              heroTag: icon.toString() + (text ?? ""),
               onPressed: onPressed,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(size / 6),

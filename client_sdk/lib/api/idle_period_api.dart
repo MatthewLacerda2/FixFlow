@@ -16,7 +16,7 @@ class IdlePeriodApi {
 
   final ApiClient apiClient;
 
-  /// Removes Idle days
+  /// Deletes an Idle Period
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -48,7 +48,7 @@ class IdlePeriodApi {
     );
   }
 
-  /// Removes Idle days
+  /// Deletes an Idle Period
   ///
   /// Parameters:
   ///
@@ -60,16 +60,16 @@ class IdlePeriodApi {
     }
   }
 
-  /// Returns all Idle Periods that contain the given date
+  /// Gets Idle Periods owned by the Company that start and end within a given time-period
   ///
   /// Note: This method returns the HTTP [Response].
   ///
   /// Parameters:
   ///
-  /// * [String] businessId:
+  /// * [DateTime] startDate:
   ///
-  /// * [DateTime] date:
-  Future<Response> apiV1IdlePeriodGetWithHttpInfo({ String? businessId, DateTime? date, }) async {
+  /// * [DateTime] finishDate:
+  Future<Response> apiV1IdlePeriodGetWithHttpInfo({ DateTime? startDate, DateTime? finishDate, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/IdlePeriod';
 
@@ -80,11 +80,11 @@ class IdlePeriodApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    if (businessId != null) {
-      queryParams.addAll(_queryParams('', 'businessId', businessId));
+    if (startDate != null) {
+      queryParams.addAll(_queryParams('', 'startDate', startDate));
     }
-    if (date != null) {
-      queryParams.addAll(_queryParams('', 'date', date));
+    if (finishDate != null) {
+      queryParams.addAll(_queryParams('', 'finishDate', finishDate));
     }
 
     const contentTypes = <String>[];
@@ -101,15 +101,15 @@ class IdlePeriodApi {
     );
   }
 
-  /// Returns all Idle Periods that contain the given date
+  /// Gets Idle Periods owned by the Company that start and end within a given time-period
   ///
   /// Parameters:
   ///
-  /// * [String] businessId:
+  /// * [DateTime] startDate:
   ///
-  /// * [DateTime] date:
-  Future<List<IdlePeriod>?> apiV1IdlePeriodGet({ String? businessId, DateTime? date, }) async {
-    final response = await apiV1IdlePeriodGetWithHttpInfo( businessId: businessId, date: date, );
+  /// * [DateTime] finishDate:
+  Future<IdlePeriod?> apiV1IdlePeriodGet({ DateTime? startDate, DateTime? finishDate, }) async {
+    final response = await apiV1IdlePeriodGetWithHttpInfo( startDate: startDate, finishDate: finishDate, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -117,18 +117,13 @@ class IdlePeriodApi {
     // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<IdlePeriod>') as List)
-        .cast<IdlePeriod>()
-        .toList(growable: false);
-
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'IdlePeriod',) as IdlePeriod;
+    
     }
     return null;
   }
 
   /// Creates an Idle period
-  ///
-  /// Idle Periods are allowed to overlap
   ///
   /// Note: This method returns the HTTP [Response].
   ///
@@ -161,8 +156,6 @@ class IdlePeriodApi {
   }
 
   /// Creates an Idle period
-  ///
-  /// Idle Periods are allowed to overlap
   ///
   /// Parameters:
   ///

@@ -18,7 +18,7 @@ public class CreateAptLogValidator : AbstractValidator<CreateAptLog> {
 			.LessThanOrEqualTo(DateTime.UtcNow)
 			.WithMessage(ValidatorErrors.DateMustNotBeInTheFuture);
 
-		RuleFor(x => x.whenShouldCustomerComeBack)
+		RuleFor(x => x.DateToComeback)
 			.GreaterThan(DateTime.UtcNow.Date)
 			.WithMessage(ValidatorErrors.DateMustBeInTheFuture);
 
