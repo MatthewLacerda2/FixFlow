@@ -68,11 +68,7 @@ class BusinessConfig extends StatelessWidget {
             _patchBusinessDTO(context);
           },
         ),
-        const SizedBox(height: 34),
-        Container(
-          height: 10,
-          color: Colors.grey.shade800,
-        ),
+        const SizedBox(height: 20)
       ],
     );
   }

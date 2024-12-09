@@ -5,7 +5,6 @@ import '../../../components/Buttons/custom_button.dart';
 import '../../../components/business_config.dart';
 import '../../../components/warning_modal.dart';
 import '../../../utils/flow_storage.dart';
-import '../../AppConfig/change_phone/change_phone_screen.dart';
 import '../../AppConfig/deactivate_account/deactivate_account_screen.dart';
 import '../../AppConfig/delete_account/delete_warning_screen.dart';
 import '../../AppConfig/option_item.dart';
@@ -31,20 +30,9 @@ class AppConfigScreen extends StatelessWidget {
               BusinessConfig(
                 businessDTO: businessDTO,
               ),
-              OptionItem(
-                title: 'Trocar telefone',
-                titleStyle: const TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                        builder: (BuildContext context) =>
-                            const ChangePhoneScreen()),
-                  );
-                },
+              Container(
+                height: 10,
+                color: Colors.grey.shade800,
               ),
               OptionItem(
                 title: 'Desativar conta',
