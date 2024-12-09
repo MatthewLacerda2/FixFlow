@@ -1,96 +1,241 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
-import '../../../components/Buttons/custom_button.dart';
+import '../../components/Buttons/custom_button.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
+import '../../components/apt_list.dart';
+import '../../utils/date_time_utils.dart';
+import '../../utils/flow_snack.dart';
+import '../../utils/flow_storage.dart';
+import '../../utils/string_utils.dart';
+import '../apts/schedule_screen.dart';
 import 'change_successful.dart';
 
-//TODO: load the schedules which are in that period, let the user decide if he wants to delete them and tell the user, or maintain the schedule
-class CreateIdlePeriodScreen extends StatelessWidget {
+class CreateIdlePeriodScreen extends StatefulWidget {
   const CreateIdlePeriodScreen({super.key});
+
+  @override
+  State<CreateIdlePeriodScreen> createState() => _CreateIdlePeriodScreenState();
+}
+
+class _CreateIdlePeriodScreenState extends State<CreateIdlePeriodScreen> {
+  late DateTime _startDateTime;
+  late DateTime _finishDateTime;
+  late Future<List<AptSchedule>> _schedulesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _startDateTime = DateTime.now();
+    _finishDateTime = DateTime.now().add(const Duration(days: 3));
+    _schedulesFuture = _fetchSchedules();
+  }
+
+  Future<List<AptSchedule>> _fetchSchedules() async {
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
+
+    final List<AptSchedule>? response =
+        await AptScheduleApi(apiClient).apiV1SchedulesGet(
+      minPrice: 0,
+      minDateTime: _startDateTime,
+      maxDateTime: _finishDateTime,
+      offset: 0,
+      limit: 20,
+    );
+
+    return response ?? <AptSchedule>[]; // Handle null safety
+  }
+
+  void _updateSchedules() {
+    setState(() {
+      _schedulesFuture = _fetchSchedules();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Criar Período Ocioso")),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Spacer(),
-            const Center(
-              child: Text(
-                "Criar período ocioso",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
+            const SizedBox(height: 6),
+            const Text(
+              "Não será possível criar agendamentos para um período ocioso. Isso pode ser útil durante feriados ou manutenções.",
+              textAlign: TextAlign.justify,
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+            const SizedBox(height: 22),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                const Text(
+                  'Início:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                DatePickerRectangle(
+                  initialDate: _startDateTime,
+                  onDateSelected: (DateTime date) {
+                    setState(() {
+                      _startDateTime = DateTime(
+                        date.year,
+                        date.month,
+                        date.day,
+                        _startDateTime.hour,
+                        _startDateTime.minute,
+                      );
+                      _updateSchedules();
+                    });
+                  },
+                ),
+                TimePickerRectangle(
+                  initialTime: TimeOfDay.fromDateTime(_startDateTime),
+                  onTimeSelected: (TimeOfDay time) {
+                    setState(() {
+                      _startDateTime = DateTime(
+                        _startDateTime.year,
+                        _startDateTime.month,
+                        _startDateTime.day,
+                        time.hour,
+                        time.minute,
+                      );
+                      _updateSchedules();
+                    });
+                  },
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                const Text(
+                  'Término:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                DatePickerRectangle(
+                  initialDate: _finishDateTime,
+                  onDateSelected: (DateTime date) {
+                    setState(() {
+                      _finishDateTime = DateTime(
+                        date.year,
+                        date.month,
+                        date.day,
+                        _finishDateTime.hour,
+                        _finishDateTime.minute,
+                      );
+                      _updateSchedules();
+                    });
+                  },
+                ),
+                TimePickerRectangle(
+                  initialTime: TimeOfDay.fromDateTime(_finishDateTime),
+                  onTimeSelected: (TimeOfDay time) {
+                    setState(() {
+                      _finishDateTime = DateTime(
+                        _finishDateTime.year,
+                        _finishDateTime.month,
+                        _finishDateTime.day,
+                        time.hour,
+                        time.minute,
+                      );
+                      _updateSchedules();
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async => _updateSchedules(),
+                child: FutureBuilder<List<AptSchedule>>(
+                  future: _schedulesFuture,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<AptSchedule>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const SizedBox.shrink();
+                    } else {
+                      return const Text(
+                          "Os agendamentos abaixo estão dentro desse Período. Você pode editar-los, deletar-los individualmente, ou criar o período mesmo assim");
+                    }
+                  },
                 ),
               ),
             ),
-            const SizedBox(height: 14),
-            Text(
-              "Não será possível criar agendamentos para um período ocioso. Isso pode ser útil durante feriados ou manutenções.",
-              textAlign: TextAlign.justify,
-              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async => _updateSchedules(),
+                child: FutureBuilder<List<AptSchedule>>(
+                  future: _schedulesFuture,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<AptSchedule>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text('Não há agendamentos para este período.'),
+                      );
+                    }
+
+                    final List<AptSchedule> schedules = snapshot.data!;
+                    return ListView.separated(
+                      itemCount: schedules.length,
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(
+                              color: Colors.transparent,
+                              thickness: 0,
+                              height: 10),
+                      itemBuilder: (BuildContext context, int index) {
+                        final AptSchedule schedule = schedules[index];
+                        return AptList(
+                          clientName: schedule.customer?.fullName ?? 'N/A',
+                          price: (schedule.price ?? 0) / 100,
+                          hour: TimeOfDay.fromDateTime(schedule.dateTime!)
+                              .format(context),
+                          date: DateTimeUtils.dateOnlyString(
+                              schedule.dateTime ?? DateTime.now()),
+                          service:
+                              StringUtils.normalIfBlank(schedule.service ?? ''),
+                          observation: StringUtils.normalIfBlank(
+                              schedule.description ?? ''),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    ScheduleScreen(schedule: schedule),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
             ),
-            const SizedBox(height: 32),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                const Text(
-                  'Início: ',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                DatePickerRectangle(
-                  initialDate: DateTime.now(),
-                  onDateSelected: (DateTime date) {
-                    print("debug is on the table");
-                  },
-                ),
-                TimePickerRectangle(
-                  initialTime: TimeOfDay.now(),
-                  onTimeSelected: (TimeOfDay time) {
-                    print("debug is on the table");
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                const Text(
-                  'Fim:    ',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                DatePickerRectangle(
-                  initialDate: DateTime.now(),
-                  onDateSelected: (DateTime date) {
-                    print("debug is on the table");
-                  },
-                ),
-                TimePickerRectangle(
-                  initialTime: TimeOfDay.now(),
-                  onTimeSelected: (TimeOfDay time) {
-                    print("debug is on the table");
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 50),
             Align(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
                   CustomButton(
                     text: "Voltar",
                     textSize: 18,
                     backgroundColor: Colors.white,
-                    borderRadius: 12,
-                    borderWidth: 1.6,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 1, horizontal: 44),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -100,25 +245,48 @@ class CreateIdlePeriodScreen extends StatelessWidget {
                     textSize: 18,
                     backgroundColor: Colors.green,
                     textColor: Colors.white,
-                    borderRadius: 12,
-                    borderWidth: 1.6,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 1, horizontal: 32),
-                    onPressed: () {
+                    onPressed: () async {
+                      final String mytoken = await FlowStorage.getToken();
+                      final BusinessDTO? businessData =
+                          await FlowStorage.getBusinessDTO();
+
+                      final ApiClient apiClient =
+                          FlowStorage.getApiClient(mytoken);
+
+                      final IdlePeriod newIdlePeriod = IdlePeriod(
+                          id: "id",
+                          name: DateTime.now().toString(),
+                          businessId: businessData!.id!,
+                          start: _startDateTime,
+                          finish: _finishDateTime);
+
+                      final Response resp = await IdlePeriodApi(apiClient)
+                          .apiV1IdlePeriodPostWithHttpInfo(
+                              idlePeriod: newIdlePeriod);
+
+                      if (resp.statusCode != 201) {
+                        FlowSnack.show(context, resp.body);
+                        print(resp.body);
+                        print(resp.statusCode);
+                        return;
+                      }
+
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                const ChangeSuccessfulScreen(
-                                  title: "Período criado com sucesso",
-                                  description:
-                                      "Seu período ocioso foi criado com sucesso\n\nNão será possível criar agendamentos para este período\n\nVocê pode cancelar esse período a qualquer momento, na tela de configurações",
-                                )),
+                          builder: (BuildContext context) =>
+                              const ChangeSuccessfulScreen(
+                            title: "Período criado com sucesso",
+                            description:
+                                "Seu período ocioso foi criado com sucesso\n\nNão será possível criar agendamentos para este período\n\nVocê pode cancelar esse período a qualquer momento, na tela de configurações",
+                          ),
+                        ),
                       );
                     },
                   ),
-                ])),
-            const Spacer(),
+                ],
+              ),
+            ),
           ],
         ),
       ),

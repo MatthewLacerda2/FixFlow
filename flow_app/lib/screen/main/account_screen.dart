@@ -2,6 +2,7 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/flow_storage.dart';
+import '../AppConfig/create_idle_period_screen.dart';
 import '../AppConfig/option_item.dart';
 import '../intro/introduction_screen.dart';
 import 'account/about_screen.dart';
@@ -93,7 +94,7 @@ class AccountScreen extends StatelessWidget {
                                 const AboutScreen()),
                       );
                     },
-                  ), /*
+                  ),
                   OptionItem(
                     title: 'Criar período ocioso',
                     titleStyle: const TextStyle(
@@ -106,7 +107,7 @@ class AccountScreen extends StatelessWidget {
                                 const CreateIdlePeriodScreen()),
                       );
                     },
-                  ),*/
+                  ),
                 ],
               ),
             );
