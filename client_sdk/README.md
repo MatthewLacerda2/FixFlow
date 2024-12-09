@@ -44,9 +44,10 @@ import 'package:openapi/api.dart';
 final api_instance = AccountsApi();
 
 try {
-    api_instance.apiV1AccountsLogoutPost();
+    final result = api_instance.apiV1AccountsGet();
+    print(result);
 } catch (e) {
-    print('Exception when calling AccountsApi->apiV1AccountsLogoutPost: $e\n');
+    print('Exception when calling AccountsApi->apiV1AccountsGet: $e\n');
 }
 
 ```
@@ -57,6 +58,7 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AccountsApi* | [**apiV1AccountsGet**](doc//AccountsApi.md#apiv1accountsget) | **GET** /api/v1/accounts | 
 *AccountsApi* | [**apiV1AccountsLogoutPost**](doc//AccountsApi.md#apiv1accountslogoutpost) | **POST** /api/v1/accounts/logout | 
 *AccountsApi* | [**apiV1AccountsPost**](doc//AccountsApi.md#apiv1accountspost) | **POST** /api/v1/accounts | Login with an email and password
 *AptContactApi* | [**apiV1ContactsDelete**](doc//AptContactApi.md#apiv1contactsdelete) | **DELETE** /api/v1/contacts | Deletes the Appointment Contact of the given Id
@@ -81,6 +83,7 @@ Class | Method | HTTP request | Description
 *CustomerApi* | [**apiV1CustomerPost**](doc//CustomerApi.md#apiv1customerpost) | **POST** /api/v1/Customer | Create a Customer's Account
 *CustomerApi* | [**apiV1CustomerRecordGet**](doc//CustomerApi.md#apiv1customerrecordget) | **GET** /api/v1/Customer/record | Get Customer's Record in the Business
 *IdlePeriodApi* | [**apiV1IdlePeriodDelete**](doc//IdlePeriodApi.md#apiv1idleperioddelete) | **DELETE** /api/v1/IdlePeriod | Deletes an Idle Period
+*IdlePeriodApi* | [**apiV1IdlePeriodGet**](doc//IdlePeriodApi.md#apiv1idleperiodget) | **GET** /api/v1/IdlePeriod | Gets Idle Periods owned by the Company that start and end within a given time-period
 *IdlePeriodApi* | [**apiV1IdlePeriodPost**](doc//IdlePeriodApi.md#apiv1idleperiodpost) | **POST** /api/v1/IdlePeriod | Creates an Idle period
 
 

@@ -60,6 +60,69 @@ class IdlePeriodApi {
     }
   }
 
+  /// Gets Idle Periods owned by the Company that start and end within a given time-period
+  ///
+  /// Note: This method returns the HTTP [Response].
+  ///
+  /// Parameters:
+  ///
+  /// * [DateTime] startDate:
+  ///
+  /// * [DateTime] finishDate:
+  Future<Response> apiV1IdlePeriodGetWithHttpInfo({ DateTime? startDate, DateTime? finishDate, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/api/v1/IdlePeriod';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    if (startDate != null) {
+      queryParams.addAll(_queryParams('', 'startDate', startDate));
+    }
+    if (finishDate != null) {
+      queryParams.addAll(_queryParams('', 'finishDate', finishDate));
+    }
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Gets Idle Periods owned by the Company that start and end within a given time-period
+  ///
+  /// Parameters:
+  ///
+  /// * [DateTime] startDate:
+  ///
+  /// * [DateTime] finishDate:
+  Future<IdlePeriod?> apiV1IdlePeriodGet({ DateTime? startDate, DateTime? finishDate, }) async {
+    final response = await apiV1IdlePeriodGetWithHttpInfo( startDate: startDate, finishDate: finishDate, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'IdlePeriod',) as IdlePeriod;
+    
+    }
+    return null;
+  }
+
   /// Creates an Idle period
   ///
   /// Note: This method returns the HTTP [Response].
