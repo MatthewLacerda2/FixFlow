@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 
 import '../../components/Buttons/custom_button.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
+import '../../components/Inputs/name_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/apt_list.dart';
 import '../../utils/date_time_utils.dart';
@@ -24,6 +25,7 @@ class _CreateIdlePeriodScreenState extends State<CreateIdlePeriodScreen> {
   late DateTime _startDateTime;
   late DateTime _finishDateTime;
   late Future<List<AptSchedule>> _schedulesFuture;
+  String periodName = "";
 
   @override
   void initState() {
@@ -69,7 +71,14 @@ class _CreateIdlePeriodScreenState extends State<CreateIdlePeriodScreen> {
               textAlign: TextAlign.justify,
               style: TextStyle(fontSize: 16, color: Colors.black),
             ),
-            const SizedBox(height: 22),
+            const SizedBox(height: 18),
+            NameInputField(
+              placeholder: 'Nome do período:',
+              onNameChanged: (String note) {
+                periodName = note;
+              },
+            ),
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -109,6 +118,7 @@ class _CreateIdlePeriodScreenState extends State<CreateIdlePeriodScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -148,30 +158,9 @@ class _CreateIdlePeriodScreenState extends State<CreateIdlePeriodScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async => _updateSchedules(),
-                child: FutureBuilder<List<AptSchedule>>(
-                  future: _schedulesFuture,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<AptSchedule>> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const SizedBox.shrink();
-                    } else {
-                      return const Text(
-                          "Os agendamentos abaixo estão dentro desse Período. Você pode editar-los, deletar-los individualmente, ou criar o período mesmo assim");
-                    }
-                  },
-                ),
-              ),
-            ),
+            const SizedBox(height: 24),
+            const Text(
+                "Os agendamentos abaixo podem ser editados ou deletados individualmente"),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async => _updateSchedules(),
@@ -255,7 +244,10 @@ class _CreateIdlePeriodScreenState extends State<CreateIdlePeriodScreen> {
 
                       final IdlePeriod newIdlePeriod = IdlePeriod(
                           id: "id",
-                          name: DateTime.now().toString(),
+                          name: periodName != ""
+                              ? periodName
+                              : DateTimeUtils.niceFormattedDateTime(
+                                  DateTime.now(), context),
                           businessId: businessData!.id!,
                           start: _startDateTime,
                           finish: _finishDateTime);
