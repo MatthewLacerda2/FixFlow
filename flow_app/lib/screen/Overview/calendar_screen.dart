@@ -2,8 +2,10 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Inputs/circular_button.dart';
 import '../../components/apt_list.dart';
+import '../../components/idle_period_modal.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_snack.dart';
 import '../../utils/flow_storage.dart';
@@ -258,9 +260,17 @@ class CalendarScreenState extends State<CalendarScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         ...selectedDayData.idlePeriods!.map(
-          (IdlePeriod idle) => ListTile(
-            title: Text('Período ocioso: ${idle.name}'),
-          ),
+          (IdlePeriod idle) => ColoredBorderTextButton(
+              text: 'Período ocioso: ${idle.name}',
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return IdlePeriodModal(idlePeriod: idle);
+                  },
+                );
+              },
+              textColor: Colors.black),
         ),
         ...selectedDayData.holiday!.map(
           (String holiday) => ListTile(
