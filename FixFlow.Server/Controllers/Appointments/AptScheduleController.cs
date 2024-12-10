@@ -90,8 +90,6 @@ public class AptScheduleController : ControllerBase {
 			}
 		}
 
-		//TODO: validate business hours
-
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingCustomer.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
 			if (idp.Start <= newAppointment.dateTime && idp.Finish >= newAppointment.dateTime) {

@@ -12,9 +12,6 @@ public class Business : IdentityUser {
 	/// <summary>
 	/// The Name of the Business or Business owner
 	/// </summary>
-	/// <remarks>
-	/// Idle Periods are allowed to overlap
-	/// </remarks>
 	public string Name { get; set; }
 
 	/// <summary>
@@ -23,9 +20,9 @@ public class Business : IdentityUser {
 	public string CNPJ { get; set; }
 
 	public string[] Services { get; set; } = Array.Empty<string>();
-	public bool AllowListedServicesOnly { get; set; } = false;
-	//TODO: public bool allowManyServices { get; set; } = false;
-	public bool OpenOnHolidays { get; set; } = false;
+	public bool AllowListedServicesOnly { get; set; }
+	//TODO: public bool allowManyServices { get; set; }
+	public bool OpenOnHolidays { get; set; }
 
 	public Business() : this(string.Empty, string.Empty, string.Empty, string.Empty) { }
 
@@ -41,6 +38,6 @@ public class Business : IdentityUser {
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {
-		return new Business(request.Name, request.Email, request.CNPJ, request.PhoneNumber);
+		return new Business(request.Name.Trim(), request.Email, request.CNPJ, request.PhoneNumber);
 	}
 }

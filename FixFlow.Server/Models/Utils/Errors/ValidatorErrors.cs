@@ -17,6 +17,7 @@ public struct ValidatorErrors {
 	public static readonly string UnlistedService = "O negócio só permite serviços listados!";
 	public static readonly string ServiceNameIsBlank = "Nome do serviço não pode estar em branco.";
 	public static readonly string ServiceNameIsTooBig = "Nome do serviço não pode ser maior que 32 caracteres";
+	public static readonly string TooManyServices = "Limite de 16 serviços.";
 
 	public static readonly string BusinessDayCountMustBe7 = "Devem haver exatamente 7 dias úteis!";
 	public static readonly string BusinessDayStartMustBeLessThanFinish = "O horário de início do dia útil deve ser menor que o horário de término.";

@@ -71,8 +71,6 @@ public class BusinessController : ControllerBase {
 			return BadRequest(AlreadyRegisteredErrors.CNPJ);
 		}
 
-		//TODO:validate CNPJ
-
 		Business business = (Business)businessRegister;
 
 		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.ConfirmPassword);
@@ -99,18 +97,22 @@ public class BusinessController : ControllerBase {
 
 		var business = await _userManager.FindByIdAsync(Id);
 
+		if (upBusiness.Services.Length > 16) {
+			return BadRequest(ValidatorErrors.TooManyServices);
+		}
+
 		for (int i = 0; i < upBusiness.Services.Length; i++) {
 
 			if (string.IsNullOrEmpty(upBusiness.Services[i])) {
 				return BadRequest(ValidatorErrors.ServiceNameIsBlank);
 			}
 
-			if (upBusiness.Services[i].Length > 32) {
+			string phrase = upBusiness.Services[i];
+			phrase = phrase.Trim();
+			phrase = char.ToUpper(phrase[0]) + phrase.Substring(1).ToLower();
+			if (phrase.Length > 32) {
 				return BadRequest(ValidatorErrors.ServiceNameIsTooBig);
 			}
-
-			string phrase = upBusiness.Services[i];
-			phrase = char.ToUpper(phrase[0]) + phrase.Substring(1).ToLower();
 
 			upBusiness.Services[i] = phrase;
 
