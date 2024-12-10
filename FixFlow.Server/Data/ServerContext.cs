@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using Server.Models.Appointments;
-using Server.Models.DTO;
 namespace Server.Data;
 
 public class ServerContext : IdentityDbContext {
@@ -16,6 +15,8 @@ public class ServerContext : IdentityDbContext {
 	public DbSet<AptLog> Logs { get; set; } = default!;
 	public DbSet<AptContact> Contacts { get; set; } = default!;
 
+	public DbSet<Subscription> Subscriptions { get; set; } = default!;
+
 	public ServerContext(DbContextOptions<ServerContext> options)
 		: base(options) {
 	}
@@ -23,15 +24,21 @@ public class ServerContext : IdentityDbContext {
 	protected override void OnModelCreating(ModelBuilder builder) {
 		base.OnModelCreating(builder);
 
-		//FlowSeeder flowSeeder = new FlowSeeder(builder, 617);
+		builder.Entity<Business>()
+				.HasIndex(b => b.CNPJ)
+				.IsUnique();
 
 		builder.Entity<Business>()
-			   .HasIndex(b => b.CNPJ)
-			   .IsUnique();
+				.HasIndex(b => b.PhoneNumber)
+				.IsUnique();
+
+		builder.Entity<Business>()
+				.HasIndex(b => b.Email)
+				.IsUnique();
 
 		builder.Entity<Customer>()
-			.Property(c => c.PhoneNumber)
-			.IsRequired();
+				.Property(c => c.PhoneNumber)
+				.IsRequired();
 
 		builder.Entity<IdlePeriod>()
 				.HasIndex(c => c.Id)
@@ -41,6 +48,10 @@ public class ServerContext : IdentityDbContext {
 				.HasOne<Business>()
 				.WithMany()
 				.HasForeignKey(i => i.BusinessId);
+
+		builder.Entity<Subscription>()
+				.HasOne<Business>()
+				.WithMany();
 	}
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
