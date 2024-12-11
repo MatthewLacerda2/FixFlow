@@ -29,6 +29,7 @@ public class BusinessController : ControllerBase {
 	/// Used mostly when the User logs-in or opens the app
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
+	[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Subscription))]
 	[HttpGet]
 	public async Task<IActionResult> GetBusiness(string businessId) {
 		string tokenBusinessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
@@ -43,6 +44,26 @@ public class BusinessController : ControllerBase {
 		}
 		if (business.IsActive == false) {
 			return BadRequest(ValidatorErrors.DeactivatedBusiness);
+		}
+
+		var lateBill = _context.Subscriptions
+		.Where(s => s.BusinessId == businessId)
+		.OrderByDescending(s => s.dateTime).First();
+
+		if (lateBill.timeSpentDeactivated > TimeSpan.MinValue) {
+			TimeSpan toAdd = new TimeSpan(30, 0, 0, 0) - lateBill.timeSpentDeactivated;
+			lateBill.dateTime = DateTime.Now - new TimeSpan(30, 0, 0, 0) + toAdd;
+			lateBill.timeSpentDeactivated = TimeSpan.MinValue;
+		}
+
+		if (lateBill.Payed == false && lateBill.dateTime.AddMonths(1).AddDays(5) <= DateTime.Now) {
+			return Unauthorized(lateBill);
+		}
+
+		if (lateBill.Payed == true) {
+			Subscription newSub = new Subscription(business.Id, business.Name, business.CNPJ, DateTime.Now, 2000, false, null);
+			_context.Subscriptions.Add(newSub);
+			_context.SaveChanges();
 		}
 
 		return Ok(new BusinessDTO(business));
@@ -72,6 +93,7 @@ public class BusinessController : ControllerBase {
 		}
 
 		Business business = (Business)businessRegister;
+		Subscription firstMonth = new Subscription(business.Id, business.Name, business.CNPJ, DateTime.Now, 2000, false, null);
 
 		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.ConfirmPassword);
 
@@ -81,6 +103,7 @@ public class BusinessController : ControllerBase {
 			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful.\n\n" + errorJson);
 		}
 
+		_context.Subscriptions.Add(firstMonth);
 		await _context.SaveChangesAsync();
 
 		return CreatedAtAction(nameof(CreateBusiness), business);
@@ -139,6 +162,10 @@ public class BusinessController : ControllerBase {
 
 		var business = await _userManager.FindByIdAsync(Id);
 		business!.IsActive = false;
+
+		Subscription sub = _context.Subscriptions.Where(s => s.BusinessId == business.Id).OrderByDescending(s => s.dateTime).First();
+
+		sub.timeSpentDeactivated = DateTime.Now - sub.dateTime;
 
 		await _context.SaveChangesAsync();
 

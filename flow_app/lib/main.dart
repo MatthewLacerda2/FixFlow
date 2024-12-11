@@ -19,7 +19,7 @@ class FlowApp extends StatelessWidget {
         <DeviceOrientation>[DeviceOrientation.portraitUp]);
 
     return MaterialApp(
-      title: 'Flow',
+      title: 'Revisit',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,

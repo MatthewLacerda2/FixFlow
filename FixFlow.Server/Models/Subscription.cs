@@ -36,6 +36,11 @@ public class Subscription {
 	[JsonIgnore]
 	public string? AdditionalNote { get; set; }
 
+	/// <summary>
+	/// When we deactivate the account, we store the time the user spent, so if he comes back he'll pick up the time left
+	/// </summary>
+	public TimeSpan timeSpentDeactivated { get; set; }
+
 	public Subscription() : this(string.Empty, string.Empty, string.Empty, DateTime.Now, 0, false, string.Empty) { }
 
 	public Subscription(string businessId, string businessName, string businessCNPJ, DateTime _dateTime, int price, bool payed, string? additionalNote) {
@@ -47,5 +52,6 @@ public class Subscription {
 		Price = price;
 		Payed = payed;
 		AdditionalNote = additionalNote;
+		timeSpentDeactivated = TimeSpan.MinValue;
 	}
 }
