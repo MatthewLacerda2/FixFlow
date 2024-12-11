@@ -49,7 +49,7 @@ public class IdlePeriodController : ControllerBase {
 	/// <summary>
 	/// Gets Idle Periods owned by the Company that start and end within a given time-period
 	/// </summary>
-	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(IdlePeriod))]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IdlePeriod))]
 	[HttpGet]
 	public async Task<IActionResult> GetIdlePeriod(DateTime startDate, DateTime finishDate) {
 
