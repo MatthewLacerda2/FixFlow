@@ -10,16 +10,12 @@ import 'account/app_config_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
-  //TODO: see if ya can delete this
-  Future<BusinessDTO?> _fetchBusinessData() async {
-    return await FlowStorage.getBusinessDTO();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<BusinessDTO?>(
-        future: _fetchBusinessData(),
+        future: FlowStorage.getBusinessDTO(),
         builder: (BuildContext context, AsyncSnapshot<BusinessDTO?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
