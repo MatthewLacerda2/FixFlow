@@ -43,6 +43,7 @@ class _PhoneInputFormatter extends TextInputFormatter {
       if (i == 7) formatted += '-';
       formatted += digits[i];
     }
+    print(formatted);
     return newValue.copyWith(
       text: formatted,
       selection: TextSelection.collapsed(offset: formatted.length),

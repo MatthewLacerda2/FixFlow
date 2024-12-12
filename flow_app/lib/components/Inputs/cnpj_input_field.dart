@@ -32,7 +32,7 @@ class _CNPJInputFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    if (newValue.text.length > 5) {
+    if (newValue.text.length > 14) {
       return oldValue;
     }
     final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');

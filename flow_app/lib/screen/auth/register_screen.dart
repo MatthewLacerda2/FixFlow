@@ -1,9 +1,10 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 
+import '../../components/Inputs/cnpj_input_field.dart';
 import '../../components/Inputs/password_input_field.dart';
+import '../../components/Inputs/phone_input_field.dart';
 import '../../utils/flow_snack.dart';
 import '../../utils/login_utils.dart';
 import '../intro/introduction_screen.dart';
@@ -15,18 +16,19 @@ class RegisterScreen extends StatelessWidget {
     return BusinessRegisterRequest(
         name: companyNameController.text.trim(),
         email: emailController.text.trim(),
-        cnpj: cnpjController.text,
-        phoneNumber: phoneController.text,
+        phoneNumber: _phoneNumber,
+        cnpj: _cnpj,
         password: registerPassword,
         confirmPassword: registerPasswordConfirmation);
   }
 
   final TextEditingController companyNameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController cnpjController = TextEditingController();
 
   String? registerPassword, registerPasswordConfirmation;
+
+  String _phoneNumber = "";
+  String _cnpj = "";
 
   @override
   Widget build(BuildContext context) {
@@ -43,28 +45,21 @@ class RegisterScreen extends StatelessWidget {
               controller: companyNameController,
               decoration: const InputDecoration(labelText: 'Nome da empresa'),
             ),
-            TextField(
-              controller: phoneController,
-              decoration: const InputDecoration(labelText: 'Telefone'),
-              keyboardType: TextInputType.phone,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly,
-                _PhoneInputFormatter(),
-              ],
+            PhoneInputField(
+              placeholder: 'Telefone',
+              onPhoneChanged: (String phone) {
+                _phoneNumber = phone;
+              },
             ),
             TextField(
               controller: emailController,
               decoration: const InputDecoration(labelText: 'Email'),
             ),
-            TextField(
-              controller: cnpjController,
-              decoration: const InputDecoration(labelText: 'CNPJ'),
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly,
-                _CNPJInputFormatter(),
-              ],
-            ),
+            CNPJInputField(
+                placeholder: "CNPJ",
+                onCNPJChanged: (String cnpj) {
+                  _cnpj = cnpj;
+                }),
             const SizedBox(height: 20),
             PasswordInputField(
               placeholder: 'Password',
@@ -101,55 +96,6 @@ class RegisterScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _PhoneInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    if (newValue.text.length > 14) {
-      return oldValue;
-    }
-    final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
-    String formatted = '';
-    for (int i = 0; i < digits.length; i++) {
-      if (i == 0) formatted += '(';
-      if (i == 2) formatted += ') ';
-      if (i == 7) formatted += '-';
-      formatted += digits[i];
-    }
-    return newValue.copyWith(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
-    );
-  }
-}
-
-class _CNPJInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    // Remove all non-digit characters
-    final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
-
-    String formatted = '';
-    for (int i = 0; i < digits.length; i++) {
-      if (i == 2) formatted += '.';
-      if (i == 5) formatted += '.';
-      if (i == 8) formatted += '/';
-      if (i == 12) formatted += '-';
-      formatted += digits[i];
-    }
-
-    return newValue.copyWith(
-      text: formatted,
-      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }
