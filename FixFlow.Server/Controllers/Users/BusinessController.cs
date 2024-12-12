@@ -60,7 +60,7 @@ public class BusinessController : ControllerBase {
 			return Unauthorized(lateBill);
 		}
 
-		if (lateBill.Payed == true) {
+		if (lateBill.Payed == true && lateBill.dateTime.AddMonths(1) < DateTime.Now) {
 			Subscription newSub = new Subscription(business.Id, business.Name, business.CNPJ, DateTime.Now, 2000, false, null);
 			_context.Subscriptions.Add(newSub);
 			_context.SaveChanges();
