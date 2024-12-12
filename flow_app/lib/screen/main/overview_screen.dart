@@ -2,6 +2,7 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
+import '../../components/rounded_info_box.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
 import '../Overview/Clients/clients_screen.dart';

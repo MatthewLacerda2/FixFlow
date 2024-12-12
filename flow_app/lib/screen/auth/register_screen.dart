@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import '../../components/Inputs/cnpj_input_field.dart';
+import '../../components/Inputs/email_input_field.dart';
+import '../../components/Inputs/name_input_field.dart';
 import '../../components/Inputs/password_input_field.dart';
 import '../../components/Inputs/phone_input_field.dart';
 import '../../utils/flow_snack.dart';
@@ -14,21 +16,20 @@ class RegisterScreen extends StatelessWidget {
 
   BusinessRegisterRequest createBusinessRegisterRequest() {
     return BusinessRegisterRequest(
-        name: companyNameController.text.trim(),
-        email: emailController.text.trim(),
+        name: _companyName.trim(),
+        email: _email.trim(),
         phoneNumber: _phoneNumber,
         cnpj: _cnpj,
         password: registerPassword,
         confirmPassword: registerPasswordConfirmation);
   }
 
-  final TextEditingController companyNameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-
   String? registerPassword, registerPasswordConfirmation;
 
+  String _companyName = "";
   String _phoneNumber = "";
   String _cnpj = "";
+  String _email = "";
 
   @override
   Widget build(BuildContext context) {
@@ -41,20 +42,22 @@ class RegisterScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(
-              controller: companyNameController,
-              decoration: const InputDecoration(labelText: 'Nome da empresa'),
-            ),
+            NameInputField(
+                placeholder: "Nome da empresa",
+                onNameChanged: (String name) {
+                  _companyName = name;
+                }),
             PhoneInputField(
               placeholder: 'Telefone',
               onPhoneChanged: (String phone) {
                 _phoneNumber = phone;
               },
             ),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
+            EmailInputField(
+                placeholder: "Email",
+                onEmailValidated: (String email) {
+                  _email = email;
+                }),
             CNPJInputField(
                 placeholder: "CNPJ",
                 onCNPJChanged: (String cnpj) {
