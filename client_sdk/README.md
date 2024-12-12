@@ -85,6 +85,8 @@ Class | Method | HTTP request | Description
 *IdlePeriodApi* | [**apiV1IdlePeriodDelete**](doc//IdlePeriodApi.md#apiv1idleperioddelete) | **DELETE** /api/v1/IdlePeriod | Deletes an Idle Period
 *IdlePeriodApi* | [**apiV1IdlePeriodGet**](doc//IdlePeriodApi.md#apiv1idleperiodget) | **GET** /api/v1/IdlePeriod | Gets Idle Periods owned by the Company that start and end within a given time-period
 *IdlePeriodApi* | [**apiV1IdlePeriodPost**](doc//IdlePeriodApi.md#apiv1idleperiodpost) | **POST** /api/v1/IdlePeriod | Creates an Idle period
+*SubscriptionApi* | [**apiV1SubscriptionGet**](doc//SubscriptionApi.md#apiv1subscriptionget) | **GET** /api/v1/Subscription | Gets Idle Periods owned by the Company that start and end within a given time-period
+*SubscriptionApi* | [**apiV1SubscriptionUnpayedGet**](doc//SubscriptionApi.md#apiv1subscriptionunpayedget) | **GET** /api/v1/Subscription/unpayed | Deletes an Idle Period
 
 
 ## Documentation For Models
@@ -105,6 +107,7 @@ Class | Method | HTTP request | Description
  - [FlowLoginRequest](doc//FlowLoginRequest.md)
  - [IdlePeriod](doc//IdlePeriod.md)
  - [ProblemDetails](doc//ProblemDetails.md)
+ - [Subscription](doc//Subscription.md)
  - [UpdateAptContact](doc//UpdateAptContact.md)
  - [UpdateAptLog](doc//UpdateAptLog.md)
 

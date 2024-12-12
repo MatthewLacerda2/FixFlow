@@ -50,10 +50,10 @@ public class BusinessController : ControllerBase {
 		.Where(s => s.BusinessId == businessId)
 		.OrderByDescending(s => s.dateTime).First();
 
-		if (lateBill.timeSpentDeactivated > TimeSpan.MinValue) {
+		if (lateBill.timeSpentDeactivated > TimeSpan.Zero) {
 			TimeSpan toAdd = new TimeSpan(30, 0, 0, 0) - lateBill.timeSpentDeactivated;
 			lateBill.dateTime = DateTime.Now - new TimeSpan(30, 0, 0, 0) + toAdd;
-			lateBill.timeSpentDeactivated = TimeSpan.MinValue;
+			lateBill.timeSpentDeactivated = TimeSpan.Zero;
 		}
 
 		if (lateBill.Payed == false && lateBill.dateTime.AddMonths(1).AddDays(5) <= DateTime.Now) {
@@ -104,8 +104,9 @@ public class BusinessController : ControllerBase {
 		}
 
 		_context.Subscriptions.Add(firstMonth);
+		Console.WriteLine("it breaks after this line");
 		await _context.SaveChangesAsync();
-
+		Console.WriteLine("this line doesnt output because the line above breaks the thing");
 		return CreatedAtAction(nameof(CreateBusiness), business);
 	}
 

@@ -12,7 +12,7 @@ part of openapi.api;
 
 class ApiClient {
   ApiClient({
-    this.basePath = 'http://192.168.15.81:5105',
+    this.basePath = 'http://192.168.15.9:5105',
     this.authentication,
   });
 
@@ -261,6 +261,8 @@ class ApiClient {
           return IdlePeriod.fromJson(value);
         case 'ProblemDetails':
           return ProblemDetails.fromJson(value);
+        case 'Subscription':
+          return Subscription.fromJson(value);
         case 'UpdateAptContact':
           return UpdateAptContact.fromJson(value);
         case 'UpdateAptLog':

@@ -36,6 +36,7 @@ part 'api/business_api.dart';
 part 'api/business_calendar_day_api.dart';
 part 'api/customer_api.dart';
 part 'api/idle_period_api.dart';
+part 'api/subscription_api.dart';
 
 part 'model/apt_contact.dart';
 part 'model/apt_log.dart';
@@ -53,6 +54,7 @@ part 'model/customer_record.dart';
 part 'model/flow_login_request.dart';
 part 'model/idle_period.dart';
 part 'model/problem_details.dart';
+part 'model/subscription.dart';
 part 'model/update_apt_contact.dart';
 part 'model/update_apt_log.dart';
 

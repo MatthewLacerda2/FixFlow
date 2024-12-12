@@ -7,7 +7,7 @@ swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v
 
 openapi-generator-cli generate -i .\FixFlow.Server\swagger.json -g dart -o ./client_sdk
 
-dotnet watch run --urls http://192.168.15.81:5105
+dotnet watch run
 
 - - - - -
 

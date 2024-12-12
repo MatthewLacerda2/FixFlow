@@ -47,6 +47,13 @@ class LoginUtils {
     final BusinessDTO? businessDTO =
         await BusinessApi(apiClient).apiV1BusinessGet(businessId: businessId);
 
+    var resp = await BusinessApi(apiClient)
+        .apiV1BusinessGetWithHttpInfo(businessId: businessId);
+    if (resp.statusCode == 400) {
+      //pegar o subscription que nao tá pago
+      return null;
+    }
+
     FlowStorage.saveBusinessDTO(businessDTO!);
 
     return businessDTO;

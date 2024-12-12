@@ -26,6 +26,8 @@ doc/FlowLoginRequest.md
 doc/IdlePeriod.md
 doc/IdlePeriodApi.md
 doc/ProblemDetails.md
+doc/Subscription.md
+doc/SubscriptionApi.md
 doc/UpdateAptContact.md
 doc/UpdateAptLog.md
 git_push.sh
@@ -38,6 +40,7 @@ lib/api/business_api.dart
 lib/api/business_calendar_day_api.dart
 lib/api/customer_api.dart
 lib/api/idle_period_api.dart
+lib/api/subscription_api.dart
 lib/api_client.dart
 lib/api_exception.dart
 lib/api_helper.dart
@@ -62,6 +65,7 @@ lib/model/customer_record.dart
 lib/model/flow_login_request.dart
 lib/model/idle_period.dart
 lib/model/problem_details.dart
+lib/model/subscription.dart
 lib/model/update_apt_contact.dart
 lib/model/update_apt_log.dart
 pubspec.yaml
@@ -89,5 +93,7 @@ test/flow_login_request_test.dart
 test/idle_period_api_test.dart
 test/idle_period_test.dart
 test/problem_details_test.dart
+test/subscription_api_test.dart
+test/subscription_test.dart
 test/update_apt_contact_test.dart
 test/update_apt_log_test.dart

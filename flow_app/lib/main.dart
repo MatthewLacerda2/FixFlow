@@ -1,3 +1,4 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,7 +49,10 @@ class FlowApp extends StatelessWidget {
       return false;
     }
 
-    await LoginUtils.fetchBusinessDTO();
+    final BusinessDTO? fetchedDTO = await LoginUtils.fetchBusinessDTO();
+    if (fetchedDTO == null) {
+      return false;
+    }
 
     return true;
   }

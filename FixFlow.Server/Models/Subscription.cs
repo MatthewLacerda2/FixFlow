@@ -52,6 +52,6 @@ public class Subscription {
 		Price = price;
 		Payed = payed;
 		AdditionalNote = additionalNote;
-		timeSpentDeactivated = TimeSpan.MinValue;
+		timeSpentDeactivated = TimeSpan.Zero;
 	}
 }
