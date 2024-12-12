@@ -6,15 +6,13 @@ using Server.Models;
 using Server.Models.DTO;
 using Server.Models.Erros;
 using Server.Models.Utils;
+using Server.Utils;
 
 namespace Server.Controllers;
 
-/// <summary>
-/// Controller class for Business CRUD requests
-/// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(Business))]
-//[Authorize]
+[Authorize]
 [Produces("application/json")]
 public class BusinessController : ControllerBase {
 
@@ -27,23 +25,52 @@ public class BusinessController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Gets the Business with the given Id.
-	/// Used when the User logs-in or opens the app
+	/// Gets the Business' Data of the given Id.
+	/// Used mostly when the User logs-in or opens the app
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
+	[ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Subscription))]
 	[HttpGet]
 	public async Task<IActionResult> GetBusiness(string businessId) {
+		string tokenBusinessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+
+		if (businessId != tokenBusinessId) {
+			return Unauthorized();
+		}
 
 		var business = await _userManager.FindByIdAsync(businessId);
 		if (business == null) {
-			return BadRequest(NotExistErrors.Business);
+			return BadRequest(NotExistErrors.business);
+		}
+		if (business.IsActive == false) {
+			return BadRequest(ValidatorErrors.DeactivatedBusiness);
+		}
+
+		var lateBill = _context.Subscriptions
+		.Where(s => s.BusinessId == businessId)
+		.OrderByDescending(s => s.dateTime).First();
+
+		if (lateBill.timeSpentDeactivated > TimeSpan.Zero) {
+			TimeSpan toAdd = new TimeSpan(30, 0, 0, 0) - lateBill.timeSpentDeactivated;
+			lateBill.dateTime = DateTime.Now - new TimeSpan(30, 0, 0, 0) + toAdd;
+			lateBill.timeSpentDeactivated = TimeSpan.Zero;
+		}
+
+		if (lateBill.Payed == false && lateBill.dateTime.AddMonths(1).AddDays(5) <= DateTime.Now) {
+			return Unauthorized(lateBill);
+		}
+
+		if (lateBill.Payed == true && lateBill.dateTime.AddMonths(1) < DateTime.Now) {
+			Subscription newSub = new Subscription(business.Id, business.Name, business.CNPJ, DateTime.Now, 2000, false, null);
+			_context.Subscriptions.Add(newSub);
+			_context.SaveChanges();
 		}
 
 		return Ok(new BusinessDTO(business));
 	}
 
 	/// <summary>
-	/// Creates a Business User
+	/// Registers a Business User
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Business))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -65,9 +92,8 @@ public class BusinessController : ControllerBase {
 			return BadRequest(AlreadyRegisteredErrors.CNPJ);
 		}
 
-		//TODO:validate CNPJ
-
 		Business business = (Business)businessRegister;
+		Subscription firstMonth = new Subscription(business.Id, business.Name, business.CNPJ, DateTime.Now, 2000, false, null);
 
 		var userCreationResult = await _userManager.CreateAsync(business, businessRegister.ConfirmPassword);
 
@@ -77,50 +103,70 @@ public class BusinessController : ControllerBase {
 			return StatusCode(500, "Internal Server Error: Register Business Unsuccessful.\n\n" + errorJson);
 		}
 
+		_context.Subscriptions.Add(firstMonth);
+		Console.WriteLine("it breaks after this line");
 		await _context.SaveChangesAsync();
-
+		Console.WriteLine("this line doesnt output because the line above breaks the thing");
 		return CreatedAtAction(nameof(CreateBusiness), business);
 	}
 
 	/// <summary>
-	/// Updates the Business with the given Id
+	/// Updates the Business of the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessDTO))]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch]
 	public async Task<IActionResult> UpdateBusiness([FromBody] BusinessDTO upBusiness) {
 
-		var businessExists = await _userManager.FindByIdAsync(upBusiness.Id);
-		if (businessExists == null) {
-			return BadRequest(NotExistErrors.Business);
+		string Id = User.Claims.First(c => c.Type == "businessId")?.Value!;
+
+		var business = await _userManager.FindByIdAsync(Id);
+
+		if (upBusiness.Services.Length > 16) {
+			return BadRequest(ValidatorErrors.TooManyServices);
 		}
 
-		businessExists.Name = upBusiness.Name;
-		businessExists.BusinessWeek = upBusiness.BusinessWeek;
-		businessExists.services = upBusiness.Services;
-		businessExists.allowListedServicesOnly = upBusiness.AllowListedServicesOnly;
-		businessExists.openOnHolidays = upBusiness.OpenOnHolidays;
+		for (int i = 0; i < upBusiness.Services.Length; i++) {
+
+			if (string.IsNullOrEmpty(upBusiness.Services[i])) {
+				return BadRequest(ValidatorErrors.ServiceNameIsBlank);
+			}
+
+			string phrase = upBusiness.Services[i];
+			phrase = phrase.Trim();
+			phrase = char.ToUpper(phrase[0]) + phrase.Substring(1).ToLower();
+			if (phrase.Length > 32) {
+				return BadRequest(ValidatorErrors.ServiceNameIsTooBig);
+			}
+
+			upBusiness.Services[i] = phrase;
+
+		}
+
+		business!.Name = upBusiness.Name;
+		business.Services = upBusiness.Services;
+		business.AllowListedServicesOnly = upBusiness.AllowListedServicesOnly;
+		business.OpenOnHolidays = upBusiness.OpenOnHolidays;
 
 		await _context.SaveChangesAsync();
 
-		return Ok(new BusinessDTO(businessExists));
+		return Ok(new BusinessDTO(business));
 	}
 
 	/// <summary>
-	/// Deactivates the Business Account with the given Id.
-	/// That freezes the subscription, and stops notifications
+	/// Deactivates the Business Account of the given Id.
+	/// That freezes subscription and stops notifications
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpPatch("deactivate")]
-	public async Task<IActionResult> DeactivateBusiness([FromBody] string Id) {
+	public async Task<IActionResult> DeactivateBusiness() {
+		string Id = User.Claims.First(c => c.Type == "businessId")?.Value!;
 
 		var business = await _userManager.FindByIdAsync(Id);
-		if (business == null) {
-			return BadRequest(NotExistErrors.Business);
-		}
+		business!.IsActive = false;
 
-		business.IsActive = false;
+		Subscription sub = _context.Subscriptions.Where(s => s.BusinessId == business.Id).OrderByDescending(s => s.dateTime).First();
+
+		sub.timeSpentDeactivated = DateTime.Now - sub.dateTime;
 
 		await _context.SaveChangesAsync();
 
@@ -128,25 +174,20 @@ public class BusinessController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Deletes the Business with the given Id and all it's data owned by it
+	/// Deletes the Business
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
 	[HttpDelete]
-	public async Task<IActionResult> DeleteBusiness([FromBody] string Id) {
+	public async Task<IActionResult> DeleteBusiness() {
+		string Id = User.Claims.First(c => c.Type == "businessId")?.Value!;
 
-		var business = await _userManager.FindByIdAsync(Id);
-		if (business == null) {
-			return BadRequest(NotExistErrors.Business);
-		}
-
-		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.businessId == Id));
 		_context.Schedules.RemoveRange(_context.Schedules.Where(x => x.BusinessId == Id));
 		_context.Logs.RemoveRange(_context.Logs.Where(x => x.BusinessId == Id));
-
+		_context.Contacts.RemoveRange(_context.Contacts.Where(x => x.BusinessId == Id));
 		_context.Customers.RemoveRange(_context.Customers.Where(x => x.BusinessId == Id));
 
-		await _userManager.DeleteAsync(business);
+		var business = await _userManager.FindByIdAsync(Id);
+		await _userManager.DeleteAsync(business!);
 
 		await _context.SaveChangesAsync();
 

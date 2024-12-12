@@ -7,16 +7,16 @@ import '../../components/Buttons/rounded_iconed_button.dart';
 import '../../components/Inputs/date_picker_rectangle.dart';
 import '../../components/Inputs/limited_text_input_field.dart';
 import '../../components/Inputs/price_input_field.dart';
+import '../../components/Inputs/services_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
+import '../../utils/flow_snack.dart';
+import '../../utils/flow_storage.dart';
 import '../main/main_screen.dart';
 
 class ScheduleScreen extends StatefulWidget {
-  const ScheduleScreen({
-    super.key,
-    required this.schedule,
-  });
+  const ScheduleScreen({super.key, required this.schedule});
   final AptSchedule schedule;
 
   @override
@@ -27,19 +27,20 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 
-  bool _isEdited = false;
-
-  double preco = 0.0;
+  String? upService;
+  int preco = 0;
   DateTime newDateTime = DateTime.now();
+
+  bool _isEdited = false;
 
   @override
   void initState() {
     super.initState();
     _precoController = TextEditingController(
-        text: widget.schedule.price?.toStringAsFixed(2) ?? "");
+        text: (widget.schedule.price! / 100).toStringAsFixed(2));
     _observacaoController =
-        TextEditingController(text: widget.schedule.observation);
-    preco = widget.schedule.price ?? 0.0;
+        TextEditingController(text: widget.schedule.description);
+    preco = widget.schedule.price! * 100;
     newDateTime = widget.schedule.dateTime!;
   }
 
@@ -50,29 +51,25 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   void _saveChanges() async {
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
+
     final AptSchedule patchedSchedule = widget.schedule;
     patchedSchedule.price = preco;
     patchedSchedule.dateTime = newDateTime;
-    patchedSchedule.observation = _observacaoController.text;
-    final Response response = await AptScheduleApi()
+    patchedSchedule.description = _observacaoController.text;
+    patchedSchedule.service = upService;
+    final Response response = await AptScheduleApi(apiClient)
         .apiV1SchedulesPatchWithHttpInfo(aptSchedule: patchedSchedule);
     snackbarResponse(response);
   }
 
   void snackbarResponse(Response response) {
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Agendamento editado!"),
-        ),
-      );
+      FlowSnack.show(context, "Agendamento editado!");
       goToSchedulesScreen();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.body),
-        ),
-      );
+      FlowSnack.show(context, response.body);
     }
   }
 
@@ -90,8 +87,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   void _cancelChanges() {
     setState(() {
       _isEdited = false;
-      _precoController.text = widget.schedule.price?.toStringAsFixed(2) ?? "";
-      _observacaoController.text = widget.schedule.observation ?? "";
+      _precoController.text = widget.schedule.price!.toStringAsFixed(2);
+      _observacaoController.text = widget.schedule.description ?? "";
     });
   }
 
@@ -140,11 +137,18 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: 24),
+            ServicesInputField(
+              initialService: widget.schedule.service,
+              onServiceSelected: (String? selectedService) {
+                upService = selectedService;
+              },
+            ),
+            const SizedBox(height: 24),
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
-                preco = double.parse(value);
+                preco = ((double.tryParse(value) ?? 0) * 100).toInt();
                 _toggleEdit();
               },
             ),
@@ -201,8 +205,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           textSize: 14,
                           backgroundColor: Colors.green,
                           textColor: Colors.black,
-                          onPressed: () {
-                            AptScheduleApi()
+                          onPressed: () async {
+                            final String mytoken = await FlowStorage.getToken();
+                            final ApiClient apiClient =
+                                FlowStorage.getApiClient(mytoken);
+                            AptScheduleApi(apiClient)
                                 .apiV1SchedulesDelete(body: widget.schedule.id);
                             goToSchedulesScreen();
                           },

@@ -11,7 +11,7 @@ class IntroductionScreenPage extends StatelessWidget {
     return IntroductionScreen(
       pages: <PageViewModel>[
         PageViewModel(
-          title: "Bem-vindo ao Flow!",
+          title: "Bem-vindo ao Revisit!",
           body: "Retenha seus clientes de forma fácil!",
           image: const Padding(
             padding: EdgeInsets.only(bottom: 24.0),
@@ -39,7 +39,7 @@ class IntroductionScreenPage extends StatelessWidget {
         PageViewModel(
           title: "Consistência",
           body:
-              "O Cliente vai precisar do seu serviço denovo, né? É aí que o Flow entra!",
+              "O Cliente vai precisar do seu serviço denovo, né? É aí que o Revisit entra!",
           image: const Padding(
             padding: EdgeInsets.only(bottom: 24.0),
             child: Center(child: Icon(Icons.repeat, size: 90)),
@@ -48,7 +48,7 @@ class IntroductionScreenPage extends StatelessWidget {
         PageViewModel(
           title: '"Alô Fulano! Bora agendar?"',
           body:
-              "O App vai lembrar quando já é tempo do Cliente agendar outro atendimento.",
+              "O App vai lembrar quando já é tempo do Cliente visitar sua empresa denovo.",
           image: const Padding(
             padding: EdgeInsets.only(bottom: 24.0),
             child: Center(child: Icon(Icons.message, size: 90)),

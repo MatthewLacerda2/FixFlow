@@ -20,13 +20,12 @@ class AptSchedule {
     this.wasContacted,
     this.dateTime,
     this.service,
-    this.observation,
+    this.description,
     this.price,
   });
 
   String id;
 
-  /// The Id of the Customer who made the Schedule
   String customerId;
 
   ///
@@ -37,9 +36,9 @@ class AptSchedule {
   ///
   Customer? customer;
 
-  /// The Id of the Business who owns this Contact
   String businessId;
 
+  /// Was the Customer contacted to make this Schedule?
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -48,7 +47,6 @@ class AptSchedule {
   ///
   bool? wasContacted;
 
-  /// The scheduled DateTime of the Appointment
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -59,7 +57,7 @@ class AptSchedule {
 
   String? service;
 
-  String? observation;
+  String? description;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -67,7 +65,7 @@ class AptSchedule {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  double? price;
+  int? price;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is AptSchedule &&
@@ -78,7 +76,7 @@ class AptSchedule {
     other.wasContacted == wasContacted &&
     other.dateTime == dateTime &&
     other.service == service &&
-    other.observation == observation &&
+    other.description == description &&
     other.price == price;
 
   @override
@@ -91,11 +89,11 @@ class AptSchedule {
     (wasContacted == null ? 0 : wasContacted!.hashCode) +
     (dateTime == null ? 0 : dateTime!.hashCode) +
     (service == null ? 0 : service!.hashCode) +
-    (observation == null ? 0 : observation!.hashCode) +
+    (description == null ? 0 : description!.hashCode) +
     (price == null ? 0 : price!.hashCode);
 
   @override
-  String toString() => 'AptSchedule[id=$id, customerId=$customerId, customer=$customer, businessId=$businessId, wasContacted=$wasContacted, dateTime=$dateTime, service=$service, observation=$observation, price=$price]';
+  String toString() => 'AptSchedule[id=$id, customerId=$customerId, customer=$customer, businessId=$businessId, wasContacted=$wasContacted, dateTime=$dateTime, service=$service, description=$description, price=$price]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -122,10 +120,10 @@ class AptSchedule {
     } else {
       json[r'service'] = null;
     }
-    if (this.observation != null) {
-      json[r'observation'] = this.observation;
+    if (this.description != null) {
+      json[r'description'] = this.description;
     } else {
-      json[r'observation'] = null;
+      json[r'description'] = null;
     }
     if (this.price != null) {
       json[r'price'] = this.price;
@@ -161,8 +159,8 @@ class AptSchedule {
         wasContacted: mapValueOfType<bool>(json, r'wasContacted'),
         dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
-        observation: mapValueOfType<String>(json, r'observation'),
-        price: mapValueOfType<double>(json, r'price'),
+        description: mapValueOfType<String>(json, r'description'),
+        price: mapValueOfType<int>(json, r'price'),
       );
     }
     return null;

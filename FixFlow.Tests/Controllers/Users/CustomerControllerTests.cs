@@ -89,7 +89,7 @@ public class CustomerControllerTests {
 		await _context.SaveChangesAsync();
 
 		// Act
-		var result = await _controller.ReadCustomers(business1.Id, 1, 1, "matthew");
+		var result = await _controller.ReadCustomers(1, 1, "matthew");
 
 		// Assert
 		var okResult = Assert.IsType<OkObjectResult>(result);
@@ -102,7 +102,7 @@ public class CustomerControllerTests {
 	public async Task CreateCustomer_ValidCustomer_ReturnsCreated() {
 		// Arrange
 		var business = new Business("lenda", "lenda@gmail.com", "123.4567.789-0001", "98988263255");
-		var customerCreate = new CustomerCreate(business.Id, "John Doe", "789.456.123-90", null, "1234567890", "customer@gmail.com");
+		var customerCreate = new CustomerCreate("John Doe", "789.456.123-90", null, "1234567890", "customer@gmail.com");
 
 		_mockUserManager.Setup(x => x.CreateAsync(It.IsAny<Customer>())).ReturnsAsync(IdentityResult.Success);
 
@@ -124,7 +124,7 @@ public class CustomerControllerTests {
 	[Fact]
 	public async Task CreateCustomer_PhoneNumberAlreadyExists_ReturnsBadRequest() {
 		// Arrange
-		var customerCreate = new CustomerCreate("business-id", "John Doe", "789.456.123-90", null, "1234567890", "customer@gmail.com");
+		var customerCreate = new CustomerCreate("John Doe", "789.456.123-90", null, "1234567890", "customer@gmail.com");
 		var business = new Business("lenda", "lenda@gmail.com", "123.4567.789-0001", "98988263255");
 
 		_mockUserManager.Setup(x => x.CreateAsync(It.IsAny<Customer>())).ReturnsAsync(IdentityResult.Success);
@@ -144,7 +144,7 @@ public class CustomerControllerTests {
 	[Fact]
 	public async Task CreateCustomer_EmailAlreadyExists_ReturnsBadRequest() {
 		// Arrange
-		var customerCreate = new CustomerCreate("business-id", "John Doe", "789.456.123-90", null, "1234567890", "customer@gmail.com");
+		var customerCreate = new CustomerCreate("John Doe", "789.456.123-90", null, "1234567890", "customer@gmail.com");
 		var business = new Business("lenda", "lenda@gmail.com", "123.4567.789-0001", "98988263255");
 
 		_mockUserManager.Setup(x => x.CreateAsync(It.IsAny<Customer>())).ReturnsAsync(IdentityResult.Success);
@@ -167,7 +167,7 @@ public class CustomerControllerTests {
 	[Fact]
 	public async Task CreateCustomer_CPFAlreadyExists_ReturnsBadRequest() {
 		// Arrange
-		var customerCreate = new CustomerCreate("business-id", "John Doe", "789.456.123-90", null, "1234567890", "customer@gmail.com");
+		var customerCreate = new CustomerCreate("John Doe", "789.456.123-90", null, "1234567890", "customer@gmail.com");
 		var business = new Business("lenda", "lenda@gmail.com", "123.4567.789-0001", "98988263255");
 
 		_mockUserManager.Setup(x => x.CreateAsync(It.IsAny<Customer>())).ReturnsAsync(IdentityResult.Success);

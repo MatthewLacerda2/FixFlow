@@ -9,15 +9,9 @@ using Server.Models.Utils;
 
 namespace Server.Controllers;
 
-/// <summary>
-/// Controller class for Scheduled Appointment CRUD requests
-/// </summary>
-/// <remarks>
-/// Schedules are simply the setup of an Appointment, not the Appointment itself
-/// </remarks>
 [ApiController]
 [Route(Common.api_v1 + "schedules")]
-//[Authorize]
+[Authorize]
 [Produces("application/json")]
 public class AptScheduleController : ControllerBase {
 
@@ -32,8 +26,11 @@ public class AptScheduleController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadSchedules(string businessId, string? client, string? service, float minPrice, float maxPrice,
+	public async Task<IActionResult> ReadSchedules(string? client, string? service, float minPrice, float? maxPrice,
 													DateTime minDateTime, DateTime maxDateTime, int offset, int limit) {
+
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+
 		var schedulesQuery = _context.Schedules.AsQueryable();
 
 		schedulesQuery = _context.Schedules.Where(x => x.BusinessId == businessId);
@@ -46,15 +43,19 @@ public class AptScheduleController : ControllerBase {
 			schedulesQuery = schedulesQuery.Where(x => x.Service != null && x.Service.Contains(service));
 		}
 
+		schedulesQuery = schedulesQuery.Where(x => x.price >= minPrice);
+
+		if (maxPrice.HasValue) {
+			schedulesQuery = schedulesQuery.Where(x => x.price <= maxPrice);
+		}
+
 		schedulesQuery = schedulesQuery.Where(x => x.dateTime >= minDateTime);
 		schedulesQuery = schedulesQuery.Where(x => x.dateTime <= maxDateTime);
-
-		schedulesQuery = schedulesQuery.Where(x => x.Price >= minPrice);
-		schedulesQuery = schedulesQuery.Where(x => x.Price <= maxPrice);
 
 		var resultsArray = await schedulesQuery
 			.Skip(offset)
 			.Take(limit)
+			.OrderByDescending(x => x.dateTime).ThenBy(x => x.price).ThenBy(x => x.CustomerId).ThenBy(x => x.Id)
 			.ToArrayAsync();
 
 		for (int i = 0; i < resultsArray.Length; i++) {
@@ -73,29 +74,30 @@ public class AptScheduleController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateSchedule([FromBody] CreateAptSchedule newAppointment) {
 
-		var existingCustomer = _context.Customers.Find(newAppointment.customerId);
+		var existingCustomer = _context.Customers.Find(newAppointment.CustomerId);
 		if (existingCustomer == null) {
-			return BadRequest(NotExistErrors.Customer);
+			return BadRequest(NotExistErrors.customer);
 		}
 
 		var existingBusiness = _context.Business.Find(existingCustomer.BusinessId);
 
-		if (existingBusiness!.allowListedServicesOnly) {
-			if (newAppointment.Service == null || !existingBusiness.services.Contains(newAppointment.Service)) {
+		newAppointment.Service = StringUtils.PhraseCaseNormalizer(newAppointment.Service);
+		newAppointment.Description = StringUtils.PhraseCaseNormalizer(newAppointment.Description);
+
+		if (existingBusiness!.AllowListedServicesOnly) {
+			if (newAppointment.Service == null || !existingBusiness.Services.Contains(newAppointment.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
 
-		//TODO: validate business hours
-
-		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingBusiness.Id).ToArray();
+		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingCustomer.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
-			if (idp.start <= newAppointment.dateTime && idp.finish >= newAppointment.dateTime) {
+			if (idp.Start <= newAppointment.dateTime && idp.Finish >= newAppointment.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
 			}
 		}
 
-		AptContact contact = _context.Contacts.Where(x => x.CustomerId == newAppointment.customerId)
+		AptContact contact = _context.Contacts.Where(x => x.CustomerId == newAppointment.CustomerId)
 								.Where(x => x.dateTime <= DateTime.UtcNow).Where(x => x.dateTime >= DateTime.UtcNow.AddDays(-1))
 								.OrderByDescending(x => x.dateTime).FirstOrDefault()!;
 
@@ -107,7 +109,7 @@ public class AptScheduleController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Update the Appointment Schedule with the given Id
+	/// Update the Appointment Schedule of the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AptSchedule))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -116,13 +118,16 @@ public class AptScheduleController : ControllerBase {
 
 		var existingAppointment = _context.Schedules.Find(upSchedule.Id);
 		if (existingAppointment == null) {
-			return BadRequest(NotExistErrors.AptSchedule);
+			return BadRequest(NotExistErrors.aptSchedule);
 		}
 
 		var existingBusiness = _context.Business.Find(existingAppointment.BusinessId);
 
-		if (upSchedule.Service != null && existingBusiness!.allowListedServicesOnly) {
-			if (!existingBusiness.services.Contains(upSchedule.Service)) {
+		upSchedule.Service = StringUtils.PhraseCaseNormalizer(upSchedule.Service);
+		upSchedule.Description = StringUtils.PhraseCaseNormalizer(upSchedule.Description);
+
+		if (upSchedule.Service != null && existingBusiness!.AllowListedServicesOnly) {
+			if (!existingBusiness.Services.Contains(upSchedule.Service)) {
 				return BadRequest(ValidatorErrors.UnlistedService);
 			}
 		}
@@ -131,15 +136,15 @@ public class AptScheduleController : ControllerBase {
 
 		IdlePeriod[] idps = _context.IdlePeriods.Where(x => x.BusinessId == existingAppointment.BusinessId).ToArray();
 		foreach (IdlePeriod idp in idps) {
-			if (idp.start <= upSchedule.dateTime && idp.finish >= upSchedule.dateTime) {
+			if (idp.Start <= upSchedule.dateTime && idp.Finish >= upSchedule.dateTime) {
 				return BadRequest(ValidatorErrors.DateWithinIdlePeriod);
 			}
 		}
 
 		existingAppointment.dateTime = upSchedule.dateTime;
 		existingAppointment.Service = upSchedule.Service;
-		existingAppointment.observation = upSchedule.observation;
-		existingAppointment.Price = upSchedule.Price;
+		existingAppointment.Description = upSchedule.Description;
+		existingAppointment.price = upSchedule.price;
 
 		await _context.SaveChangesAsync();
 
@@ -156,7 +161,7 @@ public class AptScheduleController : ControllerBase {
 
 		var scheduleToDelete = _context.Schedules.Find(Id);
 		if (scheduleToDelete == null) {
-			return BadRequest(NotExistErrors.AptSchedule);
+			return BadRequest(NotExistErrors.aptSchedule);
 		}
 
 		_context.Schedules.Remove(scheduleToDelete);

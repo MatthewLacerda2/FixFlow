@@ -9,14 +9,14 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
-**customerId** | **String** | The Id of the Customer who made the Schedule | 
+**customerId** | **String** |  | 
 **customer** | [**Customer**](Customer.md) |  | [optional] 
-**businessId** | **String** | The Id of the Business who owns this Contact | 
-**wasContacted** | **bool** |  | [optional] 
-**dateTime** | [**DateTime**](DateTime.md) | The scheduled DateTime of the Appointment | [optional] 
+**businessId** | **String** |  | 
+**wasContacted** | **bool** | Was the Customer contacted to make this Schedule? | [optional] 
+**dateTime** | [**DateTime**](DateTime.md) |  | [optional] 
 **service** | **String** |  | [optional] 
-**observation** | **String** |  | [optional] 
-**price** | **double** |  | [optional] 
+**description** | **String** |  | [optional] 
+**price** | **int** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

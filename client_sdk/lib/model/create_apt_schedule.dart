@@ -16,14 +16,12 @@ class CreateAptSchedule {
     required this.customerId,
     this.dateTime,
     this.service,
-    this.observation,
-    this.price,
+    this.description,
+    required this.price,
   });
 
-  /// The Id of the Customer who made the Schedule
   String customerId;
 
-  /// The scheduled DateTime of the Appointment
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
   /// does not include a default value (using the "default:" property), however, the generated
@@ -34,22 +32,16 @@ class CreateAptSchedule {
 
   String? service;
 
-  String? observation;
+  String? description;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  double? price;
+  int price;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is CreateAptSchedule &&
     other.customerId == customerId &&
     other.dateTime == dateTime &&
     other.service == service &&
-    other.observation == observation &&
+    other.description == description &&
     other.price == price;
 
   @override
@@ -58,11 +50,11 @@ class CreateAptSchedule {
     (customerId.hashCode) +
     (dateTime == null ? 0 : dateTime!.hashCode) +
     (service == null ? 0 : service!.hashCode) +
-    (observation == null ? 0 : observation!.hashCode) +
-    (price == null ? 0 : price!.hashCode);
+    (description == null ? 0 : description!.hashCode) +
+    (price.hashCode);
 
   @override
-  String toString() => 'CreateAptSchedule[customerId=$customerId, dateTime=$dateTime, service=$service, observation=$observation, price=$price]';
+  String toString() => 'CreateAptSchedule[customerId=$customerId, dateTime=$dateTime, service=$service, description=$description, price=$price]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -77,16 +69,12 @@ class CreateAptSchedule {
     } else {
       json[r'service'] = null;
     }
-    if (this.observation != null) {
-      json[r'observation'] = this.observation;
+    if (this.description != null) {
+      json[r'description'] = this.description;
     } else {
-      json[r'observation'] = null;
+      json[r'description'] = null;
     }
-    if (this.price != null) {
       json[r'price'] = this.price;
-    } else {
-      json[r'price'] = null;
-    }
     return json;
   }
 
@@ -112,8 +100,8 @@ class CreateAptSchedule {
         customerId: mapValueOfType<String>(json, r'customerId')!,
         dateTime: mapDateTime(json, r'dateTime', r''),
         service: mapValueOfType<String>(json, r'service'),
-        observation: mapValueOfType<String>(json, r'observation'),
-        price: mapValueOfType<double>(json, r'price'),
+        description: mapValueOfType<String>(json, r'description'),
+        price: mapValueOfType<int>(json, r'price')!,
       );
     }
     return null;
@@ -162,6 +150,7 @@ class CreateAptSchedule {
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
     'customerId',
+    'price',
   };
 }
 

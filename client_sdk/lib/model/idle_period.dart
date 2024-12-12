@@ -13,34 +13,22 @@ part of openapi.api;
 class IdlePeriod {
   /// Returns a new [IdlePeriod] instance.
   IdlePeriod({
-    this.id,
-    this.name,
-    this.businessId,
-    this.start,
-    this.finish,
+    required this.id,
+    required this.name,
+    required this.businessId,
+    required this.start,
+    required this.finish,
   });
 
-  String? id;
+  String id;
 
-  String? name;
+  String name;
 
-  String? businessId;
+  String businessId;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  DateTime? start;
+  DateTime start;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  DateTime? finish;
+  DateTime finish;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is IdlePeriod &&
@@ -53,42 +41,22 @@ class IdlePeriod {
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (name == null ? 0 : name!.hashCode) +
-    (businessId == null ? 0 : businessId!.hashCode) +
-    (start == null ? 0 : start!.hashCode) +
-    (finish == null ? 0 : finish!.hashCode);
+    (id.hashCode) +
+    (name.hashCode) +
+    (businessId.hashCode) +
+    (start.hashCode) +
+    (finish.hashCode);
 
   @override
   String toString() => 'IdlePeriod[id=$id, name=$name, businessId=$businessId, start=$start, finish=$finish]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.id != null) {
       json[r'id'] = this.id;
-    } else {
-      json[r'id'] = null;
-    }
-    if (this.name != null) {
       json[r'name'] = this.name;
-    } else {
-      json[r'name'] = null;
-    }
-    if (this.businessId != null) {
       json[r'businessId'] = this.businessId;
-    } else {
-      json[r'businessId'] = null;
-    }
-    if (this.start != null) {
-      json[r'start'] = this.start!.toUtc().toIso8601String();
-    } else {
-      json[r'start'] = null;
-    }
-    if (this.finish != null) {
-      json[r'finish'] = this.finish!.toUtc().toIso8601String();
-    } else {
-      json[r'finish'] = null;
-    }
+      json[r'start'] = this.start.toUtc().toIso8601String();
+      json[r'finish'] = this.finish.toUtc().toIso8601String();
     return json;
   }
 
@@ -111,11 +79,11 @@ class IdlePeriod {
       }());
 
       return IdlePeriod(
-        id: mapValueOfType<String>(json, r'id'),
-        name: mapValueOfType<String>(json, r'name'),
-        businessId: mapValueOfType<String>(json, r'businessId'),
-        start: mapDateTime(json, r'start', r''),
-        finish: mapDateTime(json, r'finish', r''),
+        id: mapValueOfType<String>(json, r'id')!,
+        name: mapValueOfType<String>(json, r'name')!,
+        businessId: mapValueOfType<String>(json, r'businessId')!,
+        start: mapDateTime(json, r'start', r'')!,
+        finish: mapDateTime(json, r'finish', r'')!,
       );
     }
     return null;
@@ -163,6 +131,11 @@ class IdlePeriod {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
+    'id',
+    'name',
+    'businessId',
+    'start',
+    'finish',
   };
 }
 

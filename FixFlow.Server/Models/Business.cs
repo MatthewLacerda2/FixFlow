@@ -19,15 +19,10 @@ public class Business : IdentityUser {
 	/// </summary>
 	public string CNPJ { get; set; }
 
-	/// <summary>
-	/// The DateTimes of the week where the business is open
-	/// </summary>
-	public BusinessWeek BusinessWeek { get; set; }
-
-	public string[] services { get; set; } = Array.Empty<string>();
-	public bool allowListedServicesOnly { get; set; } = false;
-	//TODO: public bool allowManyServices { get; set; } = false;
-	public bool openOnHolidays { get; set; } = false;
+	public string[] Services { get; set; } = Array.Empty<string>();
+	public bool AllowListedServicesOnly { get; set; }
+	//TODO: public bool AllowManyServices { get; set; }
+	public bool OpenOnHolidays { get; set; }
 
 	public Business() : this(string.Empty, string.Empty, string.Empty, string.Empty) { }
 
@@ -40,11 +35,9 @@ public class Business : IdentityUser {
 		Email = email;
 		CNPJ = cnpj;
 		PhoneNumber = phoneNumber;
-
-		BusinessWeek = new BusinessWeek();
 	}
 
 	public static explicit operator Business(BusinessRegisterRequest request) {
-		return new Business(request.Name, request.Email, request.CNPJ, request.PhoneNumber);
+		return new Business(request.Name.Trim(), request.Email, request.CNPJ, request.PhoneNumber);
 	}
 }

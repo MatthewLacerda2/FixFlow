@@ -24,6 +24,7 @@ class MainScreenState extends State<MainScreen> {
 
   late final AptFilters scheduleFilters;
   late final AptFilters logFilters;
+  late final AptFilters contactsFilter;
   late List<Widget> _screens = <Widget>[];
 
   @override
@@ -46,15 +47,21 @@ class MainScreenState extends State<MainScreen> {
 
     scheduleFilters = AptFilters(
         businessId: businessId,
-        maxPrice: 9999,
+        maxPrice: 999999,
         minDateTime: DateTime.now(),
-        maxDateTime: DateTime.now().add(const Duration(days: 30)));
+        maxDateTime: DateTime.now().add(const Duration(days: 15)));
 
     logFilters = AptFilters(
         businessId: businessId,
-        maxPrice: 9999,
+        maxPrice: 999999,
         minDateTime: DateTime(2023),
         maxDateTime: DateTime.now());
+
+    contactsFilter = AptFilters(
+        businessId: businessId,
+        maxPrice: 999999,
+        minDateTime: DateTime.now(),
+        maxDateTime: DateTime.now().add(const Duration(days: 5)));
 
     _screens = <Widget>[
       const OverviewScreen(),

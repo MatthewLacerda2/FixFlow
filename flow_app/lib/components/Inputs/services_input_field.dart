@@ -27,12 +27,11 @@ class ServicesInputFieldState extends State<ServicesInputField> {
 
   Future<void> loadBusinessOptions() async {
     final BusinessDTO? businessData = await FlowStorage.getBusinessDTO();
-    if (businessData != null) {
-      setState(() {
-        _availableServices = businessData.services ?? <String>[];
-        _allowNewServices = !(businessData.allowListedServicesOnly ?? true);
-      });
-    }
+
+    setState(() {
+      _availableServices = businessData!.services ?? <String>[];
+      _allowNewServices = !(businessData.allowListedServicesOnly ?? true);
+    });
   }
 
   @override
@@ -41,6 +40,8 @@ class ServicesInputFieldState extends State<ServicesInputField> {
     _textController.text = widget.initialService ?? "";
     _selectedService = widget.initialService;
     _textController.addListener(_onSearchChanged);
+    loadBusinessOptions();
+    print(_availableServices);
   }
 
   @override
@@ -100,7 +101,7 @@ class ServicesInputFieldState extends State<ServicesInputField> {
         TextField(
           controller: _textController,
           decoration: const InputDecoration(
-            hintText: 'Type a service',
+            hintText: 'Digite um serviço',
             border: OutlineInputBorder(),
           ),
         ),

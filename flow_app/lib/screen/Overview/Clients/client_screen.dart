@@ -2,8 +2,9 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/colored_border_text_button.dart';
-import '../../../components/logs_list.dart';
+import '../../../components/apt_list.dart';
 import '../../../utils/date_time_utils.dart';
+import '../../../utils/string_utils.dart';
 import '../../apts/log_screen.dart';
 
 class ClientScreen extends StatelessWidget {
@@ -15,10 +16,11 @@ class ClientScreen extends StatelessWidget {
     if (aptLogs == null) {
       return 0;
     }
-    return aptLogs.fold(
+    final double total = aptLogs.fold(
       0.0,
       (double sum, AptLog log) => sum + (log.price ?? 0),
     );
+    return total / 100;
   }
 
   @override
@@ -28,7 +30,7 @@ class ClientScreen extends StatelessWidget {
         title: const Text('Cliente'),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
         child: ListView(
           children: <Widget>[
             Text(
@@ -55,7 +57,7 @@ class ClientScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
             ),
             Text(
-              'CPF: ${record.cpf ?? 'não informado'}',
+              'CPF: ${record.cpf == "" ? 'não informado' : record.cpf}',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
@@ -70,7 +72,7 @@ class ClientScreen extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             Text(
-              'Agendamentos: ${record.numSchedules}',
+              'Agendamentos: ${record.logs!.length}',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Text(
@@ -117,18 +119,17 @@ class ClientScreen extends StatelessWidget {
               height: 1,
               color: Colors.grey,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             ...record.logs!.map((AptLog log) {
               final String timeOfDayString =
                   TimeOfDay.fromDateTime(log.dateTime!).format(context);
-              return LogsList(
+              return AptList(
                 clientName: record.fullName,
-                price: log.price ??
-                    0, //TODO: prices are coming null, this is just a band-aid
+                price: log.price! / 100,
                 hour: timeOfDayString,
                 date: DateTimeUtils.dateOnlyString(log.dateTime!),
-                service: log.service ?? '-',
-                observation: log.description ?? '-',
+                service: StringUtils.normalIfBlank(log.service),
+                observation: StringUtils.normalIfBlank(log.description),
                 onTap: () {
                   Navigator.push(
                     context,

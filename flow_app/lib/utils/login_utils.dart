@@ -3,6 +3,7 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
+import 'flow_snack.dart';
 import 'flow_storage.dart';
 
 class LoginUtils {
@@ -17,17 +18,13 @@ class LoginUtils {
         .apiV1AccountsPostWithHttpInfo(flowLoginRequest: flr);
 
     if (loginResponse.statusCode != 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(loginResponse.body),
-        ),
-      );
+      FlowSnack.show(context, loginResponse.body);
       return;
     }
 
-    FlowStorage.saveToken(loginResponse.body);
+    await FlowStorage.saveToken(loginResponse.body);
 
-    fetchBusinessDTO();
+    await fetchBusinessDTO();
 
     Navigator.pushAndRemoveUntil(
       context,
@@ -39,15 +36,23 @@ class LoginUtils {
   }
 
   static Future<BusinessDTO?> fetchBusinessDTO() async {
-    String? jwtToken = await FlowStorage.getToken();
-    jwtToken = jwtToken!.replaceAll('"', '');
+    final String jwtToken = await FlowStorage.getToken();
     final JWT jwtTokenDecoded = JWT.decode(jwtToken);
     final Map<String, dynamic> payload =
         jwtTokenDecoded.payload as Map<String, dynamic>;
     final String businessId = payload['businessId'] as String;
 
+    final ApiClient apiClient = FlowStorage.getApiClient(jwtToken);
+
     final BusinessDTO? businessDTO =
-        await BusinessApi().apiV1BusinessGet(businessId: businessId);
+        await BusinessApi(apiClient).apiV1BusinessGet(businessId: businessId);
+
+    var resp = await BusinessApi(apiClient)
+        .apiV1BusinessGetWithHttpInfo(businessId: businessId);
+    if (resp.statusCode == 400) {
+      //TODO: pegar o subscription que nao tá pago
+      return null;
+    }
 
     FlowStorage.saveBusinessDTO(businessDTO!);
 

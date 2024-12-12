@@ -16,16 +16,22 @@ class FlowStorage {
     await prefs.setString(jwtTokenKey, token);
   }
 
-  static Future<String?> getToken() async {
+  static Future<String> getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(jwtTokenKey);
+
+    final String token = prefs.getString(jwtTokenKey) ?? "";
+
+    return token.replaceAll('"', '');
   }
 
   static Future<void> clear() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
 
-    await AccountsApi().apiV1AccountsLogoutPost();
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
+
+    await AccountsApi(apiClient).apiV1AccountsLogoutPost();
   }
 
   static Future<void> saveBusinessDTO(BusinessDTO businessDTO) async {
@@ -45,5 +51,11 @@ class FlowStorage {
   static Future<void> removeBusinessDTO() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(businessDTOKey);
+  }
+
+  static ApiClient getApiClient(String token) {
+    final ApiClient cl = ApiClient();
+    cl.addDefaultHeader("Authorization", "Bearer $token");
+    return cl;
   }
 }

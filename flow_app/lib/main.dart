@@ -1,3 +1,4 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,7 +20,7 @@ class FlowApp extends StatelessWidget {
         <DeviceOrientation>[DeviceOrientation.portraitUp]);
 
     return MaterialApp(
-      title: 'Flow',
+      title: 'Revisit',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -28,7 +29,7 @@ class FlowApp extends StatelessWidget {
         future: checkIfLoggedIn(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData && snapshot.data == true) {
             return const MainScreen(
               initialIndex: 0,
@@ -42,12 +43,17 @@ class FlowApp extends StatelessWidget {
   }
 
   Future<bool> checkIfLoggedIn() async {
-    final bool loggedIn = await FlowStorage.getToken() != null;
+    final String token = await FlowStorage.getToken();
 
-    if (loggedIn) {
-      LoginUtils.fetchBusinessDTO();
+    if (token.isEmpty) {
+      return false;
     }
 
-    return loggedIn;
+    final BusinessDTO? fetchedDTO = await LoginUtils.fetchBusinessDTO();
+    if (fetchedDTO == null) {
+      return false;
+    }
+
+    return true;
   }
 }

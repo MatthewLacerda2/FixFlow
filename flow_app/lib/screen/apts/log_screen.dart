@@ -11,13 +11,12 @@ import '../../components/Inputs/services_input_field.dart';
 import '../../components/Inputs/time_picker_rectangle.dart';
 import '../../components/warning_modal.dart';
 import '../../utils/date_time_utils.dart';
+import '../../utils/flow_snack.dart';
+import '../../utils/flow_storage.dart';
 import '../main/main_screen.dart';
 
 class LogScreen extends StatefulWidget {
-  const LogScreen({
-    super.key,
-    required this.log,
-  });
+  const LogScreen({super.key, required this.log});
 
   final AptLog log;
 
@@ -29,7 +28,7 @@ class LogScreenState extends State<LogScreen> {
   late TextEditingController _precoController;
   late TextEditingController _observacaoController;
 
-  UpdateAptLog upLog = UpdateAptLog(id: "id");
+  UpdateAptLog upLog = UpdateAptLog(id: "id", price: 0);
 
   bool _isEdited = false;
 
@@ -42,12 +41,11 @@ class LogScreenState extends State<LogScreen> {
         id: log.id,
         dateTime: log.dateTime,
         description: log.description,
-        price: log.price,
-        scheduleId: log.scheduleId,
+        price: log.price ?? 0,
         service: log.service);
 
     _precoController = TextEditingController(
-        text: widget.log.price?.toStringAsFixed(2) ?? 0.toString());
+        text: (widget.log.price! / 100).toStringAsFixed(2));
     _observacaoController = TextEditingController(text: widget.log.description);
   }
 
@@ -58,33 +56,27 @@ class LogScreenState extends State<LogScreen> {
   }
 
   void _saveChanges() async {
-    final Response response =
-        await AptLogApi().apiV1LogsPatchWithHttpInfo(updateAptLog: upLog);
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
+
+    final Response response = await AptLogApi(apiClient)
+        .apiV1LogsPatchWithHttpInfo(updateAptLog: upLog);
     snackbarResponse(response);
   }
 
   void snackbarResponse(Response response) {
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Atendimento editado!"),
-        ),
-      );
+      FlowSnack.show(context, "Atendimento editado!");
       goToLogsScreen();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.body),
-        ),
-      );
+      FlowSnack.show(context, response.body);
     }
   }
 
   void _cancelChanges() {
     setState(() {
       _isEdited = false;
-      _precoController.text =
-          widget.log.price?.toStringAsFixed(2) ?? 0.toString();
+      _precoController.text = widget.log.price!.toStringAsFixed(2);
       _observacaoController.text = widget.log.description ?? "";
     });
   }
@@ -175,7 +167,7 @@ class LogScreenState extends State<LogScreen> {
             PriceInputField(
               controller: _precoController,
               onPriceValid: (String value) {
-                upLog.price = double.parse(value);
+                upLog.price = ((double.tryParse(value) ?? 0) * 100).toInt();
                 _toggleEdit();
               },
             ),
@@ -235,8 +227,12 @@ class LogScreenState extends State<LogScreen> {
                           textSize: 14,
                           backgroundColor: Colors.green,
                           textColor: Colors.black,
-                          onPressed: () {
-                            AptLogApi().apiV1LogsDelete(body: widget.log.id);
+                          onPressed: () async {
+                            final String mytoken = await FlowStorage.getToken();
+                            final ApiClient apiClient =
+                                FlowStorage.getApiClient(mytoken);
+                            AptLogApi(apiClient)
+                                .apiV1LogsDelete(body: widget.log.id);
                             goToLogsScreen();
                           },
                         ),

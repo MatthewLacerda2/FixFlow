@@ -1,6 +1,9 @@
+import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/Buttons/custom_button.dart';
+import '../../../utils/flow_storage.dart';
+import '../../auth/initial_screen.dart';
 import '../../main/main_screen.dart';
 import '../are_you_sure_screen.dart';
 
@@ -84,8 +87,21 @@ class DeactivateAccountScreen extends StatelessWidget {
                             changeSuccessfulScreenTitle: "Conta desativada",
                             changeSuccessfulScreenDescription:
                                 "Sua conta foi desativada, mas não perdida. Você pode reativar-la e continuar daonde parou, com o mesmo e-mail e senha\n\nVolte logo!",
-                            onPressed: () {
-                              //TODO: http request to deactivate account
+                            onConfirm: () async {
+                              final String mytoken =
+                                  await FlowStorage.getToken();
+                              final ApiClient apiClient =
+                                  FlowStorage.getApiClient(mytoken);
+                              BusinessApi(apiClient)
+                                  .apiV1BusinessDeactivatePatch();
+                              FlowStorage.clear();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const InitialScreen(),
+                                ),
+                              );
                             },
                           ),
                         ),

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Server.Data;
 using Server.Models;
@@ -11,27 +12,29 @@ namespace Server.Controllers;
 
 [ApiController]
 [Route(Common.api_v1 + nameof(BusinessCalendarDay))]
-//[Authorize]
+[Authorize]
 [Produces("application/json")]
 public class BusinessCalendarDayController : ControllerBase {
 
 	private readonly ServerContext _context;
+	private readonly UserManager<Business> _userManager;
 
-	public BusinessCalendarDayController(ServerContext context) {
+	public BusinessCalendarDayController(ServerContext context, UserManager<Business> userManager) {
 		_context = context;
+		_userManager = userManager;
 	}
 
 	/// <summary>
 	/// Gets all the events for this month
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusinessCalendarDay[]))]
-	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[HttpGet]
-	public async Task<IActionResult> GetBusinessMonthCalendar(string businessId, int year, int month) {
+	public async Task<IActionResult> GetBusinessMonthCalendar(int year, int month) {
 
-		bool businessExists = await _context.Business.FindAsync(businessId) != null;
-		if (!businessExists) {
-			return NotFound(NotExistErrors.Business);
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+		var businessExists = await _userManager.FindByIdAsync(businessId);
+		if (businessExists == null) {
+			return Unauthorized(NotExistErrors.business);
 		}
 
 		int daysInMonth = DateTime.DaysInMonth(year, month);
@@ -39,18 +42,18 @@ public class BusinessCalendarDayController : ControllerBase {
 
 		for (int i = 0; i < daysInMonth; i++) {
 			BusinessCalendarDay aux = new BusinessCalendarDay();
-			aux.date = new DateTime(year, month, i + 1).ToUniversalTime();
+			aux.date = new DateTime(year, month, i + 1);
 
 			aux.schedules = _context.Schedules.Where(x => x.BusinessId == businessId)
-								.Where(x => x.dateTime.ToUniversalTime().Date == aux.date.ToUniversalTime().Date)
+								.Where(x => x.dateTime.Date == aux.date.Date)
 								.ToArray();
 
 			aux.logs = _context.Logs.Where(x => x.BusinessId == businessId)
-								.Where(x => x.dateTime.ToUniversalTime().Date == aux.date.ToUniversalTime().Date)
+								.Where(x => x.dateTime.Date == aux.date.Date)
 								.ToArray();
 
 			aux.idlePeriods = _context.IdlePeriods.Where(x => x.BusinessId == businessId)
-								.Where(x => x.start <= aux.date && x.finish >= aux.date)
+								.Where(x => x.Start <= aux.date && x.Finish >= aux.date)
 								.ToArray();
 
 			foreach (AptSchedule sched in aux.schedules) {

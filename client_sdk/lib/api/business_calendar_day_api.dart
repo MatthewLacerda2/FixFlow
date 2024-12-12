@@ -22,12 +22,10 @@ class BusinessCalendarDayApi {
   ///
   /// Parameters:
   ///
-  /// * [String] businessId:
-  ///
   /// * [int] year:
   ///
   /// * [int] month:
-  Future<Response> apiV1BusinessCalendarDayGetWithHttpInfo({ String? businessId, int? year, int? month, }) async {
+  Future<Response> apiV1BusinessCalendarDayGetWithHttpInfo({ int? year, int? month, }) async {
     // ignore: prefer_const_declarations
     final path = r'/api/v1/BusinessCalendarDay';
 
@@ -38,9 +36,6 @@ class BusinessCalendarDayApi {
     final headerParams = <String, String>{};
     final formParams = <String, String>{};
 
-    if (businessId != null) {
-      queryParams.addAll(_queryParams('', 'businessId', businessId));
-    }
     if (year != null) {
       queryParams.addAll(_queryParams('', 'year', year));
     }
@@ -66,13 +61,11 @@ class BusinessCalendarDayApi {
   ///
   /// Parameters:
   ///
-  /// * [String] businessId:
-  ///
   /// * [int] year:
   ///
   /// * [int] month:
-  Future<List<BusinessCalendarDay>?> apiV1BusinessCalendarDayGet({ String? businessId, int? year, int? month, }) async {
-    final response = await apiV1BusinessCalendarDayGetWithHttpInfo( businessId: businessId, year: year, month: month, );
+  Future<List<BusinessCalendarDay>?> apiV1BusinessCalendarDayGet({ int? year, int? month, }) async {
+    final response = await apiV1BusinessCalendarDayGetWithHttpInfo( year: year, month: month, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

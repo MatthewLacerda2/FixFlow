@@ -2,6 +2,7 @@ import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/Buttons/colored_border_text_button.dart';
+import '../../components/rounded_info_box.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
 import '../Overview/Clients/clients_screen.dart';
@@ -31,14 +32,13 @@ class _OverviewScreenState extends State<OverviewScreen> {
       _isLoading = true;
     });
 
-    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
-    final String businessId = bd!.id!;
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final List<AptSchedule>? todaySchedules =
-        await AptScheduleApi().apiV1SchedulesGet(
-      businessId: businessId,
+        await AptScheduleApi(apiClient).apiV1SchedulesGet(
       minPrice: 0,
-      maxPrice: 999,
+      maxPrice: 99999,
       minDateTime: DateTime.now(),
       maxDateTime:
           DateTimeUtils.getNextDayAtMidnight(DateTime.now().weekday + 1),
@@ -47,10 +47,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
     );
 
     final List<AptSchedule>? weekSchedules =
-        await AptScheduleApi().apiV1SchedulesGet(
-      businessId: businessId,
+        await AptScheduleApi(apiClient).apiV1SchedulesGet(
       minPrice: 0,
-      maxPrice: 999,
+      maxPrice: 99999,
       minDateTime: DateTime.now(),
       maxDateTime: DateTimeUtils.getNextDayAtMidnight(DateTime.sunday),
       limit: 100,
@@ -154,6 +153,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     color: Colors.grey,
                     height: 1,
                   ),
+                  /*
                   const SizedBox(height: 24),
                   ColoredBorderTextButton(
                     text: 'Estatísticas',
@@ -162,14 +162,10 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     backgroundColor: Colors.orangeAccent,
                     width: 130,
                     onPressed: () {
-                      //TODO: Make the Statistics Screen
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Botão não-implementado !"),
-                        ),
-                      );
+                      TODO: Make the Statistics Screen
+                      FlowSnack.show(context, "Botão não implementado");
                     },
-                  ),
+                  ),*/
                   const SizedBox(height: 24),
                   ColoredBorderTextButton(
                     text: 'Calendário',
@@ -181,8 +177,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              const CalendarScreen(),
+                          builder: (BuildContext context) => CalendarScreen(
+                              month: DateTime.now().month,
+                              year: DateTime.now().year),
                         ),
                       );
                     },
@@ -204,7 +201,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(
+                      height:
+                          24), /*
                   ColoredBorderTextButton(
                     text: 'Mensalidades',
                     textColor: Colors.black,
@@ -212,14 +211,10 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     backgroundColor: Colors.grey[300]!,
                     width: 100,
                     onPressed: () {
-                      // TODO: Create Mensalidades Screen
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Botão não-implementado !"),
-                        ),
-                      );
+                      TODO: Create Mensalidades Screen
+                      FlowSnack.show(context, "Botão não-implementado!");
                     },
-                  ),
+                  ),*/
                 ],
               ),
             ),

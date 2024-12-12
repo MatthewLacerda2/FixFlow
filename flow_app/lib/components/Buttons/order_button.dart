@@ -8,12 +8,17 @@ class OrderButton extends StatelessWidget {
     required this.icon,
     required this.iconSize,
     required this.iconColor,
+    required this.onToggle,
+    required this.sort,
     this.isUp,
   });
+
   final IconData icon;
   final double iconSize;
   final Color iconColor;
   final bool? isUp;
+  final String sort;
+  final Function(String key, bool isUp) onToggle;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,10 @@ class OrderButton extends StatelessWidget {
       children: <Widget>[
         RoundedIconedButton(
           icon: icon,
-          onPressed: () {},
+          onPressed: () {
+            final bool newState = (isUp == null) ? true : !isUp!;
+            onToggle(sort, newState);
+          },
           size: iconSize,
           bottom: 0,
           right: 0,
@@ -37,7 +45,7 @@ class OrderButton extends StatelessWidget {
                 size: iconSize,
                 color: Colors.black,
               ),
-        SizedBox(height: iconSize, width: 10)
+        SizedBox(height: iconSize, width: 10),
       ],
     );
   }

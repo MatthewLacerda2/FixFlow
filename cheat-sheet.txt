@@ -5,22 +5,13 @@ dotnet restore
 dotnet build -c Release .\FixFlow.Server.csproj
 swagger tofile --output .\swagger.json .\bin\Release\net8.0\FixFlow.Server.dll v1
 
-dotnet watch run --urls http://192.168.15.81:5105
-
-cd FixFlow.Tests
-
-dotnet build
-dotnet test
-
-cd ..
-
 openapi-generator-cli generate -i .\FixFlow.Server\swagger.json -g dart -o ./client_sdk
 
-cd flow_app\lib
+dotnet watch run
 
-flutter pub get
-flutter upgrade
-flutter build apk
+- - - - -
+
+Pro Wi-fi debugging:
 
 vai no telefone, developer options, wireless debugging
     "pair device with pairing code"

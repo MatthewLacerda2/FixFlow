@@ -32,4 +32,12 @@ class DateTimeUtils {
   static String dateOnlyString(DateTime? date) {
     return date == null ? '-' : DateFormat('dd/MM/yy').format(date);
   }
+
+  static String niceFormattedDateTime(DateTime dateTime, BuildContext context) {
+    final String date = dateOnlyString(dateTime);
+    final String time =
+        TimeOfDay(hour: dateTime.hour, minute: dateTime.minute).format(context);
+
+    return "$time - $date";
+  }
 }

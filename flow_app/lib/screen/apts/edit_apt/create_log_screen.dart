@@ -1,7 +1,6 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:snackbar/snackbar.dart';
 
 import '../../../components/Inputs/customer_dropdown.dart';
 import '../../../components/Inputs/date_picker_rectangle.dart';
@@ -9,6 +8,7 @@ import '../../../components/Inputs/limited_text_input_field.dart';
 import '../../../components/Inputs/price_input_field.dart';
 import '../../../components/Inputs/services_input_field.dart';
 import '../../../components/Inputs/time_picker_rectangle.dart';
+import '../../../utils/flow_snack.dart';
 import '../../../utils/flow_storage.dart';
 import '../../main/main_screen.dart';
 
@@ -60,27 +60,22 @@ class CreateLogScreenState extends State<CreateLogScreen> {
   }
 
   void _saveChanges() async {
-    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
-    final String businessId = bd!.id!;
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final CreateAptLog createLog = CreateAptLog(
         customerId: customerId,
-        businessId: businessId,
         dateTime: registerDate,
-        observation: _observacaoController.text,
-        price: double.tryParse(_precoController.text) ?? 0.0,
+        description: _observacaoController.text,
+        price: ((double.tryParse(_precoController.text) ?? 0) * 100).toInt(),
         service: service,
-        whenShouldCustomerComeBack: whenShouldComeBack);
+        dateToComeback: whenShouldComeBack);
 
-    final Response response =
-        await AptLogApi().apiV1LogsPostWithHttpInfo(createAptLog: createLog);
+    final Response response = await AptLogApi(apiClient)
+        .apiV1LogsPostWithHttpInfo(createAptLog: createLog);
 
     if (response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Atendimento registrado!"),
-        ),
-      );
+      FlowSnack.show(context, "Atendimento registrado!");
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute<void>(
@@ -92,7 +87,7 @@ class CreateLogScreenState extends State<CreateLogScreen> {
     } else {
       print(createLog);
       print(response.body);
-      snack("Error: $response");
+      FlowSnack.show(context, response.body);
     }
   }
 
@@ -183,6 +178,8 @@ class CreateLogScreenState extends State<CreateLogScreen> {
             ServicesInputField(
               onServiceSelected: (String? selectedService) {
                 service = selectedService ?? "";
+                print(selectedService);
+                print("UMU BUGA FEI DI TAL");
               },
             ),
             const SizedBox(height: 24),

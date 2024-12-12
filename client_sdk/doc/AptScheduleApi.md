@@ -11,7 +11,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**apiV1SchedulesDelete**](AptScheduleApi.md#apiv1schedulesdelete) | **DELETE** /api/v1/schedules | Deletes the Appointment Schedule with the given Id
 [**apiV1SchedulesGet**](AptScheduleApi.md#apiv1schedulesget) | **GET** /api/v1/schedules | Gets a number of filtered Schedules
-[**apiV1SchedulesPatch**](AptScheduleApi.md#apiv1schedulespatch) | **PATCH** /api/v1/schedules | Update the Appointment Schedule with the given Id
+[**apiV1SchedulesPatch**](AptScheduleApi.md#apiv1schedulespatch) | **PATCH** /api/v1/schedules | Update the Appointment Schedule of the given Id
 [**apiV1SchedulesPost**](AptScheduleApi.md#apiv1schedulespost) | **POST** /api/v1/schedules | Creates an Appointment Schedule
 
 
@@ -56,7 +56,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **apiV1SchedulesGet**
-> List<AptSchedule> apiV1SchedulesGet(businessId, client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit)
+> List<AptSchedule> apiV1SchedulesGet(client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit)
 
 Gets a number of filtered Schedules
 
@@ -65,7 +65,6 @@ Gets a number of filtered Schedules
 import 'package:openapi/api.dart';
 
 final api_instance = AptScheduleApi();
-final businessId = businessId_example; // String | 
 final client = client_example; // String | 
 final service = service_example; // String | 
 final minPrice = 3.4; // double | 
@@ -76,7 +75,7 @@ final offset = 56; // int |
 final limit = 56; // int | 
 
 try {
-    final result = api_instance.apiV1SchedulesGet(businessId, client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit);
+    final result = api_instance.apiV1SchedulesGet(client, service, minPrice, maxPrice, minDateTime, maxDateTime, offset, limit);
     print(result);
 } catch (e) {
     print('Exception when calling AptScheduleApi->apiV1SchedulesGet: $e\n');
@@ -87,7 +86,6 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **businessId** | **String**|  | [optional] 
  **client** | **String**|  | [optional] 
  **service** | **String**|  | [optional] 
  **minPrice** | **double**|  | [optional] 
@@ -115,7 +113,7 @@ No authorization required
 # **apiV1SchedulesPatch**
 > AptSchedule apiV1SchedulesPatch(aptSchedule)
 
-Update the Appointment Schedule with the given Id
+Update the Appointment Schedule of the given Id
 
 ### Example
 ```dart

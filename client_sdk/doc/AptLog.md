@@ -9,14 +9,14 @@ import 'package:openapi/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
-**customerId** | **String** | The Id of the Customer who took the Appointment | 
+**customerId** | **String** |  | 
 **customer** | [**Customer**](Customer.md) |  | [optional] 
-**businessId** | **String** | The Id of the Business who owns this Contact | 
-**scheduleId** | **String** | The Id of the Schedule that precedes this Log, if any | [optional] 
-**dateTime** | [**DateTime**](DateTime.md) | The DateTime when the Log was registered | [optional] 
+**businessId** | **String** |  | 
+**scheduleId** | **String** |  | [optional] 
+**dateTime** | [**DateTime**](DateTime.md) |  | [optional] 
 **service** | **String** |  | [optional] 
-**price** | **double** |  | [optional] 
-**description** | **String** |  | [optional] 
+**price** | **int** |  | [optional] 
+**description** | **String** | Anything about the Log that is worth noting | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

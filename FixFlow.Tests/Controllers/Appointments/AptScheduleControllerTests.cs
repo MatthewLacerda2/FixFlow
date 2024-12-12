@@ -26,8 +26,8 @@ public class AptScheduleControllerTests {
 		var client1Name = "fulano da silva";
 
 		var business1 = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var business2 = new Business("b-2", "b-2@gmail.com", "123.4567.789-0001", "98988263255");
 		var client1 = new Customer(business1.Id, "789456123", client1Name, null, null, null);
@@ -58,7 +58,7 @@ public class AptScheduleControllerTests {
 		var expectedSchedule = schedules[10];
 
 		// Act
-		var result = await _controller.ReadSchedules(business1.Id, "fulano ", "Service 1", 20, 90, minDate, maxDate, 1, 1) as OkObjectResult;
+		var result = await _controller.ReadSchedules("fulano ", "Service 1", 20, 90, minDate, maxDate, 1, 1) as OkObjectResult;
 
 		// Assert
 		Assert.NotNull(result);
@@ -90,8 +90,8 @@ public class AptScheduleControllerTests {
 	public async Task CreateSchedule_ReturnsBadRequest_WhenServiceIsUnlisted() {
 		// Arrange
 		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
 
@@ -140,7 +140,7 @@ public class AptScheduleControllerTests {
 	public async Task CreateSchedule_ReturnsBadRequest_WhenDateWithinIdlePeriod() {
 		// Arrange
 		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-			allowListedServicesOnly = false
+			AllowListedServicesOnly = false
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
 		var dateAndTime = TimeSpoil.GetNextDayOfWeekWithTime(DayOfWeek.Sunday, DateTime.Now.TimeOfDay);
@@ -166,8 +166,8 @@ public class AptScheduleControllerTests {
 	public async Task CreateSchedule_ReturnsOk_WhenCreationIsSuccessful() {
 		// Arrange
 		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
 
@@ -186,12 +186,12 @@ public class AptScheduleControllerTests {
 		Assert.Equal(201, result!.StatusCode);
 		var createdSchedule = result.Value as AptSchedule;
 		Assert.NotNull(createdSchedule);
-		Assert.Equal(newAppointment.customerId, createdSchedule!.CustomerId);
+		Assert.Equal(newAppointment.CustomerId, createdSchedule!.CustomerId);
 		Assert.Equal(business.Id, createdSchedule.BusinessId);
 		Assert.Equal(newAppointment.dateTime, createdSchedule.dateTime);
-		Assert.Equal(newAppointment.Price, createdSchedule.Price);
+		Assert.Equal(newAppointment.Price, createdSchedule.price);
 		Assert.Equal(newAppointment.Service, createdSchedule.Service);
-		Assert.Equal(newAppointment.Observation, createdSchedule.observation);
+		Assert.Equal(newAppointment.Description, createdSchedule.Description);
 	}
 
 	[Fact]
@@ -212,8 +212,8 @@ public class AptScheduleControllerTests {
 	public async Task UpdateSchedule_ReturnsBadRequest_WhenServiceIsUnlisted() {
 		// Arrange
 		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
 		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(1), 100, "Service 1");
@@ -239,7 +239,7 @@ public class AptScheduleControllerTests {
 	public async Task UpdateSchedule_ReturnsBadRequest_WhenDateWithinIdlePeriod() {
 		// Arrange
 		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-			allowListedServicesOnly = false
+			AllowListedServicesOnly = false
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
 		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(1), 100, "Service 1");
@@ -267,8 +267,8 @@ public class AptScheduleControllerTests {
 	public async Task UpdateSchedule_ReturnsOk_WhenUpdateIsSuccessful() {
 		// Arrange
 		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-			allowListedServicesOnly = true,
-			services = ["Service 1", "Service 2"]
+			AllowListedServicesOnly = true,
+			Services = ["Service 1", "Service 2"]
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
 		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(1), 100, "Service 1");
@@ -292,9 +292,9 @@ public class AptScheduleControllerTests {
 		Assert.Equal(upSchedule.CustomerId, updatedSchedule!.CustomerId);
 		Assert.Equal(upSchedule.BusinessId, updatedSchedule.BusinessId);
 		Assert.Equal(upSchedule.dateTime, updatedSchedule.dateTime);
-		Assert.Equal(upSchedule.Price, updatedSchedule.Price);
+		Assert.Equal(upSchedule.price, updatedSchedule.price);
 		Assert.Equal(upSchedule.Service, updatedSchedule.Service);
-		Assert.Equal(upSchedule.observation, updatedSchedule.observation);
+		Assert.Equal(upSchedule.Description, updatedSchedule.Description);
 	}
 
 	[Fact]
@@ -315,12 +315,12 @@ public class AptScheduleControllerTests {
 	public async Task DeleteSchedule_ReturnsNoContent_WhenDeletionIsSuccessful() {
 		// Arrange
 		var business = new Business("b-1", "b-1@gmail.com", "789.4561.123-0001", "98999344788") {
-			allowListedServicesOnly = false
+			AllowListedServicesOnly = false
 		};
 		var client = new Customer(business.Id, "789456123", "fulano da silva", null, null, null);
 		var schedule = new AptSchedule(client.Id, business.Id, DateTime.UtcNow.AddDays(1), 100, "Service 1");
 		var createAptLog = new CreateAptLog(client.Id, schedule.Id, DateTime.UtcNow, 30, null, null, DateTime.UtcNow.AddDays(30));
-		var log = new AptLog(createAptLog);
+		var log = new AptLog(createAptLog, business.Id);
 
 		_context.Business.Add(business);
 		_context.Customers.Add(client);

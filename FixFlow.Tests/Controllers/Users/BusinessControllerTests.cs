@@ -37,7 +37,7 @@ public class BusinessControllerTests {
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+		Assert.Equal(NotExistErrors.business, badRequestResult.Value);
 	}
 
 	[Fact]
@@ -58,10 +58,9 @@ public class BusinessControllerTests {
 		Assert.Equal(business.Email, okResultValue.Email);
 		Assert.Equal(business.CNPJ, okResultValue.CNPJ);
 		Assert.Equal(business.PhoneNumber, okResultValue.PhoneNumber);
-		Assert.Equal(business.BusinessWeek, okResultValue.BusinessWeek);
-		Assert.Equal(business.services, okResultValue.Services);
-		Assert.Equal(business.allowListedServicesOnly, okResultValue.AllowListedServicesOnly);
-		Assert.Equal(business.openOnHolidays, okResultValue.OpenOnHolidays);
+		Assert.Equal(business.Services, okResultValue.Services);
+		Assert.Equal(business.AllowListedServicesOnly, okResultValue.AllowListedServicesOnly);
+		Assert.Equal(business.OpenOnHolidays, okResultValue.OpenOnHolidays);
 	}
 
 	[Fact]
@@ -170,10 +169,9 @@ public class BusinessControllerTests {
 		var okResult = Assert.IsType<OkObjectResult>(result);
 		var okResultValue = Assert.IsType<BusinessDTO>(okResult.Value);
 
-		Assert.Equal(business.BusinessWeek, upBusiness.BusinessWeek);
-		Assert.Equal(business.services, upBusiness.services);
-		Assert.Equal(business.allowListedServicesOnly, upBusiness.allowListedServicesOnly);
-		Assert.Equal(business.openOnHolidays, upBusiness.openOnHolidays);
+		Assert.Equal(business.Services, upBusiness.Services);
+		Assert.Equal(business.AllowListedServicesOnly, upBusiness.AllowListedServicesOnly);
+		Assert.Equal(business.OpenOnHolidays, upBusiness.OpenOnHolidays);
 	}
 
 	[Fact]
@@ -187,7 +185,7 @@ public class BusinessControllerTests {
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+		Assert.Equal(NotExistErrors.business, badRequestResult.Value);
 	}
 
 	[Fact]
@@ -198,7 +196,7 @@ public class BusinessControllerTests {
 		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync(business);
 
 		// Act
-		var result = await _controller.DeactivateBusiness(businessId);
+		var result = await _controller.DeactivateBusiness();
 
 		// Assert
 		var okResult = Assert.IsType<OkResult>(result);
@@ -207,15 +205,13 @@ public class BusinessControllerTests {
 
 	[Fact]
 	public async Task DeactivateBusiness_ReturnsBadRequest_WhenBusinessDoesNotExist() {
-		// Arrange
-		var businessId = "non-existent-business-id";
 
 		// Act
-		var result = await _controller.DeactivateBusiness(businessId);
+		var result = await _controller.DeactivateBusiness();
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+		Assert.Equal(NotExistErrors.business, badRequestResult.Value);
 	}
 
 	[Fact]
@@ -227,9 +223,9 @@ public class BusinessControllerTests {
 		_mockUserManager.Setup(x => x.DeleteAsync(business)).ReturnsAsync(IdentityResult.Success);
 
 		Customer client = new Customer(businessId, "98912345678", "fulano da silva bezerra", null, null, null);
-		AptSchedule schedule = new AptSchedule(client.Id, businessId, DateTime.UtcNow.AddDays(-1), 100f, null);
+		AptSchedule schedule = new AptSchedule(client.Id, businessId, DateTime.UtcNow.AddDays(-1), 100f, null, false);
 		CreateAptLog createAptLog = new CreateAptLog(client.Id, schedule.Id, DateTime.UtcNow, 100f, null, null, DateTime.UtcNow.AddDays(90));
-		AptLog log = new AptLog(createAptLog);
+		AptLog log = new AptLog(createAptLog, businessId);
 		AptContact contact = new AptContact(log, DateTime.UtcNow);
 
 		_context.Business.Add(business);
@@ -240,13 +236,13 @@ public class BusinessControllerTests {
 		_context.SaveChanges();
 
 		// Act
-		var result = await _controller.DeleteBusiness(businessId);
+		var result = await _controller.DeleteBusiness();
 
 		// Assert
 		var okResult = Assert.IsType<NoContentResult>(result);
 
 		Assert.Empty(_context.Customers.Where(x => x.BusinessId == businessId));
-		Assert.Empty(_context.Contacts.Where(x => x.businessId == businessId));
+		Assert.Empty(_context.Contacts.Where(x => x.BusinessId == businessId));
 		Assert.Empty(_context.Schedules.Where(x => x.BusinessId == businessId));
 		Assert.Empty(_context.Logs.Where(x => x.BusinessId == businessId));
 	}
@@ -258,10 +254,10 @@ public class BusinessControllerTests {
 		_mockUserManager.Setup(x => x.FindByIdAsync(businessId)).ReturnsAsync((Business)null!);
 
 		// Act
-		var result = await _controller.DeleteBusiness(businessId);
+		var result = await _controller.DeleteBusiness();
 
 		// Assert
 		var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-		Assert.Equal(NotExistErrors.Business, badRequestResult.Value);
+		Assert.Equal(NotExistErrors.business, badRequestResult.Value);
 	}
 }

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 
 import 'custom_input_field.dart';
 
-/// Input field for first-name or full-name
 class NameInputField extends StatelessWidget {
   const NameInputField({
     super.key,

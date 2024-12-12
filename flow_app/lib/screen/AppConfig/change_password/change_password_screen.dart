@@ -54,7 +54,6 @@ class ChangePasswordScreen extends StatelessWidget {
                       Navigator.pop(context);
                     },
                   ),
-                  //TODO: snackbar in case the change is unsuccessful
                   CustomButton(
                     text: "Confirmar",
                     textSize: 16,
@@ -63,6 +62,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(vertical: 1, horizontal: 30),
                     onPressed: () {
+                      //TODO: snackbar in case the change is unsuccessful
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(

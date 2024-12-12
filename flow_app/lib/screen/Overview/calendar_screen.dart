@@ -1,18 +1,22 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
+import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Inputs/circular_button.dart';
-import '../../components/logs_list.dart';
-import '../../components/schedules_list.dart';
+import '../../components/apt_list.dart';
+import '../../components/idle_period_modal.dart';
 import '../../utils/date_time_utils.dart';
+import '../../utils/flow_snack.dart';
 import '../../utils/flow_storage.dart';
 import '../apts/log_screen.dart';
 import '../apts/schedule_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({super.key});
+  const CalendarScreen({super.key, required this.year, required this.month});
+
+  final int month;
+  final int year;
 
   @override
   CalendarScreenState createState() => CalendarScreenState();
@@ -20,51 +24,36 @@ class CalendarScreen extends StatefulWidget {
 
 class CalendarScreenState extends State<CalendarScreen> {
   List<BusinessCalendarDay> _calendarDays = <BusinessCalendarDay>[];
-  final DateTime _currentDate = DateTime.now();
+  late DateTime _currentDate = DateTime(2024);
   int _selectedDay = DateTime.now().day;
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _currentDate = DateTime(widget.year, widget.month, DateTime.now().day);
     _fetchCalendar();
   }
 
   Future<void> _fetchCalendar() async {
-    try {
-      final BusinessDTO? business = await FlowStorage.getBusinessDTO();
-      final String? bId = business!.id;
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
-      final Response res = await BusinessCalendarDayApi()
-          .apiV1BusinessCalendarDayGetWithHttpInfo(
-              businessId: bId,
-              month: DateTime.now().month,
-              year: DateTime.now().year);
-      print("debug");
-      print(res.body);
-      print("is on the table");
-      final List<BusinessCalendarDay>? calendar = await BusinessCalendarDayApi()
-          .apiV1BusinessCalendarDayGet(
-              businessId: bId,
-              month: DateTime.now().month,
-              year: DateTime.now().year);
+    final List<BusinessCalendarDay>? calendar =
+        await BusinessCalendarDayApi(apiClient).apiV1BusinessCalendarDayGet(
+            month: widget.month, year: widget.year);
 
-      setState(() {
-        _calendarDays = calendar ?? <BusinessCalendarDay>[];
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    setState(() {
+      _calendarDays = calendar ?? <BusinessCalendarDay>[];
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calendar'),
+        title: const Text('Calendário'),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -87,11 +76,24 @@ class CalendarScreenState extends State<CalendarScreen> {
                           icon: Icons.keyboard_arrow_left,
                           size: 50,
                           onPressed: () {
-                            //TODO:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Botão não-implementado !"),
-                              ),
+                            int prevMonth = widget.month - 1;
+                            int prevYear = widget.year;
+                            if (prevMonth < 1) {
+                              prevMonth = 12;
+                              prevYear--;
+                            }
+                            if (prevYear < 2024) {
+                              FlowSnack.show(context,
+                                  "Datas anterioras a 2024 são inválidas.");
+                            }
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      CalendarScreen(
+                                        month: prevMonth,
+                                        year: prevYear,
+                                      )),
                             );
                           },
                         ),
@@ -102,11 +104,20 @@ class CalendarScreenState extends State<CalendarScreen> {
                           icon: Icons.keyboard_arrow_right,
                           size: 50,
                           onPressed: () {
-                            //TODO:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Botão não-implementado !"),
-                              ),
+                            int nextMonth = widget.month + 1;
+                            int nextYear = widget.year;
+                            if (nextMonth > 12) {
+                              nextMonth = 1;
+                              nextYear++;
+                            }
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      CalendarScreen(
+                                        month: nextMonth,
+                                        year: nextYear,
+                                      )),
                             );
                           },
                         ),
@@ -201,13 +212,13 @@ class CalendarScreenState extends State<CalendarScreen> {
         indicators.add(Colors.green);
       }
       if (calendarDay.logs!.isNotEmpty) {
-        indicators.add(Colors.blue);
+        indicators.add(Colors.cyan);
       }
       if (calendarDay.holiday!.isNotEmpty) {
         indicators.add(Colors.red);
       }
       if (calendarDay.idlePeriods!.isNotEmpty) {
-        indicators.add(const Color.fromARGB(255, 0, 100, 3));
+        indicators.add(Colors.pinkAccent);
       }
     }
 
@@ -248,10 +259,21 @@ class CalendarScreenState extends State<CalendarScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        const SizedBox(
+          height: 12,
+        ),
         ...selectedDayData.idlePeriods!.map(
-          (IdlePeriod idle) => ListTile(
-            title: Text('Período ocioso: ${idle.name}'),
-          ),
+          (IdlePeriod idle) => ColoredBorderTextButton(
+              text: 'Período ocioso: ${idle.name}',
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return IdlePeriodModal(idlePeriod: idle);
+                  },
+                );
+              },
+              textColor: Colors.black),
         ),
         ...selectedDayData.holiday!.map(
           (String holiday) => ListTile(
@@ -264,7 +286,7 @@ class CalendarScreenState extends State<CalendarScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: 10),
+                SizedBox(height: 8),
                 Text(
                   'Agendamentos',
                   style: TextStyle(
@@ -278,11 +300,11 @@ class CalendarScreenState extends State<CalendarScreen> {
             ),
           ),
         ...selectedDayData.schedules!.map(
-          (AptSchedule item) => SchedulesList(
+          (AptSchedule item) => AptList(
             clientName: item.customer!.fullName,
-            price: item.price ?? 0,
+            price: item.price! / 100,
             hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
-            date: DateTimeUtils.dateOnlyString(item.dateTime!),
+            date: DateTimeUtils.dateOnlyString(item.dateTime),
             onTap: () {
               Navigator.push(
                 context,
@@ -300,7 +322,7 @@ class CalendarScreenState extends State<CalendarScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(height: 14),
+                SizedBox(height: 8),
                 Text(
                   'Atendimentos',
                   style: TextStyle(
@@ -314,9 +336,9 @@ class CalendarScreenState extends State<CalendarScreen> {
             ),
           ),
         ...selectedDayData.logs!.map(
-          (AptLog item) => LogsList(
+          (AptLog item) => AptList(
             clientName: item.customer!.fullName,
-            price: item.price ?? 4.2,
+            price: item.price! / 100,
             hour: TimeOfDay.fromDateTime(item.dateTime!).format(context),
             date: DateTimeUtils.dateOnlyString(item.dateTime!),
             service: item.service,

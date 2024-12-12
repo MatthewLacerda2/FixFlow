@@ -10,12 +10,9 @@ using Server.Models.Utils;
 
 namespace Server.Controllers;
 
-/// <summary>
-/// Controller class for Customer's stuff
-/// </summary>
 [ApiController]
 [Route(Common.api_v1 + nameof(Customer))]
-//[Authorize]
+[Authorize]
 [Produces("application/json")]
 public class CustomerController : ControllerBase {
 
@@ -28,8 +25,7 @@ public class CustomerController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Get Customer Record in the Business.
-	/// Credentials, but also schedules and logs history
+	/// Get Customer's Record in the Business
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerRecord))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -38,7 +34,13 @@ public class CustomerController : ControllerBase {
 
 		var client = await _userManager.FindByIdAsync(customerId);
 		if (client == null) {
-			return BadRequest(NotExistErrors.Customer);
+			return BadRequest(NotExistErrors.customer);
+		}
+
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+
+		if (client.BusinessId != businessId) {
+			return BadRequest(ValidatorErrors.BadCustomerOwnership);
 		}
 
 		var clientRecord = (CustomerRecord)client;
@@ -55,8 +57,6 @@ public class CustomerController : ControllerBase {
 
 		clientRecord.logs = _context.Logs.Where(x => x.CustomerId == customerId).OrderBy(x => x.dateTime).ToArray();
 
-		clientRecord.numSchedules = _context.Schedules.Where(x => x.CustomerId == customerId).Count();
-
 		for (int i = 0; i < clientRecord.logs.Length - 1; i++) {
 			clientRecord.avgTimeBetweenSchedules += (int)(clientRecord.logs[i + 1].dateTime - clientRecord.logs[i].dateTime).TotalDays;
 		}
@@ -69,7 +69,9 @@ public class CustomerController : ControllerBase {
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDTO[]))]
 	[HttpGet]
-	public async Task<IActionResult> ReadCustomers(string businessId, uint offset, uint limit, string? fullname) {
+	public async Task<IActionResult> ReadCustomers(uint offset, uint limit, string? fullname) {
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+
 		var clientsQuery = _context.Customers.AsQueryable();
 
 		clientsQuery = clientsQuery.Where(client => client.BusinessId == businessId);
@@ -90,7 +92,7 @@ public class CustomerController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Create a Customer Account
+	/// Create a Customer's Account
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CustomerDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -98,24 +100,30 @@ public class CustomerController : ControllerBase {
 	[HttpPost]
 	public async Task<IActionResult> CreateCustomer([FromBody] CustomerCreate customerCreate) {
 
-		bool phoneTaken = _context.Customers.Where(x => x.BusinessId == customerCreate.BusinessId).Any(x => x.PhoneNumber == customerCreate.PhoneNumber);
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+		customerCreate.BusinessId = businessId;
+
+		bool phoneTaken = _context.Customers.Where(x => x.BusinessId == businessId).Any(x => x.PhoneNumber == customerCreate.PhoneNumber);
 		if (phoneTaken) {
 			return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
 		}
 
 		if (customerCreate.CPF != null) {
-			bool cpfTaken = _context.Customers.Where(x => x.BusinessId == customerCreate.BusinessId).Any(x => x.CPF == customerCreate.CPF);
+			bool cpfTaken = _context.Customers.Where(x => x.BusinessId == businessId).Any(x => x.CPF == customerCreate.CPF);
 			if (cpfTaken) {
 				return BadRequest(AlreadyRegisteredErrors.CPF);
 			}
 		}
 
 		if (customerCreate.Email != null) {
-			bool emailTaken = _context.Customers.Where(x => x.BusinessId == customerCreate.BusinessId).Any(x => x.Email == customerCreate.Email);
+			bool emailTaken = _context.Customers.Where(x => x.BusinessId == businessId).Any(x => x.Email == customerCreate.Email);
 			if (emailTaken) {
 				return BadRequest(AlreadyRegisteredErrors.Email);
 			}
 		}
+
+		customerCreate.FullName = StringUtils.NameCaseNormalizer(customerCreate.FullName);
+		customerCreate.AdditionalNote = StringUtils.PhraseCaseNormalizer(customerCreate.AdditionalNote);
 
 		Customer customer = (Customer)customerCreate;
 
@@ -132,7 +140,7 @@ public class CustomerController : ControllerBase {
 	}
 
 	/// <summary>
-	/// Updates the Customer with the given Id
+	/// Updates the Customer's data of the given Id
 	/// </summary>
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDTO))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
@@ -141,16 +149,18 @@ public class CustomerController : ControllerBase {
 
 		var existingCustomer = await _userManager.FindByIdAsync(upCustomer.Id);
 		if (existingCustomer == null) {
-			return BadRequest(NotExistErrors.Customer);
+			return BadRequest(NotExistErrors.customer);
+		}
+
+		string businessId = User.Claims.First(c => c.Type == "businessId")?.Value!;
+		if (existingCustomer.BusinessId != businessId) {
+			return BadRequest(ValidatorErrors.BadCustomerOwnership);
 		}
 
 		if (existingCustomer.CPF != upCustomer.CPF) {
 			var existingCPF = _context.Customers.Where(x => x.CPF == upCustomer.CPF);
 			if (existingCPF.Any()) {
 				return BadRequest(AlreadyRegisteredErrors.CPF);
-			}
-			else {
-				existingCustomer.CPF = upCustomer.CPF;
 			}
 		}
 
@@ -159,9 +169,6 @@ public class CustomerController : ControllerBase {
 			if (existingPhonenumber.Any()) {
 				return BadRequest(AlreadyRegisteredErrors.PhoneNumber);
 			}
-			else {
-				existingCustomer.PhoneNumber = upCustomer.PhoneNumber;
-			}
 		}
 
 		if (existingCustomer.Email != upCustomer.Email) {
@@ -169,11 +176,14 @@ public class CustomerController : ControllerBase {
 			if (existingEmail.Any()) {
 				return BadRequest(AlreadyRegisteredErrors.Email);
 			}
-			else {
-				existingCustomer.Email = upCustomer.Email;
-			}
 		}
 
+		upCustomer.FullName = StringUtils.NameCaseNormalizer(upCustomer.FullName);
+		upCustomer.AdditionalNote = StringUtils.PhraseCaseNormalizer(upCustomer.AdditionalNote);
+
+		existingCustomer.PhoneNumber = upCustomer.PhoneNumber;
+		existingCustomer.CPF = upCustomer.CPF;
+		existingCustomer.Email = upCustomer.Email;
 		existingCustomer.FullName = upCustomer.FullName;
 		existingCustomer.AdditionalNote = upCustomer.AdditionalNote;
 

@@ -35,6 +35,7 @@ class _PhoneInputFormatter extends TextInputFormatter {
     if (newValue.text.length > 14) {
       return oldValue;
     }
+
     final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
     String formatted = '';
     for (int i = 0; i < digits.length; i++) {
@@ -43,6 +44,7 @@ class _PhoneInputFormatter extends TextInputFormatter {
       if (i == 7) formatted += '-';
       formatted += digits[i];
     }
+
     return newValue.copyWith(
       text: formatted,
       selection: TextSelection.collapsed(offset: formatted.length),

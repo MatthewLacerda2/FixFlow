@@ -1,14 +1,13 @@
 import 'package:client_sdk/api.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/Buttons/colored_border_text_button.dart';
 import '../../components/Buttons/order_button.dart';
 import '../../components/Buttons/rounded_iconed_button.dart';
-import '../../components/logs_list.dart';
+import '../../components/apt_list.dart';
 import '../../utils/apt_filters.dart';
 import '../../utils/date_time_utils.dart';
 import '../../utils/flow_storage.dart';
-import '../apt_filters_screen.dart';
+import '../../utils/string_utils.dart';
 import '../apts/edit_apt/create_log_screen.dart';
 import '../apts/log_screen.dart';
 import '../create_client_screen.dart';
@@ -17,21 +16,6 @@ class LogsScreen extends StatefulWidget {
   const LogsScreen({super.key, required this.aptFilters});
 
   final AptFilters aptFilters;
-
-  AptLog getLog() {
-    final Customer cu =
-        Customer(businessId: "businessId", fullName: "full Name");
-    return AptLog(
-        id: "id",
-        customer: cu,
-        customerId: "cId",
-        businessId: "bId",
-        dateTime: DateTime.now(),
-        price: 100,
-        description: "something",
-        scheduleId: "sId",
-        service: "facial");
-  }
 
   @override
   _LogsScreenState createState() => _LogsScreenState();
@@ -47,21 +31,71 @@ class _LogsScreenState extends State<LogsScreen> {
   }
 
   Future<List<AptLog>> _fetchLogs() async {
-    final BusinessDTO? bd = await FlowStorage.getBusinessDTO();
-    final String businessId = bd!.id!;
+    final String mytoken = await FlowStorage.getToken();
+    final ApiClient apiClient = FlowStorage.getApiClient(mytoken);
 
     final AptFilters f = widget.aptFilters;
 
-    final List<AptLog>? response = await AptLogApi().apiV1LogsGet(
-        businessId: businessId,
+    final List<AptLog>? response = await AptLogApi(apiClient).apiV1LogsGet(
         offset: f.offset,
         limit: f.limit,
         minPrice: f.minPrice,
         maxPrice: f.maxPrice,
         minDateTime: f.minDateTime,
         maxDateTime: f.maxDateTime);
+    return response ?? <AptLog>[];
+  }
 
-    return response ?? <AptLog>[]; // Handle null safety
+  Future<void> _refreshLogs() async {
+    setState(() {
+      _logsFuture = _fetchLogs();
+    });
+    await _logsFuture;
+  }
+
+  List<String> order = <String>['date', 'client', 'price'];
+  List<bool?> ups = <bool?>[true, null, null];
+
+  void _handleToggle(String key, bool newIsUp) {
+    setState(() {
+      _logsFuture = _logsFuture.then((List<AptLog> contacts) {
+        final List<AptLog> sortedLogs = List<AptLog>.from(contacts);
+
+        switch (key) {
+          case 'date':
+            sortedLogs.sort((AptLog a, AptLog b) {
+              final int comparison = a.dateTime!.compareTo(b.dateTime!);
+              return newIsUp ? comparison : -comparison;
+            });
+            ups[0] = (ups[0] == null) ? true : !ups[0]!;
+            ups[1] = null;
+            ups[2] = null;
+            break;
+          case 'client':
+            sortedLogs.sort((AptLog a, AptLog b) {
+              final int comparison =
+                  a.customer!.fullName.compareTo(b.customer!.fullName);
+              return newIsUp ? comparison : -comparison;
+            });
+            ups[0] = null;
+            ups[1] = (ups[1] == null) ? true : !ups[1]!;
+            ups[2] = null;
+            break;
+          case 'price':
+            sortedLogs.sort((AptLog a, AptLog b) {
+              final int comparison = (a.price ?? 0).compareTo(b.price ?? 0);
+              return newIsUp ? comparison : -comparison;
+            });
+            ups[0] = null;
+            ups[1] = null;
+            ups[2] = (ups[2] == null) ? true : !ups[2]!;
+            break;
+          default:
+            break;
+        }
+        return sortedLogs;
+      });
+    });
   }
 
   @override
@@ -94,105 +128,99 @@ class _LogsScreenState extends State<LogsScreen> {
                   color: Colors.black,
                   height: 1,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      const OrderButton(
-                        icon: Icons.perm_contact_cal,
-                        isUp: true,
-                        iconSize: 40,
-                        iconColor: Colors.blue,
-                      ),
-                      const OrderButton(
-                        icon: Icons.attach_money,
-                        iconSize: 40,
-                        iconColor: Colors.blue,
-                      ),
-                      const OrderButton(
+                      OrderButton(
+                        onToggle: _handleToggle,
+                        sort: order[0],
+                        isUp: ups[0],
                         icon: Icons.calendar_today,
                         iconSize: 40,
-                        iconColor: Colors.blue,
+                        iconColor: Colors.blueGrey,
                       ),
-                      ColoredBorderTextButton(
-                        text: "Filtros",
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (BuildContext context) =>
-                                  AptFiltersScreen(
-                                aptFilters: widget.aptFilters,
-                              ),
-                            ),
-                          );
-                        },
-                        backgroundColor: Colors.blue,
-                        borderColor: Colors.black,
-                        textColor: Colors.white,
-                      )
+                      OrderButton(
+                        onToggle: _handleToggle,
+                        sort: order[1],
+                        isUp: ups[1],
+                        icon: Icons.perm_contact_cal,
+                        iconSize: 40,
+                        iconColor: Colors.blueGrey,
+                      ),
+                      OrderButton(
+                        onToggle: _handleToggle,
+                        sort: order[2],
+                        isUp: ups[2],
+                        icon: Icons.attach_money,
+                        iconSize: 40,
+                        iconColor: Colors.blueGrey,
+                      ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 18),
                 Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: _refreshLogs,
                     child: FutureBuilder<List<AptLog>>(
-                        future: _logsFuture,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<AptLog>> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text('Error: ${snapshot.error}'),
-                            );
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!.isEmpty) {
-                            return const Center(
-                              child: Text('Não há agendamentos.'),
-                            );
-                          }
-
-                          final List<AptLog> logs = snapshot.data!;
-                          return ListView.separated(
-                            itemCount: logs.length,
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    const Divider(
-                              color: Colors.transparent,
-                              thickness: 0,
-                              height: 9,
-                            ),
-                            itemBuilder: (BuildContext context, int index) {
-                              final AptLog log = logs[index];
-                              return LogsList(
-                                clientName: log.customer!.fullName,
-                                price: log.price ?? 0,
-                                hour: TimeOfDay.fromDateTime(log.dateTime!)
-                                    .format(context),
-                                date:
-                                    DateTimeUtils.dateOnlyString(log.dateTime!),
-                                service: log.service,
-                                observation: log.description,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute<void>(
-                                      builder: (BuildContext context) =>
-                                          LogScreen(
-                                        log: log,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+                      future: _logsFuture,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<AptLog>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
                           );
-                        })),
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text('Não há agendamentos.'),
+                          );
+                        }
+
+                        final List<AptLog> logs = snapshot.data!;
+                        return ListView.separated(
+                          itemCount: logs.length,
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(
+                            color: Colors.transparent,
+                            thickness: 0,
+                            height: 10,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            final AptLog log = logs[index];
+                            return AptList(
+                              clientName: log.customer!.fullName,
+                              price: log.price! / 100,
+                              hour: TimeOfDay.fromDateTime(log.dateTime!)
+                                  .format(context),
+                              date: DateTimeUtils.dateOnlyString(log.dateTime!),
+                              service: StringUtils.normalIfBlank(log.service),
+                              observation:
+                                  StringUtils.normalIfBlank(log.description),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>
+                                        LogScreen(
+                                      log: log,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
               ],
             ),
             RoundedIconedButton(

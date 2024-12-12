@@ -5,6 +5,16 @@ namespace Server.Models.DTO;
 public class CustomerCreate {
 
 	/// <summary>
+	/// Phone Number. Must contain only numbers
+	/// </summary>
+	[Required]
+	[Phone]
+	public string PhoneNumber { get; set; } = string.Empty;
+
+	[EmailAddress]
+	public string? Email { get; set; }
+
+	/// <summary>
 	/// The business from which the Customer is a customer
 	/// </summary>
 	[Required]
@@ -23,24 +33,13 @@ public class CustomerCreate {
 	/// <summary>
 	/// Special information about the Customer, if applicable
 	/// </summary>
-	public string? additionalNote { get; set; }
+	public string? AdditionalNote { get; set; }
 
-	/// <summary>
-	/// Phone Number. Must contain only numbers
-	/// </summary>
-	[Required]
-	[Phone]
-	public string PhoneNumber { get; set; } = string.Empty;
-
-	[EmailAddress]
-	public string? Email { get; set; }
-
-	public CustomerCreate(string businessId, string fullName, string? cpf, string? additionalNote, string phoneNumber, string? email) {
-		BusinessId = businessId;
+	public CustomerCreate(string fullName, string? cpf, string? additionalNote, string phoneNumber, string? email) {
 		FullName = fullName;
 		CPF = cpf;
 		PhoneNumber = phoneNumber;
 		Email = email;
-		this.additionalNote = additionalNote;
+		AdditionalNote = additionalNote;
 	}
 }
