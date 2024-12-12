@@ -86,7 +86,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
             maxDateTime: f.maxDateTime,
             offset: f.offset,
             limit: f.limit);
-    return response ?? <AptContact>[]; // Handle null safety
+    return response ?? <AptContact>[];
   }
 
   Future<void> _refreshContacts() async {

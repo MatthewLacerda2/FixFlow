@@ -192,9 +192,6 @@ class ContactScreenState extends State<ContactScreen> {
             ),
             const SizedBox(height: 6),
             CopyableText(text: suggestedMessage),
-            //WhatsAppButton(
-            //    phoneNumber: widget.contact.customer!.phoneNumber!,
-            //    message: "um dois tres trestando"),
             const SizedBox(height: 42),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

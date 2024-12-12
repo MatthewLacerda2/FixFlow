@@ -48,7 +48,7 @@ class _CreateIdlePeriodScreenState extends State<CreateIdlePeriodScreen> {
       limit: 20,
     );
 
-    return response ?? <AptSchedule>[]; // Handle null safety
+    return response ?? <AptSchedule>[];
   }
 
   void _updateSchedules() {

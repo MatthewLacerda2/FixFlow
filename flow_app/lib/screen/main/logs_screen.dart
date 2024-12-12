@@ -43,7 +43,7 @@ class _LogsScreenState extends State<LogsScreen> {
         maxPrice: f.maxPrice,
         minDateTime: f.minDateTime,
         maxDateTime: f.maxDateTime);
-    return response ?? <AptLog>[]; // Handle null safety
+    return response ?? <AptLog>[];
   }
 
   Future<void> _refreshLogs() async {

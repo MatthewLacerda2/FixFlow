@@ -50,7 +50,7 @@ class LoginUtils {
     var resp = await BusinessApi(apiClient)
         .apiV1BusinessGetWithHttpInfo(businessId: businessId);
     if (resp.statusCode == 400) {
-      //pegar o subscription que nao tá pago
+      //TODO: pegar o subscription que nao tá pago
       return null;
     }
 

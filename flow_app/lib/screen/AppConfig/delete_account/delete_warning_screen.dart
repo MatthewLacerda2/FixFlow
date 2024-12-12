@@ -24,7 +24,6 @@ class DeleteWarningScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // const SizedBox(height: 32),
             const Text(
               'Deletar sua conta apagará todos os seus dados',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

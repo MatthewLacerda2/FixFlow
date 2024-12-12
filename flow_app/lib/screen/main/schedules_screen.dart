@@ -46,7 +46,7 @@ class _SchedulesScreenState extends State<SchedulesScreen> {
             offset: f.offset,
             limit: f.limit);
 
-    return response ?? <AptSchedule>[]; // Handle null safety
+    return response ?? <AptSchedule>[];
   }
 
   Future<void> _refreshSchedules() async {

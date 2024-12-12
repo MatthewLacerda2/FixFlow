@@ -24,10 +24,8 @@ class WhatsAppButton extends StatelessWidget {
       },
     );
 
-    // Log the URL to debug
     debugPrint('Generated WhatsApp URI: ${whatsappUri.toString()}');
 
-    // Check if the URL can be launched
     if (await canLaunchUrl(whatsappUri)) {
       await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
     } else {
