@@ -49,7 +49,6 @@ bld/
 [Ll]ogs/
 
 # .NET WebAPI specific rules
-/FixFlow.Server/Migrations/
 /FixFlow.Server/bin/
 /FixFlow.Server/obj/
 /FixFlow.Server/swagger.json

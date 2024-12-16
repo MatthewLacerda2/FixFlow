@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: fixflow_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: xpvista7810
+      MYSQL_DATABASE: fixflow
+      MYSQL_USER: lendacerda
+      MYSQL_PASSWORD: xpvista7810
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fixflow_webapi
+    depends_on:
+      - database
+    ports:
+      - "5105:5105"
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=database;port=3306;Database=fixflow;User=lendacerda;Password=xpvista7810"
+    volumes:
+      - .:/app
+    command: >
+      sh -c "dotnet restore &&
+             dotnet ef database update &&
+             dotnet watch run --urls=http://0.0.0.0:5105"
+
+volumes:
+  db_data:
