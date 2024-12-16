@@ -26,7 +26,7 @@ services:
 
   webapi:
     build:
-      context: .
+      context: ./FixFlow.Server
       dockerfile: Dockerfile
     container_name: fixflow_webapi
     depends_on:
