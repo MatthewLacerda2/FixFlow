@@ -12,8 +12,8 @@ using Server.Data;
 namespace FixFlow.Server.Migrations
 {
     [DbContext(typeof(ServerContext))]
-    [Migration("20241212174110_timeSpentDeact")]
-    partial class timeSpentDeact
+    [Migration("20241216013017_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

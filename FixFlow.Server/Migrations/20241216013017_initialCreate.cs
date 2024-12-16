@@ -256,7 +256,7 @@ namespace FixFlow.Server.Migrations
                     dateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Service = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    price = table.Column<float>(type: "float", nullable: false),
+                    price = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -288,7 +288,7 @@ namespace FixFlow.Server.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    price = table.Column<float>(type: "float", nullable: false)
+                    price = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -296,6 +296,37 @@ namespace FixFlow.Server.Migrations
                     table.ForeignKey(
                         name: "FK_Schedules_AspNetUsers_CustomerId",
                         column: x => x.CustomerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Subscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BusinessId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BusinessName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BusinessCNPJ = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    dateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    Payed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AdditionalNote = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    timeSpentDeactivated = table.Column<TimeSpan>(type: "time(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Subscriptions_AspNetUsers_BusinessId",
+                        column: x => x.BusinessId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -372,6 +403,12 @@ namespace FixFlow.Server.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Email",
+                table: "AspNetUsers",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -407,6 +444,11 @@ namespace FixFlow.Server.Migrations
                 name: "IX_Schedules_CustomerId",
                 table: "Schedules",
                 column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subscriptions_BusinessId",
+                table: "Subscriptions",
+                column: "BusinessId");
         }
 
         /// <inheritdoc />
@@ -435,6 +477,9 @@ namespace FixFlow.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "Schedules");
+
+            migrationBuilder.DropTable(
+                name: "Subscriptions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
